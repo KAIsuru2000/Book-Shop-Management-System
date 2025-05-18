@@ -85,6 +85,13 @@ const rowFormRefill = (dataob, rowIndex) => {
 
     // refill value in to element
     selectItemCategory.value = JSON.stringify(dataob.subcategory_id.category_id);
+
+    let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + category.id);
+    fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
+
+    let brandByCategory = getServiceRequest('/brand/bycategory/' + category.id);
+    fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
+
     selectItemBrand.value = JSON.stringify(dataob.brand_id);
     selectItemSubcategory.value = JSON.stringify(dataob.subcategory_id);
     selectItemPackagetype.value = JSON.stringify(dataob.packagetype_id);
@@ -106,6 +113,10 @@ const rowFormRefill = (dataob, rowIndex) => {
 
     console.log("item", item);
     console.log("oldItem", oldItem);
+
+    //disable submit button
+     submitButton.style.visibility = "hidden";
+     updateButton.style.visibility = "visible";
 
 
 }
