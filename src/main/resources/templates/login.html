@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Login Form</title>
+        <link rel="icon" href="/image/title.png">
+    
+        <!-- link bootstrap css -->
+        <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+    
+        <!-- link bootstrap js file -->
+        <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+    
+        <!-- link login css -->
+        <link rel="stylesheet" href="/Style/common.css">
+        <link rel="stylesheet" href="/Style/login.css">
+    
+        <!-- link Fontawasome css file -->
+        <link rel="stylesheet" href="/fontawesome-free-6.4.2/css/all.css">
+    
+    </head>
+    
+    <body>
+    <div class="container-fluid">
+    <div class="row divLogin">
+        <div class="col-7">
+                <form action="/login" method="post">
+                    <div class="p-3 mt-4 d-flex justify-content-center loginTitle">
+                    <h2 class="titleColur">Login</h2>
+                    </div>
+                    <!--            user name area start-->
+                    <div class="input-group mt-5">
+                        <span for="textUserName" class="input-group-text lablBgCl">User Name &nbsp &nbsp &nbsp:</span>
+                        <input type="text" class="form-control" name="username" placeholder="Enter User name" aria-label="Sizing example input"
+                               aria-describedby="inputGroup-sizing-default" id="textUserName" required>
+                    </div>
+                    <!--            user name area end-->
+    
+                    <!--            password area start-->
+                    <div class="input-group mt-5">
+                        <span for="passwordField" class="input-group-text lablBgCl">Password &nbsp &nbsp &nbsp &nbsp :</span>
+                        <input type="password" class="form-control" name="password" placeholder="Enter Password" aria-label="Sizing example input"
+                               aria-describedby="inputGroup-sizing-default" id="passwordField" required>
+                    </div>
+                    <!--            password area end-->
+                    <!-- invalid un pw -->
+                    <!-- mehidi thim leaf engin eka magin(th) url ekehi ? eken pasuwa error namathi parameter eakak thibeda bala(if) mema kotasa active karai-->
+                    <div class="text-center text-danger fw-bold mt-5"
+                         th:if="${param.error}">
+                        Invalid Username and Password
+                    </div>
+    
+                    <!--            login button area start-->
+                    <div class="mt-4 d-flex justify-content-center">
+                        <button class="btn btn-primary offCanvasButton" type="submit">
+                            <i class="fa-solid fa-right-to-bracket" style="color: #f4f5f6;"></i>
+                            Login
+                        </button>
+                    </div>
+                    <!--            login button area end-->
+                </form>
+        </div>
+        <div class="col-5 logoSide">
+            <div class="mt-3 d-flex justify-content-center">
+                        <img src="/image/title.png" alt="book shop logo">
+            </div>
+            <div class="mt-1 d-flex justify-content-center" style="color: white;">
+                        <h2>Bright book shop</h2>
+            </div>
+            <div class="mt-5 d-flex justify-content-center" style="color: white;">
+                        <h1>Hello, Welcome!</h1>
+            </div>
+    
+        </div>
+    </div>
+    </div>
+    
+    
+    </body>
+    
+    </html>
+

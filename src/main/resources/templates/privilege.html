@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- nav bar start -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+    <!-- nav bar end -->
+
+<div class="container-fluid">
+    <!-- title area start -->
+    <div class="row p-1 mt-1">
+        <div class="col-12 p-3 d-flex justify-content-center divTitle">
+            <i class="fa-solid fa-file-circle-check fa-2xl ms-3 pt-3" style="color: #f9fafb;"></i>
+            <h2 class="h2 ms-3">Privilege management</h2>
+        </div>
+    </div>
+    <!-- title area end -->
+    <!-- offcanvas button area start -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-2">
+            <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                <i class="fa-solid fa-file-circle-plus" style="color: #fcfcfc;"></i>
+                Add New Privilege
+            </button>
+        </div>
+        <div class="col-9"></div>
+    </div>
+    <!-- offcanvas button area end -->
+    <!-- table area start -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 mt-1 divTable">
+            <div class="container-fluid">
+                <table class="table" id="tablePrivilege">
+                    <thead >
+                    <tr>
+                        <th>#</th>
+                        <th>Role</th>
+                        <th>Module</th>
+                        <th>Select</th>
+                        <th>Insert</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="tablePrivilegeBody" >
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <!-- table arae end -->
+    <!-- offcanvas area start -->
+    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 550px;" tabindex="-1" data-bs-scroll="true"
+         data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-body small">
+
+            <!-- form area start -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="divForm">
+                                <!-- form eke action/method magin thibena submisson bawitha nokarai -->
+                                <!-- eya thibunoth form eka submit kala pasu refresh we  -->
+                                <form onsubmit="return false" id="privilegeForm">
+                                    <!-- form eka validate kara genima sadaha -->
+                                    <!-- required mark and offcanvas close button start -->
+                                    <div class="row">
+
+                                        <!-- offcanvas close button start -->
+                                        <div class="col-1">
+                                            <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                                    aria-label="Close">X</button>
+                                        </div>
+                                        <!-- offcanvas close button close -->
+
+                                        <div class="col-9"></div>
+
+                                        <!-- required mark start -->
+                                        <div class="col-1">
+                                            <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                        </div>
+                                        <!-- required mark end -->
+
+                                        <div class="col-1"></div>
+
+                                    </div>
+                                    <!-- required mark and offcanvas close button end -->
+                                    <!-- role and module row start-->
+
+                                        <!-- role area start -->
+                                    <div class="row mt-3">
+                                        <div class="col-3"></div>
+                                        <div class="col-6">
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text lablBg" for="selectRole">Role
+                                                    &nbsp; &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></label>
+                                                <select id="selectRole" class="form-select" data-bs-toggle="tooltip"
+                                                        title="Select role correctly here." onchange="selectDainamicElementValidater(this,'privilege','role_id')" onclick="selectDainamicElementValidater(this,'privilege','role_id')">
+                                                    <option selected disabled>Select Role</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="Senior Manager">Senior Manager</option>
+                                                    <option value="Cashier">Cashier</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3"></div>
+                                    </div>
+                                    <!-- role area end -->
+
+                                    <!-- module area start -->
+                                    <div class="row mt-3">
+                                        <div class="col-3"></div>
+                                        <div class="col-6">
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text lablBg" for="selectModule">Module
+                                                    &nbsp;: <span class="fw-bold text-danger">*</span></label>
+                                                <select id="selectModule" class="form-select" data-bs-toggle="tooltip"
+                                                        title="Select module correctly here." onchange="selectDainamicElementValidater(this,'privilege','module_id')" onclick="selectDainamicElementValidater(this,'privilege','module_id')">
+                                                    <option selected disabled>Select Module</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Privilege">Privilege</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-3"></div>
+                                    </div>
+                                        <!-- module area end -->
+                                    <!-- role and module row  end-->
+
+                                    <!-- radio button area start-->
+
+                                    <div class="row mt-3">
+                                        <div class="col-4"></div>
+                                        <div class="col-4">
+                                    <!-- Select start -->
+                                    <div class="row mt-3">
+                                        <div class="col-3">
+                                            <lable for="textSelect" class="col-for-lable fw-bold">
+                                                Select :
+                                            </lable>
+                                        </div>
+                                        <div class="col-9 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                   id="checkSelect"
+                                                   onchange="if(this.checked){
+                                                        privilege.sel = true;
+                                                        lblSel.innerText = 'select granted';
+                                                    }else{
+                                                        privilege.sel =false;
+                                                        lblSel.innerText = 'select not granted';
+                                                    }">
+                                            <label class="form-check-label" id="lblSel">
+                                                <h6>Select privilege Not Granted</h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                        <!-- Select end -->
+                                    <!-- Insert start -->
+                                    <div class="row mt-3">
+                                        <div class="col-3">
+                                            <lable for="textSelect" class="col-for-lable fw-bold">
+                                                Insert :
+                                            </lable>
+                                        </div>
+                                        <div class="col-9 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                   id="checkInsert"
+                                                   onchange="if(this.checked){
+                                                        privilege.inst = true;
+                                                        lblInst.innerText = 'select granted';
+                                                    }else{
+                                                        privilege.inst =false;
+                                                        lblInst.innerText = 'select not granted';
+                                                    }">
+                                            <label class="form-check-label" id="lblInst">
+                                                <h6>Insert Privilege Not Granted</h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                        <!-- insert end -->
+                                    <!-- Update start -->
+                                    <div class="row mt-3">
+                                        <div class="col-3">
+                                            <lable for="textSelect" class="col-for-lable fw-bold">
+                                                Update :
+                                            </lable>
+                                        </div>
+                                        <div class="col-9 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                   id="checkUpdate"
+                                                   onchange="if(this.checked){
+                                                        privilege.upd = true;
+                                                        lblUpd.innerText = 'select granted';
+                                                    }else{
+                                                        privilege.upd =false;
+                                                        lblUpd.innerText = 'select not granted';
+                                                    }">
+                                            <label class="form-check-label" id="lblUpd">
+                                                <h6>Update privilege Not Granted</h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                        <!-- Update end -->
+                                    <!-- Delete start -->
+                                    <div class="row mt-3">
+                                        <div class="col-3">
+                                            <lable for="textSelect" class="col-for-lable fw-bold">
+                                                Delete :
+                                            </lable>
+                                        </div>
+                                        <div class="col-9 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                   id="checkDelete"
+                                                   onchange="if(this.checked){
+                                                        privilege.del = true;
+                                                        lblDel.innerText = 'select granted';
+                                                    }else{
+                                                        privilege.del =false;
+                                                        lblDel.innerText = 'select not granted';
+                                                    }">
+                                            <label class="form-check-label" id="lblDel">
+                                                <h6>Delete privilege Not Granted</h6>
+                                            </label>
+                                        </div>
+                                    </div>
+                                        <!-- Delete end -->
+                                        </div>
+                                        <div class="col-4"></div>
+                                    </div>
+                                    <!-- radio button area end-->
+                                    <!-- button row start-->
+                                    <div class="row mt-3 mb-4">
+
+                                        <div class="col-1"></div>
+
+                                        <!-- clear btn area start -->
+                                        <div class="col-2">
+                                            <button type="button" class="btn btnClear">
+                                                <i class="fa-solid fa-eraser"></i>
+                                                Clear
+                                            </button>
+                                        </div>
+                                        <!-- clear btn area end -->
+
+                                        <div class="col-5"></div>
+
+                                        <!-- update button area start -->
+                                        <div class="col-2">
+                                            <button type="button" class=" btn btnUpdate" id="updateButton" onclick="buttonPrivilageUpdate()">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                                Update
+                                            </button>
+                                        </div>
+                                        <!-- update button area end -->
+
+                                        <!-- Add btn area start -->
+                                        <div class="col-2">
+                                            <button type="button" class=" btn btnAdd" id="submitButton" onclick="buttonPrivilageSubmit()">
+                                                <!-- buttonEmpSubmit function eka (employee.js)-->
+                                                <i class="fa-solid fa-file-circle-plus"></i>
+                                                Add
+                                            </button>
+                                        </div>
+                                        <!-- Add btn area end -->
+
+                                    </div>
+                                    <!-- button row end -->
+                                </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->
+</div>
+
+
+<script src="/jsFiles/privilege.js"></script>
+
+<script src="/jsFiles/common.js"></script>
+
+<script src="/jsFiles/validatorFunction.js"></script>
+
+<script src="/jsFiles/tableFunction.js"></script>
+
+
+</body>
+
+</html>

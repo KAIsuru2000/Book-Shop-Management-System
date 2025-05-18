@@ -1,0 +1,178 @@
+
+body {
+    background-color: #6e9099b3;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.divTitle {
+    color: white;
+    background-image: linear-gradient(#1c1e1f, #009dc5, #131313);
+    border-radius: 25px;
+    border: solid 2px white;
+}
+
+.divForm {
+    background-color: #6e9099b3;
+    border-radius: 25px;
+    padding: 10px;
+    border: solid 4px rgb(18, 2, 251);
+    width: 100%;
+    height: 100%;
+}
+
+.divTable {
+    background-color: #004658c4;
+    border-radius: 25px;
+    padding: 25px;
+    border: solid 2px rgb(253, 252, 252);
+    
+}
+
+.offCanvasButton {
+    background-image: linear-gradient(#06092a, #0646f6, #03181d);
+    border: solid 2px white;
+    border-radius: 15px;
+}
+
+table,
+td {
+    /* border: 1px solid black; */
+    font-weight: 800;
+    font-family: sans-serif;
+    color: white;
+}
+
+th {
+    /* border: 1px solid black; */
+    font-weight: bolder;
+    font-family: revert;
+    text-align: center;
+    font-size: large;
+    color: white;
+}
+
+.offCanvasArea {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.offCanvasCloseBtn {
+    background-image: linear-gradient(black, rgb(30, 0, 253), black);
+    border: solid 2px rgb(253, 250, 250);
+    color: white;
+    font-size: large;
+    border-radius: 10px;
+}
+
+tbody tr:hover {
+    background-color: rgb(192 192 3) !important;
+}
+
+table,
+th,
+td {
+    border: 2px solid rgb(25 149 157);
+}
+
+.lablBg {
+    background-color: #000000;
+    color: rgb(254, 254, 255);
+}
+
+.btnClear {
+    background-image: linear-gradient(black, rgb(253, 0, 0), black);
+    color: rgb(254, 254, 255);
+    border: solid 2px white;
+    padding: 10px 32px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+.btnUpdate {
+    background-image: linear-gradient(black, rgb(222, 197, 5), black);
+    color: rgb(254, 254, 255);
+    border: solid 2px white;
+    padding: 10px 32px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+.btnAdd {
+    background-image: linear-gradient(black, rgb(57, 202, 4), black);
+    color: rgb(254, 254, 255);
+    border: solid 2px white;
+    padding: 10px 32px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 15px;
+    /* animation: size 0.5s linear forwards; */
+}
+
+.btnView{
+    background-image: linear-gradient(black, rgb(4, 173, 251), black);
+    color: rgb(254, 254, 255);
+    border: solid 2px white;
+    padding: 10px 32px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+button:hover {
+    transform: scale(1.08);
+}
+
+ /* Style for the row containing buttons */
+ .buttonrow td{
+    text-align: center;
+    background-color: black; /* Match background color */
+    border-left: 3px solid white;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
+    border-top: hidden;
+  }
+
+  .clickRow td{
+    background-color: black;
+    border-left: hidden;
+    border-right: hidden;
+    border-bottom: hidden;
+    border-top: 3px solid white;
+    
+  }
+
+thead{
+    background-image: linear-gradient(#1c1e1f, #009dc5, #131313);
+}
+
+.clickRow td:first-child {
+    border-left: 3px solid white;
+}
+
+.clickRow td:last-child {
+    border-right: 3px solid white;
+}
+
+.no-hover:hover {
+background-color: black !important;
+}
+
+table thead {
+    pointer-events: none;
+  }
+
+.tableView{
+    color: black !important;   
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  

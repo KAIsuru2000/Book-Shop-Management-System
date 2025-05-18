@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- nav bar start -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+    <!-- nav bar end -->
+
+    <div class="container-fluid"> <!--Use for a full width container-->
+        <!-- title area start -->
+        <div class="row p-1 mt-1"><!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)
+            0.25rem  margin-top  -->
+
+            <div class="col-12 p-3 d-flex justify-content-center divTitle">
+                <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
+                <i class="fa-solid fa-layer-group fa-2xl mt-3" style="color: #fcfcfc;"></i>
+                <h2 class="h2 ms-3">Item management</h2><!--1rem set margin start  -->
+            </div>
+        </div>
+        <!-- title area end -->
+
+        <!-- offcanvas button area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-2">
+                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    Add New Item
+                </button>
+            </div>
+            <div class="col-9"></div>
+        </div>
+        <!-- offcanvas button area end -->
+
+        <!-- table area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 mt-1 divTable">
+                <div class="container-fluid">
+                    <table class="table" id="tableItem">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Item code</th>
+                                <th>Item Name</th>
+                                <th>Purchase price</th>
+                                <th>Profit rate</th>
+                                <th>Sales Price</th>
+                                
+                                <th>Photo</th>
+                                <th>Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableItemBody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- table arae end -->
+
+        <!-- offcanvas area start -->
+        <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+            data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas-body small">
+
+                <!-- form area start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
+                            <form onsubmit="return false" id="formItem">
+
+                                <!-- required mark and offcanvas close button start -->
+                                <div class="row">
+
+                                    <!-- offcanvas close button start -->
+                                    <div class="col-1">
+                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                    </div>
+                                    <!-- offcanvas close button close -->
+
+                                    <div class="col-9"></div>
+
+                                    <!-- required mark start -->
+                                    <div class="col-1">
+                                        <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                    </div>
+                                    <!-- required mark end -->
+
+                                    <div class="col-1"></div>
+
+                                </div>
+                                <!-- required mark and offcanvas close button end -->
+
+                                <!-- Item Category , Item Brand and Item Subcategory row start-->
+                                <div class="row mt-4">
+
+                                    <!-- Item Category area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectItemCategory">Item
+                                                Category &nbsp; &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></label>
+                                            <select id="selectItemCategory" class="form-select" data-bs-toggle="tooltip"
+                                                title="select Item Category correctly here."
+                                                onchange="selectStaticElementValidater(this , 'item', 'itemCategory')"
+                                                onclick="selectStaticElementValidater(this , 'item', 'itemCategory')">
+                                                <option selected disabled>Select Item Category</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Category area end -->
+
+                                    <!-- Item Brand area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectItemBrand">Item Brand : <span class="fw-bold text-danger">*</span></label>
+                                            <select id="selectItemBrand" class="form-select"
+                                                onchange="selectDainamicElementValidater(this , 'item', 'brand_id')"
+                                                onclick="selectDainamicElementValidater(this , 'item', 'brand_id')"
+                                                data-bs-toggle="tooltip" title="Select the brand name correctly here.">
+                                                <option value="" selected disabled>Select Item Brand</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Brand area end-->
+
+                                    <!-- Item Subcategory area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectItemSubcategory">Item
+                                                Subcategory:
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectItemSubcategory"
+                                                onchange="selectDainamicElementValidater(this , 'item', 'subcategory_id')"
+                                                onclick="selectDainamicElementValidater(this , 'item', 'subcategory_id')"
+                                                data-bs-toggle="tooltip"
+                                                title="Select the Item subcategory correctly here.">
+                                                <option selected disabled>Select Item Subcategory</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Subcategory area end-->
+
+                                </div>
+                                <!-- Item Category , Item Brand and Item Subcategory row end-->
+
+                                <!-- Item Package type , Item Unit and Item Status row start -->
+                                <div class="row mt-4">
+
+                                    <!-- Item Package type area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectItemPackagetype">Item
+                                                Package type: <span class="fw-bold text-danger">*</span></label>
+                                            <select id="selectItemPackagetype" class="form-select"
+                                                onchange="selectDainamicElementValidater(this , 'item', 'packagetype_id')"
+                                                onclick="selectDainamicElementValidater(this , 'item', 'packagetype_id')"
+                                                data-bs-toggle="tooltip"
+                                                title="Select the package type correctly here.">
+                                                <option selected disabled>Select Item Package type</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Package type area end -->
+
+                                    <!-- Item Unit area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="textItemUnit">Item Unit &nbsp; &nbsp;: <span class="fw-bold text-danger">*</span></label>
+                                            <input style="color: white;" type="text" placeholder="
+                                Enter Item Unit" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textItemUnit"
+                                                onkeyup="textValidator(this, '^.*$', 'item', 'unitsize')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'unitsize')" required
+                                                data-bs-toggle="tooltip" title="Select the Item Unit correctly here.">
+                                            <select id="selectItemUnitType" class="form-select"
+                                                onchange="selectDainamicElementValidater(this , 'item', 'unittype_id')"
+                                                onclick="selectDainamicElementValidater(this , 'item', 'unittype_id')"
+                                                data-bs-toggle="tooltip" title="Select the unit type correctly here.">
+                                                <option value="" selected disabled>Select Item Unit Type</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Unit area end-->
+
+                                    <!-- Item Status area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectItemStatus">Item Status &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectItemStatus"
+                                                onchange="selectDainamicElementValidater(this , 'item', 'itemstatus_id')"
+                                                onclick="selectDainamicElementValidater(this , 'item', 'itemstatus_id')"
+                                                data-bs-toggle="tooltip" title="Select the Item
+                                Status correctly here.">
+                                                <option selected disabled>Select Item Status</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Status area end-->
+
+                                </div>
+                                <!-- Item Package type , Item Unit and Item Status row end -->
+
+                                <!-- Item Name row -->
+                                <div class="row mt-3">
+
+                                    <!-- Item Name start-->
+                                    <div class="col-12">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Item
+                                                Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <input type="text" placeholder="
+                                Enter Item Name " class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textItemName"
+                                                oninput="textValidator(this, '^.*$', 'item', 'itemname')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'itemname')" required
+                                                data-bs-toggle="tooltip"
+                                                title="After entering the item's Category,Brand,Subcategory, Package type and Unit type correctly, Item Name will be entered.">
+                                        </div>
+
+                                    </div>
+                                    <!-- Item Name end-->
+
+
+
+                                </div>
+                                <!-- Item Name row -->
+
+                                <!-- ROP , ROQ and Purchase Price row start-->
+                                <div class="row mt-4">
+
+                                    <!-- ROP area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span for="textROP" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">ROP &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter ROP" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textROP" required
+                                                onkeyup="textValidator(this, '^.*$', 'item', 'rop')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'rop')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the re-order point correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- ROP area end -->
+
+                                    <!-- ROQ area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span for="textROQ" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">ROQ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter ROQ" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textROQ" required
+                                                onkeyup="textValidator(this, '^.*$', 'item', 'roq')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'roq')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the re-order quentity correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- ROQ area end-->
+
+                                    <!-- Purchase Price area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span for="textPurchasePrice" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Purchase Price &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Purchase Price" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textPurchasePrice"
+                                                required onkeyup="textValidator(this, '^.*$', 'item', 'purchaseprice')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'purchaseprice')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the Purchase Price correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- Purchase Price area end-->
+
+                                </div>
+                                <!-- ROP , ROQ and Purchase Price row end -->
+
+                                <!-- Profit Ratio , Sales Price and Discount Ratio row start-->
+                                <div class="row mt-4">
+
+                                    <!-- Profit Ratio area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span for="textProfitRatio" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Profit Ratio &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Profit Ratio" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textProfitRatio"
+                                                required onkeyup="textValidator(this, '^.*$', 'item', 'profitrate'); genarateSalesPrice();"
+                                                onclick="textValidator(this, '^.*$', 'item', 'profitrate')"
+                                                data-bs-toggle="tooltip" title="Enter the Profit Ratio correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- Profit Ratio area end -->
+
+                                    <!-- Sales Price area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span for="textSalesPrice" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Sales Price : <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Sales Price" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textSalesPrice"
+                                                required onkeyup="textValidator(this, '^.*$', 'item', 'salesprice')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'salesprice')"
+                                                data-bs-toggle="tooltip" title="Enter the Sales Price correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- Sales Price area end-->
+
+                                    <!-- Discount Ratio area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span for="textDiscountRatio" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Discount Ratio&nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Discount Ratio" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textDiscountRatio"
+                                                required onkeyup="textValidator(this, '^.*$', 'item', 'discountrate')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'discountrate')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the Discount Ratio correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- Discount Ratio area end-->
+
+                                </div>
+                                <!-- Profit Ratio , sales Price and Discount Ratio row end -->
+
+                                <!-- Note , Item Photo and Item Photo Review row start-->
+                                <div class="row mt-4">
+
+                                    <!-- Note area start -->
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="text-danger">(optional)</span></span>
+                                            <textarea placeholder="
+                                            Enter Note" id="textNote" class="form-control" aria-label="With textarea"
+                                                onkeyup="textValidator(this, '^.*$', 'item', 'note')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'note')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter a note about the employee here"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Note area end -->
+
+                                    <!-- Sales Price area start-->
+                                    <div class="col-4">
+                                        <!-- <div class="input-group mb-3">
+                                            <span for="textSalesPrice" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Sales Price &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Sales Price" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textSalesPrice" requiredonkeyup="textValidator(this, '^.*$', 'item', 'salesprice')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'salesprice')" data-bs-toggle="tooltip" 
+                                                title="Enter the Sales Price correctly here.">
+                                        </div> -->
+                                    </div>
+                                    <!-- Sales Price area end-->
+
+                                    <!-- Discount Ratio area start-->
+                                    <div class="col-4">
+                                        <!-- <div class="input-group mb-3">
+                                            <span for="textDiscountRatio" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Discount Ratio &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Discount Ratio" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textDiscountRatio" required onkeyup="textValidator(this, '^.*$', 'item', 'discountrate')"
+                                                onclick="textValidator(this, '^.*$', 'item', 'discountrate')" data-bs-toggle="tooltip" 
+                                                title="Enter the Discount Ratio correctly here.">
+                                        </div> -->
+                                    </div>
+                                    <!-- Discount Ratio area end-->
+
+                                </div>
+                                <!-- Note , Item Photo and Item Photo Review row end -->
+
+                                <!-- button row start-->
+                                <div class="row mt-3 mb-4">
+
+                                    <div class="col-1"></div>
+
+                                    <!-- clear btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" class="btn btnClear">
+                                            <i class="fa-solid fa-eraser"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <!-- clear btn area end -->
+
+                                    <div class="col-5"></div>
+
+                                    <!-- update button area start -->
+                                    <div class="col-2">
+                                        <button type="button" class=" btn btnUpdate" onclick="buttonItemUpdate()">
+                                            <i class="fa-solid fa-file-pen"></i>
+                                            Update
+                                        </button>
+                                    </div>
+                                    <!-- update button area end -->
+
+                                    <!-- Add btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" class=" btn btnAdd" onclick="submitItemForm()">
+                                            <!-- button Submit function eka (item.js)-->
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <!-- Add btn area end -->
+
+                                </div>
+                                <!-- button row end -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas area end -->
+
+    </div>
+
+    <!-- link js files -->
+    <script src="/jsFiles/common.js"></script>
+
+    <script src="/jsFiles/tableFunction.js"></script>
+
+    <script src="/jsFiles/validatorFunction.js"></script>
+
+    <script src="/jsFiles/item.js"></script>
+
+</body>
+
+</html>

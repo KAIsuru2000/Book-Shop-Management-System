@@ -1,0 +1,31 @@
+.loginTitle {
+    color: black;
+}
+
+.divLogin{
+    margin-top: 100px;
+    margin-bottom: 100px;
+    background-color: white;
+    margin-left: 250px;
+    margin-right: 250px ;
+    height: 500px;
+    border-radius: 50px;
+}
+
+.logoSide{
+    background-image: linear-gradient(#1c1e1f, #009dc5, #131313);
+    border-bottom-left-radius: 150px;
+    border-bottom-right-radius: 50px;
+    border-top-left-radius: 150px;
+    border-top-right-radius: 50px;
+
+}
+
+.lablBgCl{
+    background-image: linear-gradient(#1c1e1f, #009dc5, #131313);
+    color: rgb(254, 254, 255);
+}
+
+.titleColur{
+    color: #009dc5;
+}

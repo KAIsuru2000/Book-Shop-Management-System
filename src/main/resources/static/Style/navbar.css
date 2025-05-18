@@ -1,0 +1,129 @@
+body {
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    background-position: center;
+    font-family: sans-serif;
+    background-color: #6e9099b3;
+    position: relative;
+}
+
+/* Background Shape div ekata pera meya pawathi */
+.background-shape::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    background-image: linear-gradient(#fdfeff, #6bc7eb, #73d8f1, #80e3ee, #fefefe);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+    /* mema hedaya ul , li tag walata pitupasin pihituwai */
+    z-index: -1; /* Moves the shape to the background */
+}
+
+.menu_bar {
+    text-align: center;
+    position: relative;
+    /* memagin menu bar eka polygen hedayata idiriyen penwai */
+    z-index: 1; /* Keeps menu above the background shape */
+}
+
+.menu_bar ul {
+    display: inline-flex;
+    list-style: none;
+    color: #ffffff;
+}
+
+.menu_bar ul li {
+    padding: 10px;
+}
+
+.menu_bar ul li a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.menu_bar ul li:hover {
+    background: black;
+    border-radius: 15px;
+}
+
+.menu_bar .fa {
+    margin-right: 5px;
+}
+
+.sub-menu-1 {
+    display: none;
+}
+
+.menu_bar ul li:hover .sub-menu-1 {
+    display: block;
+    position: absolute;
+    background: black;
+    margin-top: 10px;
+    margin-left: -10px;
+    border-radius: 15px;
+}
+
+.menu_bar ul li:hover .sub-menu-1 ul {
+    display: block;
+    margin: 10px;
+}
+
+.menu_bar ul li:hover .sub-menu-1 ul li {
+    /* width: 150px; */
+    padding: 10px;
+    border-bottom: 1px dotted #ffffff;
+    background: transparent;
+    border-radius: 0;
+    text-align: center;
+}
+
+.menu_bar ul li:hover .sub-menu-1 ul li:last-child {
+    border-bottom: none;
+}
+
+.menu_bar ul li:hover .sub-menu-1 ul li a:hover {
+    color: #b1f14b;
+}
+
+.fa-angle-right {
+    float: right;
+}
+
+.sub-menu-2 {
+    display: none;
+}
+
+.hover-me:hover .sub-menu-2 {
+    position: absolute;
+    display: block;
+    margin-top: -40px;
+    margin-left: 140px;
+    background: rgb(0, 100, 0);
+}
+.nevLeft, .nevRight {
+    display: flex;
+    align-items: center;
+}
+
+.nevLeft {
+    gap: 15px;
+}
+
+.nevRight {
+    position: absolute;
+    top: 8px;
+    left: 90%;
+    /* transform: translateX(-50%); */
+}
+
+
+.logo {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}

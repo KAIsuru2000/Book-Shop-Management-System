@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- nav bar start -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+    <!-- nav bar end -->
+
+    <div class="container-fluid">
+        <!-- title area start -->
+        <div class="row p-1 mt-1">
+            <div class="col-12 p-3 d-flex justify-content-center divTitle">
+                <i class="fa-solid fa-user-tie fa-2x" style="color: #f9fafb;"></i>
+                <h2 class="h2 ms-3">User management</h2>
+            </div>
+        </div>
+        <!-- title area end -->
+        <!-- offcanvas button area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-2">
+                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                    <i class="fa-solid fa-user-plus" style="color: #fcfcfc;"></i>
+                    Add New User
+                </button>
+            </div>
+            <div class="col-9"></div>
+        </div>
+        <!-- offcanvas button area end -->
+        <!-- table area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 mt-1 divTable">
+                <div class="container-fluid">
+                    <table class="table" id="tableUser">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Employee</th>
+                                <th>User Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tableUserBody">
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- table arae end -->
+        <!-- offcanvas area start -->
+        <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 550px;" tabindex="-1" data-bs-scroll="true"
+            data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas-body small">
+
+                <!-- form area start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="divForm">
+                            <!-- form eke action/method magin thibena submisson bawitha nokarai -->
+                            <!-- eya thibunoth form eka submit kala pasu refresh we  -->
+                            <form onsubmit="return false" id="userForm">
+                                <!-- form eka validate kara genima sadaha -->
+                                <!-- required mark and offcanvas close button start -->
+                                <div class="row">
+
+                                    <!-- offcanvas close button start -->
+                                    <div class="col-1">
+                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                    </div>
+                                    <!-- offcanvas close button close -->
+
+                                    <div class="col-9"></div>
+
+                                    <!-- required mark start -->
+                                    <div class="col-1">
+                                        <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                    </div>
+                                    <!-- required mark end -->
+
+                                    <div class="col-1"></div>
+
+                                </div>
+                                <!-- required mark and offcanvas close button end -->
+
+                                <!--employee start-->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectEmployee">Employee &nbsp;
+                                                &nbsp; &nbsp;:<span class="fw-bold text-danger">*</span></label>
+                                            <select id="selectEmployee" class="form-select" data-bs-toggle="tooltip"
+                                                title="Select Employee correctly here."
+                                                onchange="selectDainamicElementValidater(this,'user','employee_id')" onclick="selectDainamicElementValidater(this,'user','employee_id')">
+                                                <option selected disabled>Select Employee </option>
+                                                <option value="Manager">Manager</option>
+                                                <option value="Senior Manager">Senior Manager</option>
+                                                <option value="Cashier">Cashier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--employee end-->
+
+                                <!--User Name  start-->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span for="textUserName" class="input-group-text lablBg">User Name &nbsp;
+                                                &nbsp;:<span class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter User name" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textUserName" required
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's User Name correctly here. (Ex-Nimal)"
+                                                onkeyup="textValidator(this,'^[A-Za-z0-9]{4,20}$','user','username')" onclick="textValidator(this,'^[A-Za-z0-9]{4,20}$','user','username')">
+                                            <!-- mehi property name eka lesa findall wala lebena name eka denna -->
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--User Name  end-->
+
+                                <!--Password  start-->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span for="passwordField" class="input-group-text lablBg">Password &nbsp;
+                                                &nbsp; &nbsp; :<span class="fw-bold text-danger">*</span></span>
+                                            <input type="password" class="form-control" placeholder="
+                                            Enter Password" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="passwordField" required
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's Password correctly here."
+                                                onkeyup="textValidator(this,'^[A-Za-z0-9\\_\\$\\#\\@\\-]{8,16}$' , 'user','password')" onclick="textValidator(this,'^[A-Za-z0-9\\_\\$\\#\\@\\-]{8,16}$' , 'user','password')">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Password  end-->
+
+                                <!--Re-Password start-->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span for="rePasswordField" class="input-group-text lablBg">Re-Password :<span class="fw-bold text-danger">*</span></span>
+                                            <input type="password" class="form-control" placeholder="
+                                            Retype the password" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="rePasswordField"
+                                                required data-bs-toggle="tooltip"
+                                                title="Retype the password above."
+                                                onkeyup="textPasswordReTypeValidator()" onclick="textPasswordReTypeValidator()">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Re-Password end-->
+
+                                <!--Email  start-->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span for="emailField" class="input-group-text lablBg">Email &nbsp; &nbsp;
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:<span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="email" class="form-control" placeholder="
+                                            Enter Email" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="emailField" required
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's email correctly here."
+                                                onkeyup="textValidator(this,'^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$','user','email')" onclick="textValidator(this,'^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$','user','email')">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Email  end-->
+
+                                <!-- Note start -->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Note&nbsp; : <span
+                                                    class="text-danger">(optional)</span></span>
+                                            <textarea placeholder="
+                                            Enter Note" id="textNote" class="form-control" aria-label="With textarea"
+                                                onkeyup="textValidator(this, '^.*$', 'user', 'note')"
+                                                onclick="textValidator(this, '^.*$', 'user', 'note')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter a note about the employee here"></textarea>
+                                        </div>
+                                </div>
+                                <div class="col-3"></div>
+                        </div>
+                        <!-- Note end -->
+
+                        <!--Role  start-->
+                        <div class="row mt-3">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <lable for="divRoles" class="fw-bold">
+                                    Role :
+                                </lable>
+                                <div id="divRoles">
+                                    <input type="checkbox" name="role" />Manger
+                                    <input type="checkbox" name="role" />Cashier
+                                    <input type="checkbox" name="role" />Store Manger
+                                </div>
+                            </div>
+                            <div class="col-3"></div>
+                        </div>
+                        <!--Role  end-->
+
+                        <!--Status  start-->
+                        <div class="row mt-3">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <div>
+                                    <lable for="textSelect" class="col-for-lable fw-bold">
+                                        Status :
+                                    </lable>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="checkboxUserStatus"
+                                        onchange="checkBoxValidator(this,'','user','status',true,false,labelStatus , 'User Account is Active','User account is not Active')">
+                                    <label class="form-check-label" for="checkboxUserStatus" id="labelStatus">User
+                                        Account is Not Active</label>
+                                </div>
+                            </div>
+                            <div class="col-3"></div>
+                        </div>
+                        <!--Status  end-->
+
+
+                        <!-- button row start-->
+                        <div class="row mt-3 mb-4">
+
+                            <div class="col-1"></div>
+
+                            <!-- clear btn area start -->
+                            <div class="col-2">
+                                <button type="button" class="btn btnClear" onclick="clearUserForm()">
+                                    <i class="fa-solid fa-eraser"></i>
+                                    Clear
+                                </button>
+                            </div>
+                            <!-- clear btn area end -->
+
+                            <div class="col-5"></div>
+
+                            <!-- update button area start -->
+                            <div class="col-2">
+                                <button id="buttonUpdate" type="button" class=" btn btnUpdate" onclick="buttonUserUpdate()">
+                                    <i class="fa-solid fa-file-pen"></i>
+                                    Update
+                                </button>
+                            </div>
+                            <!-- update button area end -->
+
+                            <!-- Add btn area start -->
+                            <div class="col-2">
+                                <button id="buttonSubmit" type="button" class=" btn btnAdd" onclick="submitUserForm()">
+                                    <!-- buttonEmpSubmit function eka (employee.js)-->
+                                    <i class="fa-solid fa-file-circle-plus"></i>
+                                    Add
+                                </button>
+                            </div>
+                            <!-- Add btn area end -->
+
+                        </div>
+                        <!-- button row end -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->
+    </div>
+
+
+    <script src="/jsFiles/user.js"></script>
+
+    <script src="/jsFiles/common.js"></script>
+
+    <script src="/jsFiles/validatorFunction.js"></script>
+
+    <script src="/jsFiles/tableFunction.js"></script>
+
+
+</body>
+
+</html>

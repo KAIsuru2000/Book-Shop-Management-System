@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- nav bar start -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+    <!-- nav bar end -->
+
+    <div class="container-fluid"> <!--Use for a full width container-->
+
+        <!-- title area start -->
+        <div class="row p-1 mt-1"><!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)
+                                       0.25rem  margin-top  -->
+
+            <div class="col-12 p-3 d-flex justify-content-center divTitle">
+                <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
+                <i class="fa-solid fa-user-tie fa-2x"></i>
+                <h2 class="h2 ms-3">Customer management</h2><!--1rem set margin start  -->
+            </div>
+        </div>
+        <!-- title area end -->
+
+        <!-- offcanvas button area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-2">
+                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Add New Customer
+                </button>
+            </div>
+            <div class="col-9"></div>
+        </div>
+        <!-- offcanvas button area end -->
+
+        <!-- table area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 mt-1 divTable">
+                <div class="container-fluid">
+                <table class="table" id="tableCustomer">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Reg no</th>
+                            <th>Full Name</th>
+                            <th>Mobile</th>
+                            <th>Designation</th>
+                            <th>Status</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="tableCustomerBody">
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- table arae end -->
+
+        <!-- offcanvas area start -->
+        <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+            data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas-body small">
+
+                <!-- form area start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
+                            <form onsubmit="return false"  id="formCustomer">
+
+                                <!-- required mark and offcanvas close button start -->
+                                <div class="row">
+
+                                    <!-- offcanvas close button start -->
+                                    <div class="col-1">
+                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                    </div>
+                                    <!-- offcanvas close button close -->
+
+                                    <div class="col-9"></div>
+
+                                    <!-- required mark start -->
+                                    <div class="col-1">
+                                        <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                    </div>
+                                    <!-- required mark end -->
+
+                                    <div class="col-1"></div>
+
+                                </div>
+                                <!-- required mark and offcanvas close button end -->
+
+                                <!-- full name area start-->
+                                <div class="row mt-3">
+
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span for="textFullName" class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Full Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter full name" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textFullName" required onkeyup="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'customer', 'fullname')" onclick="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'customer', 'fullname')"data-bs-toggle="tooltip" 
+                                                title="Enter the customer's full name correctly here. (Ex-Nimal Perera)">
+                                        </div>
+
+                                    </div>
+                                    <div class="col-3"></div>
+                                  
+                                </div>
+                                <!-- full name area end-->
+
+                                <!-- Mobile no area start-->
+                                <div class="row mt-3">
+
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Mobile
+                                                No &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="tel" placeholder="
+                                            Enter Mobile No" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="telMobil" required onkeyup="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'customer', 'mobileno')" onclick="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'customer', 'mobileno')" data-bs-toggle="tooltip" 
+                                                title="Enter the customer's Mobile number correctly here. (Ex-0774578123)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                  
+                                </div>
+                                <!-- Mobile no area end-->
+
+                                <!-- Email area start-->
+                                <div class="row mt-3">
+
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Email
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="email" placeholder="
+                                            Enter email" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="inputEmail" required onkeyup="textValidator(this, '^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$', 'customer', 'email')" onclick="textValidator(this, '^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$', 'customer', 'email')" data-bs-toggle="tooltip" 
+                                                title="Enter the customer's Email correctly here. (Ex-Nimal45@gmail.com)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                  
+                                </div>
+                                <!-- Email area end-->
+
+                                <!--Status  start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectEmpStatus"> Customer Status  :
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectCusStatus"
+                                                onchange="selectDainamicElementValidater(this , 'customer', 'customerstatus_id')"
+                                                onclick="selectDainamicElementValidater(this , 'customer', 'customerstatus_id')"
+                                                data-bs-toggle="tooltip" title="Select the customer
+                                            Status correctly here.">
+                                                <option selected disabled>Select Customer Status</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Status  end-->
+
+                                <!-- Note area start-->
+                                <div class="row mt-3">
+
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; : <span
+                                                    class="text-danger">(optional)</span></span>
+                                            <textarea placeholder="
+                                            Enter Note" id="textNote" class="form-control"
+                                                aria-label="With textarea" onkeyup="textValidator(this, '^.*$', 'customer', 'note')" onclick="textValidator(this, '^.*$', 'customer', 'note')" data-bs-toggle="tooltip" 
+                                                title="Enter a note about the customer here"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                  
+                                </div>
+                                <!-- Note area end-->
+
+                                
+
+                                <!-- button row start-->
+                                <div class="row mt-3 mb-4">
+
+                                    <div class="col-1"></div>
+
+                                    <!-- clear btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" class="btn btnClear">
+                                            <i class="fa-solid fa-eraser"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <!-- clear btn area end -->
+
+                                    <div class="col-5"></div>
+
+                                    <!-- update button area start -->
+                                    <div class="col-2">
+                                        <button type="button" class=" btn btnUpdate">
+                                            <i class="fa-solid fa-file-pen"></i>
+                                            Update
+                                        </button>
+                                    </div>
+                                    <!-- update button area end -->
+
+                                    <!-- Add btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" class=" btn btnAdd" onclick="buttonEmpSubmit()">
+                                            <!-- buttonEmpSubmit function eka (employee.js)-->
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <!-- Add btn area end -->
+
+                                </div>
+                                <!-- button row end -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas area end -->
+
+    </div>
+
+    <!-- link js files -->
+    <script src="/jsFiles/common.js"></script>
+
+    <script src="/jsFiles/tableFunction.js"></script>
+
+    <script src="/jsFiles/validatorFunction.js"></script>
+
+    <script src="/jsFiles/customer.js"></script>
+
+</body>
+
+</html>

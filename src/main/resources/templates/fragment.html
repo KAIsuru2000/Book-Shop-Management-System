@@ -1,0 +1,75 @@
+<!-- nav bar start -->
+<nav th:fragment="topnavbarfragment">
+    <div class="background-shape"></div>
+    <div class="nevLeft menu_bar">
+        <ul>
+            <li><a href="/dashboard"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+        </ul>
+        <ul>
+            <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> Administration</a>
+                <div class="sub-menu-1">
+                    <ul>
+                        <li><a href="/employee">Employee</a></li>
+                        <li><a href="/user">User</a></li>
+                        <li><a href="/privilege">Privilege</a></li>
+                        <li><a href="/item">Item</a></li>
+                        <li><a href="/customer">Customer</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="logo">
+        <img src="/image/title.png" alt="Logo" width="67" height="62">
+    </div>
+    <div class="nevRight menu_bar">
+        <form class="d-flex">
+            <!-- methenta name eka genwa ganima 
+         apita ui ewanne back end eka haraha
+         apita ui service ekath samagama data yewiya heka
+         apita url ekehi thibena data illa gatha heka ewagema set karana data (th:text)illa gatha heka
+         e sadaha ui ekata loggedusername namin parameter ekak set kara thibiya yuthuya
+         e sadaha logincontroller wala dashboard eka load karana thanata authentication object ekak genwa gena-->
+            <span class="text-black fw-bold mt-1" th:text="${loggedusername}"> 123456 </span>
+            <a style="color: #ffffff;" class="btn" href="/logout">Logout<i class="fa-solid fa-right-from-bracket" style="color: #f60404;"></i>
+            </a>
+        </form>
+    </div>
+</nav>
+<!-- nav bar end -->
+
+<!-- header and titla start -->
+ <head th:fragment="headerfragment">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}"></title>
+    <link rel="icon" href="/image/title.png">
+
+    <!-- link bootstrp min css file -->
+    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!--link bootstrap js file  -->
+    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- link Fontawasome css file -->
+    <link rel="stylesheet" href="/fontawesome-free-6.4.2/css/all.css">
+
+    <!-- link common css file -->
+    <link rel="stylesheet" href="/Style/common.css">
+
+    <!-- nav bar css -->
+    <link rel="stylesheet" href="/Style/navbar.css">
+
+    <!-- link J Query file -->
+    <script src="/j Query/jQuery v3.7.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+    <!-- link datatables css file -->
+    <link rel="stylesheet" href="/datatables-1.13.6/css/jquery.dataTables.min.css">
+
+    <!-- link datatables js file -->
+    <script src="/datatables-1.13.6/js/jquery.dataTables.min.js"></script>
+ </head>
+<!-- header and titla end -->

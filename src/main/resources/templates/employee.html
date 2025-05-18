@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- nav bar start -->
+     <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+    <!-- nav bar end -->
+
+    <div class="container-fluid"> <!--Use for a full width container-->
+
+        <!-- title area start -->
+        <div class="row p-1 mt-1"><!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)
+                                       0.25rem  margin-top  -->
+
+            <div class="col-12 p-3 d-flex justify-content-center divTitle">
+                <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
+                <i class="fa-solid fa-user-tie fa-2x"></i>
+                <h2 class="h2 ms-3">Employee management</h2><!--1rem set margin start  -->
+            </div>
+        </div>
+        <!-- title area end -->
+
+        <!-- offcanvas button area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-2">
+                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Add New Employee
+                </button>
+            </div>
+            <div class="col-9"></div>
+        </div>
+        <!-- offcanvas button area end -->
+
+        <!-- table area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 mt-1 divTable">
+                <div class="container-fluid">
+                    <table class="table" id="tableEmployee">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Full Name</th>
+                                <th>NIC</th>
+                                <th>Mobile</th>
+                                <th>Designation</th>
+                                <th>Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="tableEmployeeBody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- table arae end -->
+
+        <!-- offcanvas area start -->
+        <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+            data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas-body small">
+
+                <!-- form area start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
+                            <form id="formEmployee">
+
+                                <!-- required mark and offcanvas close button start -->
+                                <div class="row">
+
+                                    <!-- offcanvas close button start -->
+                                    <div class="col-1">
+                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                    </div>
+                                    <!-- offcanvas close button start -->
+
+                                    <div class="col-9"></div>
+
+                                    <!-- required mark start -->
+                                    <div class="col-1">
+                                        <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                    </div>
+                                    <!-- required mark end -->
+
+                                    <div class="col-1"></div>
+
+                                </div>
+                                <!-- required mark and offcanvas close button end -->
+
+                                <!-- full name and calling name row -->
+                                <div class="row mt-3">
+
+                                    <!-- full name area start-->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span for="textFullName" class="input-group-text lablBg">Full Name &nbsp;
+                                                &nbsp; &nbsp;: <span class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter full name" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textFullName" required
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's full name correctly here. (Ex-Nimal Perera)">
+                                        </div>
+
+                                    </div>
+                                    <!-- full name area end-->
+
+                                    <!-- calling name start -->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="textCallingName">Calling Name
+                                                &nbsp; &nbsp; &nbsp; : <span
+                                                    class="fw-bold text-danger">*</span></label><input type="text"
+                                                placeholder="
+                                                    Enter calling name" class="form-control" id="textCallingName"
+                                                list="dlCallingName" required onchange="callingNameValidator(this)"
+                                                onkeyup="callingNameValidator(this)"
+                                                onclick="callingNameValidator(this)" data-bs-toggle="tooltip"
+                                                title="Enter the employee's Calling name correctly here. (Ex-Nimal)">
+                                            <datalist id="dlCallingName">
+                                                <option value="1">
+                                                <option value="2">
+                                                <option value="3">
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                    <!-- calling name end -->
+
+                                </div>
+
+                                <!-- nic and gender row -->
+                                <div class="row mt-3">
+
+                                    <!-- nic area start-->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Nic
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" placeholder="
+                                            Enter nic" id="textNic" required data-bs-toggle="tooltip"
+                                                title="Enter the employee's NIC number correctly here. (Ex-200012547844)">
+                                        </div>
+                                    </div>
+                                    <!-- nic area end-->
+
+                                    <!-- gender start -->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectGender">Gender
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : <span
+                                                    class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectGender" disabled
+                                                data-bs-toggle="tooltip"
+                                                title="After entering the employee's nic number correctly, gender will be entered.">
+                                                <option selected>Select Gender </option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- gender end -->
+
+                                </div>
+
+                                <!-- DOB and email row -->
+                                <div class="row mt-3">
+
+                                    <!-- DOB start-->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Date
+                                                Of Birth :
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <input type="date" placeholder="
+                                            Enter Date Of Birth " class="form-control"
+                                                aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="dateDOB" readonly
+                                                required data-bs-toggle="tooltip"
+                                                title="After entering the employee's nic number correctly, Date of Birth will be entered.">
+                                        </div>
+
+                                    </div>
+                                    <!-- DOB end-->
+
+                                    <!-- email start -->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Email
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="email" placeholder="
+                                            Enter email" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="inputEmail" required
+                                                onkeyup="textValidator(this, '^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$', 'employee', 'email')"
+                                                onclick="textValidator(this, '^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$', 'employee', 'email')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's Email correctly here. (Ex-Nimal45@gmail.com)">
+                                        </div>
+                                    </div>
+                                    <!-- email end -->
+
+                                </div>
+
+                                <!-- Mobile and land number row -->
+                                <div class="row mt-3">
+
+                                    <!-- Mobil no area start-->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Mobile
+                                                No &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="tel" placeholder="
+                                            Enter Mobile No" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="telMobil" required
+                                                onkeyup="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'employee', 'mobile')"
+                                                onclick="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'employee', 'mobileno')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's Mobile number correctly here. (Ex-0774578123)">
+                                        </div>
+                                    </div>
+                                    <!-- Mobil no area end-->
+
+                                    <!-- land no start -->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Land No
+                                                :
+                                                <span class="text-danger">(optional)</span>
+                                            </span>
+                                            <input type="tel" placeholder="
+                                            Enter Land No" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="telLand"
+                                                onkeyup="textValidator(this, '^[0][12345689][0-9]{8}$', 'employee', 'landno')"
+                                                onclick="textValidator(this, '^[0][12345689][0-9]{8}$', 'employee', 'landno')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's Land number correctly here. (Ex-0114567891)">
+                                        </div>
+                                    </div>
+                                    <!-- land no end -->
+
+                                </div>
+
+                                <!-- Address and note row -->
+                                <div class="row mt-3">
+
+                                    <!-- address area start-->
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Address &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <textarea class="form-control" aria-label="With textarea" placeholder="
+                                            Enter address" id="textAddress" required
+                                                onkeyup="textValidator(this, '^.*$', 'employee', 'address')"
+                                                onclick="textValidator(this, '^.*$', 'employee', 'address')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's Address correctly here. (Ex-50/1,Colombo road,Gampaha.)"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- address area end-->
+
+                                    <!-- note area start -->
+                                    <div class="col-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; : <span
+                                                    class="text-danger">(optional)</span></span>
+                                            <textarea placeholder="
+                                            Enter Note" id="textNote" class="form-control" aria-label="With textarea"
+                                                onkeyup="textValidator(this, '^.*$', 'employee', 'note')"
+                                                onclick="textValidator(this, '^.*$', 'employee', 'note')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter a note about the employee here"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- note area end -->
+
+                                </div>
+
+                                <!-- designation,civilstatus,status row -->
+                                <div class="row mt-4">
+
+                                    <!-- designation area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectDesignation">Designation
+                                                &nbsp; : <span class="fw-bold text-danger">*</span></label>
+                                            <select id="selectDesignation" class="form-select"
+                                                onchange="selectDainamicElementValidater(this , 'employee', 'designation_id')"
+                                                onclick="selectDainamicElementValidater(this , 'employee', 'designation_id')"
+                                                data-bs-toggle="tooltip"
+                                                title="Select the employee's Designation correctly here.">
+                                                <option selected disabled>Select Designation</option>
+                                                <option value="Manager">Manager</option>
+                                                <option value="Senior Manager">Senior Manager</option>
+                                                <option value="Cashier">Cashier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- designation area end -->
+
+                                    <!-- civilstatus area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectCivil">Civilstatus
+                                                : <span class="fw-bold text-danger">*</span></label>
+                                            <select id="selectCivil" class="form-select"
+                                                onchange="selectStaticElementValidater(this , 'employee', 'civilstatus')"
+                                                onclick="selectStaticElementValidater(this , 'employee', 'civilstatus')"
+                                                data-bs-toggle="tooltip"
+                                                title="Select the employee's Civilstatus correctly here.">
+                                                <option value="" selected disabled>Select Civilstatus</option>
+                                                <option value="Single">Single</option>
+                                                <option value="Married">Married</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- civilstatus area end-->
+
+                                    <!-- status area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectEmpStatus">Employee
+                                                Status :
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectEmpStatus"
+                                                onchange="selectDainamicElementValidater(this , 'employee', 'employeestatus_id')"
+                                                onclick="selectDainamicElementValidater(this , 'employee', 'employeestatus_id')"
+                                                data-bs-toggle="tooltip" title="Select the Employee
+                                            Status correctly here.">
+                                                <option selected disabled>Select Employee Status</option>
+                                                <option value="Working">Working</option>
+                                                <option value="Delete">Delete</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- status area end-->
+
+                                </div>
+
+                                <!-- button row -->
+                                <div class="row mt-3 mb-4">
+
+                                    <div class="col-1"></div>
+
+                                    <!-- clear btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                            <i class="fa-solid fa-eraser"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <!-- clear btn area end -->
+
+                                    <div class="col-5"></div>
+
+                                    <!-- update button area start -->
+                                    <div class="col-2">
+                                        <button type="button" id="buttonEmpUpdate" class=" btn btnUpdate"
+                                            onclick="buttonEmployeeUpdate()">
+                                            <i class="fa-solid fa-file-pen"></i>
+                                            Update
+                                        </button>
+                                    </div>
+                                    <!-- update button area end -->
+
+                                    <!-- Add btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" id="buttonEmpAdd" class=" btn btnAdd"
+                                            onclick="buttonEmployeeSubmit()">
+                                            <!-- buttonEmpSubmit function eka (employee.js)-->
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <!-- Add btn area end -->
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas area end -->
+
+    </div>
+
+    <!-- view/print employee -->
+    <!-- Modal -->
+    <!-- offcanvas area start -->
+    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+        data-bs-backdrop="false" id="offcanvasBottomView" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-header">
+            <!--offcanvas close button start -->
+            <div class="row">
+
+                <!-- offcanvas close button start -->
+                <div class="col-1">
+                    <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                        aria-label="Close">X</button>
+                </div>
+                <!-- offcanvas close button start -->
+
+                <div class="col-11"></div>
+
+
+
+            </div>
+            <!--offcanvas close button end -->
+        </div>
+        <div class="offcanvas-body small">
+            <!-- employee view area start -->
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <table id="tableView" style="border: none;">
+                        <thead>
+                            <th colspan="3"
+                                style="background-color:white; color:black; border: none; text-align: center; font-size:x-large;">
+                                Employee Details</th>
+                        </thead>
+                        <tbody style="border: none;">
+                            <tr>
+                                <th colspan="3" style="text-align: center;border: none;"><img src=""
+                                        alt="Employee photo" width="30" height="30"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Full name</th>
+                                <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                    id="fullNameView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Calling name</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                    id="callingNameView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black;border: none; text-align: left;">Nic</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                    id="nicView"></th>
+
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Gender</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                    id="genderView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Date Of Birth</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                    id="dobView"></th>
+
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Email</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                    id="emailView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black;border: none; text-align: left;">Mobile No</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black;border: none; text-align: left; font-style: italic; font-weight: 500;"
+                                    id="mobileView"></th>
+
+                            </tr>
+                            <tr>
+                                <th style="color:black;border: none; text-align: left;">Land No</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black;border: none; text-align: left; font-style: italic; font-weight: 500;"
+                                    id="landNoView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Address </th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                                    id="addressView"></th>
+
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Note</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                                    id="noteView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left; border: none;">Designation </th>
+                                <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; border: none; text-align: left; font-style: italic; font-weight: 500;"
+                                    id="designationView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Civilstatus</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                                    id="civilStatusView"></th>
+                            </tr>
+                            <tr>
+                                <th style="color:black; text-align: left;border: none;">Employee status</th>
+                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
+                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                                    id="employeeStatusView"></th>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <!-- employee view table area end -->
+
+
+
+            <div class="row mt-3">
+                <div class="col-10"></div>
+                <div class="col-2">
+                    <button type="button" class=" offCanvasCloseBtn p-2" onclick="buttonPrintRow()">
+                        <i class="fa-solid fa-print" style="color: #ffffff;"></i>
+                        Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->
+
+    <!-- link js files -->
+    <script src="/jsFiles/common.js"></script>
+
+    <script src="/jsFiles/tableFunction.js"></script>
+
+    <script src="/jsFiles/employee.js"></script>
+
+    <script src="/jsFiles/validatorFunction.js"></script>
+
+
+
+</body>
+
+</html>
