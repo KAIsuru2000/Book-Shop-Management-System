@@ -14,6 +14,7 @@ const fillDataIntoTable = (tableBodyId, dataList, propertyList, editFunction, de
         let tr = document.createElement("tr");
         //tr ekata dataRow nam class ekak add kara ganima
         tr.classList.add("dataRow");
+        
 
         //index ekata td ekak sada ganima
         let tdIndex = document.createElement("td");
