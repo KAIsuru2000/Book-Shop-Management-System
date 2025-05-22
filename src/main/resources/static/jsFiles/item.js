@@ -269,6 +269,13 @@ selectCategoryElement.addEventListener("change", () => {
 let selectUniteTypeElement = document.getElementById("selectItemUnitType");
 selectUniteTypeElement.addEventListener("change", () => {
 
+    
+
+
+});
+
+// define function for generate item name
+const generateItemName = () => {
     let category = JSON.parse(selectCategoryElement.value);
     let brand = JSON.parse(selectItemBrand.value);
     let subCategory = JSON.parse(selectItemSubcategory.value);
@@ -295,9 +302,7 @@ selectUniteTypeElement.addEventListener("change", () => {
         item.itemname = null; //item object add to value null
 
     }
-
-
-});
+}
 
 //define function for get item form error
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
@@ -386,6 +391,9 @@ const checkItemFormUpdate = () => {
 
     //mulinma veriable eka thibeda balima >> item and olditem >> compair kirima sadaha value thibiya yuthuya
     if (item != null && oldItem != null) {
+        if (item.subcategory_id.category_id.name != oldItem.subcategory_id.category_id.name) {
+            updates = updates + "category is change...! \n";
+        }
         if (item.brand_id.name != oldItem.brand_id.name) {
             updates = updates + "brand name is change...! \n";
         }

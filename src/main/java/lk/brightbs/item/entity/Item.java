@@ -66,7 +66,7 @@ public class Item {
     private BigDecimal roq;
 
     @Column(name = "note")
-    private String note;
+    private String note; 
 
     @Column(name = "addeddatetime")
     @NotNull
