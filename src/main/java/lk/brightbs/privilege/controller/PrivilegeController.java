@@ -51,6 +51,7 @@ public class PrivilegeController {
 
         return privilegeView;
     }
+	
     //load employee all data
     @GetMapping(value = "/privilege/alldata" , produces = "application/json")
     public List<Privilege> findAllData(){// check user authentication and authorization
