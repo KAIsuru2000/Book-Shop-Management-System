@@ -84,19 +84,18 @@ const rowFormRefill = (dataob, rowIndex) => {
 
 
     // refill value in to element
-    selectItemCategory.value = JSON.stringify(dataob.subcategory_id.category_id);
+   
 
-    let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + category.id);
+    let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + dataob.subcategory_id.category_id.id);
     fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
 
-    let brandByCategory = getServiceRequest('/brand/bycategory/' + category.id);
+     selectItemCategory.value = JSON.stringify(dataob.subcategory_id.category_id);
+
+    let brandByCategory = getServiceRequest('/brand/bycategory/' + dataob.subcategory_id.category_id.id);
     fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
 
     selectItemBrand.value = JSON.stringify(dataob.brand_id);
     selectItemSubcategory.value = JSON.stringify(dataob.subcategory_id);
-    selectItemPackagetype.value = JSON.stringify(dataob.packagetype_id);
-    textItemUnit.value = dataob.unitsize;
-    selectItemUnitType.value = JSON.stringify(dataob.unittype_id);
     selectItemStatus.value = JSON.stringify(dataob.itemstatus_id);
     textItemName.value = dataob.itemname;
     textROP.value = dataob.rop;
@@ -172,21 +171,19 @@ const refreshItemForm = () => {
 
 
     //validation colors iwath kirima
-    setDefault([selectItemCategory, selectItemBrand, selectItemSubcategory, selectItemPackagetype, selectItemUnitType, selectItemStatus, textItemName, textROP, textROQ, textPurchasePrice, textProfitRatio, textSalesPrice, textDiscountRatio, textNote]);
+    setDefault([selectItemCategory, selectItemBrand, selectItemSubcategory, selectItemStatus, textItemName, textROP, textROQ, textPurchasePrice, textProfitRatio, textSalesPrice, textDiscountRatio, textNote]);
 
     // dynamic element refill kala yuthuya
     let brand = getServiceRequest('/brand/alldata')
     let categories = getServiceRequest('/Category/alldata');
 
-    let packagetype = getServiceRequest('/packagetype/alldata');
+    
     let itemStatus = getServiceRequest('/itemStatus/alldata');
     let subCategory = getServiceRequest('/subCategory/alldata');
-    let uniteType = getServiceRequest('/uniteType/alldata');
+    
 
     fillDataIntoSelect(selectItemBrand, "Please Select brand..!", brand, "name");
     fillDataIntoSelect(selectItemCategory, "Please Select categories..!", categories, "name");
-
-    fillDataIntoSelect(selectItemPackagetype, "Please Select packagetype..!", packagetype, "name");
 
     fillDataIntoSelect(selectItemStatus, "Please Select itemStatus..!", itemStatus, "name");
     // status eka form eka load wana wita select wi thibimata
@@ -202,7 +199,6 @@ const refreshItemForm = () => {
     selectItemStatus.classList.add("is-valid");
 
     fillDataIntoSelect(selectItemSubcategory, "Please Select Item Subcategory..!", subCategory, "name");
-    fillDataIntoSelect(selectItemUnitType, "Please Select Item Unit Type..!", uniteType, "name");
 }
 
 // item category wala id eka cach karagena
@@ -211,7 +207,22 @@ const refreshItemForm = () => {
 let selectCategoryElement = document.getElementById("selectItemCategory");
 selectCategoryElement.addEventListener("change", () => {
     let category = JSON.parse(selectCategoryElement.value);
-    // selectCategoryelement.style.border = "2px solid green";
+
+    // validation color laba deema
+    if (selectCategoryElement.value != "") {
+    prevElementItemCategory = selectItemCategory.previousElementSibling;
+    selectItemCategory.style.borderBottom = "4px solid green";
+    prevElementItemCategory.style.backgroundColor = "green";
+    selectItemCategory.classList.remove("is-invalid");
+    selectItemCategory.classList.add("is-valid");
+    }else{
+    prevElementItemCategory = selectItemCategory.previousElementSibling;
+    selectItemCategory.style.borderBottom = "4px solid red";
+    prevElementItemCategory.style.backgroundColor = "red";
+    selectItemCategory.classList.add("is-invalid");
+    selectItemCategory.classList.remove("is-valid");
+    }
+    
 
     if (category.name == "Book") {
         // elementId.disabled = "disabled";
@@ -246,6 +257,8 @@ selectCategoryElement.addEventListener("change", () => {
     let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + category.id);
 
     fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
+    item.subcategory_id = null;
+
 
     // category and brand athara sambandaya dekwimaa
     //mehidee category eka magin brand eka ganimata hekiwana paridi sadai
@@ -262,39 +275,57 @@ selectCategoryElement.addEventListener("change", () => {
     let brandByCategory = getServiceRequest('/brand/bycategory/' + category.id);
 
     fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
+    item.brand_id = null;
+
+    spanItemNameElement = textItemName.previousElementSibling;
+    spanItemBrandElement = selectItemBrand.previousElementSibling;
+    spanItemSubcategoryElement = selectItemSubcategory.previousElementSibling;
+
+        textItemName.value ="";
+        textItemName.style.borderBottom = "4px solid red";
+        selectItemBrand.style.borderBottom = "4px solid red";
+        selectItemSubcategory.style.borderBottom = "4px solid red";
+        spanItemNameElement.style.backgroundColor = "red";
+        spanItemBrandElement.style.backgroundColor = "red";
+        spanItemSubcategoryElement.style.backgroundColor = "red";
+        textItemName.classList.add("is-invalid");
+        selectItemBrand.classList.add("is-invalid");
+        selectItemSubcategory.classList.add("is-invalid");
+        textItemName.classList.remove("is-valid");
+        selectItemBrand.classList.remove("is-valid");
+        selectItemSubcategory.classList.remove("is-valid");
+        item.itemname = null; //item object add to value null
 
 });
 
-// unite type eka select kala pasu item name eka fill wima sadaha
-let selectUniteTypeElement = document.getElementById("selectItemUnitType");
-selectUniteTypeElement.addEventListener("change", () => {
 
-    
-
-
-});
 
 // define function for generate item name
 const generateItemName = () => {
-    let category = JSON.parse(selectCategoryElement.value);
-    let brand = JSON.parse(selectItemBrand.value);
-    let subCategory = JSON.parse(selectItemSubcategory.value);
-    let packageType = JSON.parse(selectItemPackagetype.value);
-    let uniteSize = textItemUnit.value;
-    let uniteType = JSON.parse(selectItemUnitType.value);
 
-    textItemName.value = category.name + " " + brand.name + " " + subCategory.name + " " + uniteSize + " " + uniteType.name + " " + packageType.name;
+    console.log("generateItemName", item);
+
+    let category = item.subcategory_id.category_id;
+    let brand = item.brand_id;
+    let subCategory = item.subcategory_id;
+
 
     // validation wala colour eka laba deema sadaha
-    spanElement = textItemName.previousElementSibling
+    spanElement = textItemName.previousElementSibling;
 
-    if (category !== "" && brand !== "" && subCategory !== "" && packageType !== "" && uniteSize !== "" && uniteType !== "") {
+    if (item.brand_id != null && item.subcategory_id.name != null ){
+
+        textItemName.value = brand.name + " " + subCategory.name;
+
         textItemName.style.borderBottom = "4px solid green";
         spanElement.style.backgroundColor = "green";
         textItemName.classList.remove("is-invalid");
         textItemName.classList.add("is-valid");
         item.itemname = textItemName.value; //value add to item object
+
     } else {
+
+        textItemName.value ="";
         textItemName.style.borderBottom = "4px solid red";
         spanElement.style.backgroundColor = "red";
         textItemName.classList.add("is-invalid");
@@ -315,15 +346,7 @@ const checkItemFormError = () => {
     if (item.subcategory_id == null) {
         errors = errors + "Please select item subcategory...\n";
     }
-    if (item.packagetype_id == null) {
-        errors = errors + "Please select item package type...\n";
-    }
-    if (item.unitsize == null) {
-        errors = errors + "Please enter item Unit...\n";
-    }
-    if (item.unittype_id == null) {
-        errors = errors + "Please select item unit type...\n";
-    }
+    
     if (item.itemstatus_id == null) {
         errors = errors + "Please select item status...\n";
     }
@@ -400,15 +423,7 @@ const checkItemFormUpdate = () => {
         if (item.subcategory_id.name != oldItem.subcategory_id.name) {
             updates = updates + "subcategory is change...! \n";
         }
-        if (item.packagetype_id.name != oldItem.packagetype_id.name) {
-            updates = updates + "package type is change...! \n";
-        }
-        if (item.unitsize != oldItem.unitsize) {
-            updates = updates + "unit size is change...! \n";
-        }
-        if (item.unittype_id.name != oldItem.unittype_id.name) {
-            updates = updates + "unit type is change...! \n";
-        }
+        
         if (item.itemstatus_id.name != oldItem.itemstatus_id.name) {
             updates = updates + "item status is change...! \n";
         }

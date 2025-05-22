@@ -54,9 +54,6 @@ public class Item {
     @NotNull
     private BigDecimal discountrate;
 
-    @Column(name = "unitsize")
-    private BigDecimal unitsize;
-
     @Column(name = "rop")
     @NotNull
     private BigDecimal rop;
@@ -93,13 +90,7 @@ public class Item {
     @JoinColumn(name = "itemstatus_id", referencedColumnName = "id")
     private Itemstatus itemstatus_id;
 
-    @ManyToOne
-    @JoinColumn(name = "packagetype_id", referencedColumnName = "id")
-    private Packagetype packagetype_id;
-
-    @ManyToOne
-    @JoinColumn(name = "unittype_id" , referencedColumnName = "id")
-    private UniteType unittype_id ;
+   
 
     // table eka fill kirima sadaha selected data genwa ganimata dao hi query eka
     // sadaha awashya constructer eka sadima >> construnter eka class name ekenma
