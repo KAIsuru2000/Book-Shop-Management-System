@@ -1,12 +1,18 @@
 //define function for fill data into select (elementid, displaymsg, datalistname,displaypropertyname)
 const fillDataIntoSelect = (parentId,message,dataList,displayProperty)=>{
     parentId.innerHTML = "";
+
+// inner form wala select sadaha data fill kirimedi msg eka empty nisa eya add nokarai
+if (message != "") {
     let optionMsgEs = document.createElement("option");
     optionMsgEs.value = "";
     optionMsgEs.selected = "selected";
     optionMsgEs.disabled = "disabled";
     optionMsgEs.innerText = message;
     parentId.appendChild(optionMsgEs);
+}
+
+    
 
     dataList.forEach(dataOb => {
         let option = document.createElement("option");

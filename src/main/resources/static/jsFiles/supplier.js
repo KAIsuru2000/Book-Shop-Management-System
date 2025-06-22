@@ -10,9 +10,9 @@ window.addEventListener("load", () => {
     refreshSupplierTable();
 
     //Call refresh form function
-    refreshSupplierForm();
+    refreshSupplierForm(); 
 
-})
+});
 
 //create function for refresh table
 const refreshSupplierTable = () => {
@@ -74,10 +74,64 @@ const getSupplierStatus = (dataob) => {
 
 }
 
-const addSelectedBrand=() => {}
-const addAllBrand=() => {}
-const removeSelectedBrand=() => {}
-const removeAllBrand=() => {}
+// inner form button function area start
+const addSelectedBrand=() => {
+    // selected element eka veriable ekakata dama ganima
+    let selectedBrand =JSON.parse(selectAllBrand.value);
+    // ema element eka anith list ekata push kirima
+    supplier.brands.push(selectedBrand);
+    // ema dropdown eka load kirima
+    fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
+    // ema element eka thibu list eken iwath kirima
+    // e sadaha allBrand let nowiya yuthuya
+    // map eka sadaha allitem.map walin eka item object ekak gena eya ema item eke id eka selected item id ekata samana wiya yuthuya >> elesa samana nam exit wenawa >> exit unoth allBrand list eken splice karanna ona selected element eka
+    let extIndex = allBrand.map(item=>item.id).indexOf(selectedBrand.id);
+    // extIndex eka asamanai -1 nam allready exit wei
+    if (extIndex != -1) {
+        // extIndex,1 >> selected element eka idan eka element ekak makanna ona ewita selected eka ayath wei
+       allBrand.splice(extIndex,1) 
+    }
+    fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
+    
+}
+const addAllBrand=() => {
+    // selected side eke list ekata all side eke siyalla add wiya yuthuya
+    // for of ekak dama all side eke list eka read kala yuthuya
+    for (const brand of allBrand) {
+        supplier.brands.push(brand);
+    }
+    fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
+
+    // all side eka empty wiya yuthuya>>all side eke siyallama selected paththata yai
+    allBrand = [];
+    fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
+}
+
+const removeSelectedBrand=() => {
+    // selected side eken aragena all side ekata add karanawa
+    // selected side eken remove kirima
+    let selectedBrand =JSON.parse(selectSelectedBrand.value);
+    allBrand.push(selectedBrand);
+    fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
+    
+    let extIndex = supplier.brands.map(item=>item.id).indexOf(selectedBrand.id);
+    if (extIndex != -1) {
+        supplier.brands.splice(extIndex,1) 
+    }
+    fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
+}
+
+const removeAllBrand=() => {
+    // selected side list eka one by one read karala all paththata push kirima
+    for (const brand of supplier.brands) {
+        allBrand.push(brand);
+    }
+    fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
+    // selected side eka empty wima
+    supplier.brands = [];
+    fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
+}
+// inner form button function area end
 
 const rowFormRefill = (dataob, rowIndex) => {}
 
@@ -88,15 +142,30 @@ const rowPrint = (dataob, rowIndex) => {}
 const refreshSupplierForm = () => {
 
     supplier = new Object();
+    // selected data tika supplier list ekakata yodai
+    supplier.brands = new Array();
 
     formSupplier.reset();
 
     //validation colors iwath kirima
-    // setDefault([textFullName, textCallingName, textNic, selectGender, dateDOB, inputEmail, telMobil, telLand, textAddress, textNote, selectDesignation, selectCivil, selectEmpStatus]);
+    setDefault([textSupplierName , telContactNo , inputEmail , selectSupplierStatus]);
 
     // dynamic element refill kala yuthuya
-    // let customerStatus = getServiceRequest('/customerStatus/alldata')
+    allBrand = getServiceRequest('/brand/alldata')
+    let supplierStatuses = getServiceRequest('/supplierStatus/alldata')
     
-    // fillDataIntoSelect(selectCusStatus, "Please Select Customer Status..!", customerStatus, "name");
+    fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
+    fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
+    fillDataIntoSelect(selectSupplierStatus, "Please select status...!", supplierStatuses, "name");
+
+    // supplier status eka auto active wee thibimata
+    selectSupplierStatus.value = JSON.stringify(supplierStatuses[0]);
+    supplier.supplierstatus_id = supplierStatuses[0];
+    // validation colour eka laba deema
+    prevElementSupplierStatus = selectSupplierStatus.previousElementSibling;
+    selectSupplierStatus.style.borderBottom = "4px solid green";
+    prevElementSupplierStatus.style.backgroundColor = "green";
+    selectSupplierStatus.classList.remove("is-invalid");
+    selectSupplierStatus.classList.add("is-valid");
 }
     
