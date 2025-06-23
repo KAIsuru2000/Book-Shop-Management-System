@@ -76,7 +76,9 @@ const getSupplierStatus = (dataob) => {
 
 // inner form button function area start
 const addSelectedBrand=() => {
-    // selected element eka veriable ekakata dama ganima
+    // mehidee selected ekak thibunoth pamanak add wimata sakas karai neththan click kala pasu erros ei >> eya welakwimata if yoda liyai
+    if (selectAllBrand.value != "") {
+       // selected element eka veriable ekakata dama ganima
     let selectedBrand =JSON.parse(selectAllBrand.value);
     // ema element eka anith list ekata push kirima
     supplier.brands.push(selectedBrand);
@@ -92,7 +94,11 @@ const addSelectedBrand=() => {
        allBrand.splice(extIndex,1) 
     }
     fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
-    
+    }else{
+       // error message eka show karanawa
+       window.alert("Please select a brand to add!");
+
+    }
 }
 const addAllBrand=() => {
     // selected side eke list ekata all side eke siyalla add wiya yuthuya
@@ -108,7 +114,9 @@ const addAllBrand=() => {
 }
 
 const removeSelectedBrand=() => {
-    // selected side eken aragena all side ekata add karanawa
+    // mehidee selected ekak thibunoth pamanak remove wimata sakas karai neththan click kala pasu erros ei >> eya welakwimata if yoda liyai
+    if (selectSelectedBrand.value != "") {
+        // selected side eken aragena all side ekata add karanawa
     // selected side eken remove kirima
     let selectedBrand =JSON.parse(selectSelectedBrand.value);
     allBrand.push(selectedBrand);
@@ -119,6 +127,11 @@ const removeSelectedBrand=() => {
         supplier.brands.splice(extIndex,1) 
     }
     fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
+    }else{
+       // error message eka show karanawa
+       window.alert("Please select a brand to remove!");
+       
+    }
 }
 
 const removeAllBrand=() => {
