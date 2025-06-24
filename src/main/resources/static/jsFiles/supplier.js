@@ -181,4 +181,20 @@ const refreshSupplierForm = () => {
     selectSupplierStatus.classList.remove("is-invalid");
     selectSupplierStatus.classList.add("is-valid");
 }
-    
+
+//form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
+// const checkSupplierFormErrors = () =>{
+//     let errors = "";
+
+//     if (employee.fullname == null) {
+//         errors = errors + "Please Enter valid Full Name...! \n";
+//     }
+
+//     if (employee.callingname == null) {
+//         errors = errors + "Please Enter valid calling name...! \n";
+//     }
+//     if (employee.nic == null) {
+//         errors = errors + "Please Enter valid nic...! \n";
+//     }
+//     return errors;
+// }
