@@ -174,5 +174,16 @@ td {
     text-align: center;
     vertical-align: middle;
   }
+
+/* .placeholderCenter::placeholder {
+  text-align: left;
+} */
+
+/* input::placeholder {
+  text-align: left;
+} */
+
+
+
   
   

@@ -96,33 +96,69 @@
                                 </div>
                                 <!-- required mark and offcanvas close button end -->
 
-                                <!-- Supplier Name , Contact No row start-->
+                                <!-- Supplier Name , brn and Contact person Name row start-->
                                 <div class="row mt-4">
 
                                     <!-- Supplier Name area start -->
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Supplier Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <span class="input-group-text lablBg"
+                                                id="inputGroup-sizing-default">Supplier Name :
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
-                                            <input type="text" placeholder="
-                                Enter Supplier Name " class="form-control" aria-label="Sizing example input"
+                                            <input type="text" placeholder="Enter Supplier Name" class="form-control" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textSupplierName"
                                                 oninput="textValidator(this, '^.*$', 'supplier', 'suppliername')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'suppliername')" required
-                                                data-bs-toggle="tooltip"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'suppliername')"
+                                                required data-bs-toggle="tooltip"
                                                 title="Please enter supplier name correctly">
                                         </div>
                                     </div>
                                     <!-- Supplier Name area end -->
 
-                                    <!-- Contact No area start-->
-                                    <div class="col-6">
+                                    <!-- BRN area start-->
+                                    <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Contact No &nbsp; &nbsp; :
+                                            <span class="input-group-text lablBg">BRN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span></span>
-                                            <input type="tel" placeholder="
-                                            Enter Mobile No" class="form-control" aria-label="Sizing example input"
+                                            <input type="tel" placeholder="Enter BRN" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="charBRN" required
+                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'brn')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'brn')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the business registration number correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- BRN area end-->
+
+                                    <!-- Contact person Name area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Person Name:
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <input type="text" placeholder="Enter Contact Person Name" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textConPersonName"
+                                                oninput="textValidator(this, '^.*$', 'supplier', 'contact_person')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'contact_person')"
+                                                required data-bs-toggle="tooltip"
+                                                title="Please enter contact person name correctly">
+                                        </div>
+                                    </div>
+                                    <!-- Contact person Name area end -->
+
+                                </div>
+                                <!-- Supplier Name , brn and Contact person Name row end-->
+
+                                <!-- Contact No , Email area and Address row start-->
+                                <div class="row mt-4">
+
+                                    <!-- Contact No area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Contact No &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="tel" placeholder="Enter Mobile No" class="form-control" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="telContactNo" required
                                                 onkeyup="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'supplier', 'contactno')"
                                                 onclick="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'supplier', 'contactno')"
@@ -132,20 +168,12 @@
                                     </div>
                                     <!-- Contact No area end-->
 
-                                </div>
-                                <!-- Supplier Name , Contact No row start-->
-
-                                <!--Email , Supplier Status row start -->
-                                <div class="row mt-4">
-
-                                    <!-- email start -->
-                                    <div class="col-6">
+                                    <!-- Email area start-->
+                                    <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Email
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <span class="input-group-text lablBg">Email &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
                                                 <span class="fw-bold text-danger">*</span></span>
-                                            <input type="email" placeholder="
-                                            Enter email" class="form-control" aria-label="Sizing example input"
+                                            <input type="email" placeholder="Enter email" class="form-control" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="inputEmail" required
                                                 onkeyup="textValidator(this, '^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$', 'supplier', 'email')"
                                                 onclick="textValidator(this, '^[A-Za-z0-9]{5,20}[@][a-z]{3,8}[.][a-z]{2,3}$', 'supplier', 'email')"
@@ -153,52 +181,176 @@
                                                 title="Enter the supplier's Email correctly here. (Ex-Nimal45@gmail.com)">
                                         </div>
                                     </div>
-                                    <!-- email end -->
+                                    <!-- Email area end-->
 
-                                    
+                                    <!-- Address area start -->
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Address &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <textarea class="form-control" aria-label="With textarea" placeholder="Enter address" id="textAddress" required
+                                                onkeyup="textValidator(this, '^.*$', 'employee', 'address')"
+                                                onclick="textValidator(this, '^.*$', 'employee', 'address')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the employee's Address correctly here. (Ex-50/1,Colombo road,Gampaha.)"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Address area end -->
+
+                                </div>
+                                <!-- Contact No , Email area and Address row end-->
+
+                                <!-- inner form area start -->
+                                <div class="row mt-4">
+
+                                    <div class="col-2"></div>
+                                    <!-- All Brands area start -->
+                                    <div class="col-3">
+                                        <label for="selectAllBrand" class="form-label fw-bold h5">All Brands : </label>
+                                        <select class="form-select" id="selectAllBrand" multiple style="height: 165px;"></select>
+                                    </div>
+                                    <!-- All Brands area end -->
+                                    <!-- Button area start -->
+                                    <div class="col-2 mt-4 d-flex flex-column align-items-center justify-content-center">
+                                        <div>
+                                            <button type="button" onclick="addSelectedBrand()" style="width : 75px;"
+                                                class="btn  offCanvasCloseBtn"> <i class="fa-solid fa-play"
+                                                    style="color: #fcfcfc;"></i> </button><br>
+                                            <button type="button" onclick="addAllBrand()" style="width : 75px;"
+                                                class="btn mt-1 offCanvasCloseBtn"> <i class="fa-solid fa-forward"
+                                                    style="color: #f7f7f7;"></i> </button><br>
+                                            <button type="button" onclick="removeSelectedBrand()" style="width : 75px;"
+                                                class="btn mt-1 offCanvasCloseBtn"> <i
+                                                    class="fa-solid fa-play fa-flip-horizontal"
+                                                    style="color: #ffffff;"></i> </button><br>
+                                            <button type="button" onclick="removeAllBrand()" style="width : 75px;"
+                                                class="btn mt-1 offCanvasCloseBtn"> <i class="fa-solid fa-backward"
+                                                    style="color: #ffffff;"></i> </button><br>
+                                        </div>
+                                    </div>
+                                    <!-- Button area end -->
+                                    <!-- Selected Brands area start -->
+                                    <div class="col-3">
+                                        <label for="selectSelectedBrand" class="form-label fw-bold h5">Selected Brands :
+                                        </label>
+                                        <select class="form-select" id="selectSelectedBrand" multiple style="height: 165px;"></select>
+                                    </div>
+                                    <!-- Selected Brands area end -->
+                                    <div class="col-2"></div>
+
+                                </div>
+                                <!-- inner form area end -->
+
+                                <!-- Status , Bank Name area and Branch name row start-->
+                                <div class="row mt-5">
 
                                     <!-- Status area start-->
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectItemStatus">Supplier Status &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <label class="input-group-text lablBg" for="selectItemStatus">Supplier
+                                                Status:
                                                 <span class="fw-bold text-danger">*</span></label>
                                             <select class="form-select" id="selectSupplierStatus"
                                                 onchange="selectDainamicElementValidater(this , 'supplier', 'supplierstatus_id')"
                                                 onclick="selectDainamicElementValidater(this , 'supplier', 'supplierstatus_id')"
-                                                data-bs-toggle="tooltip" title="Select the Supplier Status correctly here.">
+                                                data-bs-toggle="tooltip"
+                                                title="Select the Supplier Status correctly here.">
                                                 <option selected disabled>Select Supplier Status</option>
                                                 <option value=""></option>
                                                 <option value=""></option>
                                             </select>
                                         </div>
                                     </div>
-                                    <!-- Item Status area end-->
+                                    <!-- Status area end-->
 
-                                </div>
-                                <!-- Email , Supplier Status row end -->
-
-                                <div class="row mt-5">
-
-                                    <div class="col-2"></div>
-                                    <div class="col-3">
-                                        <label for="selectAllBrand" class="form-label fw-bold h5">All Brands : </label>
-                                        <select class="form-select" id="selectAllBrand" multiple></select>
-                                    </div>
-                                    <div class="col-2 d-flex flex-column align-items-center justify-content-center">
-                                        <div>
-                                        <button type="button" onclick="addSelectedBrand()" style="width : 75px;" class="btn  offCanvasCloseBtn"> <i class="fa-solid fa-play" style="color: #fcfcfc;"></i> </button><br>
-                                        <button type="button" onclick="addAllBrand()" style="width : 75px;" class="btn mt-1 offCanvasCloseBtn"> <i class="fa-solid fa-forward" style="color: #f7f7f7;"></i> </button><br>
-                                        <button type="button" onclick="removeSelectedBrand()" style="width : 75px;" class="btn mt-1 offCanvasCloseBtn"> <i class="fa-solid fa-play fa-flip-horizontal" style="color: #ffffff;"></i> </button><br>
-                                        <button type="button" onclick="removeAllBrand()" style="width : 75px;" class="btn mt-1 offCanvasCloseBtn"> <i class="fa-solid fa-backward" style="color: #ffffff;"></i> </button><br>
+                                    <!-- Bank Name area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Bank
+                                                Name &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <input type="text" placeholder="Enter Bank Name" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textBankName"
+                                                oninput="textValidator(this, '^.*$', 'supplier', 'bankname')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'bankname')" required
+                                                data-bs-toggle="tooltip" title="Please enter Bank name correctly">
                                         </div>
                                     </div>
-                                    <div class="col-3">
-                                        <label for="selectSelectedBrand" class="form-label fw-bold h5">Selected Brands : </label>
-                                        <select class="form-select" id="selectSelectedBrand" multiple></select>
+                                    <!-- Bank Name area end -->
+
+                                    <!-- Branch Name area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Branch
+                                                Name :
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <input type="text" placeholder="Enter Branch Name" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textBranchName"
+                                                oninput="textValidator(this, '^.*$', 'supplier', 'branchname')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'branchname')" required
+                                                data-bs-toggle="tooltip"
+                                                title="Please enter Bank Branch name correctly">
+                                        </div>
                                     </div>
-                                    <div class="col-2"></div>
+                                    <!-- Branch Name area end -->
 
                                 </div>
+                                <!-- Status , Bank Name area and Branch name row end-->
+
+                                <!-- Account No , Holder Name area and note row start-->
+                                <div class="row mt-4">
+
+                                    <!-- Account No area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Account No &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="tel" class="form-control" placeholder="Enter Account No" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="telAccountNo" required
+                                                onkeyup="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'supplier', 'accuntno')"
+                                                onclick="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'supplier', 'accuntno')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter the supplier's Account number correctly here.">
+                                        </div>
+                                    </div>
+                                    <!-- Account No area end-->
+
+                                    <!-- Holder Name area start -->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Holder
+                                                Name &nbsp; :
+                                                <span class="fw-bold text-danger">*</span>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="Enter Account Holder Name" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textHolderName"
+                                                oninput="textValidator(this, '^.*$', 'supplier', 'accuntholdername')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'accuntholdername')"
+                                                required data-bs-toggle="tooltip"
+                                                title="Please enter Account Holder name correctly">
+                                        </div>
+                                    </div>
+                                    <!-- Holder Name area end -->
+
+                                    <!-- note area start -->
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text lablBg">Note &nbsp;: <span
+                                                    class="text-danger">(optional)</span></span>
+                                            <textarea id="textNote" class="form-control" placeholder="Enter Note" aria-label="With textarea"
+                                                onkeyup="textValidator(this, '^.*$', 'employee', 'note')"
+                                                onclick="textValidator(this, '^.*$', 'employee', 'note')"
+                                                data-bs-toggle="tooltip"
+                                                title="Enter a note about the employee here"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- note area end -->
+
+                                </div>
+                                <!-- Account No , Holder Name area and note row end-->
 
                                 <!-- button row start-->
                                 <div class="row mt-3 mb-4">
@@ -218,7 +370,8 @@
 
                                     <!-- update button area start -->
                                     <div class="col-2">
-                                        <button type="button" id="updateButton" class=" btn btnUpdate" onclick="buttonItemUpdate()">
+                                        <button type="button" id="updateButton" class=" btn btnUpdate"
+                                            onclick="buttonItemUpdate()">
                                             <i class="fa-solid fa-file-pen"></i>
                                             Update
                                         </button>
@@ -227,7 +380,8 @@
 
                                     <!-- Add btn area start -->
                                     <div class="col-2">
-                                        <button type="button" id="submitButton" class=" btn btnAdd" onclick="submitItemForm()">
+                                        <button type="button" id="submitButton" class=" btn btnAdd"
+                                            onclick="submitItemForm()">
                                             <!-- button Submit function eka (item.js)-->
                                             <i class="fa-solid fa-file-circle-plus"></i>
                                             Add
