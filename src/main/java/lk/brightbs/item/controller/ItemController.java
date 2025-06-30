@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.item.dao.ItemDao;
 import lk.brightbs.item.dao.ItemStatusDao;
-import lk.brightbs.item.entity.Brand;
 import lk.brightbs.item.entity.Item;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
