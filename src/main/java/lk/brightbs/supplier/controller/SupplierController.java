@@ -1,5 +1,6 @@
 package lk.brightbs.supplier.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,7 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.supplier.dao.SupplierDao;
 import lk.brightbs.supplier.entity.Supplier;
-
+import lk.brightbs.user.dao.UserDao;
+import lk.brightbs.user.entity.User;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 
 @RestController
@@ -27,6 +31,9 @@ public class SupplierController {
 	// userprivilegecontroller walin constructer object ekak sada ganima
 	@Autowired
 	private UserPrivilegeController userPrivilegeController;
+
+	@Autowired
+	private UserDao userDao;
 
     //load privilege ui
     @RequestMapping("/supplier")
@@ -73,5 +80,40 @@ public class SupplierController {
 			return new ArrayList<>();
 		}
    }
+
+   //define post mapping
+	@PostMapping(value = "/supplier/insert")
+	public String insertSupplier(@RequestBody Supplier supplier) {
+		// check user authentication and authorization
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		//log una user object eka ara ganima
+		User logedUser = userDao.getByUsername(auth.getName());
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SUPPLIER");
+		if (userPrivilege.getInst()) {
+			//check duplicate
+			Supplier extSupplierName = supplierDao.getBySupplierName(supplier.getSuppliername());
+			if(extSupplierName != null){
+				return "Save not completed : entered Supplier name " + supplier.getSuppliername() +"Value Allready ext..!";
+			}
+			
+
+			try {
+				//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
+			supplier.setAddeddatetime(LocalDateTime.now());
+			supplier.setAddeduserid(logedUser.getId());
+			supplier.setRegno(supplierDao.getNextSupplierNo());
+
+				// save operator
+				supplierDao.save(supplier);
+				return "OK";
+			} catch (Exception e) {
+
+				return "Insert not completed : " + e.getMessage();
+
+			}
+		} else {
+			return "Insert not completed : you haven't permission...";
+		}
+	}
     
 }

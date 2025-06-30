@@ -15,7 +15,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lk.brightbs.employee.entity.Employee;
 import lk.brightbs.item.entity.Item;
+import lk.brightbs.supplier.entity.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,6 +62,13 @@ public class PriceRequest {
     @Column(name = "requireddate")
     @NotNull
     private LocalDate requireddate ;
+
+    //user many employee one
+    //foreing key eka one side eke sita many side ekata ei ema nisa many to one
+    @ManyToOne(optional = true)  //meya optional
+    //table name eka(employee_id) foreing key wana table eke id eka(referencedColumnName=primary key)
+    @JoinColumn(name = "supplier_id" , referencedColumnName = "id")
+    private Supplier supplier_id;
 
     @ManyToOne
     @JoinColumn(name = "pricelistrequeststatus_id" , referencedColumnName = "id")

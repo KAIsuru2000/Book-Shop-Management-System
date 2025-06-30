@@ -87,7 +87,7 @@ const addSelectedBrand=() => {
     // ema element eka thibu list eken iwath kirima
     // e sadaha allBrand let nowiya yuthuya
     // map eka sadaha allitem.map walin eka item object ekak gena eya ema item eke id eka selected item id ekata samana wiya yuthuya >> elesa samana nam exit wenawa >> exit unoth allBrand list eken splice karanna ona selected element eka
-    let extIndex = allBrand.map(item=>item.id).indexOf(selectedBrand.id);
+    let extIndex = allBrand.map(brand=>brand.id).indexOf(selectedBrand.id);
     // extIndex eka asamanai -1 nam allready exit wei
     if (extIndex != -1) {
         // extIndex,1 >> selected element eka idan eka element ekak makanna ona ewita selected eka ayath wei
@@ -146,7 +146,52 @@ const removeAllBrand=() => {
 }
 // inner form button function area end
 
-const rowFormRefill = (dataob, rowIndex) => {}
+const rowFormRefill = (dataob, rowIndex) => {
+
+    console.log("Edit record", dataob, rowIndex);
+
+    let supplierStatuses = getServiceRequest('/supplierStatus/alldata');
+    fillDataIntoSelect(selectSupplierStatus, "Please select status...!", supplierStatuses, "name");
+
+    // dataob object eka use karala form fields refill karanna
+    textSupplierName.value = dataob.suppliername;
+    charBRN.value = dataob.brn;
+    textConPersonName.value = dataob.contact_person;
+    telContactNo.value = dataob.contactno;
+    inputEmail.value = dataob.email;
+    textAddress.value = dataob.address;
+    // selectAllBrand.value = supplier.brands;
+    // selectSelectedBrand.value = supplier.brands;
+    selectSupplierStatus.value = JSON.stringify(dataob.supplierstatus_id);
+
+    textBankName.value = dataob.bankname;
+    textBranchName.value = dataob.branchname;
+    telAccountNo.value = dataob.accuntno;
+    textHolderName.value = dataob.accuntholdername;
+
+    // all side ekata me supplier supply karan nethi brand tika ganima 
+    allBrand = getServiceRequest('/brand/getListWithoutSupply/' + dataob.id);
+    fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
+
+    // inner form eka selected paththa fill kara ganima
+    fillDataIntoSelect(selectSelectedBrand, "", dataob.brands, "name");
+
+    // inner form eka magin add wana data list eka (entity file ekehi many to many wala Set<Brand> brands) length eka 0 da balai
+    if (dataob.brands && dataob.brands.length > 0) {
+        supplier.brands = dataob.brands;
+    }
+
+    //update kirima sadaha awashya object 2 sada ganima
+    supplier = JSON.parse(JSON.stringify(dataob));
+    oldSupplier = JSON.parse(JSON.stringify(dataob));
+
+    console.log("supplier", supplier);
+    console.log("oldSupplier", oldSupplier);
+
+    //disable submit button
+     submitButton.style.visibility = "hidden";
+     updateButton.style.visibility = "visible";
+}
 
 const rowDelete = (dataob, rowIndex) => {}
     
@@ -165,6 +210,7 @@ const refreshSupplierForm = () => {
 
     // dynamic element refill kala yuthuya
     allBrand = getServiceRequest('/brand/alldata')
+    // allBrandWithoutSupply = getServiceRequest('/brand/getListWithoutSupply/' + dataob.id);
     let supplierStatuses = getServiceRequest('/supplierStatus/alldata')
     
     fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
@@ -183,18 +229,83 @@ const refreshSupplierForm = () => {
 }
 
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
-// const checkSupplierFormErrors = () =>{
-//     let errors = "";
+const checkSupplierFormErrors = () =>{
+    let errors = "";
 
-//     if (employee.fullname == null) {
-//         errors = errors + "Please Enter valid Full Name...! \n";
-//     }
+    if (supplier.suppliername == null) {
+        errors = errors + "Please Enter valid Full Name...! \n";
+    }
 
-//     if (employee.callingname == null) {
-//         errors = errors + "Please Enter valid calling name...! \n";
-//     }
-//     if (employee.nic == null) {
-//         errors = errors + "Please Enter valid nic...! \n";
-//     }
-//     return errors;
-// }
+    if (supplier.brn == null) {
+        errors = errors + "Please Enter valid Business Registration number...! \n";
+    }
+    if (supplier.contact_person == null) {
+        errors = errors + "Please Enter valid contact person name...! \n";
+    }
+    if (supplier.contactno == null) {
+        errors = errors + "Please Enter valid contact number...! \n";
+    }
+    if (supplier.email == null) {
+        errors = errors + "Please Enter valid Email...! \n";
+    }
+    if (supplier.address == null) {
+        errors = errors + "Please Enter valid Address...! \n";
+    }
+    if (supplier.supplierstatus_id == null) {
+        errors = errors + "Please Enter valid Supplier Status...! \n";
+    }
+    if (supplier.bankname == null) {
+        errors = errors + "Please Enter valid Bank Name...! \n";
+    }
+    if (supplier.branchname == null) {
+        errors = errors + "Please Enter valid Branch Name...! \n";
+    }
+    if (supplier.accuntno == null) {
+        errors = errors + "Please Enter valid Account Number...! \n";
+    }
+    if (supplier.accuntholdername == null) {
+        errors = errors + "Please Enter valid Account Holder Name...! \n";
+    }
+    
+    // inner form eka magin add wana data list eka (entity file ekehi many to many wala Set<Brand> brands) length eka 0 da balai
+    if (supplier.brands.length == 0) {
+        errors = errors + "Please Enter valid Brand...! \n";
+    }
+    return errors;
+}
+
+//Supplier form submit event function 
+const buttonSupplierSubmit = () => {
+    console.log('Add Supplier', supplier);
+
+    //check form error for required element
+    let errors = checkSupplierFormErrors();
+    if (errors == "") {
+        //no errors get user confirmation
+        let userConfirm = window.confirm("Are you sure to add following supplier...?" +
+            "\n Supplier name : " + supplier.suppliername +
+            "\n Supplier brn : " + supplier.brn +
+            "\n Supplier contact person : " + supplier.contact_person +
+            "\n Supplier contact number : " + supplier.contactno +
+            "\n Supplier email : " + supplier.email +
+            "\n Supplier address : " + supplier.address +
+            "\n Supplier status : " + supplier.supplierstatus_id.name
+        );
+        if (userConfirm) {
+            // call post service
+            let postResponce = getHTTPServiceRequest("/supplier/insert", "POST", supplier);
+            if (postResponce == "OK") {
+                window.alert("Save successfully ");
+                refreshSupplierTable();
+                refreshSupplierForm();
+                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
+            } else {
+                window.alert("Failed to submit \n" + errors + postResponce);
+            }
+        }
+    } else {
+        window.alert("Something went wrong...\n" + errors);
+    }
+
+
+}

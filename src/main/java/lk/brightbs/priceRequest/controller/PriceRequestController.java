@@ -1,5 +1,6 @@
 package lk.brightbs.priceRequest.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +9,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.privilege.entity.Privilege;
+import lk.brightbs.user.dao.UserDao;
+import lk.brightbs.user.entity.User;
 import lk.brightbs.priceRequest.dao.PriceRequestDao;
 import lk.brightbs.priceRequest.entity.PriceRequest;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
@@ -26,6 +31,9 @@ public class PriceRequestController {
 	// userprivilegecontroller walin constructer object ekak sada ganima
 	@Autowired
 	private UserPrivilegeController userPrivilegeController;
+
+	@Autowired
+	private UserDao userDao;
 
     //load privilege ui
     @RequestMapping("/priceRequest")
@@ -72,5 +80,37 @@ public class PriceRequestController {
 			return new ArrayList<>();
 		}
    }
+
+   //define post mapping
+	@PostMapping(value = "/priceRequest/insert")
+	public String insertPriceRequest(@RequestBody PriceRequest priceRequest) {
+		// check user authentication and authorization
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		//log una user object eka ara ganima
+		User logedUser = userDao.getByUsername(auth.getName());
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		if (userPrivilege.getInst()) {
+			//check duplicate
+			
+			
+
+			try {
+				//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
+			priceRequest.setAddeddatetime(LocalDateTime.now());
+			priceRequest.setAddeduserid(logedUser.getId());
+			priceRequest.setRequestno(priceRequestDao.getNextPriceRequestNo());
+
+				// save operator
+				priceRequestDao.save(priceRequest);
+				return "OK";
+			} catch (Exception e) {
+
+				return "Insert not completed : " + e.getMessage();
+
+			}
+		} else {
+			return "Insert not completed : you haven't permission...";
+		}
+	}
     
 }

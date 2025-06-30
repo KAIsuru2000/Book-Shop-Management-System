@@ -13,6 +13,13 @@ public class BrandController {
 
     @Autowired
     private BrandDao brandDao;
+
+    // @Autowired
+	// private UserDao userDao;
+
+    // @Autowired
+    // private UserPrivilegeController userPrivilegeController;
+
     
     //get mapping for get designation all data url - /brand/alldata
     @GetMapping(value = "/brand/alldata" , produces = "application/json")
@@ -27,4 +34,33 @@ public class BrandController {
 
         return brandDao.byCategory(categoryid);
     }
+
+    // request mapping for get brand without supply url - "/brand/listwihoutsupply"
+    @GetMapping(value = "/brand/getListWithoutSupply/{supplierid}" , produces = "application/json")
+    public List<Brand> getListWithoutSupply(@PathVariable("supplierid") Integer supplierid){
+
+        return brandDao.getListWithoutSupply(supplierid);
+    }
+
+    
+
+//     // request mapping for get brand without supply url - "/brand/listwihoutsupply"
+//     @GetMapping(value = "/brand/listwihoutsupply" , params = {"supplierid"} , produces = "application/json")
+//     public List<Brand> getListWithoutSupply(@RequestParam("supplierid") Integer supplierid) {
+
+//         // check user authentication and authorization
+// 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+//         //log una user object eka ara ganima
+// 		// User logedUser = userDao.getByUsername(auth.getName());
+// 		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ITEM");
+// 		if (userPrivilege.getUpd()) {
+
+// 			return brandDao.getListWithoutSupply(supplierid);
+
+// 			}
+
+    
+
+// }
 }

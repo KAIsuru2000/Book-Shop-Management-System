@@ -249,8 +249,8 @@
                                             <input type="text" class="form-control" placeholder="
                                             Enter Purchase Price" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textPurchasePrice"
-                                                required onkeyup="textValidator(this, '^.*$', 'item', 'purchaseprice')"
-                                                onclick="textValidator(this, '^.*$', 'item', 'purchaseprice')"
+                                                required onkeyup="textValidator(this, '^.*$', 'item', 'purchaseprice'); genarateSalesPrice();"
+                                                onclick="textValidator(this, '^.*$', 'item', 'purchaseprice')  " 
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the Purchase Price correctly here.">
                                         </div>

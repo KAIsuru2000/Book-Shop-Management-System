@@ -190,8 +190,8 @@
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
                                             <textarea class="form-control" aria-label="With textarea" placeholder="Enter address" id="textAddress" required
-                                                onkeyup="textValidator(this, '^.*$', 'employee', 'address')"
-                                                onclick="textValidator(this, '^.*$', 'employee', 'address')"
+                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'address')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'address')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the employee's Address correctly here. (Ex-50/1,Colombo road,Gampaha.)"></textarea>
                                         </div>
@@ -310,8 +310,8 @@
                                                 <span class="fw-bold text-danger">*</span></span>
                                             <input type="tel" class="form-control" placeholder="Enter Account No" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="telAccountNo" required
-                                                onkeyup="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'supplier', 'accuntno')"
-                                                onclick="textValidator(this, '^[0][7][01245678][0-9]{7}$', 'supplier', 'accuntno')"
+                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'accuntno')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'accuntno')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the supplier's Account number correctly here.">
                                         </div>
@@ -341,8 +341,8 @@
                                             <span class="input-group-text lablBg">Note &nbsp;: <span
                                                     class="text-danger">(optional)</span></span>
                                             <textarea id="textNote" class="form-control" placeholder="Enter Note" aria-label="With textarea"
-                                                onkeyup="textValidator(this, '^.*$', 'employee', 'note')"
-                                                onclick="textValidator(this, '^.*$', 'employee', 'note')"
+                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'note')"
+                                                onclick="textValidator(this, '^.*$', 'supplier', 'note')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter a note about the employee here"></textarea>
                                         </div>
@@ -381,8 +381,8 @@
                                     <!-- Add btn area start -->
                                     <div class="col-2">
                                         <button type="button" id="submitButton" class=" btn btnAdd"
-                                            onclick="submitItemForm()">
-                                            <!-- button Submit function eka (item.js)-->
+                                            onclick="buttonSupplierSubmit()">
+                                            <!-- button Submit function eka-->
                                             <i class="fa-solid fa-file-circle-plus"></i>
                                             Add
                                         </button>

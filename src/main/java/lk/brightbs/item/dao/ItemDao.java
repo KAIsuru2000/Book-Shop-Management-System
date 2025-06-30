@@ -1,7 +1,9 @@
 package lk.brightbs.item.dao;
 
+
 import lk.brightbs.item.entity.Item;
 
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +25,8 @@ public interface ItemDao extends JpaRepository<Item, Integer> {
 
     @Query("select i from Item i where i.itemname=?1")
     Item getByItemName(String itemname);
+
+    @Query("select i from Item i where i.id not in (select PRI.item_id.id from PriceListRequestHasItem PRI where PRI.pricelistrequest_id.id=?1)" )
+    public List<Item> getListWithoutRequest(Integer pricelistrequestid);
     
 }

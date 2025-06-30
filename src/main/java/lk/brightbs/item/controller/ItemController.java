@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.item.dao.ItemDao;
 import lk.brightbs.item.dao.ItemStatusDao;
+import lk.brightbs.item.entity.Brand;
 import lk.brightbs.item.entity.Item;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
@@ -196,5 +198,12 @@ public class ItemController {
 			return "Update not completed : you haven't permission...";
 		}
 	}
+
+	// request mapping for get item without request url - "/items/getListWithoutRequest/"
+    @GetMapping(value = "/items/getListWithoutRequest/{pricelistrequestid}" , produces = "application/json")
+    public List<Item> getListWithoutRequest(@PathVariable("pricelistrequestid") Integer pricelistrequestid){
+
+        return itemDao.getListWithoutRequest(pricelistrequestid);
+    }
 
 }

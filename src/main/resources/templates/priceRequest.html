@@ -101,9 +101,9 @@
                                     <!-- Supplier area start-->
                                     <div class="col-6">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectItemStatus">Supplier &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <label class="input-group-text lablBg" for="selectSupplier">Supplier &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span></label>
-                                            <select class="form-select" id="selectSupplierStatus"
+                                            <select class="form-select" id="selectSupplier"
                                                 onchange="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
                                                 onclick="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
                                                 data-bs-toggle="tooltip"
@@ -127,6 +127,7 @@
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="dateRequireDate" onkeyup="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
                                                 onclick="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
+                                                oninput="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
                                                 required data-bs-toggle="tooltip"
                                                 title="Please enter the required date correctly">
                                         </div>
@@ -144,7 +145,7 @@
                                         <div class="input-group mb-3">
                                             <label class="input-group-text lablBg" for="selectItemStatus">Price Request Status:
                                                 <span class="fw-bold text-danger">*</span></label>
-                                            <select class="form-select" id="selectPrice RequestStatus"
+                                            <select class="form-select" id="selectPriceRequestStatus"
                                                 onchange="selectDainamicElementValidater(this , 'priceRequest', 'pricelistrequeststatus_id')"
                                                 onclick="selectDainamicElementValidater(this , 'priceRequest', 'pricelistrequeststatus_id')"
                                                 data-bs-toggle="tooltip"
@@ -176,9 +177,9 @@
                                 <!-- inner form area start -->
                                 <div class="row mt-4">
 
-                                    <div class="col-2"></div>
+                                    <!-- <div class="col-2"></div> -->
                                     <!-- All Items area start -->
-                                    <div class="col-3">
+                                    <div class="col-5">
                                         <label for="selectAllItems" class="form-label fw-bold h5">All Items : </label>
                                         <select class="form-select" id="selectAllItems" multiple style="height: 165px;"></select>
                                     </div>
@@ -203,13 +204,13 @@
                                     </div>
                                     <!-- Button area end -->
                                     <!-- Selected Items area start -->
-                                    <div class="col-3">
+                                    <div class="col-5">
                                         <label for="selectSelectedItems" class="form-label fw-bold h5">Selected Items :
                                         </label>
                                         <select class="form-select" id="selectSelectedItems" multiple style="height: 165px;"></select>
                                     </div>
                                     <!-- Selected Items area end -->
-                                    <div class="col-2"></div>
+                                    <!-- <div class="col-2"></div> -->
 
                                 </div>
                                 <!-- inner form area end -->
@@ -245,7 +246,7 @@
                                     <!-- Add btn area start -->
                                     <div class="col-2">
                                         <button type="button" id="submitButton" class=" btn btnAdd"
-                                            onclick="submitItemForm()">
+                                            onclick="buttonPriceRequestSubmit()">
                                             <!-- button Submit function eka (item.js)-->
                                             <i class="fa-solid fa-file-circle-plus"></i>
                                             Add
