@@ -1,0 +1,57 @@
+package lk.brightbs.purchaseOrder.entity;
+
+import java.math.BigDecimal;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lk.brightbs.item.entity.Item;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "purchaserequest_has_item")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PurchaseOrderHasItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "uniteprice")
+    @NotNull
+    private BigDecimal uniteprice;
+
+    @Column(name = "quentity")
+    @NotNull
+    private Integer quentity;
+
+    @Column(name = "lineprice")
+    @NotNull
+    private BigDecimal lineprice;
+
+    // foreign key
+    @Id // primary key nisa
+    @ManyToOne
+    @JoinColumn(name = "item_id", referencedColumnName = "id")
+    // foreign key lesa another table ekaka record ekak ana nisa type eka
+    // PriceRequest
+    private Item item_id;
+
+    // foreign key
+    @Id // primary key nisa
+    @ManyToOne
+    @JoinColumn(name = "purchaserequest_id", referencedColumnName = "id")
+    // foreign key lesa another table ekaka record ekak ana nisa type eka Item
+    private PurchaseOrder purchaserequest_id;
+
+}

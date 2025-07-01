@@ -66,7 +66,7 @@ public class PurchaseOrder {
    
     @ManyToOne
     @JoinColumn(name = "purchaserequeststatus_id" , referencedColumnName = "id")
-    private EmployeeStatus purchaserequeststatus_id ;
+    private PurchaseOrderStatus purchaserequeststatus_id ;
     
     @ManyToOne
     @JoinColumn(name = "supplier_id" , referencedColumnName = "id")
