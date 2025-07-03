@@ -81,5 +81,35 @@ const getHTTPServiceRequest = (url, method, data) => {
     return getServiceRequest; //After the AJAX call completes (synchronously), the getServiceRequest variable, now containing the server's response, is returned.
 }
 
+//define function for fill data into select (elementid, displaymsg, datalistname,displaypropertyname)
+// item code and name yana dekama dropdown ekak thula penwa ganima sadaha meaya yoda gani 
+// mehidee code and nema yana attribute dekama eka kotasaka pawathi wenama object ekak thula nowei 
+// mehidee property one two lesa property dekak add kara gani
+const fillDataIntoSelectTwo = (parentId,message,dataList,displayPropertyOne,displayPropertyTwo)=>{
+
+    parentId.innerHTML = "";
+
+// inner form wala select sadaha data fill kirimedi msg eka empty nisa eya add nokarai
+if (message != "") {
+    let optionMsgEs = document.createElement("option");
+    optionMsgEs.value = "";
+    optionMsgEs.selected = "selected";
+    optionMsgEs.disabled = "disabled";
+    optionMsgEs.innerText = message;
+    parentId.appendChild(optionMsgEs);
+}
+
+    
+
+    dataList.forEach(dataOb => {
+        let option = document.createElement("option");
+        option.value = JSON.stringify(dataOb);
+        // methanata property dekak ekathu kirima sidu karai
+        option.innerText = dataOb[displayPropertyOne] + " - " + dataOb[displayPropertyTwo];
+        parentId.appendChild(option);
+        
+    });
+}
+
  
 

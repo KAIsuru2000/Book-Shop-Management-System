@@ -37,7 +37,7 @@
         </div>
         <!-- offcanvas button area end -->
 
-        <!-- table area start -->
+        <!--main table area start -->
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10 mt-1 divTable">
@@ -63,7 +63,7 @@
             </div>
             <div class="col-1"></div>
         </div>
-        <!-- table arae end -->
+        <!--main table arae end -->
 
         <!-- offcanvas area start -->
         <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
@@ -103,7 +103,7 @@
                                 <div class="row mt-3">
                                     <!-- main form area start -->
                                     <div class="col-6">
-                                        
+
                                         <!-- Supplier area start-->
                                         <div class="row">
                                             <div class="input-group">
@@ -146,7 +146,14 @@
                                                 <span for="textTotalAmount" class="input-group-text lablBg"
                                                     id="inputGroup-sizing-default">Total Amount : <span
                                                         class="fw-bold text-danger">*</span></span>
-                                                <input type="text" placeholder="Enter Total Amount" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="textTotalAmount" required onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')" onclick="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')" data-bs-toggle="tooltip" title="Enter the Total Amount correctly here.">
+                                                <input type="text" placeholder="Enter Total Amount" class="form-control"
+                                                    aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textTotalAmount"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Total Amount correctly here.">
                                             </div>
                                         </div>
                                         <!-- Total Amount area end-->
@@ -182,7 +189,7 @@
                                             </div>
                                         </div>
                                         <!-- Order Status area end-->
-                                        <!-- button row -->
+                                        <!--main form button row start-->
                                         <div class="row mt-4">
 
                                             <div class="col-1"></div>
@@ -200,8 +207,8 @@
 
                                             <!-- update button area start -->
                                             <div class="col-3">
-                                                <button type="button" id="buttonEmpUpdate" class=" btn btnUpdate"
-                                                    onclick="buttonEmployeeUpdate()">
+                                                <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
+                                                    onclick="buttonPurchaseOrderUpdate()">
                                                     <i class="fa-solid fa-file-pen"></i>
                                                     Update
                                                 </button>
@@ -210,8 +217,8 @@
 
                                             <!-- Add btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="buttonEmpAdd" class=" btn btnAdd"
-                                                    onclick="buttonEmployeeSubmit()">
+                                                <button type="button" id="btnPurchaseOrderSubmit" class=" btn btnAdd"
+                                                    onclick="buttonPurchaseOrderSubmit()">
                                                     <!-- buttonEmpSubmit function eka (employee.js)-->
                                                     <i class="fa-solid fa-file-circle-plus"></i>
                                                     Add
@@ -220,12 +227,12 @@
                                             <!-- Add btn area end -->
 
                                         </div>
-                                        <!-- button row end -->
+                                        <!--main form button row end -->
                                     </div>
-                                    <!-- main form end -->
+                                    <!-- main form area end -->
                                     <!-- inner form and table start -->
                                     <div class="col-6">
-
+                                        <!-- inner form area start -->
                                         <!-- Item and Unit Price area start -->
                                         <div class="row">
                                             <!-- Item area start-->
@@ -235,8 +242,8 @@
                                                         &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></label>
                                                     <select class="form-select" id="selectItem"
-                                                        onchange="selectDainamicElementValidater(this , 'priceRequest', 'item_id')"
-                                                        onclick="selectDainamicElementValidater(this , 'priceRequest', 'item_id')"
+                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Item correctly here.">
                                                         <option selected disabled>Select Item</option>
@@ -256,8 +263,8 @@
                                             Enter Unit Price" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'item', 'uniteprice')"
-                                                        onclick="textValidator(this, '^.*$', 'item', 'uniteprice')"
+                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
+                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Unit Price correctly here.">
                                                 </div>
@@ -279,8 +286,8 @@
                                                         placeholder="Enter Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textQuantity"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'item', 'quentity')"
-                                                        onclick="textValidator(this, '^.*$', 'item', 'quentity')"
+                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
+                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Quantity correctly here.">
                                                 </div>
@@ -296,8 +303,8 @@
                                                         placeholder="Enter Line Price" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textLinePrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'item', 'lineprice')"
-                                                        onclick="textValidator(this, '^.*$', 'item', 'lineprice')"
+                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Line Price correctly here.">
                                                 </div>
@@ -307,17 +314,18 @@
 
                                         </div>
                                         <!-- Quantity and Line Price area end -->
+                                         <!-- inner form area end -->
 
 
 
-                                        <!-- button row -->
+                                        <!--inner form button row start -->
                                         <div class="row mt-4">
 
                                             <div class="col-1"></div>
 
                                             <!-- clear btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                                <button type="button" id="btnInnerClear" class="btn btnClear">
                                                     <i class="fa-solid fa-eraser"></i>
                                                     Clear
                                                 </button>
@@ -328,8 +336,8 @@
 
                                             <!-- update button area start -->
                                             <div class="col-3">
-                                                <button type="button" id="buttonEmpUpdate" class=" btn btnUpdate"
-                                                    onclick="buttonEmployeeUpdate()">
+                                                <button type="button" id="btnPurchaseOrderItemUpdate"
+                                                    class=" btn btnUpdate" onclick="buttonPurchaseOrderItemUpdate()">
                                                     <i class="fa-solid fa-file-pen"></i>
                                                     Update
                                                 </button>
@@ -338,8 +346,8 @@
 
                                             <!-- Add btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="buttonEmpAdd" class=" btn btnAdd"
-                                                    onclick="buttonEmployeeSubmit()">
+                                                <button type="button" id="btnPurchaseOrderItemSubmit"
+                                                    class=" btn btnAdd" onclick="buttonPurchaseOrderItemSubmit()">
                                                     <!-- buttonEmpSubmit function eka (employee.js)-->
                                                     <i class="fa-solid fa-file-circle-plus"></i>
                                                     Add
@@ -348,8 +356,8 @@
                                             <!-- Add btn area end -->
 
                                         </div>
-                                        <!-- button row end -->
-                                        <!-- table row start -->
+                                        <!--inner form button row end -->
+                                        <!--inner table row start -->
                                         <div class="row mt-4 ms-1 me-1">
                                             <div class="col-12 divTable">
                                                 <div class="container-fluid">
@@ -372,8 +380,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- table row end -->
-                                        <!-- button row -->
+                                        <!--inner table row end -->
+                                        <!--overall button row start -->
                                         <div class="row mt-4">
 
                                             <div class="col-1"></div>
@@ -411,7 +419,7 @@
                                             <!-- Add btn area end -->
 
                                         </div>
-                                        <!-- button row end -->
+                                        <!--overall button row end -->
 
 
                                     </div>

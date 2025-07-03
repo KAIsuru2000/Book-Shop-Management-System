@@ -6,16 +6,18 @@ window.addEventListener("load", () => {
     // enable tooltip
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    refreshEmployeeTable();
+    refreshPurchaseOrderTable();
 
-    refreshEmployeeform();
+    refreshPurchaseOrderForm();
 
 })
 
 //refresh table Area 
-const refreshEmployeeTable = () => {
+const refreshPurchaseOrderTable = () => {
 
-    let employees = getServiceRequest("/employee/alldata");
+    // let purchaseOrders = getServiceRequest("/purchaseOrder/alldata");
+
+    let purchaseOrders = [];
 
     let propertyList = [
         { propertyName: "fullname", dataType: "string" },
@@ -26,10 +28,10 @@ const refreshEmployeeTable = () => {
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tableEmployeeBody, employees, propertyList, employeeFormRefill, employeeDelete, employeeView, "#offcanvasBottom");
+    fillDataIntoTable(tablePurchaseOrderBody, purchaseOrders, propertyList, purchaseOrderFormRefill, purchaseOrderDelete, purchaseOrderView, "#offcanvasBottom");
 
 
-    $('#tableEmployee').DataTable();
+    $('#tablePurchaseOrder').DataTable();
 
 
 }
@@ -49,11 +51,11 @@ const getEmployeeStatus = (dataob) => {
     if (dataob.employeestatus_id.name == "delete") {
         return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;"></i>'
     }
-    
-    
+
+
 }
-//function for re fill employee form
-const employeeFormRefill = (ob, index) => {
+//function for re fill purchase order form
+const purchaseOrderFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
 
     // refill value in to element -> elementId.value = ob.releventPropertyName
@@ -106,16 +108,16 @@ const employeeFormRefill = (ob, index) => {
 
 }
 
-//function for delete employee form
-const employeeDelete = (ob, index) => {
+//function for delete purchase order form
+const purchaseOrderDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
-    // activeTableRow(tableEmployeeBody, index, "red");
+    // activeTableRow(tablePurchaseOrderBody, index, "red");
 
 
-    let userConfirm = window.confirm("Are you sure to delete following employee...?" +
-        "\n Employee full name : " + ob.fullname +
-        "\n Employee nic : " + ob.nic +
+    let userConfirm = window.confirm("Are you sure to delete following purchase order...?" +
+        "\n Purchase Order ID : " + ob.id +
+        "\n Purchase Order Date : " + ob.date +
         "\n Employee designation : " + ob.designation_id.name
     );
     if (userConfirm) {
@@ -139,8 +141,8 @@ const employeeDelete = (ob, index) => {
     }
 }
 
-//function for view / print employee form
-const employeeView = (ob, index) => {
+//function for view / print purchase order form
+const purchaseOrderView = (ob, index) => {
     console.log("View", ob, index);
     //option 1
     //aluth window ekak open kara ganima
@@ -190,7 +192,7 @@ const employeeView = (ob, index) => {
 }
 //print button function
 const buttonPrintRow = () => {
-    
+
     //aluth window ekak open kara ganima
     let newWindow = window.open();
     //ema window ekata title ekak demima
@@ -250,9 +252,9 @@ const checkFormError = () => {
     return errors;
 }
 
-//Employee form submit event function 
-const buttonEmployeeSubmit = () => {
-    console.log('Add Employee', employee);
+//Purchase Order form submit event function 
+const buttonPurchaseOrderSubmit = () => {
+    console.log('Add Purchase Order', purchaseOrder);
 
     //check form error for required element
     let errors = checkFormError();
@@ -338,7 +340,7 @@ const checkFormUpdate = () => {
 }
 
 // form update event function 
-const buttonEmployeeUpdate = () => {
+const buttonPurchaseOrderUpdate = () => {
 
     //need to check form errors
     let errors = checkFormError();
@@ -355,8 +357,8 @@ const buttonEmployeeUpdate = () => {
                 let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
                 if (putResponce == "OK") {
                     window.alert("Update Successfully...!");
-                    refreshEmployeeTable();
-                    refreshEmployeeform();
+                    refreshPurchaseOrderTable();
+                    refreshPurchaseOrderform();
                     $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
                 } else {
                     window.alert("Failed to update...!" + putResponce);
@@ -372,485 +374,132 @@ const buttonEmployeeUpdate = () => {
 }
 
 // form delete event function 
-const buttonEmployeeDelete = () => {
-    refreshEmployeeTable();
+const buttonPurchaseOrderDelete = () => {
+    refreshPurchaseOrderTable();
 }
 
-//full name validation
-textFullName.addEventListener("keyup", () => {
 
-    // Navigate to the parent element and then to the associated span
-    spanElementFullName = textFullName.previousElementSibling;
-    // Navigate to the parent element and then to the associated span
-    spanElementCalName = textCallingName.previousElementSibling;
+const refreshPurchaseOrderForm = () => {
+    purchaseOrder = new Object();
+    purchaseOrder.purchaseOrderHasItemList = new Array();
 
-    // valid da nadda balima
-    const fullNameValue = textFullName.value;
-    if (fullNameValue != "") {
-        if (new RegExp("^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$").test(fullNameValue)) {
-            //valid full name
-            employee.fullname = fullNameValue; //value add to employee object
+    formPurchaseOrder.reset();
 
-            textFullName.style.borderBottom = "4px solid green";
-            spanElementFullName.style.backgroundColor = "green";
-            textFullName.classList.remove("is-invalid");
-            textFullName.classList.add("is-valid");
-
-            // Navigate to the parent element and then to the associated span
-            spanElementCalName = textCallingName.previousElementSibling;
-
-            //genarate calling name
-            let fullNamePart = fullNameValue.split(" ");
-            dlCallingName.innerHTML = "";
-            textCallingName.value = fullNamePart[0];
-            textCallingName.style.borderBottom = "4px solid green";
-            spanElementCalName.style.backgroundColor = "green";
-            textCallingName.classList.remove("is-invalid");
-            textCallingName.classList.add("is-valid");
-            employee.callingname = textCallingName.value; //value add to employee object
-            fullNamePart.forEach(element => {
-                let option = document.createElement("option");
-                option.value = element;
-                if (element.length > 2) {
-                    dlCallingName.appendChild(option);
-                }
-
-            });
-
-
-
-        } else {
-            //invalid fullname
-            textFullName.style.borderBottom = "4px solid red";
-            spanElementFullName.style.backgroundColor = "red";
-            textFullName.classList.add("is-invalid");
-            textFullName.classList.remove("is-valid");
-            employee.fullname = null; //employee object add to value null
-        }
-    } else {
-        //invalid fullname
-        textFullName.style.borderBottom = "4px solid red";
-        spanElementFullName.style.backgroundColor = "red";
-        textCallingName.style.borderBottom = "4px solid red";
-        spanElementCalName.style.backgroundColor = "red";
-        textFullName.classList.add("is-invalid");
-        textFullName.classList.remove("is-valid");
-        textCallingName.classList.add("is-invalid");
-        textCallingName.classList.remove("is-valid");
-        textCallingName.value = "";
-        employee.fullname = null; //employee object add to value null
-    }
-});
-
-textFullName.addEventListener("click", () => {
-
-    // Navigate to the parent element and then to the associated span
-    spanElementFullName = textFullName.previousElementSibling;
-    // Navigate to the parent element and then to the associated span
-    spanElementCalName = textCallingName.previousElementSibling;
-
-    // valid da nadda balima
-    const fullNameValue = textFullName.value;
-    if (fullNameValue != "") {
-        if (new RegExp("^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$").test(fullNameValue)) {
-            //valid full name
-            employee.fullname = fullNameValue; //value add to employee object
-
-            textFullName.style.borderBottom = "4px solid green";
-            spanElementFullName.style.backgroundColor = "green";
-            textFullName.classList.remove("is-invalid");
-            textFullName.classList.add("is-valid");
-
-
-
-            //genarate calling name
-            let fullNamePart = fullNameValue.split(" ");
-            dlCallingName.innerHTML = "";
-            textCallingName.value = fullNamePart[0];
-            textCallingName.style.borderBottom = "4px solid green";
-            spanElementCalName.style.backgroundColor = "green";
-            textCallingName.classList.remove("is-invalid");
-            textCallingName.classList.add("is-valid");
-            employee.callingname = textCallingName.value; //value add to employee object
-            fullNamePart.forEach(element => {
-                let option = document.createElement("option");
-                option.value = element;
-                if (element.length > 2) {
-                    dlCallingName.appendChild(option);
-                }
-
-            });
-
-
-
-        } else {
-            //invalid fullname
-            textFullName.style.borderBottom = "4px solid red";
-            spanElementFullName.style.backgroundColor = "red";
-            textFullName.classList.add("is-invalid");
-            textFullName.classList.remove("is-valid");
-            employee.fullname = null; //employee object this value null
-        }
-    } else {
-        //invalid fullname
-        textFullName.style.borderBottom = "4px solid red";
-        spanElementFullName.style.backgroundColor = "red";
-        textCallingName.style.borderBottom = "4px solid red";
-        spanElementCalName.style.backgroundColor = "red";
-        textFullName.classList.add("is-invalid");
-        textFullName.classList.remove("is-valid");
-        textCallingName.classList.add("is-invalid");
-        textCallingName.classList.remove("is-valid");
-        textCallingName.value = "";
-        employee.fullname = null; //employee object this value null
-    }
-});
-
-
-
-const callingNameValidator = (callingNameElement) => {
-
-    // Navigate to the parent element and then to the associated span
-    // validation wala colour eka laba deema sadaha
-    spanElement = textCallingName.previousElementSibl
-    const callingNameValue = callingNameElement.value;
-    const fullNameValue = textFullName.value;
-    let fullNameParts = fullNameValue.split(" ");
-    let extIndex = fullNameParts.map(fullNamePart => fullNamePart).indexOf(callingNameValue);
-    if (callingNameValue != "") {
-        if (extIndex != -1) {
-            textCallingName.style.borderBottom = "4px solid green";
-            spanElement.style.backgroundColor = "green";
-            textCallingName.classList.remove("is-invalid");
-            textCallingName.classList.add("is-valid");
-            employee.callingname = textCallingName.value; //value add to employee object
-        } else {
-            textCallingName.style.borderBottom = "4px solid red";
-            spanElement.style.backgroundColor = "red";
-            textCallingName.classList.add("is-invalid");
-            textCallingName.classList.remove("is-valid");
-            employee.callingname = null; //employee object add to value null
-        }
-    } else {
-        textCallingName.style.borderBottom = "4px solid red";
-        spanElement.style.backgroundColor = "red";
-        textCallingName.classList.add("is-invalid");
-        textCallingName.classList.remove("is-valid");
-        employee.callingname = null; //employee object add to value null
-    }
-
-}
-
-//nic validater
-textNic.addEventListener("keyup", () => {
-
-    // Navigate to the parent element and then to the associated tag
-    prevElementNic = textNic.previousElementSibling;
-    prevElementGender = selectGender.previousElementSibling;
-    prevElementDob = dateDOB.previousElementSibling;
-
-    const nicValue = textNic.value;
-
-    if (nicValue.length == 10 || nicValue.length == 12) {
-
-        if (nicValue != "") {
-            if (new RegExp("^([0-9]{9}[VvXx])|([0-9]{12})$").test(nicValue)) {
-                //valid nic name
-                textNic.style.borderBottom = "4px solid green";
-                prevElementNic.style.backgroundColor = "green";
-                textNic.classList.remove("is-invalid");
-                textNic.classList.add("is-valid");
-                employee.nic = nicValue; //value add to employee object
-                //generate gender , DOB
-                let year, days, month, date, dob;
-                if (nicValue.length == 10) {
-                    days = nicValue.substring(2, 5);
-                    year = "19" + nicValue.substring(0, 2);
-                }
-                if (nicValue.length == 12) {
-                    days = nicValue.substring(4, 7);
-                    year = nicValue.substring(0, 4);
-                }
-
-                if (parseInt(days) > 500) {
-                    selectGender.value = 'Female';
-                    employee.gender = selectGender.value; //value add to employee object
-                    //valid gender
-                    selectGender.style.borderBottom = "4px solid green";
-                    prevElementGender.style.backgroundColor = "green";
-                    selectGender.classList.remove("is-invalid");
-                    selectGender.classList.add("is-valid");
-                    days = days - 500;
-                } else {
-                    selectGender.value = 'Male';
-                    //valid gender
-                    selectGender.style.borderBottom = "4px solid green";
-                    prevElementGender.style.backgroundColor = "green";
-                    selectGender.classList.remove("is-invalid");
-                    selectGender.classList.add("is-valid");
-                    employee.gender = selectGender.value; //value add to employee object
-
-                }
-
-                let dobDate = new Date(year);
-
-                if (year % 4 != 0) {
-                    dobDate.setDate(days - 1);
-                } else {
-                    dobDate.setDate(days);
-                }
-
-                month = dobDate.getMonth() + 1;
-                if (month < 10) {
-                    month = "0" + month;
-                }
-
-                date = dobDate.getDate();
-                if (date < 10) {
-                    date = "0" + date;
-                }
-
-                dob = year + "-" + month + "-" + date;
-                dateDOB.value = dob;
-                //valid dob
-                dateDOB.style.borderBottom = "4px solid green";
-                prevElementDob.style.backgroundColor = "green";
-                dateDOB.classList.remove("is-invalid");
-                dateDOB.classList.add("is-valid");
-                employee.dob = dateDOB.value; //value add to employee object
-
-
-            } else {
-                //invalid nic
-                textNic.style.borderBottom = "4px solid red";
-                prevElementNic.style.backgroundColor = "red";
-                textNic.classList.add("is-invalid");
-                textNic.classList.remove("is-valid");
-                employee.nic = null; //employee object add to value null
-
-
-                //invalid gender
-                selectGender.style.borderBottom = "4px solid red";
-                prevElementGender.style.backgroundColor = "red";
-                selectGender.classList.add("is-invalid");
-                selectGender.classList.remove("is-valid");
-                employee.gender = null; //employee object add to value null
-                //invalid dob
-                dateDOB.style.borderBottom = "4px solid red";
-                prevElementDob.style.backgroundColor = "red";
-                dateDOB.classList.add("is-invalid");
-                dateDOB.classList.remove("is-valid");
-                employee.dob = null; //employee object add to value null
-
-
-            }
-
-
-
-        } else {
-            //empty nic field
-            textNic.style.borderBottom = "4px solid red";
-            prevElementNic.style.backgroundColor = "red";
-            textNic.classList.add("is-invalid");
-            textNic.classList.remove("is-valid");
-            employee.nic = null; //employee object add to value null
-
-            //empty dob field
-            dateDOB.style.borderBottom = "4px solid red";
-            prevElementDob.style.backgroundColor = "red";
-            dateDOB.classList.add("is-invalid");
-            dateDOB.classList.remove("is-valid");
-            dateDOB.value = "";
-            employee.dob = null; //employee object add to value null
-
-            //empty gender field
-            selectGender.style.borderBottom = "4px solid red";
-            prevElementGender.style.backgroundColor = "red";
-            selectGender.classList.add("is-invalid");
-            selectGender.classList.remove("is-valid");
-            employee.gender = null; //employee object add to value null
-        }
-    } else {
-
-        //empty nic field
-        textNic.style.borderBottom = "4px solid red";
-        prevElementNic.style.backgroundColor = "red";
-        textNic.classList.add("is-invalid");
-        textNic.classList.remove("is-valid");
-        employee.nic = null; //employee object add to value null
-
-        //empty dob field
-        dateDOB.style.borderBottom = "4px solid red";
-        prevElementDob.style.backgroundColor = "red";
-        dateDOB.classList.add("is-invalid");
-        dateDOB.classList.remove("is-valid");
-        dateDOB.value = "";
-        employee.dob = null; //employee object add to value null
-
-        //empty gender field
-        selectGender.style.borderBottom = "4px solid red";
-        prevElementGender.style.backgroundColor = "red";
-        selectGender.classList.add("is-invalid");
-        selectGender.classList.remove("is-valid");
-        employee.gender = null; //employee object add to value null
-    }
-
-
-
-
-
-});
-
-textNic.addEventListener("click", () => {
-
-    // Navigate to the parent element and then to the associated tag
-    prevElementNic = textNic.previousElementSibling;
-    prevElementGender = selectGender.previousElementSibling;
-    prevElementDob = dateDOB.previousElementSibling;
-
-    const nicValue = textNic.value;
-
-    if (nicValue.length == 10 || nicValue.length == 12) {
-
-        if (nicValue != "") {
-            if (new RegExp("^([0-9]{9}[VvXx])|([0-9]{12})$").test(nicValue)) {
-                //valid nic name
-                textNic.style.borderBottom = "4px solid green";
-                prevElementNic.style.backgroundColor = "green";
-                employee.nic = nicValue; //value add to employee object
-                //generate gender , DOB
-                let year, days, month, date, dob;
-                if (nicValue.length == 10) {
-                    days = nicValue.substring(2, 5);
-                    year = "19" + nicValue.substring(0, 2);
-                }
-                if (nicValue.length == 12) {
-                    days = nicValue.substring(4, 7);
-                    year = nicValue.substring(0, 4);
-                }
-
-                if (parseInt(days) > 500) {
-                    selectGender.value = 'Female';
-                    employee.gender = selectGender.value; //value add to employee object
-                    //valid gender
-                    selectGender.style.borderBottom = "4px solid green";
-                    prevElementGender.style.backgroundColor = "green";
-                    days = days - 500;
-                } else {
-                    selectGender.value = 'Male';
-                    //valid gender
-                    selectGender.style.borderBottom = "4px solid green";
-                    prevElementGender.style.backgroundColor = "green";
-                    employee.gender = selectGender.value; //value add to employee object
-
-                }
-
-                let dobDate = new Date(year);
-
-                if (year % 4 != 0) {
-                    dobDate.setDate(days - 1);
-                } else {
-                    dobDate.setDate(days);
-                }
-
-                month = dobDate.getMonth() + 1;
-                if (month < 10) {
-                    month = "0" + month;
-                }
-
-                date = dobDate.getDate();
-                if (date < 10) {
-                    date = "0" + date;
-                }
-
-                dob = year + "-" + month + "-" + date;
-                dateDOB.value = dob;
-                //valid dob
-                dateDOB.style.borderBottom = "4px solid green";
-                prevElementDob.style.backgroundColor = "green";
-                employee.dob = dateDOB.value; //value add to employee object
-
-
-            } else {
-                //invalid nic
-                textNic.style.borderBottom = "4px solid red";
-                prevElementNic.style.backgroundColor = "red";
-                employee.nic = null; //employee object this value null
-                employee.dob = null; //employee object this value null
-                employee.gender = null; //employee object this value null
-                //invalid gender
-                selectGender.style.borderBottom = "4px solid red";
-                prevElementGender.style.backgroundColor = "red";
-                //invalid dob
-                dateDOB.style.borderBottom = "4px solid red";
-                prevElementDob.style.backgroundColor = "red";
-
-            }
-
-
-
-        } else {
-            //empty nic field
-            textNic.style.borderBottom = "4px solid red";
-            prevElementNic.style.backgroundColor = "red";
-            employee.nic = null; //employee object this value null
-
-            //empty dob field
-            dateDOB.style.borderBottom = "4px solid red";
-            prevElementDob.style.backgroundColor = "red";
-            dateDOB.value = "";
-            employee.dob = null; //employee object this value null
-
-            //empty gender field
-            selectGender.style.borderBottom = "4px solid red";
-            prevElementGender.style.backgroundColor = "red";
-            employee.gender = null; //employee object this value null
-        }
-    } else {
-
-        //empty nic field
-        textNic.style.borderBottom = "4px solid red";
-        prevElementNic.style.backgroundColor = "red";
-        textNic.classList.add("is-invalid");
-        textNic.classList.remove("is-valid");
-        employee.nic = null; //employee object this value null
-
-        //empty dob field
-        dateDOB.style.borderBottom = "4px solid red";
-        prevElementDob.style.backgroundColor = "red";
-        dateDOB.classList.add("is-invalid");
-        dateDOB.classList.remove("is-valid");
-        dateDOB.value = "";
-        employee.dob = null; //employee object this value null
-
-        //empty gender field
-        selectGender.style.borderBottom = "4px solid red";
-        prevElementGender.style.backgroundColor = "red";
-        selectGender.classList.add("is-invalid");
-        selectGender.classList.remove("is-valid");
-        employee.gender = null; //employee object this value null
-    }
-
-
-
-
-
-});
-
-const refreshEmployeeform = () => {
-    employee = new Object();
-
-    formEmployee.reset();
-
-    //validation colors iwath kirima
-    setDefault([textFullName, textCallingName, textNic, selectGender, dateDOB, inputEmail, telMobil, telLand, textAddress, textNote, selectDesignation, selectCivil, selectEmpStatus]);
+    //validation colors iwath kirima main form sadaha
+    setDefault([selectSupplier, dateRequireDate, textTotalAmount, textNote, selectOrderStatus]);
 
     // dynamic element refill kala yuthuya
-    let designation = getServiceRequest('/designation/alldata')
-    fillDataIntoSelect(selectDesignation, "Please Select Designation..!!", designation, "name");
+    let suppliers = getServiceRequest('/supplier/alldata');
+    fillDataIntoSelect(selectSupplier, "Please Select Supplier..!!", suppliers, "suppliername");
 
-    let employeeStatues = getServiceRequest('/employeeStatues/alldata');
-    fillDataIntoSelect(selectEmpStatus, "Please Select Status..!!", employeeStatues, "name");
+    let orderStatues = getServiceRequest('/purchaseOrderStatues/alldata');
+    fillDataIntoSelect(selectOrderStatus, "Please Select Status..!!", orderStatues, "name");
+
+    // status eka form eka load wana wita select wi thibimata
+    // selected value eka string walin ena nisa stringify kara gani
+    selectOrderStatus.value = JSON.stringify(orderStatues[0]);
+    // ema value eka newatha object ekata set kala yuththa object format ekeni
+    purchaseOrder.purchaseOrderStatus_id = JSON.parse(selectOrderStatus.value);
+    // status field eka sadaha validation colour eka laba deema
+    prevElementOrderStatus = selectOrderStatus.previousElementSibling;
+    selectOrderStatus.style.borderBottom = "4px solid green";
+    prevElementOrderStatus.style.backgroundColor = "green";
+    selectOrderStatus.classList.remove("is-invalid");
+    selectOrderStatus.classList.add("is-valid");
+
+    // inner form eka refresh karawima
+    refreshPurchaseOrderInnerForm();
+
+    btnPurchaseOrderUpdate.classList.add("d-none");
+    btnPurchaseOrderSubmit.classList.remove("d-none");
+}
+
+// define function for refresh inner form
+const refreshPurchaseOrderInnerForm = () => {
+
+    // association eke class name ekata samanawa simple walin start kara gani
+    purchaseOrderHasItem = new Object();
+
+
+    // mehi form eka reset kala wita main form ekath reset wana nisa esa kala noheka
+    // formPurchaseOrder.reset();
+    // ema nisa element tika clean kirima sidu karai
+    // selectItem dynamic nisa clean nokarai
+    // dynamic element refill kala yuthuya
+    let items = getServiceRequest('/item/alldata');
+    // code ekai name ekai dekama drop down ekak thula penwa ganima
+    fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
+
+    textUnitPrice.value = "";
+    textQuantity.value = "";
+    textLinePrice.value = "";
+
+    // colors wenas kala heka
+    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice]);
+
+    btnPurchaseOrderItemUpdate.classList.add("d-none");
+    btnPurchaseOrderItemSubmit.classList.remove("d-none");
+
+    // Reresh inner table
+    // array eka awashya netha main object ekata array eka gani
+    // let purchaseOrders = [];
+
+    let propertyList = [
+        { propertyName: genareateItemName, dataType: "function" },
+        { propertyName: "uniteprice", dataType: "decimal" },
+        { propertyName: "quentity", dataType: "string" },
+        { propertyName: "lineprice", dataType: "decimal" }
+
+    ];
+
+    //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
+    fillDataIntoInnerTable(tableInnerBody, purchaseOrder.purchaseOrderHasItemList, propertyList, purchaseOrderItemFormRefill, purchaseOrderItemDelete, "#offcanvasBottom");
+
+
+    $('#tablePurchaseOrder').DataTable();
+}
+
+const genareateItemName = (dataob) => {
+    // itemcode + " - " + itemname
+    return dataob.item_id.itemname;
+}
+
+const purchaseOrderItemFormRefill = (ob, index) => { }
+const purchaseOrderItemDelete = (ob, index) => {
+    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?" +
+        "\n Item : " + purchaseOrderHasItem.item_id.itemname +
+        "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
+        "\n Quantity : " + purchaseOrderHasItem.quentity +
+        "\n Line Price : " + purchaseOrderHasItem.lineprice
+    );
+    if (userConfirm) {
+        window.alert("Item removed successfully from purchase order...!");
+        // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
+        let extIndex = purchaseOrder.purchaseOrderHasItemList.map(orderitem=>orderitem.item_id.id).indexOf(ob.item_id.id);
+        if (extIndex != -1) {
+        purchaseOrder.purchaseOrderHasItemList.splice(extIndex,1);
+        }
+        refreshPurchaseOrderInnerForm();
+    }
+ }
+
+const buttonPurchaseOrderItemUpdate = (ob, index) => { }
+const buttonPurchaseOrderItemSubmit = (ob, index) => {
+    console.log("Purchase Order Item", purchaseOrderHasItem);
+
+    let userConfirm = window.confirm("Are you sure to add following item to purchase order...?" +
+        "\n Item : " + purchaseOrderHasItem.item_id.itemname +
+        "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
+        "\n Quantity : " + purchaseOrderHasItem.quentity +
+        "\n Line Price : " + purchaseOrderHasItem.lineprice
+    );
+    if (userConfirm) {
+        window.alert("Item added successfully to purchase order...!");
+        // main form eke thiyena list ekata ob eka push karai
+        purchaseOrder.purchaseOrderHasItemList.push(purchaseOrderHasItem);
+        refreshPurchaseOrderInnerForm();
+    }
+
 }
 
 

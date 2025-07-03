@@ -191,7 +191,7 @@ const refreshItemForm = () => {
     selectItemStatus.value = JSON.stringify(itemStatus[0]);
     // ema value eka newatha object ekata set kala yuththa object format ekeni
     item.itemstatus_id = JSON.parse(selectItemStatus.value);
-    // validation colour eka laba deema
+    // status field eka sadaha validation colour eka laba deema
     prevElementItemStatus = selectItemStatus.previousElementSibling;
     selectItemStatus.style.borderBottom = "4px solid green";
     prevElementItemStatus.style.backgroundColor = "green";
