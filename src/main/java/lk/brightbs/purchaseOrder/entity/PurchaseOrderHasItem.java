@@ -2,6 +2,8 @@ package lk.brightbs.purchaseOrder.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,7 +53,10 @@ public class PurchaseOrderHasItem {
     @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "purchaserequest_id", referencedColumnName = "id")
-    // foreign key lesa another table ekaka record ekak ana nisa type eka Item
+    // foreign key lesa another table ekaka record ekak ana nisa type eka PurchaseOrder
+    // recursion walek wima sadaha purchaserequest_id read kirima walakwai(JsonIgnore)
+    // meya block kala wita save kala noheka
+    @JsonIgnore
     private PurchaseOrder purchaserequest_id;
 
 }

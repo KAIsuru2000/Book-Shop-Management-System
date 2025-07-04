@@ -15,16 +15,15 @@ window.addEventListener("load", () => {
 //refresh table Area 
 const refreshPurchaseOrderTable = () => {
 
-    // let purchaseOrders = getServiceRequest("/purchaseOrder/alldata");
-
-    let purchaseOrders = [];
+    let purchaseOrders = getServiceRequest("/purchaseOrder/alldata");
 
     let propertyList = [
-        { propertyName: "fullname", dataType: "string" },
-        { propertyName: "nic", dataType: "string" },
-        { propertyName: "mobile", dataType: "string" },
-        { propertyName: getDesignation, dataType: "function" },
-        { propertyName: getEmployeeStatus, dataType: "function" },
+        { propertyName: "purchaserequestno", dataType: "string" },
+        { propertyName: generateSupplierName, dataType: "function" },
+        { propertyName: "requireddate", dataType: "string" },
+        { propertyName: generateItemList, dataType: "function" },
+        { propertyName: "totalamount", dataType: "decimal" },
+        { propertyName: getOrderStatus, dataType: "function" },
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
@@ -36,23 +35,38 @@ const refreshPurchaseOrderTable = () => {
 
 }
 
-const getDesignation = (dataob) => {
-    return dataob.designation_id.name;
+const generateSupplierName = (dataob) => {
+    return dataob.supplier_id.suppliername;
 }
-const getEmployeeStatus = (dataob) => {
-    if (dataob.employeestatus_id.name == "working") {
-        return '<i class="fa-solid fa-person-circle-check fa-beat fa-xl" style="color: #07f702;"></i>'
+const getOrderStatus = (dataob) => {
+    if (dataob.purchaserequeststatus_id.name == "Pending") {
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;"></i>'
     }
 
-    if (dataob.employeestatus_id.name == "resign") {
-        return '<i class="fa-solid fa-person-circle-minus fa-beat fa-xl" style="color: #f6ee04;"></i>'
+    if (dataob.purchaserequeststatus_id.name == "Recived") {
+        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;"></i>'
     }
 
-    if (dataob.employeestatus_id.name == "delete") {
+    if (dataob.purchaserequeststatus_id.name == "Completed") {
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
+    }
+
+    if (dataob.purchaserequeststatus_id.name == "Cancelled ") {
         return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;"></i>'
     }
 
+    if (dataob.purchaserequeststatus_id.name == "Deleted") {
+        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
+    }
 
+
+}
+const generateItemList = (dataob) => {
+    let itemList = "";
+    dataob.items.forEach(item => {
+        itemList += `<li>${item.name} - ${item.quantity}</li>`;
+    });
+    return `<ul>${itemList}</ul>`;
 }
 //function for re fill purchase order form
 const purchaseOrderFormRefill = (ob, index) => {
@@ -212,45 +226,25 @@ const buttonPrintRow = () => {
 const checkFormError = () => {
     let errors = "";
 
-    if (employee.fullname == null) {
-        errors = errors + "Please Enter valid Full Name...! \n";
+    if (purchaseOrder.supplier_id == null) {
+        errors = errors + "Please Enter valid Supplier Name...! \n";
     }
 
-    if (employee.callingname == null) {
-        errors = errors + "Please Enter valid calling name...! \n";
-    }
-    if (employee.nic == null) {
-        errors = errors + "Please Enter valid nic...! \n";
-    }
-    if (employee.gender == null) {
-        errors = errors + "Please Enter valid gender...! \n";
-    }
-    if (employee.dob == null) {
-        errors = errors + "Please Enter valid Date of birth...! \n";
-    }
-    if (employee.email == null) {
-        errors = errors + "Please Enter valid email...! \n";
-    }
-    if (employee.mobile == null) {
-        errors = errors + "Please Enter valid mobile no...! \n";
+    if (purchaseOrder.requireddate == null) {
+        errors = errors + "Please Enter valid Required Date...! \n";
     }
 
-    if (employee.address == null) {
-        errors = errors + "Please Enter valid address...! \n";
+    if (purchaseOrder.totalamount == null) {
+        errors = errors + "Please Enter valid Total Amount...! \n";
     }
 
-    if (employee.designation_id == null) {
-        errors = errors + "Please Enter valid designation...! \n";
-    }
-    if (employee.civilstatus == null) {
-        errors = errors + "Please Enter valid civil status...! \n";
-    }
-    if (employee.employeestatus_id == null) {
-        errors = errors + "Please Enter valid employee status...! \n";
+    if (purchaseOrder.purchaseOrderHasItemList.length == 0) {
+        errors = errors + "Please Enter valid Purchase Order Items...! \n";
     }
 
     return errors;
 }
+    
 
 //Purchase Order form submit event function 
 const buttonPurchaseOrderSubmit = () => {
@@ -260,18 +254,18 @@ const buttonPurchaseOrderSubmit = () => {
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following employee...?" +
-            "\n Employee full name : " + employee.fullname +
-            "\n Employee nic : " + employee.nic +
-            "\n Employee designation : " + employee.designation_id.name
+        let userConfirm = window.confirm("Are you sure to add following Purchase Order...?" +
+            "\n Supplier name : " + purchaseOrder.supplier_id.suppliername +
+            "\n Purchase Order required date : " + purchaseOrder.requireddate +
+            "\n Purchase Order total amount : " + purchaseOrder.totalamount
         );
         if (userConfirm) {
             // call post service
-            let postResponce = getHTTPServiceRequest("/employee/insert", "POST", employee);
+            let postResponce = getHTTPServiceRequest("/purchaseOrders/insert", "POST", purchaseOrder);
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
-                refreshEmployeeTable();
-                refreshEmployeeform();
+                refreshPurchaseOrderTable();
+                refreshPurchaseOrderForm();
                 $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
             } else {
                 window.alert("Failed to submit \n" + errors + postResponce);
@@ -339,39 +333,39 @@ const checkFormUpdate = () => {
     return updates;
 }
 
-// form update event function 
-const buttonPurchaseOrderUpdate = () => {
+// // form update event function 
+// const buttonPurchaseOrderUpdate = () => {
 
-    //need to check form errors
-    let errors = checkFormError();
-    if (errors == "") {
-        // need to check form update
-        let updates = checkFormUpdate();
-        if (updates == "") {
-            window.alert("nothing to update..\n");
-        } else {
-            //need to get user confirmation
-            let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-            if (userConfirm) {
-                //call put service
-                let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
-                if (putResponce == "OK") {
-                    window.alert("Update Successfully...!");
-                    refreshPurchaseOrderTable();
-                    refreshPurchaseOrderform();
-                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-                } else {
-                    window.alert("Failed to update...!" + putResponce);
-                }
-            } else {
+//     //need to check form errors
+//     let errors = checkFormError();
+//     if (errors == "") {
+//         // need to check form update
+//         let updates = checkFormUpdate();
+//         if (updates == "") {
+//             window.alert("nothing to update..\n");
+//         } else {
+//             //need to get user confirmation
+//             let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
+//             if (userConfirm) {
+//                 //call put service
+//                 let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
+//                 if (putResponce == "OK") {
+//                     window.alert("Update Successfully...!");
+//                     refreshPurchaseOrderTable();
+//                     refreshPurchaseOrderform();
+//                     $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
+//                 } else {
+//                     window.alert("Failed to update...!" + putResponce);
+//                 }
+//             } else {
 
-            }
-        }
-    } else {
-        window.alert("something went wrong.. \n" + errors);
-    }
+//             }
+//         }
+//     } else {
+//         window.alert("something went wrong.. \n" + errors);
+//     }
 
-}
+// }
 
 // form delete event function 
 const buttonPurchaseOrderDelete = () => {
@@ -381,6 +375,7 @@ const buttonPurchaseOrderDelete = () => {
 
 const refreshPurchaseOrderForm = () => {
     purchaseOrder = new Object();
+    // main object ekata (purchaseOrder) list ekak (purchaseOrderHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
     purchaseOrder.purchaseOrderHasItemList = new Array();
 
     formPurchaseOrder.reset();
@@ -399,7 +394,7 @@ const refreshPurchaseOrderForm = () => {
     // selected value eka string walin ena nisa stringify kara gani
     selectOrderStatus.value = JSON.stringify(orderStatues[0]);
     // ema value eka newatha object ekata set kala yuththa object format ekeni
-    purchaseOrder.purchaseOrderStatus_id = JSON.parse(selectOrderStatus.value);
+    purchaseOrder.purchaserequeststatus_id = JSON.parse(selectOrderStatus.value);
     // status field eka sadaha validation colour eka laba deema
     prevElementOrderStatus = selectOrderStatus.previousElementSibling;
     selectOrderStatus.style.borderBottom = "4px solid green";
@@ -455,8 +450,29 @@ const refreshPurchaseOrderInnerForm = () => {
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
     fillDataIntoInnerTable(tableInnerBody, purchaseOrder.purchaseOrderHasItemList, propertyList, purchaseOrderItemFormRefill, purchaseOrderItemDelete, "#offcanvasBottom");
 
-
     $('#tablePurchaseOrder').DataTable();
+
+    // "purchaseOrderHasItemList" mehi data thibunoth line price genarate kara gatha heka
+
+    let totalAmount = 0.00;
+    for (const orderitem of purchaseOrder.purchaseOrderHasItemList) {
+        totalAmount = parseFloat(totalAmount) + parseFloat(orderitem.lineprice);
+        
+    }
+    // ui eke athi total amount field ekata value eka set kirima
+    // total amount eka 0.00 nowe nam value eka ui ekata set karai
+    if (totalAmount != 0.00) {
+        textTotalAmount.value = totalAmount.toFixed(2);
+        // object ekata set karai
+        purchaseOrder.totalamount = textTotalAmount.value;
+        // validation color eka set karai
+        prevElementTotalAmount = textTotalAmount.previousElementSibling;
+        textTotalAmount.style.borderBottom = "4px solid green";
+    prevElementTotalAmount.style.backgroundColor = "green";
+    textTotalAmount.classList.remove("is-invalid");
+    textTotalAmount.classList.add("is-valid");
+    } 
+
 }
 
 const genareateItemName = (dataob) => {
@@ -466,11 +482,13 @@ const genareateItemName = (dataob) => {
 
 const purchaseOrderItemFormRefill = (ob, index) => { }
 const purchaseOrderItemDelete = (ob, index) => {
-    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?" +
-        "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        "\n Quantity : " + purchaseOrderHasItem.quentity +
-        "\n Line Price : " + purchaseOrderHasItem.lineprice
+    console.log("Delete Purchase Order Item", purchaseOrderHasItem);
+    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?" 
+        // +
+        // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
+        // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
+        // "\n Quantity : " + purchaseOrderHasItem.quentity +
+        // "\n Line Price : " + purchaseOrderHasItem.lineprice
     );
     if (userConfirm) {
         window.alert("Item removed successfully from purchase order...!");
@@ -487,7 +505,8 @@ const buttonPurchaseOrderItemUpdate = (ob, index) => { }
 const buttonPurchaseOrderItemSubmit = (ob, index) => {
     console.log("Purchase Order Item", purchaseOrderHasItem);
 
-    let userConfirm = window.confirm("Are you sure to add following item to purchase order...?" +
+    let userConfirm = window.confirm("Are you sure to add following item to purchase order...?" 
+        +
         "\n Item : " + purchaseOrderHasItem.item_id.itemname +
         "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
         "\n Quantity : " + purchaseOrderHasItem.quentity +
@@ -496,6 +515,7 @@ const buttonPurchaseOrderItemSubmit = (ob, index) => {
     if (userConfirm) {
         window.alert("Item added successfully to purchase order...!");
         // main form eke thiyena list ekata ob eka push karai
+        // ema nisa table ekehida data atha.
         purchaseOrder.purchaseOrderHasItemList.push(purchaseOrderHasItem);
         refreshPurchaseOrderInnerForm();
     }

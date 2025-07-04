@@ -17,6 +17,8 @@ public class PurchaseOrderStatusController {
 
     @GetMapping(value = "/purchaseOrderStatues/alldata" , produces = "application/json")
 	public List<PurchaseOrderStatus> findAllData(){
+
         return purchaseOrderStatusDao.findAll();
+        
     }
 }
