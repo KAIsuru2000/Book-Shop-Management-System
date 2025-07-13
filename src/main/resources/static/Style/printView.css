@@ -1,0 +1,24 @@
+.printHeader {
+    background-color: #010a8f;
+    color: white;
+    /* padding: 20px; */
+    text-align: center;
+}
+
+.footer-bar {
+    margin-top: 30px;
+    text-align: center;
+    background-color: rgb(235, 127, 3);
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/*.left-vertical-line {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    !*left: 0;*!*/
+/*    width: 3px;             !* Line thickness *!*/
+/*    height: 100vh;          !* Full viewport height *!*/
+/*    background-color: yellow;*/
+/*}*/

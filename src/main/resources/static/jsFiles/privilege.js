@@ -29,7 +29,7 @@ const refreshPrivilegeTable = () => {
     { dataType: 'function', propertyName: getDel }];
 
     // call tablefill function
-    fillDataIntoTable(tablePrivilegeBody, privileges, displayPropertyList, rowFormRefill, rowDelete, rowPrint, "#offcanvasBottom");
+    fillDataIntoTable(tablePrivilegeBody, privileges, displayPropertyList, rowFormRefill, rowDelete, privilegeRowView, "#offcanvasBottom");
 
     //j querry table ekak bawata path kirima
     $('#tablePrivilege').DataTable();
@@ -160,36 +160,52 @@ const rowDelete = (dataob, rowIndex) => {
     }
 }
 
-//function for view / print employee form
-const rowPrint = (ob, index) => {
+//privilege table eka thula athi view button eke function eka
+const privilegeRowView = (ob, index) => {
     console.log("View", ob, index);
 
     // html wala athi modal ekak open weema 
-    tdRole.innerHTML = getRoleStatus(ob);
-    tdModule.innerHTML = getModuleStatus(ob);
-    tdSelect.innerHTML = getSel(ob);
-    tdInsert.innerHTML = getInst(ob);
-    tdUpdate.innerHTML = getUpt(ob);
-    tdDelete.innerHTML = getDel(ob);
-    $("#modalPrivilegeView").modal("show");
+    privilegeRoleView.innerHTML = getRoleStatus(ob);
+    moduleView.innerHTML = getModuleStatus(ob);
+    selectView.innerHTML = getSel(ob);
+    insertView.innerHTML = getInst(ob);
+    updateView.innerHTML = getUpt(ob);
+    deleteView.innerHTML = getDel(ob);
+    $("#offcanvasBottomPrivilegeView").offcanvas("show");
 
 }
-//print button function
+//print offcanvas model eka thula athi print button eka function eka
 const buttonPrintRow = () => {
     //aluth window ekak open kara ganima
     let newWindow = window.open();
-    //ema window ekata title ekak demima
-    //title eke html code tika venama verible ekakata dama ganima
-    // ../ folder ekakin eliyata emata
-    let printView = "<html>" + "<head><title>Print</title><link rel='stylesheet' href='./Resources/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='./Resources/bootstrap-5.2.3/css/bootstrap.min.css'><script src='./Resources/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script></head>" + "<body>" + tablePrivilegeView.outerHTML +
-        "</body>" + "<html>";
-    newWindow.document.write(printView);
+
+    newWindow.document.write(`
+            <html>
+            <head>
+                <title>Print View - Privilege Details</title>
+                <!-- link bootstrp min css file -->
+    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!--link bootstrap js file  -->
+    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+    
+                <!-- link css file -->
+                    <link rel="stylesheet" href="/Style/printView.css">
+                    
+                    <!-- link Fontawasome css file -->
+    <link rel="stylesheet" href="/fontawesome-free-6.4.2/css/all.css">
+            </head>
+            <body>
+                ${document.querySelector('.bodyPrintView').outerHTML}
+            </body>
+            </html>
+        `);
     //open wana tab eka tika welawak open wee thibee print ekata open weema
     setTimeout(() => {
         newWindow.stop();
         newWindow.print();
         newWindow.close();
-    }, 1500)
+    }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
 }
 
 // creat function for refersh employee form
@@ -403,5 +419,14 @@ const buttonPrivilageUpdate = () => {
     } else {
         window.alert("Forms has following error...\n" + errors);
 
+    }
+}
+
+// clear privilege form
+const clearPrivilegeForm = () => {
+
+    let userConfirm = window.confirm("Do you need to refresh form...?");
+    if (userConfirm) {
+        refreshPrivilegeForm();
     }
 }

@@ -32,7 +32,7 @@ const refreshUserTable = () => {
     ];
 
     // call tablefill function
-    fillDataIntoTable(tableUserBody, users, displayPropertyList, rowFormRefill, rowDelete, rowPrint, "#offcanvasBottom");
+    fillDataIntoTable(tableUserBody, users, displayPropertyList, userRowFormRefill, userRowDelete, userRowView, "#offcanvasBottom");
 
     //call jquerry data table
     $('#tableUser').dataTable();
@@ -83,7 +83,7 @@ const getRole = (dataob) => {
 
 
 // form refill function
-const rowFormRefill = (dataob, rowIndex) => {
+const userRowFormRefill = (dataob, rowIndex) => {
     console.log("Update");
     console.log(dataob);
 
@@ -201,7 +201,7 @@ const rowFormRefill = (dataob, rowIndex) => {
 }
 
 // row delete function
-const rowDelete = (dataob, rowIndex) => {
+const userRowDelete = (dataob, rowIndex) => {
     //delete sadaha confirmation ganima
     const userResponce = window.confirm('Are you sure to delete following user\n' +
         'Employee is : ' + dataob.username
@@ -224,10 +224,72 @@ const rowDelete = (dataob, rowIndex) => {
     }
 }
 
-// row print function
-const rowPrint = (dataob, rowIndex) => {
-    console.log("Print");
-    console.log(dataob);
+//user table eka thula athi view button eke function eka
+const userRowView = (dataob, rowIndex) => {
+    console.log("View", dataob, rowIndex);
+
+    
+
+    // html wala athi modal ekak open weema 
+    employeeNameView.innerText = dataob.employee_id.fullname;
+
+    //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
+    let roles = "";
+    // role list ekak ena nisa
+    dataob.roles.forEach((role, index) => {
+        if (dataob.roles.length - 1 == index) {
+            //last role eken pasu "," ekak set nokarai
+            roles = roles + role.name;
+        } else {
+            //roles veriable ekata concatinate kara ganimata role object eke name access karala
+            //name athara gap ekak thaba gani
+            roles = roles + role.name + " , ";
+        }
+
+    });
+    document.getElementById("roleView").textContent = roles;
+
+    if (dataob.status == true) {
+        userStatusView.innerText = "Active";
+    } else {
+        userStatusView.innerText = "Inactive";
+    }
+    userNameView.innerText = dataob.username;
+    
+
+    $("#offcanvasBottomUserView").offcanvas("show"); // show the offcanvas
+    
+}
+//print offcanvas model eka thula athi print button eka function eka
+const buttonPrintRow = () => {
+
+    //aluth window ekak open kara ganima
+    let newWindow = window.open();
+
+    newWindow.document.write(`
+            <html>
+            <head>
+                <title>Print View - User Details</title>
+                <!-- link bootstrp min css file -->
+    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!--link bootstrap js file  -->
+    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+    
+                <!-- link css file -->
+                    <link rel="stylesheet" href="/Style/printView.css">
+            </head>
+            <body>
+                ${document.querySelector('.bodyPrintView').outerHTML}
+            </body>
+            </html>
+        `);
+    //open wana tab eka tika welawak open wee thibee print ekata open weema
+    setTimeout(() => {
+        newWindow.stop();
+        newWindow.print();
+        newWindow.close();
+    }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
 }
 
 // creat function for refersh user form

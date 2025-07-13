@@ -40,7 +40,7 @@ const refreshItemTable = () => {
     ];
 
     // call tablefill function
-    fillDataIntoTable(tableItemBody, items, displayPropertyList, rowFormRefill, rowDelete, rowPrint, "#offcanvasBottom");
+    fillDataIntoTable(tableItemBody, items, displayPropertyList, rowFormRefill, rowDelete, itemRowView, "#offcanvasBottom");
 
     //call jquerry data table
     $('#tableItem').dataTable();
@@ -154,7 +154,64 @@ const rowDelete = (dataob, rowIndex) => {
 
 }
 
-const rowPrint = (dataob, rowIndex) => { }
+//item table eka thula athi view button eke function eka
+const itemRowView = (dataob, rowIndex) => {
+    console.log("View", dataob, rowIndex);
+    // html wala athi modal ekak open weema
+    brandNameView.innerText = dataob.brand_id.name;
+    SubcategoryView.innerText = dataob.subcategory_id.name;
+    itemNameView.innerText = dataob.itemname;
+    statusView.innerText = dataob.itemstatus_id.name;
+    rOPView.innerText = dataob.rop;
+    purchasePriceView.innerText = dataob.purchaseprice;
+    rOQView.innerText = dataob.roq;
+    profitRatioView.innerText = dataob.profitrate;
+    salesPriceView.innerText = dataob.salesprice;
+    discountRatioView.innerText = dataob.discountrate;
+    if (dataob.note == undefined) {
+        noteView.innerText = "-";
+    } else {
+        noteView.innerText = dataob.note;
+    }
+
+    $("#offcanvasBottomItemView").offcanvas("show"); // show the offcanvas
+
+}
+
+//print offcanvas model eka thula athi print button eka function eka
+const buttonPrintRow = () => {
+
+    //aluth window ekak open kara ganima
+    let newWindow = window.open();
+    //ema window ekata title ekak demima
+    //title eke html code tika venama verible ekakata dama ganima
+    // let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/printView.css'></head>" + "<body>" + bodyView.outerHTML +
+    //     "</body>";
+    newWindow.document.write(`
+            <html>
+            <head>
+                <title>Print View - Item Details</title>
+                <!-- link bootstrp min css file -->
+    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!--link bootstrap js file  -->
+    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+    
+                <!-- link css file -->
+                    <link rel="stylesheet" href="/Style/printView.css">
+            </head>
+            <body>
+                ${document.querySelector('.bodyPrintView').outerHTML}
+            </body>
+            </html>
+        `);
+    //open wana tab eka tika welawak open wee thibee print ekata open weema
+    setTimeout(() => {
+        newWindow.stop();
+        newWindow.print();
+        newWindow.close();
+    }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
+}
 
 
 // creat function for refersh user form
@@ -500,6 +557,14 @@ const buttonItemUpdate = () => {
         window.alert("Form has following error \n" + errors);
     }
 
+}
+
+const clearItemForm = () => {
+
+    let userConfirm = window.confirm("Do you need to refresh form...?");
+    if (userConfirm) {
+        refreshItemForm();
+    }
 }
 
 

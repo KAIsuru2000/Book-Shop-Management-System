@@ -26,7 +26,7 @@ const refreshEmployeeTable = () => {
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tableEmployeeBody, employees, propertyList, employeeFormRefill, employeeDelete, employeeView, "#offcanvasBottom");
+    fillDataIntoTable(tableEmployeeBody, employees, propertyList, employeeRowFormRefill, employeeRowDelete, employeeRowView, "#offcanvasBottom");
 
 
     $('#tableEmployee').DataTable();
@@ -53,7 +53,7 @@ const getEmployeeStatus = (dataob) => {
     
 }
 //function for re fill employee form
-const employeeFormRefill = (ob, index) => {
+const employeeRowFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
 
     // refill value in to element -> elementId.value = ob.releventPropertyName
@@ -107,7 +107,7 @@ const employeeFormRefill = (ob, index) => {
 }
 
 //function for delete employee form
-const employeeDelete = (ob, index) => {
+const employeeRowDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
     // activeTableRow(tableEmployeeBody, index, "red");
@@ -139,9 +139,9 @@ const employeeDelete = (ob, index) => {
     }
 }
 
-//function for view / print employee form
-const employeeView = (ob, index) => {
-    console.log("View", ob, index);
+//employee table eka thula athi view button eke function eka
+const employeeRowView = (dataob, index) => {
+    console.log("View", dataob, index);
     //option 1
     //aluth window ekak open kara ganima
     // let newWindow = window.open();
@@ -163,41 +163,59 @@ const employeeView = (ob, index) => {
 
     //option 2
     // html wala athi modal ekak open weema 
-    fullNameView.innerText = ob.fullname;
-    callingNameView.innerText = ob.callingname;
-    nicView.innerText = ob.nic;
-    genderView.innerText = ob.gender;
-    dobView.innerText = ob.dob;
-    emailView.innerText = ob.email;
-    mobileView.innerText = ob.mobile;
-    if (ob.landno == undefined) {
+    fullNameView.innerText = dataob.fullname;
+    callingNameView.innerText = dataob.callingname;
+    nicView.innerText = dataob.nic;
+    genderView.innerText = dataob.gender;
+    dobView.innerText = dataob.dob;
+    emailView.innerText = dataob.email;
+    mobileView.innerText = dataob.mobile;
+    if (dataob.landno == undefined) {
         landNoView.innerText = "-";
     } else {
-        landNoView.innerText = ob.landno;
+        landNoView.innerText = dataob.landno;
     }
-    addressView.innerText = ob.address
-    if (ob.note == undefined) {
+    addressView.innerText = dataob.address
+    if (dataob.note == undefined) {
         noteView.innerText = "-";
     } else {
-        noteView.innerText = ob.note;
+        noteView.innerText = dataob.note;
     }
-    designationView.innerText = ob.designation_id.name;
-    civilStatusView.innerText = ob.civilstatus;
-    employeeStatusView.innerText = ob.employeestatus_id.name;
+    designationView.innerText = dataob.designation_id.name;
+    civilStatusView.innerText = dataob.civilstatus;
+    employeeStatusView.innerText = dataob.employeestatus_id.name;
 
-    $("#offcanvasBottomView").offcanvas("show"); // show the offcanvas
+    $("#offcanvasBottomEmployeeView").offcanvas("show"); // show the offcanvas
 
 }
-//print button function
+
+//print offcanvas model eka thula athi print button eka function eka
 const buttonPrintRow = () => {
     
     //aluth window ekak open kara ganima
     let newWindow = window.open();
     //ema window ekata title ekak demima
     //title eke html code tika venama verible ekakata dama ganima
-    let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/common.css'></head>" + "<body style='background-color:white;  justify-content: center; display: flex;'>" + tableView.outerHTML +
-        "</body>";
-    newWindow.document.write(printView);
+    // let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/printView.css'></head>" + "<body>" + bodyView.outerHTML +
+    //     "</body>";
+    newWindow.document.write(`
+            <html>
+            <head>
+                <title>Print View - Employee Details</title>
+                <!-- link bootstrp min css file -->
+    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!--link bootstrap js file  -->
+    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+    
+                <!-- link css file -->
+                    <link rel="stylesheet" href="/Style/printView.css">
+            </head>
+            <body>
+                ${document.querySelector('.bodyPrintView').outerHTML}
+            </body>
+            </html>
+        `);
     //open wana tab eka tika welawak open wee thibee print ekata open weema
     setTimeout(() => {
         newWindow.stop();
@@ -851,6 +869,15 @@ const refreshEmployeeform = () => {
 
     let employeeStatues = getServiceRequest('/employeeStatues/alldata');
     fillDataIntoSelect(selectEmpStatus, "Please Select Status..!!", employeeStatues, "name");
+}
+
+// form eke clear button eka sadaha
+const clearEmployeeForm = () => {
+
+    let userConfirm = window.confirm("Do you need to refresh form...?");
+    if (userConfirm) {
+        refreshEmployeeform();
+    }
 }
 
 
