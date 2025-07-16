@@ -27,7 +27,7 @@
             <div class="col-1"></div>
             <div class="col-2">
                 <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshSupplierForm()">
                     <i class="fa-solid fa-circle-plus"></i>
                     Add New Supplier
                 </button>
@@ -102,8 +102,7 @@
                                     <!-- Supplier Name area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg"
-                                                id="inputGroup-sizing-default">Supplier Name :
+                                            <span class="input-group-text lablBg">Supplier Name :
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
                                             <input type="text" placeholder="Enter Supplier Name" class="form-control" aria-label="Sizing example input"
@@ -248,7 +247,7 @@
                                     <!-- Status area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectItemStatus">Supplier
+                                            <label class="input-group-text lablBg" for="selectSupplierStatus">Supplier
                                                 Status:
                                                 <span class="fw-bold text-danger">*</span></label>
                                             <select class="form-select" id="selectSupplierStatus"
@@ -267,7 +266,7 @@
                                     <!-- Bank Name area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Bank
+                                            <span class="input-group-text lablBg">Bank
                                                 Name &nbsp; &nbsp; :
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
@@ -283,7 +282,7 @@
                                     <!-- Branch Name area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Branch
+                                            <span class="input-group-text lablBg">Branch
                                                 Name :
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
@@ -321,7 +320,7 @@
                                     <!-- Holder Name area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Holder
+                                            <span class="input-group-text lablBg">Holder
                                                 Name &nbsp; :
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
@@ -359,7 +358,7 @@
 
                                     <!-- clear btn area start -->
                                     <div class="col-2">
-                                        <button type="button" class="btn btnClear">
+                                        <button type="button" class="btn btnClear" onclick="refreshSupplierForm()">
                                             <i class="fa-solid fa-eraser"></i>
                                             Clear
                                         </button>

@@ -869,6 +869,17 @@ const refreshEmployeeform = () => {
 
     let employeeStatues = getServiceRequest('/employeeStatues/alldata');
     fillDataIntoSelect(selectEmpStatus, "Please Select Status..!!", employeeStatues, "name");
+    // status eka form eka load wana wita select wi thibimata
+    // selected value eka string walin ena nisa stringify kara gani
+    selectEmpStatus.value = JSON.stringify(employeeStatues[0]);
+    // ema value eka newatha object ekata set kala yuththa object format ekeni
+    employee.employeestatus_id = JSON.parse(selectEmpStatus.value);
+    // status field eka sadaha validation colour eka laba deema
+    prevElementEmpStatus = selectEmpStatus.previousElementSibling;
+    selectEmpStatus.style.borderBottom = "4px solid green";
+    prevElementEmpStatus.style.backgroundColor = "green";
+    selectEmpStatus.classList.remove("is-invalid");
+    selectEmpStatus.classList.add("is-valid");
 }
 
 // form eke clear button eka sadaha

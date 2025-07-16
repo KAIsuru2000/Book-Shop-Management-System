@@ -35,7 +35,7 @@ const refreshSupplierTable = () => {
     ];
 
     // call tablefill function
-    fillDataIntoTable(tableSupplierBody, suppliers, displayPropertyList, rowFormRefill, rowDelete, rowPrint, "#offcanvasBottom");
+    fillDataIntoTable(tableSupplierBody, suppliers, displayPropertyList, rowFormRefill, supplierRowDelete, rowPrint, "#offcanvasBottom");
 
     //call jquerry data table
     $('#tableCustomer').dataTable();
@@ -193,7 +193,37 @@ const rowFormRefill = (dataob, rowIndex) => {
      updateButton.style.visibility = "visible";
 }
 
-const rowDelete = (dataob, rowIndex) => {}
+const supplierRowDelete = (dataob, rowIndex) => {
+    console.log("Delete", dataob, rowIndex);
+
+    // activeTableRow(tableEmployeeBody, index, "red");
+
+
+    let userConfirm = window.confirm("Are you sure to delete following supplier...?" +
+        "\n Supplier name : " + dataob.suppliername +
+        "\n Supplier email : " + dataob.email +
+        "\n Supplier status : " + dataob.supplierstatus_id.name
+    );
+    if (userConfirm) {
+        // call post service
+        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
+        let deleteResponce = getHTTPServiceRequest("/supplier/delete", "DELETE", dataob);
+
+        if (deleteResponce == "OK") {
+            window.alert("Delete successfully ");
+            refreshSupplierTable();
+            refreshSupplierForm();
+
+        } else {
+            window.alert("Delete not successfully" + deleteResponce);
+
+        }
+
+
+
+
+    }
+}
     
 const rowPrint = (dataob, rowIndex) => {}
 

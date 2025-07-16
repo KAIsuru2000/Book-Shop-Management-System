@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.supplier.dao.SupplierDao;
+import lk.brightbs.supplier.dao.SupplierStatusDao;
 import lk.brightbs.supplier.entity.Supplier;
 import lk.brightbs.user.dao.UserDao;
 import lk.brightbs.user.entity.User;
@@ -27,6 +29,9 @@ public class SupplierController {
 
     @Autowired
     private SupplierDao supplierDao;
+
+	@Autowired
+    private SupplierStatusDao supplierStatusDao;
 
 	// userprivilegecontroller walin constructer object ekak sada ganima
 	@Autowired
@@ -116,4 +121,37 @@ public class SupplierController {
 		}
 	}
     
+	 //define delete mapping
+ @SuppressWarnings("unused")
+	@DeleteMapping(value = "/supplier/delete")
+    //object eka requestbody eken Supplier type supplier object ekak pass wei
+	public String deleteSupplier(@RequestBody Supplier supplier) {
+		// check user authentication and authorization
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SUPPLIER");
+		if (userPrivilege.getDel()) {
+			//check ext
+			//exting user object ekak ganima 
+			Supplier extSupplier = supplierDao.getReferenceById(supplier.getId());
+			if(extSupplier == null ){
+				// ehema kenek neththan
+				return "Supplier not exit";
+			}
+
+			try {
+				extSupplier.setSupplierstatus_id(supplierStatusDao.getReferenceById(3));
+				extSupplier.setDeletedatetime(LocalDateTime.now());
+
+				//fontend eken ena eka wenas karala awoth eka balapemak wena hinda exit record eka save karai
+				supplierDao.save(extSupplier);
+				return "OK";
+			} catch (Exception e) {
+
+				return "Delete not completed : " + e.getMessage();
+
+			}
+		} else {
+			return "Delete not completed : you haven't permission...";
+		}
+	}
 }

@@ -81,7 +81,7 @@ public class EmployeeController {
 
 	// request post mapping for insert employee data url --> /employee/insert
 	@PostMapping(value = "/employee/insert")
-	//employee insert ekata call eka yai
+	//employee insert ekata call eka yaioffcanvasBottomItemView
 	//esa yana wita data object ekak ewiya yuthuya
 	//post eke data object eka yewiya yuthuya
 	//ema data object eka mema method ekedi puluwan RequestBody yana anotation eken access karanna

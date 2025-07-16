@@ -50,7 +50,7 @@
                                 <th>Purchase price</th>
                                 <th>Profit rate</th>
                                 <th>Sales Price</th>
-                                
+
                                 <th>ROQ</th>
                                 <th>Status</th>
 
@@ -107,10 +107,10 @@
                                     <div class="col-4">
                                         <div class="input-group mb-3">
                                             <label class="input-group-text lablBg" for="selectItemCategory">Item
-                                                Category &nbsp; &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></label>
+                                                Category &nbsp; &nbsp; &nbsp; : <span
+                                                    class="fw-bold text-danger">*</span></label>
                                             <select id="selectItemCategory" class="form-select" data-bs-toggle="tooltip"
-                                                title="select Item Category correctly here."
-                                                >
+                                                title="select Item Category correctly here.">
                                                 <option selected disabled>Select Item Category</option>
                                                 <option value=""></option>
                                                 <option value=""></option>
@@ -123,7 +123,8 @@
                                     <!-- Item Brand area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectItemBrand">Item Brand : <span class="fw-bold text-danger">*</span></label>
+                                            <label class="input-group-text lablBg" for="selectItemBrand">Item Brand :
+                                                <span class="fw-bold text-danger">*</span></label>
                                             <select id="selectItemBrand" class="form-select"
                                                 onchange=" selectDainamicElementValidater(this , 'item', 'brand_id'); generateItemName();"
                                                 onclick=" selectDainamicElementValidater(this , 'item', 'brand_id'); generateItemName();"
@@ -179,12 +180,13 @@
                                     </div>
                                     <!-- Item Name end-->
 
-                                    
+
 
                                     <!-- Item Status area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectItemStatus">Item Status &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <label class="input-group-text lablBg" for="selectItemStatus">Item Status
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span></label>
                                             <select class="form-select" id="selectItemStatus"
                                                 onchange="selectDainamicElementValidater(this , 'item', 'itemstatus_id')"
@@ -202,14 +204,15 @@
                                 </div>
                                 <!-- Item name and Item Status row end -->
 
-                            
+
                                 <!-- ROP , ROQ and Purchase Price row start-->
                                 <div class="row mt-4">
 
                                     <!-- ROP area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span for="textROP" class="input-group-text lablBg">ROP &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                            <span for="textROP" class="input-group-text lablBg">ROP &nbsp; &nbsp; &nbsp;
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
                                                     class="fw-bold text-danger">*</span></span>
                                             <input type="text" class="form-control" placeholder="
                                             Enter ROP" aria-label="Sizing example input"
@@ -225,8 +228,8 @@
                                     <!-- ROQ area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span for="textROQ" class="input-group-text lablBg">ROQ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : <span
-                                                    class="fw-bold text-danger">*</span></span>
+                                            <span for="textROQ" class="input-group-text lablBg">ROQ &nbsp; &nbsp; &nbsp;
+                                                &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></span>
                                             <input type="text" class="form-control" placeholder="
                                             Enter ROQ" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textROQ" required
@@ -241,13 +244,15 @@
                                     <!-- Purchase Price area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span for="textPurchasePrice" class="input-group-text lablBg">Purchase Price &nbsp; &nbsp;:
+                                            <span for="textPurchasePrice" class="input-group-text lablBg">Purchase Price
+                                                &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span></span>
                                             <input type="text" class="form-control" placeholder="
                                             Enter Purchase Price" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textPurchasePrice"
-                                                required onkeyup="textValidator(this, '^.*$', 'item', 'purchaseprice'); genarateSalesPrice();"
-                                                onclick="textValidator(this, '^.*$', 'item', 'purchaseprice')  " 
+                                                required
+                                                onkeyup="textValidator(this, '^.*$', 'item', 'purchaseprice'); genarateSalesPrice();"
+                                                onclick="textValidator(this, '^.*$', 'item', 'purchaseprice')  "
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the Purchase Price correctly here.">
                                         </div>
@@ -263,12 +268,14 @@
                                     <!-- Profit Ratio area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span for="textProfitRatio" class="input-group-text lablBg">Profit Ratio &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                            <span for="textProfitRatio" class="input-group-text lablBg">Profit Ratio
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
                                                     class="fw-bold text-danger">*</span></span>
                                             <input type="text" class="form-control" placeholder="
                                             Enter Profit Ratio" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textProfitRatio"
-                                                required onkeyup="textValidator(this, '^.*$', 'item', 'profitrate'); genarateSalesPrice();"
+                                                required
+                                                onkeyup="textValidator(this, '^.*$', 'item', 'profitrate'); genarateSalesPrice();"
                                                 onclick="textValidator(this, '^.*$', 'item', 'profitrate')"
                                                 data-bs-toggle="tooltip" title="Enter the Profit Ratio correctly here.">
                                         </div>
@@ -278,8 +285,8 @@
                                     <!-- Sales Price area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span for="textSalesPrice" class="input-group-text lablBg">Sales Price : <span
-                                                    class="fw-bold text-danger">*</span></span>
+                                            <span for="textSalesPrice" class="input-group-text lablBg">Sales Price :
+                                                <span class="fw-bold text-danger">*</span></span>
                                             <input type="text" class="form-control" placeholder="
                                             Enter Sales Price" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textSalesPrice"
@@ -316,8 +323,8 @@
                                     <!-- Note area start -->
                                     <div class="col-4">
                                         <div class="input-group">
-                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp;: <span
-                                                    class="text-danger">(optional)</span></span>
+                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="text-danger">(optional)</span></span>
                                             <textarea placeholder="
                                             Enter Note" id="textNote" class="form-control" aria-label="With textarea"
                                                 onkeyup="textValidator(this, '^.*$', 'item', 'note')"
@@ -379,7 +386,8 @@
 
                                     <!-- update button area start -->
                                     <div class="col-2">
-                                        <button type="button" id="updateButton" class=" btn btnUpdate" onclick="buttonItemUpdate()">
+                                        <button type="button" id="updateButton" class=" btn btnUpdate"
+                                            onclick="buttonItemUpdate()">
                                             <i class="fa-solid fa-file-pen"></i>
                                             Update
                                         </button>
@@ -388,7 +396,8 @@
 
                                     <!-- Add btn area start -->
                                     <div class="col-2">
-                                        <button type="button" id="submitButton" class=" btn btnAdd" onclick="submitItemForm()">
+                                        <button type="button" id="submitButton" class=" btn btnAdd"
+                                            onclick="submitItemForm()">
                                             <!-- button Submit function eka (item.js)-->
                                             <i class="fa-solid fa-file-circle-plus"></i>
                                             Add
@@ -406,11 +415,11 @@
         </div>
         <!-- offcanvas area end -->
 
-        <!-- view/print user -->
+        <!-- view/print item -->
         <!-- Modal -->
         <!-- offcanvas area start -->
         <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
-             data-bs-backdrop="false" id="offcanvasBottomItemView" aria-labelledby="offcanvasBottomLabel">
+            data-bs-backdrop="false" id="offcanvasBottomItemView" aria-labelledby="offcanvasBottomLabel">
             <div class="offcanvas-header">
                 <!--offcanvas close button start -->
                 <div class="row">
@@ -418,7 +427,7 @@
                     <!-- offcanvas close button start -->
                     <div class="col-1">
                         <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
-                                aria-label="Close">X</button>
+                            aria-label="Close">X</button>
                     </div>
                     <!-- offcanvas close button start -->
 
@@ -430,7 +439,7 @@
                 <!--offcanvas close button end -->
             </div>
             <div class="offcanvas-body small">
-                <!--                user print view area start-->
+                <!--user print view area start-->
                 <div>
 
                     <head>
@@ -439,120 +448,141 @@
                     </head>
 
                     <body>
-                    <div class="container-fluid bodyPrintView">
-                        <div class = "row">
-                            <div class = "col-1"></div>
-                            <div class = "col-10">
-                                <!--udin thiras kaha paata irak Adiima-->
-                                <div style="height: 15px; background-color: rgb(233, 125, 2);"></div>
-                                <!--wam kelawaren siras kaha paata irak Adiima-->
-                                <!--<div class="left-vertical-line"></div>-->
+                        <div class="container-fluid bodyPrintView">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-10">
+                                    <!--udin thiras kaha paata irak Adiima-->
+                                    <div style="height: 15px; background-color: rgb(233, 125, 2);"></div>
+                                    <!--wam kelawaren siras kaha paata irak Adiima-->
+                                    <!--<div class="left-vertical-line"></div>-->
 
-                                <div class="printHeader">
+                                    <div class="printHeader">
+                                        <div class="row">
+
+
+                                            <div class="col-9 mt-4">
+                                                <h1>Item Details</h1>
+                                            </div>
+                                            <div class="col-3">
+                                                <img src="/image/printView.png" alt="Logo" class="img-fluid" width="300"
+                                                    height="120">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
+                                        <div class="col-3"></div>
+                                        <div class="col-6">
+                                            <table style="border: none;">
 
+                                                <tbody style="border: none;">
+                                                    <tr>
+                                                        <th colspan="3" style="text-align: center;border: none;"><img
+                                                                src="" alt="User photo" width="30" height="30"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Brand
+                                                            name</th>
+                                                        <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="brandNameView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">
+                                                            Subcategory name</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="SubcategoryView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black;border: none; text-align: left;">Item
+                                                            Name</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="itemNameView"></th>
 
-                                        <div class="col-9 mt-4">
-                                            <h1>Item Details</h1>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Status
+                                                        </th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="statusView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">ROP</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="rOPView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">ROQ</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="rOQView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Purchase
+                                                            Price</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="purchasePriceView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Profit
+                                                            Ratio</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="profitRatioView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Sales
+                                                            Price</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="salesPriceView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Discount
+                                                            Ratio</th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="discountRatioView"></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:black; text-align: left;border: none;">Note
+                                                        </th>
+                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
+                                                            &nbsp; </th>
+                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                                                            id="noteView"></th>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
                                         </div>
-                                        <div class="col-3">
-                                            <img src="/image/printView.png" alt="Logo" class="img-fluid" width="300" height="120">
-                                        </div>
+                                        <div class="col-3"></div>
+                                    </div>
+                                    <!-- user view table area end -->
+
+                                    <div class="footer-bar">
+                                        Contact: 033-2245678 | Email: info@brightbookshop.lk
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3"></div>
-                                    <div class="col-6">
-                                        <table style="border: none;">
-
-                                            <tbody style="border: none;">
-                                            <tr>
-                                                <th colspan="3" style="text-align: center;border: none;"><img src=""
-                                                                                                              alt="User photo" width="30" height="30"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Brand name</th>
-                                                <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="brandNameView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Subcategory name</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="SubcategoryView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black;border: none; text-align: left;">Item Name</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="itemNameView"></th>
-
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Status</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="statusView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">ROP</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="rOPView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">ROQ</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="rOQView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Purchase Price</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="purchasePriceView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Profit Ratio</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="profitRatioView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Sales Price</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="salesPriceView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Discount Ratio</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="discountRatioView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Note</th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="noteView"></th>
-                                            </tr>
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-                                    <div class="col-3"></div>
-                                </div>
-                                <!-- user view table area end -->
-
-                                <div class="footer-bar">
-                                    Contact: 033-2245678 | Email: info@brightbookshop.lk
-                                </div>
+                                <div class="col-1"></div>
                             </div>
-                            <div class = "col-1"></div>
-                        </div>
 
-                    </div>
+                        </div>
                     </body>
 
 
@@ -572,16 +602,18 @@
 
 
 
-    <!-- link js files -->
-    <script src="/jsFiles/common.js"></script>
+                <!-- link js files -->
+                <script src="/jsFiles/common.js"></script>
 
-    <script src="/jsFiles/tableFunction.js"></script>
+                <script src="/jsFiles/tableFunction.js"></script>
 
-    <script src="/jsFiles/validatorFunction.js"></script>
+                <script src="/jsFiles/validatorFunction.js"></script>
 
-    <script src="/jsFiles/item.js"></script>
+                <script src="/jsFiles/item.js"></script>
 
-    </div>
+            </div>
+            </div>
+            </div>
 </body>
 
 </html>
