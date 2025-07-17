@@ -313,4 +313,13 @@ const buttonCustomerUpdate = () => {
     }
 
 }
+
+const clearCustomerForm = () => {
+
+    let userConfirm = window.confirm("Do you need to refresh form...?");
+    if (userConfirm) {
+        refreshCustomerForm();
+    }
+}
+
     

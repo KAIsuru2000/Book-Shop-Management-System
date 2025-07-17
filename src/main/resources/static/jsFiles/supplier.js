@@ -224,7 +224,7 @@ const supplierRowDelete = (dataob, rowIndex) => {
 
     }
 }
-
+// table eka thula athi view button ekata click kalaama view modal eka open karanawa
 const supplierRowPrint = (dataob, rowIndex) => {
     console.log("View", dataob, rowIndex);
     // html wala athi modal ekak open weema
@@ -533,3 +533,13 @@ const buttonSupplierUpdate = () => {
     }
 
 }
+
+const clearSupplierForm = () => {
+
+    let userConfirm = window.confirm("Do you need to refresh form...?");
+    if (userConfirm) {
+        refreshSupplierForm();
+    }
+}
+
+    
