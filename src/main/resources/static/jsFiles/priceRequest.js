@@ -299,3 +299,93 @@ const buttonPriceRequestSubmit = () => {
     }
 }
 
+//define function for check item updates
+const checkPriceRequestFormUpdate = () => {
+
+    let updates = "";
+
+    //mulinma veriable eka thibeda balima >> item and olditem >> compair kirima sadaha value thibiya yuthuya
+    if (priceRequest != null && oldPriceRequest != null) {
+        if (priceRequest.note != oldPriceRequest.note) {
+            updates = updates + "Note is change...! \n";
+        }
+        if (priceRequest.requireddate != oldPriceRequest.requireddate) {
+            updates = updates + "Required Date is change...! \n";
+        }
+        if (priceRequest.supplier_id.suppliername != oldPriceRequest.supplier_id.suppliername) {
+            updates = updates + "Supplier Name is change...! \n";
+        }
+
+        if (priceRequest.pricelistrequeststatus_id.name != oldPriceRequest.pricelistrequeststatus_id.name) {
+            updates = updates + "Price List Request Status is change...! \n";
+        }
+
+        // update karapu items balanawa kalin tibba items ekka
+        if (priceRequest.items.length !== oldPriceRequest.items.length) {
+            updates = updates + "Selected items are change...! \n";
+        } else {
+            let extItemCount = 0;
+            for (let element of priceRequest.items) {
+
+                oldPriceRequest.items.forEach(item => {
+                    if (element.id == item.id) {
+                        extItemCount = extItemCount + 1;
+                    }
+                });
+
+            }
+            if (extItemCount != priceRequest.items.length) {
+                updates = updates + "Selected items are change...! \n";
+            }
+        }
+
+    }
+    return updates;
+
+}
+
+//define function for update item
+const buttonPriceRequestUpdate = () => {
+
+    console.log("priceRequest", priceRequest);
+    console.log("oldPriceRequest", oldPriceRequest);
+
+    //need to check form error
+    let errors = checkPriceRequestFormErrors();
+
+    //get user confurmation
+    if (errors == "") {
+
+        let updates = checkPriceRequestFormUpdate();
+        if (updates != "") {
+            let userConfirm = window.confirm("Are you sure to update following price request changes \n"
+                + updates
+
+            );
+
+            //call post service
+            if (userConfirm) {
+                let putResponce = getHTTPServiceRequest("/priceRequest/update", "PUT", priceRequest);
+                if (putResponce == "OK") {
+                    window.alert("priceRequest updated Successfully...!");
+                    refreshPriceRequestTable();
+                    refreshPriceRequestForm();
+                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
+
+                } else {
+                    window.alert("Fail to update has following error\n" + putResponce);
+                }
+            }
+        } else {
+            window.alert("Nothing to updated \n" + errors);
+        }
+
+
+
+
+    } else {
+        window.alert("Form has following error \n" + errors);
+    }
+
+}
+

@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -152,4 +153,42 @@ public class PriceRequestController {
 			return "Delete not completed : you haven't permission...";
 		}
 	}
+
+	// fix dead code error
+	@SuppressWarnings("unused")
+	// define put mapping
+	@PutMapping(value = "/priceRequest/update")
+	public String updatePriceRequest(@RequestBody PriceRequest priceRequest) {
+		// check user authentication and authorization
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		if (userPrivilege.getUpd()) {
+			// check ext
+			// exting user object ekak ganima
+			PriceRequest extPriceRequest = priceRequestDao.getReferenceById(priceRequest.getId());
+			if (extPriceRequest == null) {
+				// ehema kenek neththan
+				return "Price Request not exit";
+			}
+
+			try {
+				// status eka auto funtend eken enawa
+
+				// password eka encrypt kirima
+
+				// user object ekata added data time eka add kirima
+				priceRequest.setUpdatedatetime(LocalDateTime.now());
+
+				priceRequestDao.save(priceRequest);
+				return "OK";
+			} catch (Exception e) {
+
+				return "Update not completed : " + e.getMessage();
+
+			}
+		} else {
+			return "Update not completed : you haven't permission...";
+		}
+	}
+
 }
