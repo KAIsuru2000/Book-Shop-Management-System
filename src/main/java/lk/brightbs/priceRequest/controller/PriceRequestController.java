@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.user.dao.UserDao;
 import lk.brightbs.user.entity.User;
 import lk.brightbs.priceRequest.dao.PriceRequestDao;
+import lk.brightbs.priceRequest.dao.PriceRequestStatusDao;
 import lk.brightbs.priceRequest.entity.PriceRequest;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 
@@ -27,6 +29,9 @@ public class PriceRequestController {
 
     @Autowired
     private PriceRequestDao priceRequestDao;
+
+	 @Autowired
+    private PriceRequestStatusDao priceRequestStatusDao;
 
 	// userprivilegecontroller walin constructer object ekak sada ganima
 	@Autowired
@@ -112,5 +117,39 @@ public class PriceRequestController {
 			return "Insert not completed : you haven't permission...";
 		}
 	}
-    
+   
+	// define delete mapping
+	@SuppressWarnings("unused")
+	@DeleteMapping(value = "/priceRequest/delete")
+	// object eka requestbody eken PriceRequest type priceRequest object ekak pass wei
+	public String deletePriceRequest(@RequestBody PriceRequest priceRequest) {
+		// check user authentication and authorization
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		if (userPrivilege.getDel()) {
+			// check ext
+			// exting user object ekak ganima
+			PriceRequest extPriceRequest = priceRequestDao.getReferenceById(priceRequest.getId());
+			if (extPriceRequest == null) {
+				// ehema kenek neththan
+				return "priceRequest not exit";
+			}
+
+			try {
+				extPriceRequest.setPricelistrequeststatus_id(priceRequestStatusDao.getReferenceById(2));
+				extPriceRequest.setDeletedatetime(LocalDateTime.now());
+
+				// fontend eken ena eka wenas karala awoth eka balapemak wena hinda exit record
+				// eka save karai
+				priceRequestDao.save(extPriceRequest);
+				return "OK";
+			} catch (Exception e) {
+
+				return "Delete not completed : " + e.getMessage();
+
+			}
+		} else {
+			return "Delete not completed : you haven't permission...";
+		}
+	}
 }

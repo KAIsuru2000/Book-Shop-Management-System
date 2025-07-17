@@ -34,7 +34,7 @@ const refreshPriceRequestTable = () => {
     ];
 
     // call tablefill function
-    fillDataIntoTable(tablePriceRequestBody, priceRequests, displayPropertyList, rowFormRefill, rowDelete, rowPrint, "#offcanvasBottom");
+    fillDataIntoTable(tablePriceRequestBody, priceRequests, displayPropertyList, rowFormRefill, priceRequestRowDelete, priceRequestRowPrint, "#offcanvasBottom");
 
     //call jquerry data table
     $('#tablePriceRequest').dataTable();
@@ -67,7 +67,7 @@ const getPriceRequestStatus = (dataob) => {
     // if (dataob.pricelistrequeststatus_id.name == "pending") {
     //     return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color:rgb(254, 174, 1);"></i>'
     // }
-    if (dataob.pricerequeststatus_id.name == "In-Active") {
+    if (dataob.pricelistrequeststatus_id.name == "In-Active") {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;"></i>'
     }
 
@@ -185,9 +185,39 @@ const rowFormRefill = (dataob, rowIndex) => {
 }
 
 
-const rowDelete = (dataob, rowIndex) => {}
+const priceRequestRowDelete = (dataob, rowIndex) => {
+    console.log("Delete", dataob, rowIndex);
+
+    // activeTableRow(tableEmployeeBody, index, "red");
+
+
+    let userConfirm = window.confirm("Are you sure to delete following Price Request...?" +
+        "\n Supplier name : " + dataob.supplier_id.suppliername +
+        "\n Required date : " + dataob.requireddate +
+        "\n Status : " + dataob.pricelistrequeststatus_id.name
+    );
+    if (userConfirm) {
+        // call post service
+        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
+        let deleteResponce = getHTTPServiceRequest("/priceRequest/delete", "DELETE", dataob);
+
+        if (deleteResponce == "OK") {
+            window.alert("Delete successfully ");
+            refreshPriceRequestTable();
+            refreshPriceRequestForm();
+
+        } else {
+            window.alert("Delete not successfully" + deleteResponce);
+
+        }
+
+
+
+
+    }
+}
     
-const rowPrint = (dataob, rowIndex) => {}
+const priceRequestRowPrint = (dataob, rowIndex) => {}
 
 const refreshPriceRequestForm = () => {
 
