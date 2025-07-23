@@ -16,9 +16,10 @@
                         <li><a href="/customer">Customer</a></li>
                         <li><a href="/supplier">Supplier</a></li>
                         <li><a href="/priceRequest">Price Request</a></li>
+                        <li><a href="/addPriceList">Add Price List</a></li>
                         <li><a href="/purchaseOrders">Purchase Orders</a></li>
                         <li><a href="/invoice">Invoice</a></li>
-                        <li><a href="/addPriceList">Add Price List</a></li>
+
                         <li><a href="/supplierPayments">Supplier Payment</a></li>
                         <li><a href="/customerPayment">Customer Payment</a></li>
                         <li><a href="/grn">GRN</a></li>
@@ -39,7 +40,8 @@
          e sadaha ui ekata loggedusername namin parameter ekak set kara thibiya yuthuya
          e sadaha logincontroller wala dashboard eka load karana thanata authentication object ekak genwa gena-->
             <span class="text-black fw-bold mt-1" th:text="${loggedusername}"> 123456 </span>
-            <a style="color: #ffffff;" class="btn" href="/logout">Logout<i class="fa-solid fa-right-from-bracket" style="color: #f60404;"></i>
+            <a style="color: #ffffff;" class="btn" href="/logout">Logout<i class="fa-solid fa-right-from-bracket"
+                    style="color: #f60404;"></i>
             </a>
         </form>
     </div>
@@ -47,7 +49,8 @@
 <!-- nav bar end -->
 
 <!-- header and titla start -->
- <head th:fragment="headerfragment">
+
+<head th:fragment="headerfragment">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}"></title>
@@ -79,5 +82,5 @@
 
     <!-- link datatables js file -->
     <script src="/datatables-1.13.6/js/jquery.dataTables.min.js"></script>
- </head>
+</head>
 <!-- header and titla end -->

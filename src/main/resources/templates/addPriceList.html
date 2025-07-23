@@ -46,11 +46,9 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Order No</th>
+                                <th>Price List No</th>
                                 <th>Supplier Name</th>
-                                <th>Required Date</th>
                                 <th>Item List</th>
-                                <th>Total Amount(Rs.)</th>
                                 <th>Status</th>
 
                             </tr>
@@ -104,35 +102,40 @@
                                     <!-- main form area start -->
                                     <div class="col-6">
 
-                                        <!-- Item List area start -->
-                                        <div class="row mt-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text lablBg">Note&nbsp;: <span
-                                                        class="text-danger">(optional)</span></span>
-                                                <textarea id="textItemList" class="form-control" placeholder="Enter Note"
-                                                          aria-label="With textarea"
-                                                          onkeyup="textValidator(this, '^.*$', 'addPriceList', 'note')"
-                                                          onclick="textValidator(this, '^.*$', 'addPriceList', 'note')"
-                                                          data-bs-toggle="tooltip"
-                                                          title="Enter Item List here"></textarea>
+                                        <!-- Supplier area start-->
+                                        <div class="col-6">
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text lablBg" for="selectSupplier">Supplier
+                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                                    &nbsp;:
+                                                    <span class="fw-bold text-danger">*</span></label>
+                                                <select class="form-select" id="selectSupplier"
+                                                    onchange="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Select the Supplier correctly here.">
+                                                    <option selected disabled>Select Supplier</option>
+                                                    <option value=""></option>
+                                                    <option value=""></option>
+                                                </select>
                                             </div>
                                         </div>
-                                        <!-- Item List area end -->
-                                        <!-- note area start -->
+                                        <!-- Supplier area end-->
+                                         <!-- Item List area start -->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span class="input-group-text lablBg">Note&nbsp;: <span
-                                                        class="text-danger">(optional)</span></span>
-                                                <textarea id="textNote" class="form-control" placeholder="Enter Note"
+                                                <span class="input-group-text lablBg">Item List&nbsp;: <span
+                                                        class="text-danger">*</span></span>
+                                                <textarea id="textItemList" class="form-control" placeholder="Enter Item List"
                                                     aria-label="With textarea"
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'itemList')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'itemList')"
                                                     data-bs-toggle="tooltip"
                                                     title="Enter a note about the Purchase Order here"></textarea>
                                             </div>
                                         </div>
                                         <!-- note area end -->
-                                        <!--Order Status area start-->
+                                         <!--Order Status area start-->
                                         <div class="row mt-4">
                                             <div class="input-group mb-3">
                                                 <label class="input-group-text lablBg" for="selectOrderStatus">Order
@@ -150,7 +153,22 @@
                                             </div>
                                         </div>
                                         <!-- Order Status area end-->
+                                        <!-- note area start -->
+                                        <div class="row mt-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg">Note&nbsp;: <span
+                                                        class="text-danger">(optional)</span></span>
+                                                <textarea id="textNote" class="form-control" placeholder="Enter Note"
+                                                    aria-label="With textarea"
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter a note about the Purchase Order here"></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- note area end -->
                                         
+
                                     </div>
                                     <!-- main form area end -->
                                     <!-- inner form and table start -->
@@ -182,7 +200,8 @@
                                                     <span for="textUnitPrice" class="input-group-text lablBg"
                                                         id="inputGroup-sizing-default">Unit Price : <span
                                                             class="fw-bold text-danger">*</span></span>
-                                                    <input placeholder="Enter Unit Price" type="text" class="form-control"  aria-label="Sizing example input"
+                                                    <input placeholder="Enter Unit Price" type="text"
+                                                        class="form-control" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
                                                         required
                                                         onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
@@ -195,45 +214,64 @@
                                             <!-- Unit Price area end-->
                                         </div>
                                         <!-- Item and Unit Price area end -->
-                                        <!-- Quantity and Line Price area start -->
+                                        <!-- MinQuantity and Line Price area start -->
                                         <div class="row mt-4">
-                                            <!-- Quantity area start -->
+                                            <!-- MinQuantity area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textQuantity" class="input-group-text lablBg">Quantity :
+                                                    <span for="numberMinQuantity" class="input-group-text lablBg">MinQuantity :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Quantity" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textQuantity"
+                                                        aria-describedby="inputGroup-sizing-default" id="numberMinQuantity"
                                                         required
                                                         onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
                                                         onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Quantity correctly here.">
+                                                        title="Enter the MinQuantity correctly here.">
                                                 </div>
                                             </div>
-                                            <!-- Quantity area end -->
-                                            <!-- Line Price area start -->
+                                            <!-- MinQuantity area end -->
+                                            <!-- Last Unite Price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textQuantity" class="input-group-text lablBg">Line
+                                                    <span for="numberLastUnitePrice" class="input-group-text lablBg">Last Line
                                                         Price :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                        aria-describedby="inputGroup-sizing-default" id="numberLastUnitePrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lastuniteprice')"
+                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lastuniteprice')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Line Price correctly here.">
+                                                        title="Enter the Last Unite Price correctly here.">
                                                 </div>
                                             </div>
-                                            <!-- Line Price area end -->
+                                            <!-- Last Unite Price area end -->
 
 
                                         </div>
                                         <!-- Quantity and Line Price area end -->
+                                         <!-- market price area start -->
+                                        <div class="row mt-4">
+                                            <div class="justify-content-center">
+                                                <div class="input-group">
+                                                    <span for="numberMarketPrice" class="input-group-text lablBg">Market
+                                                        Price : <span class="fw-bold text-danger">*</span></span>
+                                                    <input type="number" class="form-control"
+                                                        placeholder="Enter Market Price" aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="numberMarketPrice"
+                                                        required
+                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'marketprice')"
+                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'marketprice')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Enter the Market Price correctly here.">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <!-- Market Price area end -->
                                         <!-- inner form area end -->
 
 
@@ -287,8 +325,9 @@
                                                                 <th>#</th>
                                                                 <th>Item Name</th>
                                                                 <th>Unit Price(Rs.)</th>
-                                                                <th>Quantity</th>
-                                                                <th>Line Price(Rs.)</th>
+                                                                <th>MinQuantity</th>
+                                                                <th>Last Unit Price(Rs.)</th>
+                                                                <th>Market Price(Rs.)</th>
 
 
                                                             </tr>
@@ -301,50 +340,50 @@
                                             </div>
                                         </div>
                                         <!--inner table row end -->
-                                        
+
 
 
                                     </div>
                                     <!-- inner form and table end -->
-                                     <!--overall button row start -->
-                                        <div class="row mt-4">
+                                    <!--overall button row start -->
+                                    <div class="row mt-4">
 
-                                            <div class="col-1"></div>
+                                        <div class="col-1"></div>
 
-                                            <!-- clear btn area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="buttonEmpClear" class="btn btnClear">
-                                                    <i class="fa-solid fa-eraser"></i>
-                                                    Clear
-                                                </button>
-                                            </div>
-                                            <!-- clear btn area end -->
-
-                                            <div class="col-2"></div>
-
-                                            <!-- update button area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
-                                                    onclick="buttonEmployeeUpdate()">
-                                                    <i class="fa-solid fa-file-pen"></i>
-                                                    Update
-                                                </button>
-                                            </div>
-                                            <!-- update button area end -->
-
-                                            <!-- Add btn area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderSubmit" class=" btn btnAdd"
-                                                    onclick="buttonPurchaseOrderSubmit()">
-                                                    <!-- buttonEmpSubmit function eka (employee.js)-->
-                                                    <i class="fa-solid fa-file-circle-plus"></i>
-                                                    Add
-                                                </button>
-                                            </div>
-                                            <!-- Add btn area end -->
-
+                                        <!-- clear btn area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                                <i class="fa-solid fa-eraser"></i>
+                                                Clear
+                                            </button>
                                         </div>
-                                        <!--overall button row end -->
+                                        <!-- clear btn area end -->
+
+                                        <div class="col-2"></div>
+
+                                        <!-- update button area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
+                                                onclick="buttonEmployeeUpdate()">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                                Update
+                                            </button>
+                                        </div>
+                                        <!-- update button area end -->
+
+                                        <!-- Add btn area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="btnPurchaseOrderSubmit" class=" btn btnAdd"
+                                                onclick="buttonPurchaseOrderSubmit()">
+                                                <!-- buttonEmpSubmit function eka (employee.js)-->
+                                                <i class="fa-solid fa-file-circle-plus"></i>
+                                                Add
+                                            </button>
+                                        </div>
+                                        <!-- Add btn area end -->
+
+                                    </div>
+                                    <!--overall button row end -->
                                 </div>
                                 <!-- main and inner form area end -->
 
