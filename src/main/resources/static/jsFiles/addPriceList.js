@@ -6,70 +6,68 @@ window.addEventListener("load", () => {
     // enable tooltip
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    refreshPurchaseOrderTable();
+    refreshAddPriceListTable();
 
-    refreshPurchaseOrderForm();
+    refreshAddPriceListForm();
 
 })
 
 //refresh table Area 
-const refreshPurchaseOrderTable = () => {
+const refreshAddPriceListTable = () => {
 
-    let purchaseOrders = getServiceRequest("/purchaseOrder/alldata");
+    let addPriceLists = getServiceRequest("/addPriceList/alldata");
 
     let propertyList = [
-        { propertyName: "purchaserequestno", dataType: "string" },
+        { propertyName: "addpricelistno", dataType: "string" },
         { propertyName: generateSupplierName, dataType: "function" },
-        { propertyName: "requireddate", dataType: "string" },
-        { propertyName: generateItemList, dataType: "function" },
-        { propertyName: "totalamount", dataType: "decimal" },
-        { propertyName: getOrderStatus, dataType: "function" },
+        { propertyName: "itemlist", dataType: "string" },
+        { propertyName: getAddPriceListStatus, dataType: "function" }
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tablePurchaseOrderBody, purchaseOrders, propertyList, purchaseOrderFormRefill, purchaseOrderDelete, purchaseOrderView, "#offcanvasBottom");
+    fillDataIntoTable(tableAddPriceListBody, addPriceLists, propertyList, addPriceListFormRefill, addPriceListDelete, addPriceListView, "#offcanvasBottom");
 
 
-    $('#tablePurchaseOrder').DataTable();
+    $('#tableAddPriceList').DataTable();
 
 
 }
 
 const generateSupplierName = (dataob) => {
-    return dataob.supplier_id.suppliername;
+    return dataob.pricelistrequest_id.supplier_id.suppliername;
 }
-const getOrderStatus = (dataob) => {
-    if (dataob.purchaserequeststatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;"></i>'
-    }
-
-    if (dataob.purchaserequeststatus_id.name == "Recived") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;"></i>'
-    }
-
-    if (dataob.purchaserequeststatus_id.name == "Completed") {
+const getAddPriceListStatus = (dataob) => {
+    if (dataob.addpriceliststatus_id.name == "Active") {
         return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
     }
 
-    if (dataob.purchaserequeststatus_id.name == "Cancelled ") {
-        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;"></i>'
-    }
 
-    if (dataob.purchaserequeststatus_id.name == "Deleted") {
+
+    if (dataob.addpriceliststatus_id.name == "In-Active") {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
     }
-
-
 }
-const generateItemList = (dataob) => {
-    let itemList = "";
-    dataob.items.forEach(item => {
-        itemList += `<li>${item.name} - ${item.quantity}</li>`;
-    });
-    return `<ul>${itemList}</ul>`;
-}
-//function for re fill purchase order form
-const purchaseOrderFormRefill = (ob, index) => {
+
+// const generateItemList = (dataob) => {
+//     //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
+//     let itemList = "";
+//     // role list ekak ena nisa
+//     dataob.itemlist.forEach((item, index) => {
+//         if (dataob.itemlist.length - 1 == index) {
+//             //last item eken pasu "," ekak set nokarai
+//             itemList = itemList + item.item_id.itemname;
+//         } else {
+//             //itemList veriable ekata concatinate kara ganimata item object eke name access karala
+//             //name athara gap ekak thaba gani
+//             itemList = itemList + item.item_id.itemname + " , ";
+//         }
+//
+//     });
+//     //awasanaye roles object eka return karanawa
+//     return itemlist;
+// }
+//function for re fill price list form
+const addPriceListFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
 
     // refill value in to element -> elementId.value = ob.releventPropertyName
@@ -122,8 +120,8 @@ const purchaseOrderFormRefill = (ob, index) => {
 
 }
 
-//function for delete purchase order form
-const purchaseOrderDelete = (ob, index) => {
+//function for delete add price list form
+const addPriceListDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
     // activeTableRow(tablePurchaseOrderBody, index, "red");
@@ -155,8 +153,8 @@ const purchaseOrderDelete = (ob, index) => {
     }
 }
 
-//function for view / print purchase order form
-const purchaseOrderView = (ob, index) => {
+//function for view / print add price list form
+const addPriceListView = (ob, index) => {
     console.log("View", ob, index);
     //option 1
     //aluth window ekak open kara ganima
@@ -226,46 +224,46 @@ const buttonPrintRow = () => {
 const checkFormError = () => {
     let errors = "";
 
-    if (purchaseOrder.addpricelist_id == null) {
+    if (addPriceList.pricelistrequest_id == null) {
         errors = errors + "Please Enter valid Supplier Name...! \n";
     }
 
-    if (purchaseOrder.requireddate == null) {
-        errors = errors + "Please Enter valid Required Date...! \n";
+    if (addPriceList.itemlist == null) {
+        errors = errors + "Please Enter valid Items...! \n";
     }
 
-    if (purchaseOrder.totalamount == null) {
-        errors = errors + "Please Enter valid Total Amount...! \n";
+    if (addPriceList.addpriceliststatus_id == null) {
+        errors = errors + "Please Enter valid Add Price List status...! \n";
     }
 
-    if (purchaseOrder.purchaseOrderHasItemList.length == 0) {
-        errors = errors + "Please Enter valid Purchase Order Items...! \n";
+    if (addPriceList.addPriceListHasItemList.length == 0) {
+        errors = errors + "Please Enter valid Add Price List Items...! \n";
     }
 
     return errors;
 }
 
 
-//Purchase Order form submit event function 
-const buttonPurchaseOrderSubmit = () => {
-    console.log('Add Purchase Order', purchaseOrder);
+//Add Price List form submit event function 
+const buttonAddPriceListSubmit = () => {
+    console.log('Add Price List', addPriceList);
 
     //check form error for required element
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following Purchase Order...?" +
-            "\n Supplier name : " + purchaseOrder.addpricelist_id.pricelistrequest_id.supplier_id.suppliername +
-            "\n Purchase Order required date : " + purchaseOrder.requireddate +
-            "\n Purchase Order total amount : " + purchaseOrder.totalamount
+        let userConfirm = window.confirm("Are you sure to add following Add Price List...?" +
+            "\n Supplier name : " + addPriceList.pricelistrequest_id.supplier_id.suppliername +
+            "\n Item List : " + addPriceList.itemlist +
+            "\n Add Price List status : " + addPriceList.addpriceliststatus_id.name
         );
         if (userConfirm) {
             // call post service
-            let postResponce = getHTTPServiceRequest("/purchaseOrders/insert", "POST", purchaseOrder);
+            let postResponce = getHTTPServiceRequest("/addPriceList/insert", "POST", addPriceList);
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
-                refreshPurchaseOrderTable();
-                refreshPurchaseOrderForm();
+                refreshAddPriceListTable();
+                refreshAddPriceListForm();
                 $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
             } else {
                 window.alert("Failed to submit \n" + errors + postResponce);
@@ -368,52 +366,53 @@ const checkFormUpdate = () => {
 // }
 
 // form delete event function 
-const buttonPurchaseOrderDelete = () => {
-    refreshPurchaseOrderTable();
+const buttonAddPriceListDelete = () => {
+    refreshAddPriceListTable();
 }
 
 
-const refreshPurchaseOrderForm = () => {
-    purchaseOrder = new Object();
-    // main object ekata (purchaseOrder) list ekak (purchaseOrderHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
-    purchaseOrder.purchaseOrderHasItemList = new Array();
+const refreshAddPriceListForm = () => {
+    addPriceList = new Object();
+    // main object ekata (addPriceList) list ekak (addPriceListHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
+    addPriceList.addPriceListHasItemList = new Array();
 
-    formPurchaseOrder.reset();
+    // main form eka reset karai
+    formAddPriceList.reset();
 
     //validation colors iwath kirima main form sadaha
-    setDefault([selectSupplier, dateRequireDate, textTotalAmount, textNote, selectOrderStatus]);
+    setDefault([selectSupplier, textItemList, selectaddPriceListStatus, textNote]);
 
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('addPriceList/alldata');
+    let suppliers = getServiceRequest('priceRequest/alldata');
     fillDataIntoSelectSupplier(selectSupplier, "Please Select Supplier..!!", suppliers);
 
-    let orderStatues = getServiceRequest('/purchaseOrderStatues/alldata');
-    fillDataIntoSelect(selectOrderStatus, "Please Select Status..!!", orderStatues, "name");
+    let addPriceListStatues = getServiceRequest('/addPriceListStatus/alldata');
+    fillDataIntoSelect(selectaddPriceListStatus, "Please Select Status..!!", addPriceListStatues, "name");
 
     // status eka form eka load wana wita select wi thibimata
     // selected value eka string walin ena nisa stringify kara gani
-    selectOrderStatus.value = JSON.stringify(orderStatues[0]);
+    selectaddPriceListStatus.value = JSON.stringify(addPriceListStatues[0]);
     // ema value eka newatha object ekata set kala yuththa object format ekeni
-    purchaseOrder.purchaserequeststatus_id = JSON.parse(selectOrderStatus.value);
+    addPriceList.addpriceliststatus_id = JSON.parse(selectaddPriceListStatus.value);
     // status field eka sadaha validation colour eka laba deema
-    prevElementOrderStatus = selectOrderStatus.previousElementSibling;
-    selectOrderStatus.style.borderBottom = "4px solid green";
-    prevElementOrderStatus.style.backgroundColor = "green";
-    selectOrderStatus.classList.remove("is-invalid");
-    selectOrderStatus.classList.add("is-valid");
+    prevElementAddPriceListStatus = selectaddPriceListStatus.previousElementSibling;
+    selectaddPriceListStatus.style.borderBottom = "4px solid green";
+    prevElementAddPriceListStatus.style.backgroundColor = "green";
+    selectaddPriceListStatus.classList.remove("is-invalid");
+    selectaddPriceListStatus.classList.add("is-valid");
 
     // inner form eka refresh karawima
-    refreshPurchaseOrderInnerForm();
+    refreshAddPriceListInnerForm();
 
-    btnPurchaseOrderUpdate.classList.add("d-none");
-    btnPurchaseOrderSubmit.classList.remove("d-none");
+    btnaddPriceListUpdate.classList.add("d-none");
+    btnaddPriceListSubmit.classList.remove("d-none");
 }
 
 // define function for refresh inner form
-const refreshPurchaseOrderInnerForm = () => {
+const refreshAddPriceListInnerForm = () => {
 
     // association eke class name ekata samanawa simple walin start kara gani
-    purchaseOrderHasItem = new Object();
+    addPricelistHasItem = new Object();
 
 
     // mehi form eka reset kala wita main form ekath reset wana nisa esa kala noheka
@@ -426,53 +425,62 @@ const refreshPurchaseOrderInnerForm = () => {
     fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
 
     textUnitPrice.value = "";
-    textQuantity.value = "";
-    textLinePrice.value = "";
+    numberMinQuantity.value = "";
+    numberLastUnitePrice.value = "";
+    numberMarketPrice.value = "";
 
     // colors wenas kala heka
-    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice]);
+    setDefault([selectItem, textUnitPrice, numberMinQuantity, numberLastUnitePrice, numberMarketPrice]);
 
-    btnPurchaseOrderItemUpdate.classList.add("d-none");
-    btnPurchaseOrderItemSubmit.classList.remove("d-none");
+    btnaddPriceListItemUpdate.classList.add("d-none");
+    btnaddPriceListItemSubmit.classList.remove("d-none");
 
-    // Reresh inner table
+    // Refresh inner table
     // array eka awashya netha main object ekata array eka gani
-    // let purchaseOrders = [];
-
+    // let addPriceLists = [];
     let propertyList = [
         { propertyName: genareateItemName, dataType: "function" },
-        { propertyName: "uniteprice", dataType: "decimal" },
-        { propertyName: "quentity", dataType: "string" },
-        { propertyName: "lineprice", dataType: "decimal" }
+        { propertyName: "unitprice", dataType: "decimal" },
+        { propertyName: "mincountity", dataType: "string" },
+        { propertyName: "lastunitprice", dataType: "decimal" },
+        { propertyName: "marketprice", dataType: "decimal" }
 
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoInnerTable(tableInnerBody, purchaseOrder.purchaseOrderHasItemList, propertyList, purchaseOrderItemFormRefill, purchaseOrderItemDelete, "#offcanvasBottom");
+    fillDataIntoInnerTable(tableInnerBody, addPriceList.addPriceListHasItemList, propertyList, addPriceListItemFormRefill, addPriceListItemDelete, "#offcanvasBottom");
 
     $('#tablePurchaseOrder').DataTable();
 
-    // "purchaseOrderHasItemList" mehi data thibunoth line price genarate kara gatha heka
+    // "addPricelistHasItem" mehi data thibunoth item list genarate kara gatha heka
+    //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
+    let itemList = "";
+    // item list ekak ena nisa
+    addPriceList.addPriceListHasItemList.forEach((item, index) => {
+        if (addPriceList.addPriceListHasItemList.length - 1 == index) {
+            //last item eken pasu "," ekak set nokarai
+            itemList = itemList + item.item_id.itemname;
+        } else {
+            //itemList veriable ekata concatinate kara ganimata item object eke name access karala
+            //name athara gap ekak thaba gani
+            itemList = itemList + item.item_id.itemname + " , ";
+        }
 
-    let totalAmount = 0.00;
-    for (const orderitem of purchaseOrder.purchaseOrderHasItemList) {
-        totalAmount = parseFloat(totalAmount) + parseFloat(orderitem.lineprice);
+    });
+    document.getElementById("textItemList").textContent = itemList;
 
-    }
-    // ui eke athi total amount field ekata value eka set kirima
-    // total amount eka 0.00 nowe nam value eka ui ekata set karai
-    if (totalAmount != 0.00) {
-        textTotalAmount.value = totalAmount.toFixed(2);
-        // object ekata set karai
-        purchaseOrder.totalamount = textTotalAmount.value;
+    if (itemList != "") {
+    // object ekata set karai
+        addPriceList.itemlist = textItemList.value;
         // validation color eka set karai
-        prevElementTotalAmount = textTotalAmount.previousElementSibling;
-        textTotalAmount.style.borderBottom = "4px solid green";
-        prevElementTotalAmount.style.backgroundColor = "green";
-        textTotalAmount.classList.remove("is-invalid");
-        textTotalAmount.classList.add("is-valid");
+        prevElementItemList = textItemList.previousElementSibling;
+        textItemList.style.borderBottom = "4px solid green";
+        prevElementItemList.style.backgroundColor = "green";
+        textItemList.classList.remove("is-invalid");
+        textItemList.classList.add("is-valid");
     }
 
+    
 }
 
 const genareateItemName = (dataob) => {
@@ -480,10 +488,10 @@ const genareateItemName = (dataob) => {
     return dataob.item_id.itemname;
 }
 
-const purchaseOrderItemFormRefill = (ob, index) => { }
-const purchaseOrderItemDelete = (ob, index) => {
-    console.log("Delete Purchase Order Item", purchaseOrderHasItem);
-    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?"
+const addPriceListItemFormRefill = (ob, index) => { }
+const addPriceListItemDelete = (ob, index) => {
+    console.log("Delete Add Price List Item", addPricelistHasItem);
+    let userConfirm = window.confirm("Are you sure to remove following item details...?"
         // +
         // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
         // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
@@ -491,33 +499,34 @@ const purchaseOrderItemDelete = (ob, index) => {
         // "\n Line Price : " + purchaseOrderHasItem.lineprice
     );
     if (userConfirm) {
-        window.alert("Item removed successfully from purchase order...!");
-        // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = purchaseOrder.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
+        window.alert("Item removed successfully from add price list...!");
+        // inner ob eka exsistent soyanawa "addPriceList.addPriceListHasItemList" mema object eken
+        let extIndex = addPriceList.addPriceListHasItemList.map(addPriceListitem => addPriceListitem.item_id.id).indexOf(ob.item_id.id);
         if (extIndex != -1) {
-            purchaseOrder.purchaseOrderHasItemList.splice(extIndex, 1);
+            addPriceList.addPriceListHasItemList.splice(extIndex, 1);
         }
-        refreshPurchaseOrderInnerForm();
+        refreshAddPriceListInnerForm();
     }
 }
 
-const buttonPurchaseOrderItemUpdate = (ob, index) => { }
-const buttonPurchaseOrderItemSubmit = (ob, index) => {
-    console.log("Purchase Order Item", purchaseOrderHasItem);
+const buttonAddPriceListItemUpdate = (ob, index) => { }
+const buttonAddPriceListItemSubmit = (ob, index) => {
+    console.log("Add Price List Item", addPricelistHasItem);
 
-    let userConfirm = window.confirm("Are you sure to add following item to purchase order...?"
+    let userConfirm = window.confirm("Are you sure to add following item to add price list...?"
         +
-        "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        "\n Quantity : " + purchaseOrderHasItem.quentity +
-        "\n Line Price : " + purchaseOrderHasItem.lineprice
+        "\n Item : " + addPricelistHasItem.item_id.itemname +
+        "\n Unit Price : " + addPricelistHasItem.unitprice +
+        "\n Minquantity : " + addPricelistHasItem.mincountity +
+        "\n Last Unit Price : " + addPricelistHasItem.lastunitprice +
+        "\n Market Price : " + addPricelistHasItem.marketprice
     );
     if (userConfirm) {
-        window.alert("Item added successfully to purchase order...!");
+        window.alert("Item added successfully to add price list...!");
         // main form eke thiyena list ekata ob eka push karai
         // ema nisa table ekehida data atha.
-        purchaseOrder.purchaseOrderHasItemList.push(purchaseOrderHasItem);
-        refreshPurchaseOrderInnerForm();
+        addPriceList.addPriceListHasItemList.push(addPricelistHasItem);
+        refreshAddPriceListInnerForm();
     }
 
 }
@@ -529,24 +538,25 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
 
     // Add a default disabled placeholder if message is provided
     // if (message !== "") {
-    const optionMsg = document.createElement("option");
-    optionMsg.value = "";
-    optionMsg.selected = true;
-    optionMsg.disabled = true;
-    optionMsg.innerText = message;
-    parentId.appendChild(optionMsg);
+        const optionMsg = document.createElement("option");
+        optionMsg.value = "";
+        optionMsg.selected = true;
+        optionMsg.disabled = true;
+        optionMsg.innerText = message;
+        parentId.appendChild(optionMsg);
     // }
 
     // Loop through the data and extract supplier names
     dataList.forEach(dataOb => {
         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
-        const option = document.createElement("option");
-        option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-        option.innerText = dataOb.pricelistrequest_id.supplier_id.suppliername;
-        parentId.appendChild(option);
+            const option = document.createElement("option");
+            option.value = JSON.stringify(dataOb); // or dataOb.id if needed
+            option.innerText = dataOb.supplier_id.suppliername;
+            parentId.appendChild(option);
         // }
     });
 };
+
 
 
 

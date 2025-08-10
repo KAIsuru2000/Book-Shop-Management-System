@@ -23,14 +23,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddPricelistHasItem {
+public class AddPriceListHasItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "uniteprice")
+    @Column(name = "unitprice")
     @NotNull
-    private BigDecimal uniteprice;
+    private BigDecimal unitprice;
 
     @Column(name = "mincountity")
     @NotNull
@@ -45,7 +45,6 @@ public class AddPricelistHasItem {
     private BigDecimal marketprice;
 
     // foreign key
-    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka
@@ -53,12 +52,11 @@ public class AddPricelistHasItem {
     private Item item_id;
 
     // foreign key
-    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "addpricelist_id", referencedColumnName = "id")
-    // foreign key lesa another table ekaka record ekak ana nisa type eka PurchaseOrder
-    // recursion walek wima sadaha purchaserequest_id read kirima walakwai(JsonIgnore)
-    // meya block kala wita save kala noheka
+    // foreign key lesa another table ekaka record ekak ana nisa type eka addpricelist
+    // recursion walek wima sadaha addpricelist_id read kirima walakwai(JsonIgnore)
+    // meya block kala wita save kala noheka eyata wisadumak lesa controller file eka thula for loop ekak liyala main object eka thula athi list eka illa gena eyata set karanawa addpricelist_id eka set karai
     @JsonIgnore
     private AddPriceList addpricelist_id;
 

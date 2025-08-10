@@ -1,4 +1,5 @@
 package lk.brightbs.addPriceList.controller;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,21 +8,26 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.addPriceList.dao.AddPriceListDao;
 import lk.brightbs.addPriceList.entity.AddPriceList;
+import lk.brightbs.addPriceList.entity.AddPriceListHasItem;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
+import lk.brightbs.user.dao.UserDao;
+import lk.brightbs.user.entity.User;
 
 
 
 @RestController
 public class AddPriceListController {
 
-    //Autowired - awashya method automatically build karala method body liyala api add karana veriable ekata ewa assing karala denawa (purchaseOrderDao instance ekak hadala denawa)
+    //Autowired - awashya method automatically build karala method body liyala api add karana veriable ekata ewa assing karala denawa (addPriceListDao instance ekak hadala denawa)
     @Autowired 
     private AddPriceListDao addPriceListDao;
 
@@ -29,8 +35,8 @@ public class AddPriceListController {
     private
      UserPrivilegeController userPrivilegeController;
 
-    // @Autowired
-	// private UserDao userDao; 
+    @Autowired
+	private UserDao userDao; 
 
     //request mapping for load AddPriceList ui url - /addPriceList
 	@RequestMapping("/addPriceList") //request eka meka awoth yata function eka run karanawa
@@ -66,7 +72,7 @@ public class AddPriceListController {
 		// module name eka privilege lesa pass kirima
 		// dan userPrivilege ta privilege object eka (username ekata ha privilege module
 		// ekata adala privileges tika) pamine
-		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ADDPRICELIST");
 		if (userPrivilege.getSel()) {
 			//privilege thiyenawanam data return karanawa
 			return addPriceListDao.findAll(Sort.by(Sort.Direction.DESC ,"id"));
@@ -77,45 +83,43 @@ public class AddPriceListController {
 		}
    }
 
-//    //define post mapping
-// 	@PostMapping(value = "/purchaseOrders/insert")
-// 	public String insertPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
-// 		// check user authentication and authorization
-// 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-// 		//log una user object eka ara ganima
-// 		User logedUser = userDao.getByUsername(auth.getName());
-// 		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
-// 		if (userPrivilege.getInst()) {
-// 			//check duplicate
-// 			// PurchaseOrder extPurchaseOrder = purchaseOrderDao.getByOrderNumber(purchaseOrder.getOrderNumber());
-// 			// if(extPurchaseOrder != null){
-// 			// 	return "Save not completed : entered Order number " + purchaseOrder.getOrderNumber() +"Value Allready ext..!";
-// 			// }
+   //define post mapping
+	@PostMapping(value = "/addPriceList/insert")
+	public String insertAddPriceList(@RequestBody AddPriceList addPriceList) {
+		// check user authentication and authorization
+		System.out.println(addPriceList);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		//log una user object eka ara ganima
+		User logedUser = userDao.getByUsername(auth.getName());
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ADDPRICELIST");
+		if (userPrivilege.getInst()) {
+			//check duplicate
+			
 			
 
-// 			try {
-// 				//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
-// 			purchaseOrder.setAddeddatetime(LocalDateTime.now());
-// 			purchaseOrder.setAddeduserid(logedUser.getId());
-// 			purchaseOrder.setPurchaserequestno(purchaseOrderDao.getNextOrderNo());
-		
-// 				// save operator
-//                 // purchaserequest_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya purchaseOrder laga athi list eka illa gena (purchaseOrderHasItemList)
-//               for (PurchaseOrderHasItem poItem : purchaseOrder.getPurchaseOrderHasItemList()) {
-//                   poItem.setPurchaserequest_id(purchaseOrder);
-//               }
+			try {
+				//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
+			addPriceList.setAddeddatetime(LocalDateTime.now());
+			addPriceList.setAddeduserid(logedUser.getId());
+			addPriceList.setAddpricelistno(addPriceListDao.getNextAddPriceListNo());
 
-// 				purchaseOrderDao.save(purchaseOrder);
-// 				return "OK";
-// 			} catch (Exception e) {
+				// save operator
+                // addpricelist_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya addpricelist laga athi list eka illa gena (addPriceListHasItemList)
+              for (AddPriceListHasItem aplhi : addPriceList.getAddPriceListHasItemList()) {
+                  aplhi.setAddpricelist_id(addPriceList);
+              }
 
-// 				return "Insert not completed : " + e.getMessage();
+				addPriceListDao.save(addPriceList);
+				return "OK";
+			} catch (Exception e) {
 
-// 			}
-// 		} else {
-// 			return "Insert not completed : you haven't permission...";
-// 		}
-// 	}
+				return "Insert not completed : " + e.getMessage();
+
+			}
+		} else {
+			return "Insert not completed : you haven't permission...";
+		}
+	}
 
     
 

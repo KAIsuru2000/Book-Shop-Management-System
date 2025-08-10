@@ -1,7 +1,5 @@
 package lk.brightbs.addPriceList.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +27,7 @@ import lombok.NoArgsConstructor;
     @NoArgsConstructor
     @AllArgsConstructor
 
-    // main object ekata (purchaseOrder) adala class eka (PurchaseOrder)
+    // main object ekata (addpricelist) adala class eka (AddPriceList)
 public class AddPriceList { 
 
     @Id //pk
@@ -37,20 +35,13 @@ public class AddPriceList {
     private Integer id ;
 
     @Column(name = "itemlist")
+    @NotNull // not null
     private String itemlist ;
 
-    @Column(name = "purchaserequestno" , unique = true)
+    @Column(name = "addpricelistno" , unique = true)
     @NotNull // not null
     // @Length(max = 8 , min = 8)
-    private String purchaserequestno ;
-
-    @Column(name = "requireddate")
-    @NotNull
-    private LocalDate requireddate ;
-
-    @Column(name ="totalamount")
-    @NotNull
-    private BigDecimal totalamount ;
+    private String addpricelistno ;
 
     @Column(name = "note")
     private String note ;
@@ -81,12 +72,12 @@ public class AddPriceList {
     // addpricelist_id int
 
     // list ekak lebiya yuthuya
-    // js wala hadapu list eka (purchaseOrderHasItemList)
-    // purchaseOrderHasItemList <- meya enna hethuwa -ER eke purchaseOrder eka one wii purchaseOrderHasItem many wiima
+    // js wala hadapu list eka (addPriceListHasItemList)
+    // addPriceListHasItemList <- meya enna hethuwa -ER eke addPriceList eka one wii addPriceListHasItem many wiima
     // inner form eke data remove kirimata awashya wei e sadaha orphanRemoval = true yodai
-    @OneToMany(mappedBy = "addpricelist_id" , cascade = CascadeType.ALL , orphanRemoval = true) // mapped by main table id (purchaserequest_id)
+    @OneToMany(mappedBy = "addpricelist_id" , cascade = CascadeType.ALL , orphanRemoval = true) // mapped by main table id (addpricelist_id)
     // CascadeType.ALL- read kirimata awasthawa laba dei
-    private List<AddPricelistHasItem> purchaseOrderHasItemList;
+    private List<AddPriceListHasItem>addPriceListHasItemList;
 
 
 

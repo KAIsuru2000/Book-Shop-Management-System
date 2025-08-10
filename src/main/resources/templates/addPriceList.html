@@ -5,354 +5,288 @@
 
 <body>
 
-    <!-- nav bar start -->
-    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
-    <!-- nav bar end -->
+<!-- nav bar start -->
+<nav th:replace="~{fragment :: topnavbarfragment}"></nav>
+<!-- nav bar end -->
 
-    <div class="container-fluid"> <!--Use for a full width container-->
+<div class="container-fluid"> <!--Use for a full width container-->
 
-        <!-- title area start -->
-        <div class="row p-1 mt-1"><!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)
+    <!-- title area start -->
+    <div class="row p-1 mt-1"><!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)
                                        0.25rem  margin-top  -->
 
-            <div class="col-12 p-3 d-flex justify-content-center divTitle">
-                <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
-                <i class="fa-solid fa-user-tie fa-2x"></i>
-                <h2 class="h2 ms-3">Add Price List management</h2><!--1rem set margin start  -->
-            </div>
+        <div class="col-12 p-3 d-flex justify-content-center divTitle">
+            <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
+            <i class="fa-solid fa-user-tie fa-2x"></i>
+            <h2 class="h2 ms-3">Add Price List management</h2><!--1rem set margin start  -->
         </div>
-        <!-- title area end -->
+    </div>
+    <!-- title area end -->
 
-        <!-- offcanvas button area start -->
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-2">
-                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+    <!-- offcanvas button area start -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-2">
+            <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
-                    <i class="fa-solid fa-user-plus"></i>
-                    Add New Price List
-                </button>
-            </div>
-            <div class="col-9"></div>
+                <i class="fa-solid fa-user-plus"></i>
+                Add New Price List
+            </button>
         </div>
-        <!-- offcanvas button area end -->
+        <div class="col-9"></div>
+    </div>
+    <!-- offcanvas button area end -->
 
-        <!--main table area start -->
-        <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10 mt-1 divTable">
-                <div class="container-fluid">
-                    <table class="table" id="tablePurchaseOrder">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Price List No</th>
-                                <th>Supplier Name</th>
-                                <th>Item List</th>
-                                <th>Status</th>
+    <!--main table area start -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 mt-1 divTable">
+            <div class="container-fluid">
+                <table class="table" id="tableAddPriceList">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Price List No</th>
+                        <th>Supplier Name</th>
+                        <th>Item List</th>
+                        <th>Status</th>
 
-                            </tr>
-                        </thead>
-                        <tbody id="tablePurchaseOrderBody">
+                    </tr>
+                    </thead>
+                    <tbody id="tableAddPriceListBody">
 
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-1"></div>
         </div>
-        <!--main table arae end -->
+        <div class="col-1"></div>
+    </div>
+    <!--main table arae end -->
 
-        <!-- offcanvas area start -->
-        <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
-            data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-            <div class="offcanvas-body small">
+    <!-- offcanvas area start -->
+    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+         data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-body small">
 
-                <!-- form area start -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
-                            <form id="formPurchaseOrder">
+            <!-- form area start -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
+                        <form id="formAddPriceList">
 
-                                <!-- required mark and offcanvas close button start -->
-                                <div class="row">
+                            <!-- required mark and offcanvas close button start -->
+                            <div class="row">
 
-                                    <!-- offcanvas close button start -->
-                                    <div class="col-1">
-                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
-                                            aria-label="Close">X</button>
-                                    </div>
-                                    <!-- offcanvas close button start -->
-
-                                    <div class="col-9"></div>
-
-                                    <!-- required mark start -->
-                                    <div class="col-1">
-                                        <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
-                                    </div>
-                                    <!-- required mark end -->
-
-                                    <div class="col-1"></div>
-
+                                <!-- offcanvas close button start -->
+                                <div class="col-1">
+                                    <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X
+                                    </button>
                                 </div>
-                                <!-- required mark and offcanvas close button end -->
+                                <!-- offcanvas close button start -->
 
-                                <!-- main and inner form area start -->
-                                <div class="row mt-3">
-                                    <!-- main form area start -->
-                                    <div class="col-6">
+                                <div class="col-9"></div>
 
-                                        <!-- Supplier area start-->
-                                        <div class="col-6">
-                                            <div class="input-group mb-3">
-                                                <label class="input-group-text lablBg" for="selectSupplier">Supplier
-                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                                    &nbsp;:
-                                                    <span class="fw-bold text-danger">*</span></label>
-                                                <select class="form-select" id="selectSupplier"
-                                                    onchange="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
+                                <!-- required mark start -->
+                                <div class="col-1">
+                                    <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                </div>
+                                <!-- required mark end -->
+
+                                <div class="col-1"></div>
+
+                            </div>
+                            <!-- required mark and offcanvas close button end -->
+
+                            <!-- main and inner form area start -->
+                            <div class="row mt-3">
+                                <!-- main form area start -->
+                                <div class="col-6">
+
+                                    <!-- Supplier area start-->
+                                    <div class="row">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectSupplier">Supplier &nbsp;
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectSupplier"
+                                                    onchange="selectDainamicElementValidater(this , 'addPriceList', 'pricelistrequest_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'addPriceList', 'pricelistrequest_id')"
                                                     data-bs-toggle="tooltip"
                                                     title="Select the Supplier correctly here.">
-                                                    <option selected disabled>Select Supplier</option>
-                                                    <option value=""></option>
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
+                                                <option selected disabled>Select Supplier</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
                                         </div>
-                                        <!-- Supplier area end-->
-                                         <!-- Item List area start -->
-                                        <div class="row mt-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text lablBg">Item List&nbsp;: <span
-                                                        class="text-danger">*</span></span>
-                                                <textarea id="textItemList" class="form-control" placeholder="Enter Item List"
-                                                    aria-label="With textarea"
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'itemList')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'itemList')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter a note about the Purchase Order here"></textarea>
-                                            </div>
-                                        </div>
-                                        <!-- note area end -->
-                                         <!--Order Status area start-->
-                                        <div class="row mt-4">
-                                            <div class="input-group mb-3">
-                                                <label class="input-group-text lablBg" for="selectOrderStatus">Order
-                                                    Status &nbsp;:
-                                                    <span class="fw-bold text-danger">*</span></label>
-                                                <select class="form-select" id="selectOrderStatus"
-                                                    onchange="selectDainamicElementValidater(this , 'purchaseOrder', 'purchaserequeststatus_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrder', 'purchaserequeststatus_id')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Select the Order Status correctly here.">
-                                                    <option selected disabled>Select Order Status</option>
-                                                    <option value=""></option>
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!-- Order Status area end-->
-                                        <!-- note area start -->
-                                        <div class="row mt-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text lablBg">Note&nbsp;: <span
-                                                        class="text-danger">(optional)</span></span>
-                                                <textarea id="textNote" class="form-control" placeholder="Enter Note"
-                                                    aria-label="With textarea"
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter a note about the Purchase Order here"></textarea>
-                                            </div>
-                                        </div>
-                                        <!-- note area end -->
-                                        
-
                                     </div>
-                                    <!-- main form area end -->
-                                    <!-- inner form and table start -->
-                                    <div class="col-6">
-                                        <!-- inner form area start -->
-                                        <!-- Item and Unit Price area start -->
-                                        <div class="row">
-                                            <!-- Item area start-->
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <label class="input-group-text lablBg" for="selectItem">Item
-                                                        &nbsp; &nbsp; &nbsp; :
-                                                        <span class="fw-bold text-danger">*</span></label>
-                                                    <select class="form-select" id="selectItem"
-                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
-                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                    <!-- Supplier area end-->
+                                    <!-- Item List area start -->
+                                    <div class="row mt-4">
+                                        <div class="input-group">
+                                                <span class="input-group-text lablBg">Item List&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : <span
+                                                        class="text-danger">*</span></span>
+                                            <textarea id="textItemList" class="form-control"
+                                                      placeholder="Enter Item List"
+                                                      aria-label="With textarea"
+                                                      onkeyup="textValidator(this, '^.*$', 'addPriceList', 'itemList')"
+                                                      onclick="textValidator(this, '^.*$', 'addPriceList', 'itemList')"
+                                                      data-bs-toggle="tooltip"
+                                                      title="Enter a note about the Add Price List here"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- note area end -->
+                                    <!--Add Price List Status area start-->
+                                    <div class="row mt-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectaddPriceListStatus">Add
+                                                Price List Status &nbsp:
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectaddPriceListStatus"
+                                                    onchange="selectDainamicElementValidater(this , 'addPriceList', 'addpriceliststatus_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'addPriceList', 'addpriceliststatus_id')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Select the Add Price List Status correctly here.">
+                                                <option selected disabled>Select Add Price List Status</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Add Price List Status area end-->
+                                    <!-- note area start -->
+                                    <div class="row mt-4">
+                                        <div class="input-group">
+                                                <span class="input-group-text lablBg">Note&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; : <span
+                                                        class="text-danger">(optional)</span></span>
+                                            <textarea id="textNote" class="form-control" placeholder="Enter Note"
+                                                      aria-label="With textarea"
+                                                      onkeyup="textValidator(this, '^.*$', 'addPriceList', 'note')"
+                                                      onclick="textValidator(this, '^.*$', 'addPriceList', 'note')"
+                                                      data-bs-toggle="tooltip"
+                                                      title="Enter a note about the Add Price List here"></textarea>
+                                        </div>
+                                    </div>
+                                    <!-- note area end -->
+
+
+                                </div>
+                                <!-- main form area end -->
+                                <!-- inner form and table start -->
+                                <div class="col-6">
+                                    <!-- inner form area start -->
+                                    <!-- Item and Unit Price area start -->
+                                    <div class="row">
+                                        <!-- Item area start-->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <label class="input-group-text lablBg" for="selectItem">Item &nbsp;
+                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                    <span class="fw-bold text-danger">*</span></label>
+                                                <select class="form-select" id="selectItem"
+                                                        onchange="selectDainamicElementValidater(this , 'addPricelistHasItem', 'item_id')"
+                                                        onclick="selectDainamicElementValidater(this , 'addPricelistHasItem', 'item_id')"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Item correctly here.">
-                                                        <option selected disabled>Select Item</option>
-                                                        <option value=""></option>
-                                                        <option value=""></option>
-                                                    </select>
-                                                </div>
+                                                    <option selected disabled>Select Item</option>
+                                                    <option value=""></option>
+                                                    <option value=""></option>
+                                                </select>
                                             </div>
-                                            <!-- Item area end-->
-                                            <!-- Unit Price area start-->
-                                            <div class="col-6">
-                                                <div class="input-group">
+                                        </div>
+                                        <!-- Item area end-->
+                                        <!-- Unit Price area start-->
+                                        <div class="col-6">
+                                            <div class="input-group">
                                                     <span for="textUnitPrice" class="input-group-text lablBg"
-                                                        id="inputGroup-sizing-default">Unit Price : <span
+                                                          id="inputGroup-sizing-default">Unit Price &nbsp; &nbsp; &nbsp; &nbsp; : <span
                                                             class="fw-bold text-danger">*</span></span>
-                                                    <input placeholder="Enter Unit Price" type="text"
-                                                        class="form-control" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Unit Price correctly here.">
-                                                </div>
+                                                <input placeholder="Enter Unit Price" type="text"
+                                                       class="form-control" aria-label="Sizing example input"
+                                                       aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
+                                                       required
+                                                       onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'unitprice')"
+                                                       onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'unitprice')"
+                                                       data-bs-toggle="tooltip"
+                                                       title="Enter the Unit Price correctly here.">
                                             </div>
-
-                                            <!-- Unit Price area end-->
                                         </div>
-                                        <!-- Item and Unit Price area end -->
-                                        <!-- MinQuantity and Line Price area start -->
-                                        <div class="row mt-4">
-                                            <!-- MinQuantity area start -->
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <span for="numberMinQuantity" class="input-group-text lablBg">MinQuantity :
+
+                                        <!-- Unit Price area end-->
+                                    </div>
+                                    <!-- Item and Unit Price area end -->
+                                    <!-- MinQuantity and Line Price area start -->
+                                    <div class="row mt-4">
+                                        <!-- MinQuantity area start -->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                    <span for="numberMinQuantity" class="input-group-text lablBg">Min Quantity :
                                                         <span class="fw-bold text-danger">*</span></span>
-                                                    <input type="number" class="form-control"
-                                                        placeholder="Enter Quantity" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="numberMinQuantity"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the MinQuantity correctly here.">
-                                                </div>
+                                                <input type="number" class="form-control"
+                                                       placeholder="Enter Quantity" aria-label="Sizing example input"
+                                                       aria-describedby="inputGroup-sizing-default"
+                                                       id="numberMinQuantity"
+                                                       required
+                                                       onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'mincountity')"
+                                                       onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'mincountity')"
+                                                       data-bs-toggle="tooltip"
+                                                       title="Enter the MinQuantity correctly here.">
                                             </div>
-                                            <!-- MinQuantity area end -->
-                                            <!-- Last Unite Price area start -->
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <span for="numberLastUnitePrice" class="input-group-text lablBg">Last Line
-                                                        Price :
+                                        </div>
+                                        <!-- MinQuantity area end -->
+                                        <!-- Last line Price area start -->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                    <span for="numberLastUnitePrice" class="input-group-text lablBg">Last Line Price :
                                                         <span class="fw-bold text-danger">*</span></span>
-                                                    <input type="number" class="form-control"
-                                                        placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="numberLastUnitePrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lastuniteprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lastuniteprice')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Last Unite Price correctly here.">
-                                                </div>
-                                            </div>
-                                            <!-- Last Unite Price area end -->
-
-
-                                        </div>
-                                        <!-- Quantity and Line Price area end -->
-                                         <!-- market price area start -->
-                                        <div class="row mt-4">
-                                            <div class="justify-content-center">
-                                                <div class="input-group">
-                                                    <span for="numberMarketPrice" class="input-group-text lablBg">Market
-                                                        Price : <span class="fw-bold text-danger">*</span></span>
-                                                    <input type="number" class="form-control"
-                                                        placeholder="Enter Market Price" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="numberMarketPrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'marketprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'marketprice')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Market Price correctly here.">
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <!-- Market Price area end -->
-                                        <!-- inner form area end -->
-
-
-
-                                        <!--inner form button row start -->
-                                        <div class="row mt-4">
-
-                                            <div class="col-1"></div>
-
-                                            <!-- clear btn area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnInnerClear" class="btn btnClear">
-                                                    <i class="fa-solid fa-eraser"></i>
-                                                    Clear
-                                                </button>
-                                            </div>
-                                            <!-- clear btn area end -->
-
-                                            <div class="col-2"></div>
-
-                                            <!-- update button area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderItemUpdate"
-                                                    class=" btn btnUpdate" onclick="buttonPurchaseOrderItemUpdate()">
-                                                    <i class="fa-solid fa-file-pen"></i>
-                                                    Update
-                                                </button>
-                                            </div>
-                                            <!-- update button area end -->
-
-                                            <!-- Add btn area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderItemSubmit"
-                                                    class=" btn btnAdd" onclick="buttonPurchaseOrderItemSubmit()">
-                                                    <!-- buttonEmpSubmit function eka (employee.js)-->
-                                                    <i class="fa-solid fa-file-circle-plus"></i>
-                                                    Add
-                                                </button>
-                                            </div>
-                                            <!-- Add btn area end -->
-
-                                        </div>
-                                        <!--inner form button row end -->
-                                        <!--inner table row start -->
-                                        <div class="row mt-4 ms-1 me-1">
-                                            <div class="col-12 divTable">
-                                                <div class="container-fluid">
-                                                    <table class="table" id="tableInner">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Item Name</th>
-                                                                <th>Unit Price(Rs.)</th>
-                                                                <th>MinQuantity</th>
-                                                                <th>Last Unit Price(Rs.)</th>
-                                                                <th>Market Price(Rs.)</th>
-
-
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tableInnerBody">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                <input type="number" class="form-control"
+                                                       placeholder="Enter Line Price" aria-label="Sizing example input"
+                                                       aria-describedby="inputGroup-sizing-default"
+                                                       id="numberLastUnitePrice"
+                                                       required
+                                                       onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'lastunitprice')"
+                                                       onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'lastunitprice')"
+                                                       data-bs-toggle="tooltip"
+                                                       title="Enter the Last Unite Price correctly here.">
                                             </div>
                                         </div>
-                                        <!--inner table row end -->
-
+                                        <!-- Last Unite Price area end -->
 
 
                                     </div>
-                                    <!-- inner form and table end -->
-                                    <!--overall button row start -->
+                                    <!-- Quantity and Line Price area end -->
+                                    <!-- market price area start -->
+                                    <div class="row mt-4">
+                                        <div class="justify-content-center">
+                                            <div class="input-group">
+                                                <span for="numberMarketPrice" class="input-group-text lablBg">Market Price : <span
+                                                        class="fw-bold text-danger">*</span></span>
+                                                <input type="number" class="form-control"
+                                                       placeholder="Enter Market Price"
+                                                       aria-label="Sizing example input"
+                                                       aria-describedby="inputGroup-sizing-default"
+                                                       id="numberMarketPrice"
+                                                       required
+                                                       onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'marketprice')"
+                                                       onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'marketprice')"
+                                                       data-bs-toggle="tooltip"
+                                                       title="Enter the Market Price correctly here.">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- Market Price area end -->
+                                    <!-- inner form area end -->
+
+
+                                    <!--inner form button row start -->
                                     <div class="row mt-4">
 
                                         <div class="col-1"></div>
 
                                         <!-- clear btn area start -->
                                         <div class="col-3">
-                                            <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                            <button type="button" id="btnInnerClear" class="btn btnClear">
                                                 <i class="fa-solid fa-eraser"></i>
                                                 Clear
                                             </button>
@@ -363,8 +297,8 @@
 
                                         <!-- update button area start -->
                                         <div class="col-3">
-                                            <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
-                                                onclick="buttonEmployeeUpdate()">
+                                            <button type="button" id="btnaddPriceListItemUpdate"
+                                                    class=" btn btnUpdate" onclick="buttonAddPriceListItemUpdate()">
                                                 <i class="fa-solid fa-file-pen"></i>
                                                 Update
                                             </button>
@@ -373,8 +307,8 @@
 
                                         <!-- Add btn area start -->
                                         <div class="col-3">
-                                            <button type="button" id="btnPurchaseOrderSubmit" class=" btn btnAdd"
-                                                onclick="buttonPurchaseOrderSubmit()">
+                                            <button type="button" id="btnaddPriceListItemSubmit"
+                                                    class=" btn btnAdd" onclick="buttonAddPriceListItemSubmit()">
                                                 <!-- buttonEmpSubmit function eka (employee.js)-->
                                                 <i class="fa-solid fa-file-circle-plus"></i>
                                                 Add
@@ -383,173 +317,242 @@
                                         <!-- Add btn area end -->
 
                                     </div>
-                                    <!--overall button row end -->
+                                    <!--inner form button row end -->
+                                    <!--inner table row start -->
+                                    <div class="row mt-4 ms-1 me-1">
+                                        <div class="col-12 divTable">
+                                            <div class="container-fluid">
+                                                <table class="table" id="tableInner">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Item Name</th>
+                                                        <th>Unit Price(Rs.)</th>
+                                                        <th>MinQuantity</th>
+                                                        <th>Last Unit Price(Rs.)</th>
+                                                        <th>Market Price(Rs.)</th>
+
+
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="tableInnerBody">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--inner table row end -->
+
+
                                 </div>
-                                <!-- main and inner form area end -->
+                                <!-- inner form and table end -->
+                                <!--overall button row start -->
+                                <div class="row mt-4">
+
+                                    <div class="col-1"></div>
+
+                                    <!-- clear btn area start -->
+                                    <div class="col-3">
+                                        <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                            <i class="fa-solid fa-eraser"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <!-- clear btn area end -->
+
+                                    <div class="col-2"></div>
+
+                                    <!-- update button area start -->
+                                    <div class="col-3">
+                                        <button type="button" id="btnaddPriceListUpdate" class=" btn btnUpdate"
+                                                onclick="buttonaddPriceListUpdate()">
+                                            <i class="fa-solid fa-file-pen"></i>
+                                            Update
+                                        </button>
+                                    </div>
+                                    <!-- update button area end -->
+
+                                    <!-- Add btn area start -->
+                                    <div class="col-3">
+                                        <button type="button" id="btnaddPriceListSubmit" class=" btn btnAdd"
+                                                onclick="buttonAddPriceListSubmit()">
+                                            <!-- buttonEmpSubmit function eka (employee.js)-->
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <!-- Add btn area end -->
+
+                                </div>
+                                <!--overall button row end -->
+                            </div>
+                            <!-- main and inner form area end -->
 
 
-                            </form>
-                        </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-        </div>
-        <!-- offcanvas area end -->
-
-    </div>
-
-    <!-- view/print employee -->
-    <!-- Modal -->
-    <!-- offcanvas area start -->
-    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
-        data-bs-backdrop="false" id="offcanvasBottomView" aria-labelledby="offcanvasBottomLabel">
-        <div class="offcanvas-header">
-            <!--offcanvas close button start -->
-            <div class="row">
-
-                <!-- offcanvas close button start -->
-                <div class="col-1">
-                    <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
-                        aria-label="Close">X</button>
-                </div>
-                <!-- offcanvas close button start -->
-
-                <div class="col-11"></div>
-
-
-
-            </div>
-            <!--offcanvas close button end -->
-        </div>
-        <div class="offcanvas-body small">
-            <!-- employee view area start -->
-            <div class="row">
-                <div class="col-3"></div>
-                <div class="col-6">
-                    <table id="tableView" style="border: none;">
-                        <thead>
-                            <th colspan="3"
-                                style="background-color:white; color:black; border: none; text-align: center; font-size:x-large;">
-                                Employee Details</th>
-                        </thead>
-                        <tbody style="border: none;">
-                            <tr>
-                                <th colspan="3" style="text-align: center;border: none;"><img src=""
-                                        alt="Employee photo" width="30" height="30"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Full name</th>
-                                <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                    id="fullNameView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Calling name</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                    id="callingNameView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black;border: none; text-align: left;">Nic</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                    id="nicView"></th>
-
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Gender</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                    id="genderView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Date Of Birth</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                    id="dobView"></th>
-
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Email</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                    id="emailView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black;border: none; text-align: left;">Mobile No</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black;border: none; text-align: left; font-style: italic; font-weight: 500;"
-                                    id="mobileView"></th>
-
-                            </tr>
-                            <tr>
-                                <th style="color:black;border: none; text-align: left;">Land No</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black;border: none; text-align: left; font-style: italic; font-weight: 500;"
-                                    id="landNoView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Address </th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
-                                    id="addressView"></th>
-
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Note</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
-                                    id="noteView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left; border: none;">Designation </th>
-                                <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; border: none; text-align: left; font-style: italic; font-weight: 500;"
-                                    id="designationView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Civilstatus</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
-                                    id="civilStatusView"></th>
-                            </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Employee status</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
-                                    id="employeeStatusView"></th>
-                            </tr>
-                        </tbody>
-
-                    </table>
-                </div>
-                <div class="col-3"></div>
-            </div>
-            <!-- employee view table area end -->
-
-
-
-            <div class="row mt-3">
-                <div class="col-10"></div>
-                <div class="col-2">
-                    <button type="button" class=" offCanvasCloseBtn p-2" onclick="buttonPrintRow()">
-                        <i class="fa-solid fa-print" style="color: #ffffff;"></i>
-                        Print</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- offcanvas area end -->
 
-    <!-- link js files -->
-    <script src="/jsFiles/common.js"></script>
+</div>
 
-    <script src="/jsFiles/tableFunction.js"></script>
+<!-- view/print employee -->
+<!-- Modal -->
+<!-- offcanvas area start -->
+<div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+     data-bs-backdrop="false" id="offcanvasBottomView" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-header">
+        <!--offcanvas close button start -->
+        <div class="row">
 
-    <script src="/jsFiles/purchaseOrders.js"></script>
+            <!-- offcanvas close button start -->
+            <div class="col-1">
+                <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                        aria-label="Close">X
+                </button>
+            </div>
+            <!-- offcanvas close button start -->
 
-    <script src="/jsFiles/validatorFunction.js"></script>
+            <div class="col-11"></div>
 
+
+        </div>
+        <!--offcanvas close button end -->
+    </div>
+    <div class="offcanvas-body small">
+        <!-- employee view area start -->
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <table id="tableView" style="border: none;">
+                    <thead>
+                    <th colspan="3"
+                        style="background-color:white; color:black; border: none; text-align: center; font-size:x-large;">
+                        Employee Details
+                    </th>
+                    </thead>
+                    <tbody style="border: none;">
+                    <tr>
+                        <th colspan="3" style="text-align: center;border: none;"><img src=""
+                                                                                      alt="Employee photo" width="30"
+                                                                                      height="30"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Full name</th>
+                        <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                            id="fullNameView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Calling name</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                            id="callingNameView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black;border: none; text-align: left;">Nic</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                            id="nicView"></th>
+
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Gender</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                            id="genderView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Date Of Birth</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                            id="dobView"></th>
+
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Email</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
+                            id="emailView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black;border: none; text-align: left;">Mobile No</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black;border: none; text-align: left; font-style: italic; font-weight: 500;"
+                            id="mobileView"></th>
+
+                    </tr>
+                    <tr>
+                        <th style="color:black;border: none; text-align: left;">Land No</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black;border: none; text-align: left; font-style: italic; font-weight: 500;"
+                            id="landNoView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Address</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                            id="addressView"></th>
+
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Note</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                            id="noteView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left; border: none;">Designation</th>
+                        <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; border: none; text-align: left; font-style: italic; font-weight: 500;"
+                            id="designationView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Civilstatus</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                            id="civilStatusView"></th>
+                    </tr>
+                    <tr>
+                        <th style="color:black; text-align: left;border: none;">Employee status</th>
+                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp;</th>
+                        <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
+                            id="employeeStatusView"></th>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="col-3"></div>
+        </div>
+        <!-- employee view table area end -->
+
+
+        <div class="row mt-3">
+            <div class="col-10"></div>
+            <div class="col-2">
+                <button type="button" class=" offCanvasCloseBtn p-2" onclick="buttonPrintRow()">
+                    <i class="fa-solid fa-print" style="color: #ffffff;"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- offcanvas area end -->
+
+<!-- link js files -->
+<script src="/jsFiles/common.js"></script>
+
+<script src="/jsFiles/tableFunction.js"></script>
+
+<script src="/jsFiles/addPriceList.js"></script>
+
+<script src="/jsFiles/validatorFunction.js"></script>
 
 
 </body>

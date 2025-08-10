@@ -7,6 +7,6 @@ import lk.brightbs.addPriceList.entity.AddPriceList;
 
 public interface AddPriceListDao extends JpaRepository<AddPriceList, Integer>{
 
- @Query(value = "SELECT coalesce(concat('PO' , lpad(substring(max(PO.purchaserequestno),2) +1 , 5 , 0)) , 'PO00001')  FROM brightbookshop.purchaserequest as PO;" , nativeQuery = true) String getNextOrderNo();
+ @Query(value = "SELECT coalesce(concat('A' , lpad(substring(max(a.addpricelistno),2) +1 , 5 , 0)) , 'A00001')  FROM brightbookshop.addpricelist as a;" , nativeQuery = true) String getNextAddPriceListNo();
 
 }
