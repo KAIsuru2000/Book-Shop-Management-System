@@ -77,12 +77,12 @@ public class PurchaseOrder {
     @JoinColumn(name = "supplier_id" , referencedColumnName = "id")
     private Supplier supplier_id ;
 
-    //purchaseOrder many addpricelist one
-    //foreing key eka one side eke sita many side ekata ei ema nisa many to one
-    @ManyToOne(optional = true)  //meya optional
-    //table name eka(addpricelist_id) foreing key wana table eke id eka(referencedColumnName=primary key)
-    @JoinColumn(name = "addpricelist_id" , referencedColumnName = "id")
-    private Employee addpricelist_id;
+//    //purchaseOrder many addpricelist one
+//    //foreing key eka one side eke sita many side ekata ei ema nisa many to one
+//    @ManyToOne(optional = true)  //meya optional
+//    //table name eka(addpricelist_id) foreing key wana table eke id eka(referencedColumnName=primary key)
+//    @JoinColumn(name = "addpricelist_id" , referencedColumnName = "id")
+//    private Employee addpricelist_id;
 
     // list ekak lebiya yuthuya
     // js wala hadapu list eka (purchaseOrderHasItemList)

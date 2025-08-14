@@ -12,10 +12,10 @@ window.addEventListener("load", () => {
 
 })
 
-//refresh table Area 
+//refresh table Area
 const refreshPurchaseOrderTable = () => {
 
-    let purchaseOrders = getServiceRequest("/purchaseOrder/alldata");
+    let purchaseOrders = getServiceRequest("/purchaseOrders/alldata");
 
     let propertyList = [
         { propertyName: "purchaserequestno", dataType: "string" },
@@ -62,11 +62,22 @@ const getOrderStatus = (dataob) => {
 
 }
 const generateItemList = (dataob) => {
+    //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
     let itemList = "";
-    dataob.items.forEach(item => {
-        itemList += `<li>${item.name} - ${item.quantity}</li>`;
+    // item list ekak ena nisa
+    dataob.purchaseOrderHasItemList.forEach((item, index) => {
+        if (dataob.purchaseOrderHasItemList.length - 1 == index) {
+            //last item eken pasu "," ekak set nokarai
+            itemList = itemList + item.item_id.itemname;
+        } else {
+            //items veriable ekata concatinate kara ganimata item object eke name access karala
+            //name athara gap ekak thaba gani
+            itemList = itemList + item.item_id.itemname + " , ";
+        }
+
     });
-    return `<ul>${itemList}</ul>`;
+    //awasanaye roles object eka return karanawa
+    return itemList;
 }
 //function for re fill purchase order form
 const purchaseOrderFormRefill = (ob, index) => {
@@ -226,7 +237,7 @@ const buttonPrintRow = () => {
 const checkFormError = () => {
     let errors = "";
 
-    if (purchaseOrder.addpricelist_id == null) {
+    if (purchaseOrder.supplier_id == null) {
         errors = errors + "Please Enter valid Supplier Name...! \n";
     }
 
@@ -255,7 +266,7 @@ const buttonPurchaseOrderSubmit = () => {
     if (errors == "") {
         //no errors get user confirmation
         let userConfirm = window.confirm("Are you sure to add following Purchase Order...?" +
-            "\n Supplier name : " + purchaseOrder.addpricelist_id.pricelistrequest_id.supplier_id.suppliername +
+            "\n Supplier name : " + purchaseOrder.supplier_id.suppliername +
             "\n Purchase Order required date : " + purchaseOrder.requireddate +
             "\n Purchase Order total amount : " + purchaseOrder.totalamount
         );
@@ -384,8 +395,8 @@ const refreshPurchaseOrderForm = () => {
     setDefault([selectSupplier, dateRequireDate, textTotalAmount, textNote, selectOrderStatus]);
 
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('addPriceList/alldata');
-    fillDataIntoSelectSupplier(selectSupplier, "Please Select Supplier..!!", suppliers);
+    let suppliers = getServiceRequest('supplier/alldata');
+    fillDataIntoSelect(selectSupplier, "Please Select Supplier..!!", suppliers, "suppliername");
 
     let orderStatues = getServiceRequest('/purchaseOrderStatues/alldata');
     fillDataIntoSelect(selectOrderStatus, "Please Select Status..!!", orderStatues, "name");
@@ -522,31 +533,31 @@ const buttonPurchaseOrderItemSubmit = (ob, index) => {
 
 }
 
-// Define function to fill supplier names into a <select> dropdown
-const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
-    // Clear existing options
-    parentId.innerHTML = "";
-
-    // Add a default disabled placeholder if message is provided
-    // if (message !== "") {
-    const optionMsg = document.createElement("option");
-    optionMsg.value = "";
-    optionMsg.selected = true;
-    optionMsg.disabled = true;
-    optionMsg.innerText = message;
-    parentId.appendChild(optionMsg);
-    // }
-
-    // Loop through the data and extract supplier names
-    dataList.forEach(dataOb => {
-        // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
-        const option = document.createElement("option");
-        option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-        option.innerText = dataOb.pricelistrequest_id.supplier_id.suppliername;
-        parentId.appendChild(option);
-        // }
-    });
-};
+// // Define function to fill supplier names into a <select> dropdown
+// const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
+//     // Clear existing options
+//     parentId.innerHTML = "";
+//
+//     // Add a default disabled placeholder if message is provided
+//     // if (message !== "") {
+//     const optionMsg = document.createElement("option");
+//     optionMsg.value = "";
+//     optionMsg.selected = true;
+//     optionMsg.disabled = true;
+//     optionMsg.innerText = message;
+//     parentId.appendChild(optionMsg);
+//     // }
+//
+//     // Loop through the data and extract supplier names
+//     dataList.forEach(dataOb => {
+//         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
+//         const option = document.createElement("option");
+//         option.value = JSON.stringify(dataOb); // or dataOb.id if needed
+//         option.innerText = dataOb.pricelistrequest_id.supplier_id.suppliername;
+//         parentId.appendChild(option);
+//         // }
+//     });
+// };
 
 
 

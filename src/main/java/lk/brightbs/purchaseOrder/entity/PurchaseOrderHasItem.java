@@ -42,7 +42,7 @@ public class PurchaseOrderHasItem {
     private BigDecimal lineprice;
 
     // foreign key
-    @Id // primary key nisa
+//    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka
@@ -50,7 +50,7 @@ public class PurchaseOrderHasItem {
     private Item item_id;
 
     // foreign key
-    @Id // primary key nisa
+//    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "purchaserequest_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka PurchaseOrder

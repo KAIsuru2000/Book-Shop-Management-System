@@ -18,7 +18,7 @@
             <div class="col-12 p-3 d-flex justify-content-center divTitle">
                 <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
                 <i class="fa-solid fa-user-tie fa-2x"></i>
-                <h2 class="h2 ms-3">Purchase Order management</h2><!--1rem set margin start  -->
+                <h2 class="h2 ms-3">GRN management</h2><!--1rem set margin start  -->
             </div>
         </div>
         <!-- title area end -->
@@ -30,7 +30,7 @@
                 <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
                     <i class="fa-solid fa-user-plus"></i>
-                    Add New Purchase Order
+                    Add New GRN
                 </button>
             </div>
             <div class="col-9"></div>
@@ -42,20 +42,20 @@
             <div class="col-1"></div>
             <div class="col-10 mt-1 divTable">
                 <div class="container-fluid">
-                    <table class="table" id="tablePurchaseOrder">
+                    <table class="table" id="tableGRN">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Order No</th>
+                                <th>GRN No</th>
                                 <th>Supplier Name</th>
-                                <th>Required Date</th>
+                                <th>Received Date</th>
                                 <th>Item List</th>
                                 <th>Total Amount(Rs.)</th>
                                 <th>Status</th>
 
                             </tr>
                         </thead>
-                        <tbody id="tablePurchaseOrderBody">
+                        <tbody id="tableGRNBody">
 
                         </tbody>
                     </table>
@@ -74,7 +74,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
-                            <form id="formPurchaseOrder">
+                            <form id="formGRN">
 
                                 <!-- required mark and offcanvas close button start -->
                                 <div class="row">
@@ -111,8 +111,8 @@
                                                     &nbsp; &nbsp; &nbsp; &nbsp; :
                                                     <span class="fw-bold text-danger">*</span></label>
                                                 <select class="form-select" id="selectSupplier"
-                                                    onchange="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id')"
+                                                    onchange="selectDainamicElementValidater(this , 'gRN', 'purchaserequest_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'gRN', 'purchaserequest_id')"
                                                     data-bs-toggle="tooltip"
                                                     title="Select the Supplier correctly here.">
                                                     <option selected disabled>Select Supplier</option>
@@ -122,23 +122,23 @@
                                             </div>
                                         </div>
                                         <!-- Supplier area end-->
-                                        <!-- Require Date start-->
+                                        <!-- Received Date start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span class="input-group-text lablBg">Require Date :
+                                                <span class="input-group-text lablBg">Received Date :
                                                     <span class="fw-bold text-danger">*</span>
                                                 </span>
                                                 <input type="date" placeholder="
-                                            Enter Required Date " class="form-control"
+                                            Enter Received Date " class="form-control"
                                                     aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default" id="dateRequireDate"
-                                                    onchange="textValidator(this, '^.*$', 'purchaseOrder', 'requireddate')"
+                                                    aria-describedby="inputGroup-sizing-default" id="dateReceivedDate"
+                                                    onchange="textValidator(this, '^.*$', 'gRN', 'receivedate')"
                                                     required data-bs-toggle="tooltip"
-                                                    title="Please enter the required date correctly">
+                                                    title="Please enter the Received date correctly">
                                             </div>
 
                                         </div>
-                                        <!-- Require Date end-->
+                                        <!-- Received Date end-->
                                         <!-- Total Amount area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
@@ -148,27 +148,13 @@
                                                     aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textTotalAmount"
                                                     required
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')"
+                                                    onkeyup="textValidator(this, '^.*$', 'gRN', 'totalamount')"
+                                                    onclick="textValidator(this, '^.*$', 'gRN', 'totalamount')"
                                                     data-bs-toggle="tooltip"
                                                     title="Enter the Total Amount correctly here.">
                                             </div>
                                         </div>
                                         <!-- Total Amount area end-->
-                                        <!-- note area start -->
-                                        <div class="row mt-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text lablBg">Note&nbsp;: <span
-                                                        class="text-danger">(optional)</span></span>
-                                                <textarea id="textNote" class="form-control" placeholder="Enter Note"
-                                                    aria-label="With textarea"
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter a note about the Purchase Order here"></textarea>
-                                            </div>
-                                        </div>
-                                        <!-- note area end -->
                                         <!--Order Status area start-->
                                         <div class="row mt-4">
                                             <div class="input-group mb-3">
@@ -544,7 +530,7 @@
 
     <script src="/jsFiles/tableFunction.js"></script>
 
-    <script src="/jsFiles/purchaseOrders.js"></script>
+    <script src="/jsFiles/grn.js"></script>
 
     <script src="/jsFiles/validatorFunction.js"></script>
 

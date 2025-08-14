@@ -34,6 +34,10 @@ public class GrnHasItem {
     @NotNull
     private BigDecimal uniteprice;
 
+    @Column(name = "quentity")
+    @NotNull
+    private Integer quentity;
+
     @Column(name = "freequentity")
     @NotNull
     private Integer freequentity;
@@ -47,7 +51,7 @@ public class GrnHasItem {
     private BigDecimal lineprice;
 
     // foreign key
-    @Id // primary key nisa
+//    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka
@@ -55,7 +59,7 @@ public class GrnHasItem {
     private Item item_id;
 
     // foreign key
-    @Id // primary key nisa
+//    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "grn_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka PurchaseOrder
