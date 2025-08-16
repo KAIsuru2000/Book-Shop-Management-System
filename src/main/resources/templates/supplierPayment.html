@@ -18,7 +18,7 @@
             <div class="col-12 p-3 d-flex justify-content-center divTitle">
                 <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
                 <i class="fa-solid fa-user-tie fa-2x"></i>
-                <h2 class="h2 ms-3">Purchase Order management</h2><!--1rem set margin start  -->
+                <h2 class="h2 ms-3">Supplier Payment management</h2><!--1rem set margin start  -->
             </div>
         </div>
         <!-- title area end -->
@@ -30,7 +30,7 @@
                 <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
                     <i class="fa-solid fa-user-plus"></i>
-                    Add New Purchase Order
+                    Add New Supplier Payment
                 </button>
             </div>
             <div class="col-9"></div>
@@ -42,20 +42,20 @@
             <div class="col-1"></div>
             <div class="col-10 mt-1 divTable">
                 <div class="container-fluid">
-                    <table class="table" id="tablePurchaseOrder">
+                    <table class="table" id="tableSupplierPayment">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Order No</th>
+                                <th>Bill No</th>
                                 <th>Supplier Name</th>
-                                <th>Required Date</th>
-                                <th>Item List</th>
                                 <th>Total Amount(Rs.)</th>
+                                <th>Paid Amount(Rs.)</th>
+                                <th>Balance Amount(Rs.)</th>
                                 <th>Status</th>
 
                             </tr>
                         </thead>
-                        <tbody id="tablePurchaseOrderBody">
+                        <tbody id="tableSupplierPaymentBody">
 
                         </tbody>
                     </table>
@@ -74,7 +74,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
-                            <form id="formPurchaseOrder">
+                            <form id="formSupplierPayment">
 
                                 <!-- required mark and offcanvas close button start -->
                                 <div class="row">
@@ -108,11 +108,11 @@
                                         <div class="row">
                                             <div class="input-group">
                                                 <label class="input-group-text lablBg" for="selectSupplier">Supplier
-                                                    &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
                                                     <span class="fw-bold text-danger">*</span></label>
                                                 <select class="form-select" id="selectSupplier"
-                                                    onchange="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id')"
+                                                    onchange="selectDainamicElementValidater(this , 'supplierPayment', 'supplier_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'supplierPayment', 'supplier_id')"
                                                     data-bs-toggle="tooltip"
                                                     title="Select the Supplier correctly here.">
                                                     <option selected disabled>Select Supplier</option>
@@ -122,88 +122,162 @@
                                             </div>
                                         </div>
                                         <!-- Supplier area end-->
-                                        <!-- Require Date start-->
+                                        <!-- Total Due Amount area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span class="input-group-text lablBg">Require Date :
-                                                    <span class="fw-bold text-danger">*</span>
-                                                </span>
-                                                <input type="date" placeholder="
-                                            Enter Required Date " class="form-control"
+                                                <span for="textTotalAmount" class="input-group-text lablBg">Total Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;: <span class="fw-bold text-danger">*</span></span>
+                                                <input type="text" placeholder="Enter Total Due Amount"
+                                                    class="form-control" aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textTotalDueAmount"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'totaldueamount')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'totaldueamount')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Total Due Amount correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Total Due Amount area end-->
+                                        <!-- Paid Amount area start-->
+                                        <div class="row mt-4">
+                                            <div class="input-group">
+                                                <span for="textPaidItemAmount" class="input-group-text lablBg">Paid
+                                                    Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; : <span class="fw-bold text-danger">*</span></span>
+                                                <input type="text" placeholder="Enter Paid Amount" class="form-control"
                                                     aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default" id="dateRequireDate"
-                                                    onchange="textValidator(this, '^.*$', 'purchaseOrder', 'requireddate')"
-                                                    required data-bs-toggle="tooltip"
-                                                    title="Please enter the required date correctly">
+                                                    aria-describedby="inputGroup-sizing-default" id="textPaidItemAmount"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'paidamount')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'paidamount')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Paid Amount correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Paid Amount area end-->
+                                        <!-- Balance Amount area start-->
+                                        <div class="row mt-4">
+                                            <div class="input-group">
+                                                <span for="textBalanceAmount" class="input-group-text lablBg">Balance
+                                                    Amount &nbsp; &nbsp; &nbsp; &nbsp;: <span class="fw-bold text-danger">*</span></span>
+                                                <input type="text" placeholder="Enter Balance Amount"
+                                                    class="form-control" aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textBalanceAmount"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'balanceamount')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'balanceamount')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Balance Amount correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Balance Amount area end-->
+                                        <!-- Payment method area start-->
+                                        <div class="row mt-4">
+                                            <div class="input-group">
+                                                <span for="textPaymentmethod" class="input-group-text lablBg">Payment
+                                                    method &nbsp; &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></span>
+                                                <input type="text" placeholder="Enter Payment Method"
+                                                    class="form-control" aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textPaymentmethod"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'paymentmethod')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'paymentmethod')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Payment Method correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Payment method area end-->
+                                        <!-- Cheque no area start -->
+                                        <div class="row mt-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg">Cheque no &nbsp; : <span
+                                                        class="text-danger">(optional)</span></span>
+                                                <input type="text" id="textChequeNo" class="form-control"
+                                                    placeholder="Enter Cheque No" aria-label="With textarea"
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'checkno')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'checkno')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Cheque No correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Cheque no area end -->
+                                        <!-- Cheque Date area start -->
+                                        <div class="row mt-4">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg">Cheque Date:<span
+                                                        class="text-danger">(optional)</span></span>
+                                                <input type="text" id="textChequeDate" class="form-control"
+                                                    placeholder="Enter Cheque Date" aria-label="With textarea"
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'checkdate')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'checkdate')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Cheque Date correctly here.">
                                             </div>
 
                                         </div>
-                                        <!-- Require Date end-->
-                                        <!-- Total Amount area start-->
+
+                                        <!-- Cheque Date area end -->
+                                        <!-- Transfer Id area start -->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span for="textTotalAmount" class="input-group-text lablBg">Total Amount : <span
-                                                        class="fw-bold text-danger">*</span></span>
-                                                <input type="text" placeholder="Enter Total Amount" class="form-control"
-                                                    aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default" id="textTotalAmount"
-                                                    required
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'totalamount')"
+                                                <span class="input-group-text lablBg">Transfer Id &nbsp; &nbsp;: <span
+                                                        class="text-danger">(optional)</span></span>
+                                                <input type="text" id="textTransferId" class="form-control"
+                                                    placeholder="Enter Transfer Id" aria-label="With textarea"
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'transferid')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'transferid')"
                                                     data-bs-toggle="tooltip"
-                                                    title="Enter the Total Amount correctly here.">
+                                                    title="Enter the Transfer Id correctly here.">
                                             </div>
                                         </div>
-                                        <!-- Total Amount area end-->
+                                        <!-- Transfer Id area end -->
+
                                         <!-- note area start -->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span class="input-group-text lablBg">Note&nbsp;: <span
+                                                <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
                                                         class="text-danger">(optional)</span></span>
                                                 <textarea id="textNote" class="form-control" placeholder="Enter Note"
                                                     aria-label="With textarea"
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrder', 'note')"
+                                                    onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'note')"
+                                                    onclick="textValidator(this, '^.*$', 'supplierPayment', 'note')"
                                                     data-bs-toggle="tooltip"
-                                                    title="Enter a note about the Purchase Order here"></textarea>
+                                                    title="Enter a note about the supplier Payment here"></textarea>
                                             </div>
                                         </div>
                                         <!-- note area end -->
-                                        <!--Order Status area start-->
+                                        <!--Supplier Payment Status area start-->
                                         <div class="row mt-4">
                                             <div class="input-group mb-3">
-                                                <label class="input-group-text lablBg" for="selectOrderStatus">Order
-                                                    Status &nbsp;:
+                                                <label class="input-group-text lablBg" for="selectSupplierPaymentStatus">Supplier Payment Status &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; :
                                                     <span class="fw-bold text-danger">*</span></label>
-                                                <select class="form-select" id="selectOrderStatus"
-                                                    onchange="selectDainamicElementValidater(this , 'purchaseOrder', 'purchaserequeststatus_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrder', 'purchaserequeststatus_id')"
+                                                <select class="form-select" id="selectSupplierPaymentStatus"
+                                                    onchange="selectDainamicElementValidater(this , 'supplierPayment', 'suplierpaymentstatus_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'supplierPayment', 'suplierpaymentstatus_id')"
                                                     data-bs-toggle="tooltip"
-                                                    title="Select the Order Status correctly here.">
-                                                    <option selected disabled>Select Order Status</option>
+                                                    title="Select the Supplier Payment Status correctly here.">
+                                                    <option selected disabled>Select Supplier Payment Status</option>
                                                     <option value=""></option>
                                                     <option value=""></option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <!-- Order Status area end-->
-                                        
+                                        <!-- Supplier Payment Status area end-->
+
                                     </div>
                                     <!-- main form area end -->
                                     <!-- inner form and table start -->
                                     <div class="col-6">
                                         <!-- inner form area start -->
-                                        <!-- Item and Unit Price area start -->
+                                        <!-- Item and Previous Due Amount area start -->
                                         <div class="row">
                                             <!-- Item area start-->
                                             <div class="col-6">
                                                 <div class="input-group">
                                                     <label class="input-group-text lablBg" for="selectItem">Item
-                                                        &nbsp; &nbsp; &nbsp; :
+                                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></label>
                                                     <select class="form-select" id="selectItem"
-                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
-                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                                        onchange="selectDainamicElementValidater(this , 'supplierpaymentHasGrn', 'grn_id')"
+                                                        onclick="selectDainamicElementValidater(this , 'supplierpaymentHasGrn', 'grn_id')"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Item correctly here.">
                                                         <option selected disabled>Select Item</option>
@@ -213,64 +287,66 @@
                                                 </div>
                                             </div>
                                             <!-- Item area end-->
-                                            <!-- Unit Price area start-->
+                                            <!-- Previous Due Amount area start-->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textUnitPrice" class="input-group-text lablBg"
-                                                        id="inputGroup-sizing-default">Unit Price : <span
+                                                    <span for="textPreviousDueAmount" class="input-group-text lablBg"
+                                                        id="inputGroup-sizing-default">Previous Due Amount:<span
                                                             class="fw-bold text-danger">*</span></span>
-                                                    <input placeholder="Enter Unit Price" type="text" class="form-control"  aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
+                                                    <input placeholder="Enter Previous Due Amount" type="text"
+                                                        class="form-control" aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default"
+                                                        id="textPreviousDueAmount" required
+                                                        onkeyup="textValidator(this, '^.*$', 'supplierpaymentHasGrn', 'previousdueamount')"
+                                                        onclick="textValidator(this, '^.*$', 'supplierpaymentHasGrn', 'previousdueamount')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Unit Price correctly here.">
+                                                        title="Enter the Previous Due Amount correctly here.">
                                                 </div>
                                             </div>
 
-                                            <!-- Unit Price area end-->
+                                            <!-- Previous Due Amount area end-->
                                         </div>
-                                        <!-- Item and Unit Price area end -->
-                                        <!-- Quantity and Line Price area start -->
+                                        <!-- Item and Previous Due Amount area end -->
+                                        <!-- Paid Amount and After Due Amount area start -->
                                         <div class="row mt-4">
-                                            <!-- Quantity area start -->
+                                            <!-- Paid Amount area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textQuantity" class="input-group-text lablBg">Quantity :
-                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <span for="textPaidAmount" class="input-group-text lablBg">Paid
+                                                        Amount:<span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
-                                                        placeholder="Enter Quantity" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textQuantity"
+                                                        placeholder="Enter Paid Amount"
+                                                        aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="textPaidAmount"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
+                                                        onkeyup="textValidator(this, '^.*$', 'supplierpaymentHasGrn', 'paidamount')"
+                                                        onclick="textValidator(this, '^.*$', 'supplierpaymentHasGrn', 'paidamount')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Quantity correctly here.">
+                                                        title="Enter the Paid Amount correctly here.">
                                                 </div>
                                             </div>
-                                            <!-- Quantity area end -->
-                                            <!-- Line Price area start -->
+                                            <!-- Paid Amount area end -->
+                                            <!-- After Due Amount area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textQuantity" class="input-group-text lablBg">Line
-                                                        Price :
+                                                    <span for="textAfterDueAmount" class="input-group-text lablBg">After Due Amount &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
-                                                        placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textLinePrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                        placeholder="Enter After Due Amount"
+                                                        aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default"
+                                                        id="textAfterDueAmount" required
+                                                        onkeyup="textValidator(this, '^.*$', 'supplierpaymentHasGrn', 'afterdueamount')"
+                                                        onclick="textValidator(this, '^.*$', 'supplierpaymentHasGrn', 'afterdueamount')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Line Price correctly here.">
+                                                        title="Enter the After Due Amount correctly here.">
                                                 </div>
                                             </div>
-                                            <!-- Line Price area end -->
+                                            <!-- After Due Amount area end -->
 
 
                                         </div>
-                                        <!-- Quantity and Line Price area end -->
+                                        <!-- Paid Amount and After Due Amount area end -->
                                         <!-- inner form area end -->
 
 
@@ -294,7 +370,7 @@
                                             <!-- update button area start -->
                                             <div class="col-3">
                                                 <button type="button" id="btnPurchaseOrderItemUpdate"
-                                                    class=" btn btnUpdate" onclick="buttonPurchaseOrderItemUpdate()">
+                                                    class=" btn btnUpdate" onclick="buttonSupplierPaymentGrnUpdate()">
                                                     <i class="fa-solid fa-file-pen"></i>
                                                     Update
                                                 </button>
@@ -303,8 +379,8 @@
 
                                             <!-- Add btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderItemSubmit"
-                                                    class=" btn btnAdd" onclick="buttonPurchaseOrderItemSubmit()">
+                                                <button type="button" id="btnSupplierPaymentGrnSubmit"
+                                                    class=" btn btnAdd" onclick="buttonSupplierPaymentGrnSubmit()">
                                                     <!-- buttonEmpSubmit function eka (employee.js)-->
                                                     <i class="fa-solid fa-file-circle-plus"></i>
                                                     Add
@@ -323,9 +399,9 @@
                                                             <tr>
                                                                 <th>#</th>
                                                                 <th>Item Name</th>
-                                                                <th>Unit Price(Rs.)</th>
-                                                                <th>Quantity</th>
-                                                                <th>Line Price(Rs.)</th>
+                                                                <th>Previous Due Amount(Rs.)</th>
+                                                                <th>Paid Amount(Rs.)</th>
+                                                                <th>After Due Amount(Rs.)</th>
 
 
                                                             </tr>
@@ -338,58 +414,60 @@
                                             </div>
                                         </div>
                                         <!--inner table row end -->
-                                        
+
 
 
                                     </div>
                                     <!-- inner form and table end -->
-                                     <!--overall button row start -->
-                                        <div class="row mt-4">
+                                    <!--overall button row start -->
+                                    <div class="row mt-4">
 
-                                            <div class="col-1"></div>
+                                        <div class="col-1"></div>
 
-                                            <!-- clear btn area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="buttonEmpClear" class="btn btnClear">
-                                                    <i class="fa-solid fa-eraser"></i>
-                                                    Clear
-                                                </button>
-                                            </div>
-                                            <!-- clear btn area end -->
-
-                                            <div class="col-2"></div>
-
-                                            <!-- update button area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
-                                                    onclick="buttonEmployeeUpdate()">
-                                                    <i class="fa-solid fa-file-pen"></i>
-                                                    Update
-                                                </button>
-                                            </div>
-                                            <!-- update button area end -->
-
-                                            <!-- Add btn area start -->
-                                            <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderSubmit" class=" btn btnAdd"
-                                                    onclick="buttonPurchaseOrderSubmit()">
-                                                    <!-- buttonEmpSubmit function eka (employee.js)-->
-                                                    <i class="fa-solid fa-file-circle-plus"></i>
-                                                    Add
-                                                </button>
-                                            </div>
-                                            <!-- Add btn area end -->
-
+                                        <!-- clear btn area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                                <i class="fa-solid fa-eraser"></i>
+                                                Clear
+                                            </button>
                                         </div>
-                                        <!--overall button row end -->
+                                        <!-- clear btn area end -->
+
+                                        <div class="col-2"></div>
+
+                                        <!-- update button area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
+                                                onclick="buttonEmployeeUpdate()">
+                                                <i class="fa-solid fa-file-pen"></i>
+                                                Update
+                                            </button>
+                                        </div>
+                                        <!-- update button area end -->
+
+                                        <!-- Add btn area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="btnSupplierPaymentSubmit" class=" btn btnAdd"
+                                                onclick="buttonSupplierPaymentSubmit()">
+                                                <!-- buttonEmpSubmit function eka (employee.js)-->
+                                                <i class="fa-solid fa-file-circle-plus"></i>
+                                                Add
+                                            </button>
+                                        </div>
+                                        <!-- Add btn area end -->
+
+                                    </div>
+                                    <!--overall button row end -->
                                 </div>
                                 <!-- main and inner form area end -->
+
 
 
                             </form>
                         </div>
                     </div>
                 </div>
+                <!-- form area end -->
             </div>
         </div>
         <!-- offcanvas area end -->
@@ -539,12 +617,13 @@
     </div>
     <!-- offcanvas area end -->
 
+
     <!-- link js files -->
     <script src="/jsFiles/common.js"></script>
 
     <script src="/jsFiles/tableFunction.js"></script>
 
-    <script src="/jsFiles/purchaseOrders.js"></script>
+    <script src="/jsFiles/supplierPayment.js"></script>
 
     <script src="/jsFiles/validatorFunction.js"></script>
 

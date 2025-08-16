@@ -63,9 +63,6 @@ public class GRN {
     @NotNull
     private BigDecimal totalamount ;
 
-    @Column(name = "note")
-    private String note ;
-
     @Column(name = "addeddatetime")
     @NotNull
     private LocalDateTime addeddatetime;
@@ -97,7 +94,7 @@ public class GRN {
     // inner form eke data remove kirimata awashya wei e sadaha orphanRemoval = true yodai
     @OneToMany(mappedBy = "grn_id" , cascade = CascadeType.ALL , orphanRemoval = true) // mapped by main table id (purchaserequest_id)
     // CascadeType.ALL- read kirimata awasthawa laba dei
-    private List<GrnHasItem> GrnHasItemList;
+    private List<GrnHasItem> grnHasItemList;
 
 
 

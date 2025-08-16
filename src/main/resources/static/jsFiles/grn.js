@@ -6,56 +6,45 @@ window.addEventListener("load", () => {
     // enable tooltip
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    refreshPurchaseOrderTable();
+    refreshGRNTable();
 
-    refreshPurchaseOrderForm();
+    refreshGRNForm();
 
 })
 
 //refresh table Area
-const refreshPurchaseOrderTable = () => {
+const refreshGRNTable = () => {
 
-    let purchaseOrders = getServiceRequest("/purchaseOrders/alldata");
+    let gRNs = getServiceRequest("/grn/alldata");
 
     let propertyList = [
-        { propertyName: "purchaserequestno", dataType: "string" },
+        { propertyName: "grnno", dataType: "string" },
         { propertyName: generateSupplierName, dataType: "function" },
-        { propertyName: "requireddate", dataType: "string" },
+        { propertyName: "receivedate", dataType: "string" },
         { propertyName: generateItemList, dataType: "function" },
         { propertyName: "totalamount", dataType: "decimal" },
-        { propertyName: getOrderStatus, dataType: "function" },
+        { propertyName: getGRNStatus, dataType: "function" },
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tablePurchaseOrderBody, purchaseOrders, propertyList, purchaseOrderFormRefill, purchaseOrderDelete, purchaseOrderView, "#offcanvasBottom");
+    fillDataIntoTable(tableGRNBody, gRNs, propertyList, gRNFormRefill, gRNDelete, gRNView, "#offcanvasBottom");
 
 
-    $('#tablePurchaseOrder').DataTable();
+    $('#tableGRN').DataTable();
 
 
 }
 
 const generateSupplierName = (dataob) => {
-    return dataob.supplier_id.suppliername;
+    return dataob.purchaserequest_id.supplier_id.suppliername;
 }
-const getOrderStatus = (dataob) => {
-    if (dataob.purchaserequeststatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;"></i>'
-    }
+const getGRNStatus = (dataob) => {
 
-    if (dataob.purchaserequeststatus_id.name == "Recived") {
+    if (dataob.grnstatus_id.name == "Received") {
         return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;"></i>'
     }
 
-    if (dataob.purchaserequeststatus_id.name == "Completed") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
-    }
-
-    if (dataob.purchaserequeststatus_id.name == "Cancelled ") {
-        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;"></i>'
-    }
-
-    if (dataob.purchaserequeststatus_id.name == "Deleted") {
+    if (dataob.grnstatus_id.name == "Not received") {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
     }
 
@@ -65,8 +54,8 @@ const generateItemList = (dataob) => {
     //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
     let itemList = "";
     // item list ekak ena nisa
-    dataob.purchaseOrderHasItemList.forEach((item, index) => {
-        if (dataob.purchaseOrderHasItemList.length - 1 == index) {
+    dataob.grnHasItemList.forEach((item, index) => {
+        if (dataob.grnHasItemList.length - 1 == index) {
             //last item eken pasu "," ekak set nokarai
             itemList = itemList + item.item_id.itemname;
         } else {
@@ -80,61 +69,15 @@ const generateItemList = (dataob) => {
     return itemList;
 }
 //function for re fill purchase order form
-const purchaseOrderFormRefill = (ob, index) => {
+const gRNFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
 
-    // refill value in to element -> elementId.value = ob.releventPropertyName
-    textFullName.value = ob.fullname;
 
-    textCallingName.value = ob.callingname;
-
-    textNic.value = ob.nic;
-
-    selectGender.value = ob.gender;
-
-    dateDOB.value = ob.dob;
-
-    inputEmail.value = ob.email;
-
-    telMobil.value = ob.mobile;
-
-    if (ob.landno == undefined) {
-        telLand.value = "";
-    } else {
-        telLand.value = ob.landno;
-    }
-
-    textAddress.value = ob.address
-
-    if (ob.note == undefined) {
-        textNote.value = "";
-    } else {
-        textNote.value = ob.note;
-    }
-
-    selectDesignation.value = JSON.stringify(ob.designation_id);
-
-    selectCivil.value = ob.civilstatus;
-
-    selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
-
-    buttonEmpAdd.style.display = "none";
-
-
-
-
-    //employee = ob
-    //oldEmployee = ob melesa thibuu wita ob array ekak nisa heap eka thula ekma idehi variable 2 ka awita ekak wenas kala wita anikath wenas we.
-    employee = JSON.parse(JSON.stringify(ob));// string kala witra ram ekehi wena wenama seedi heap ekata giya wita 2k lesa pawathi.
-    oldEmployee = JSON.parse(JSON.stringify(ob));
-
-    //form eka refill wana wita model eka open kara ganima jquary magin
-    // $("#staticBackdrop").modal("show");
 
 }
 
 //function for delete purchase order form
-const purchaseOrderDelete = (ob, index) => {
+const gRNDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
     // activeTableRow(tablePurchaseOrderBody, index, "red");
@@ -167,7 +110,7 @@ const purchaseOrderDelete = (ob, index) => {
 }
 
 //function for view / print purchase order form
-const purchaseOrderView = (ob, index) => {
+const gRNView = (ob, index) => {
     console.log("View", ob, index);
     //option 1
     //aluth window ekak open kara ganima
@@ -237,46 +180,63 @@ const buttonPrintRow = () => {
 const checkFormError = () => {
     let errors = "";
 
-    if (purchaseOrder.supplier_id == null) {
+    if (gRN.purchaserequest_id == null) {
         errors = errors + "Please Enter valid Supplier Name...! \n";
     }
 
-    if (purchaseOrder.requireddate == null) {
-        errors = errors + "Please Enter valid Required Date...! \n";
+    if (gRN.suplierbillno == null) {
+        errors = errors + "Please Enter valid Supplier Bill No...! \n";
     }
 
-    if (purchaseOrder.totalamount == null) {
-        errors = errors + "Please Enter valid Total Amount...! \n";
+    if (gRN.receivedate == null) {
+        errors = errors + "Please Enter valid Received Date...! \n";
     }
 
-    if (purchaseOrder.purchaseOrderHasItemList.length == 0) {
-        errors = errors + "Please Enter valid Purchase Order Items...! \n";
+    if (gRN.discountrate == null) {
+        errors = errors + "Please Enter valid Discount Rate...! \n";
+    }
+
+    if (gRN.totalamount == null) {
+        errors = errors + "Please Enter valid Total amount...! \n";
+    }
+
+    if (gRN.netamount == null) {
+        errors = errors + "Please Enter valid Net amount...! \n";
+    }
+
+    if (gRN.grnstatus_id == null) {
+        errors = errors + "Please Select valid GRN Status...! \n";
+    }
+
+    if (gRN.grnHasItemList.length == 0) {
+        errors = errors + "Please Enter valid GRN Items...! \n";
     }
 
     return errors;
 }
 
 
-//Purchase Order form submit event function 
-const buttonPurchaseOrderSubmit = () => {
-    console.log('Add Purchase Order', purchaseOrder);
+//GRN form submit event function 
+const buttonGRNSubmit = () => {
+    console.log('Add GRN', gRN);
 
     //check form error for required element
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following Purchase Order...?" +
-            "\n Supplier name : " + purchaseOrder.supplier_id.suppliername +
-            "\n Purchase Order required date : " + purchaseOrder.requireddate +
-            "\n Purchase Order total amount : " + purchaseOrder.totalamount
+        let userConfirm = window.confirm("Are you sure to add following GRN...?" +
+            "\n Supplier name : " + gRN.purchaserequest_id
+                .supplier_id.suppliername +
+            "\n GRN Receive date : " + gRN.receivedate +
+            "\n GRN total amount : " + gRN.totalamount
         );
         if (userConfirm) {
             // call post service
-            let postResponce = getHTTPServiceRequest("/purchaseOrders/insert", "POST", purchaseOrder);
+            let postResponce = getHTTPServiceRequest("/grn/insert", "POST", gRN);
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
-                refreshPurchaseOrderTable();
-                refreshPurchaseOrderForm();
+                refreshGRNTable();
+                refreshGRNForm();
                 $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
             } else {
                 window.alert("Failed to submit \n" + errors + postResponce);
@@ -379,52 +339,52 @@ const checkFormUpdate = () => {
 // }
 
 // form delete event function 
-const buttonPurchaseOrderDelete = () => {
-    refreshPurchaseOrderTable();
+const buttonGRNDelete = () => {
+    refreshGRNTable();
 }
 
 
-const refreshPurchaseOrderForm = () => {
-    purchaseOrder = new Object();
-    // main object ekata (purchaseOrder) list ekak (purchaseOrderHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
-    purchaseOrder.purchaseOrderHasItemList = new Array();
+const refreshGRNForm = () => {
+    gRN = new Object();
+    // main object ekata (gRN) list ekak (gRNHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
+    gRN.grnHasItemList = new Array();
 
-    formPurchaseOrder.reset();
+    formGRN.reset();
 
     //validation colors iwath kirima main form sadaha
-    setDefault([selectSupplier, dateRequireDate, textTotalAmount, textNote, selectOrderStatus]);
+    setDefault([selectSupplier, textSupplierBillNo, dateReceivedDate, textDiscountRate, textTotalAmount, textNetAmount, selectGRNStatus]);
 
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('supplier/alldata');
-    fillDataIntoSelect(selectSupplier, "Please Select Supplier..!!", suppliers, "suppliername");
+    let suppliers = getServiceRequest('purchaseOrders/alldata');
+    fillDataIntoSelectSupplier(selectSupplier, "Please Select Supplier..!!", suppliers);
 
-    let orderStatues = getServiceRequest('/purchaseOrderStatues/alldata');
-    fillDataIntoSelect(selectOrderStatus, "Please Select Status..!!", orderStatues, "name");
+    let gRNStatues = getServiceRequest('/grnStatus/alldata');
+    fillDataIntoSelect(selectGRNStatus, "Please Select Status..!!", gRNStatues, "name");
 
     // status eka form eka load wana wita select wi thibimata
     // selected value eka string walin ena nisa stringify kara gani
-    selectOrderStatus.value = JSON.stringify(orderStatues[0]);
+    selectGRNStatus.value = JSON.stringify(gRNStatues[0]);
     // ema value eka newatha object ekata set kala yuththa object format ekeni
-    purchaseOrder.purchaserequeststatus_id = JSON.parse(selectOrderStatus.value);
+    gRN.grnstatus_id = JSON.parse(selectGRNStatus.value);
     // status field eka sadaha validation colour eka laba deema
-    prevElementOrderStatus = selectOrderStatus.previousElementSibling;
-    selectOrderStatus.style.borderBottom = "4px solid green";
-    prevElementOrderStatus.style.backgroundColor = "green";
-    selectOrderStatus.classList.remove("is-invalid");
-    selectOrderStatus.classList.add("is-valid");
+    prevElementGRNStatus = selectGRNStatus.previousElementSibling;
+    selectGRNStatus.style.borderBottom = "4px solid green";
+    prevElementGRNStatus.style.backgroundColor = "green";
+    selectGRNStatus.classList.remove("is-invalid");
+    selectGRNStatus.classList.add("is-valid");
 
     // inner form eka refresh karawima
-    refreshPurchaseOrderInnerForm();
+    refreshGRNInnerForm();
 
-    btnPurchaseOrderUpdate.classList.add("d-none");
-    btnPurchaseOrderSubmit.classList.remove("d-none");
+    btnGRNUpdate.classList.add("d-none");
+    btnGRNSubmit.classList.remove("d-none");
 }
 
 // define function for refresh inner form
-const refreshPurchaseOrderInnerForm = () => {
+const refreshGRNInnerForm = () => {
 
     // association eke class name ekata samanawa simple walin start kara gani
-    purchaseOrderHasItem = new Object();
+    grnHasItem = new Object();
 
 
     // mehi form eka reset kala wita main form ekath reset wana nisa esa kala noheka
@@ -439,12 +399,14 @@ const refreshPurchaseOrderInnerForm = () => {
     textUnitPrice.value = "";
     textQuantity.value = "";
     textLinePrice.value = "";
+    textFreeQuantity.value = "";
+    textTotalQuantity.value = "";
 
     // colors wenas kala heka
-    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice]);
+    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice,textFreeQuantity,textTotalQuantity]);
 
-    btnPurchaseOrderItemUpdate.classList.add("d-none");
-    btnPurchaseOrderItemSubmit.classList.remove("d-none");
+    btnGRNItemUpdate.classList.add("d-none");
+    btnGRNItemSubmit.classList.remove("d-none");
 
     // Reresh inner table
     // array eka awashya netha main object ekata array eka gani
@@ -454,19 +416,21 @@ const refreshPurchaseOrderInnerForm = () => {
         { propertyName: genareateItemName, dataType: "function" },
         { propertyName: "uniteprice", dataType: "decimal" },
         { propertyName: "quentity", dataType: "string" },
-        { propertyName: "lineprice", dataType: "decimal" }
+        { propertyName: "lineprice", dataType: "decimal" },
+        { propertyName: "freequentity", dataType: "decimal" },
+        { propertyName: "totalquentity", dataType: "decimal" }
 
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoInnerTable(tableInnerBody, purchaseOrder.purchaseOrderHasItemList, propertyList, purchaseOrderItemFormRefill, purchaseOrderItemDelete, "#offcanvasBottom");
+    fillDataIntoInnerTable(tableInnerBody, gRN.grnHasItemList, propertyList, gRNItemFormRefill, gRNItemDelete, "#offcanvasBottom");
 
     $('#tablePurchaseOrder').DataTable();
 
     // "purchaseOrderHasItemList" mehi data thibunoth line price genarate kara gatha heka
 
     let totalAmount = 0.00;
-    for (const orderitem of purchaseOrder.purchaseOrderHasItemList) {
+    for (const orderitem of gRN.grnHasItemList) {
         totalAmount = parseFloat(totalAmount) + parseFloat(orderitem.lineprice);
 
     }
@@ -475,7 +439,7 @@ const refreshPurchaseOrderInnerForm = () => {
     if (totalAmount != 0.00) {
         textTotalAmount.value = totalAmount.toFixed(2);
         // object ekata set karai
-        purchaseOrder.totalamount = textTotalAmount.value;
+        gRN.totalamount = textTotalAmount.value;
         // validation color eka set karai
         prevElementTotalAmount = textTotalAmount.previousElementSibling;
         textTotalAmount.style.borderBottom = "4px solid green";
@@ -491,8 +455,8 @@ const genareateItemName = (dataob) => {
     return dataob.item_id.itemname;
 }
 
-const purchaseOrderItemFormRefill = (ob, index) => { }
-const purchaseOrderItemDelete = (ob, index) => {
+const gRNItemFormRefill = (ob, index) => { }
+const gRNItemDelete = (ob, index) => {
     console.log("Delete Purchase Order Item", purchaseOrderHasItem);
     let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?"
         // +
@@ -512,52 +476,52 @@ const purchaseOrderItemDelete = (ob, index) => {
     }
 }
 
-const buttonPurchaseOrderItemUpdate = (ob, index) => { }
-const buttonPurchaseOrderItemSubmit = (ob, index) => {
-    console.log("Purchase Order Item", purchaseOrderHasItem);
+const buttonGRNItemUpdate = (ob, index) => { }
+const buttonGRNItemSubmit = (ob, index) => {
+    console.log("GRN Item", grnHasItem);
 
-    let userConfirm = window.confirm("Are you sure to add following item to purchase order...?"
+    let userConfirm = window.confirm("Are you sure to add following item to GRN...?"
         +
-        "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        "\n Quantity : " + purchaseOrderHasItem.quentity +
-        "\n Line Price : " + purchaseOrderHasItem.lineprice
+        "\n Item : " + grnHasItem.item_id.itemname +
+        "\n Unit Price : " + grnHasItem.uniteprice +
+        "\n Quantity : " + grnHasItem.quentity +
+        "\n Line Price : " + grnHasItem.lineprice
     );
     if (userConfirm) {
-        window.alert("Item added successfully to purchase order...!");
+        window.alert("Item added successfully to GRN...!");
         // main form eke thiyena list ekata ob eka push karai
         // ema nisa table ekehida data atha.
-        purchaseOrder.purchaseOrderHasItemList.push(purchaseOrderHasItem);
-        refreshPurchaseOrderInnerForm();
+        gRN.grnHasItemList.push(grnHasItem);
+        refreshGRNInnerForm();
     }
 
 }
 
-// // Define function to fill supplier names into a <select> dropdown
-// const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
-//     // Clear existing options
-//     parentId.innerHTML = "";
-//
-//     // Add a default disabled placeholder if message is provided
-//     // if (message !== "") {
-//     const optionMsg = document.createElement("option");
-//     optionMsg.value = "";
-//     optionMsg.selected = true;
-//     optionMsg.disabled = true;
-//     optionMsg.innerText = message;
-//     parentId.appendChild(optionMsg);
-//     // }
-//
-//     // Loop through the data and extract supplier names
-//     dataList.forEach(dataOb => {
-//         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
-//         const option = document.createElement("option");
-//         option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-//         option.innerText = dataOb.pricelistrequest_id.supplier_id.suppliername;
-//         parentId.appendChild(option);
-//         // }
-//     });
-// };
+// Define function to fill supplier names into a <select> dropdown
+const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
+    // Clear existing options
+    parentId.innerHTML = "";
+
+    // Add a default disabled placeholder if message is provided
+    // if (message !== "") {
+    const optionMsg = document.createElement("option");
+    optionMsg.value = "";
+    optionMsg.selected = true;
+    optionMsg.disabled = true;
+    optionMsg.innerText = message;
+    parentId.appendChild(optionMsg);
+    // }
+
+    // Loop through the data and extract supplier names
+    dataList.forEach(dataOb => {
+        // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
+        const option = document.createElement("option");
+        option.value = JSON.stringify(dataOb); // or dataOb.id if needed
+        option.innerText = dataOb.supplier_id.suppliername;
+        parentId.appendChild(option);
+        // }
+    });
+};
 
 
 

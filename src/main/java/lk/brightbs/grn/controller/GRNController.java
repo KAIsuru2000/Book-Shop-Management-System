@@ -1,14 +1,16 @@
 package lk.brightbs.grn.controller;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import lk.brightbs.grn.entity.GrnHasItem;
+import lk.brightbs.user.dao.UserDao;
+import lk.brightbs.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.grn.dao.GRNDao;
@@ -23,6 +25,9 @@ public class GRNController {
     //Autowired - awashya method automatically build karala method body liyala api add karana veriable ekata ewa assing karala denawa (purchaseOrderDao instance ekak hadala denawa)
     @Autowired 
     private GRNDao grnDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @Autowired
     private
@@ -77,44 +82,44 @@ public class GRNController {
    }
 
    //define post mapping
-	// @PostMapping(value = "/purchaseOrders/insert")
-	// public String insertPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
-	// 	// check user authentication and authorization
-	// 	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	// 	//log una user object eka ara ganima
-	// 	User logedUser = userDao.getByUsername(auth.getName());
-	// 	Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
-	// 	if (userPrivilege.getInst()) {
-	// 		//check duplicate
-	// 		// PurchaseOrder extPurchaseOrder = purchaseOrderDao.getByOrderNumber(purchaseOrder.getOrderNumber());
-	// 		// if(extPurchaseOrder != null){
-	// 		// 	return "Save not completed : entered Order number " + purchaseOrder.getOrderNumber() +"Value Allready ext..!";
-	// 		// }
+	 @PostMapping(value = "/grn/insert")
+	 public String insertPurchaseOrder(@RequestBody GRN gRN) {
+	 	// check user authentication and authorization
+	 	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	 	//log una user object eka ara ganima
+	 	User logedUser = userDao.getByUsername(auth.getName());
+	 	Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GRN");
+	 	if (userPrivilege.getInst()) {
+	 		//check duplicate
+	 		// PurchaseOrder extPurchaseOrder = purchaseOrderDao.getByOrderNumber(purchaseOrder.getOrderNumber());
+	 		// if(extPurchaseOrder != null){
+	 		// 	return "Save not completed : entered Order number " + purchaseOrder.getOrderNumber() +"Value Allready ext..!";
+	 		// }
 			
 
-	// 		try {
-	// 			//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
-	// 		purchaseOrder.setAddeddatetime(LocalDateTime.now());
-	// 		purchaseOrder.setAddeduserid(logedUser.getId());
-	// 		purchaseOrder.setPurchaserequestno(purchaseOrderDao.getNextOrderNo());
+	 		try {
+	 			//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
+                gRN.setAddeddatetime(LocalDateTime.now());
+                gRN.setAddeduserid(logedUser.getId());
+                gRN.setGrnno(grnDao.getNextGrnNo());
 		
-	// 			// save operator
-    //             // purchaserequest_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya purchaseOrder laga athi list eka illa gena (purchaseOrderHasItemList)
-    //           for (PurchaseOrderHasItem poItem : purchaseOrder.getPurchaseOrderHasItemList()) {
-    //               poItem.setPurchaserequest_id(purchaseOrder);
-    //           }
+	 			// save operator
+                 // purchaserequest_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya purchaseOrder laga athi list eka illa gena (purchaseOrderHasItemList)
+               for (GrnHasItem gnItem : gRN.getGrnHasItemList()) {
+                   gnItem.setGrn_id(gRN);
+               }
 
-	// 			purchaseOrderDao.save(purchaseOrder);
-	// 			return "OK";
-	// 		} catch (Exception e) {
+	 			grnDao.save(gRN);
+	 			return "OK";
+	 		} catch (Exception e) {
 
-	// 			return "Insert not completed : " + e.getMessage();
+	 			return "Insert not completed : " + e.getMessage();
 
-	// 		}
-	// 	} else {
-	// 		return "Insert not completed : you haven't permission...";
-	// 	}
-	// }
+	 		}
+	 	} else {
+	 		return "Insert not completed : you haven't permission...";
+	 	}
+	 }
 
     
 

@@ -7,6 +7,6 @@ import lk.brightbs.grn.entity.GRN;
 
 public interface GRNDao extends JpaRepository<GRN, Integer>{
 
- @Query(value = "SELECT coalesce(concat('PO' , lpad(substring(max(PO.purchaserequestno),2) +1 , 5 , 0)) , 'PO00001')  FROM brightbookshop.purchaserequest as PO;" , nativeQuery = true) String getNextOrderNo();
+ @Query(value = "SELECT coalesce(concat('GN' , lpad(substring(max(GN.grnno),2) +1 , 5 , 0)) , 'GN00001')  FROM brightbookshop.grn as GN;" , nativeQuery = true) String getNextGrnNo();
 
 }

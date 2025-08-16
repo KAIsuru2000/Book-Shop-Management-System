@@ -6,16 +6,16 @@ window.addEventListener("load", () => {
     // enable tooltip
     $('[data-bs-toggle="tooltip"]').tooltip();
 
-    refreshGRNTable();
+    refreshSupplierPaymentTable();
 
-    refreshGRNForm();
+    refreshSupplierPaymentForm();
 
 })
 
 //refresh table Area
-const refreshGRNTable = () => {
+const refreshSupplierPaymentTable = () => {
 
-    let gRNs = getServiceRequest("/grn/alldata");
+    let gRNs = getServiceRequest("/supplierPayment/alldata");
 
     let propertyList = [
         { propertyName: "grnno", dataType: "string" },
@@ -27,10 +27,10 @@ const refreshGRNTable = () => {
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tableGRNBody, gRNs, propertyList, gRNFormRefill, gRNDelete, gRNView, "#offcanvasBottom");
+    fillDataIntoTable(tableSupplierPaymentBody, supplierPayments, propertyList, supplierPaymentFormRefill, supplierPaymentDelete, supplierPaymentView, "#offcanvasBottom");
 
 
-    $('#tableGRN').DataTable();
+    $('#tableSupplierPayment').DataTable();
 
 
 }
@@ -69,7 +69,7 @@ const generateItemList = (dataob) => {
     return itemList;
 }
 //function for re fill purchase order form
-const gRNFormRefill = (ob, index) => {
+const supplierPaymentFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
 
 
@@ -77,7 +77,7 @@ const gRNFormRefill = (ob, index) => {
 }
 
 //function for delete purchase order form
-const gRNDelete = (ob, index) => {
+const supplierPaymentDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
     // activeTableRow(tablePurchaseOrderBody, index, "red");
@@ -95,8 +95,8 @@ const gRNDelete = (ob, index) => {
 
         if (deleteResponce == "OK") {
             window.alert("Delete successfully ");
-            refreshEmployeeTable();
-            refreshEmployeeform();
+            refreshSupplierPaymentTable();
+            refreshSupplierPaymentform();
 
         } else {
             window.alert("Delete not successfully" + deleteResponce);
@@ -110,7 +110,7 @@ const gRNDelete = (ob, index) => {
 }
 
 //function for view / print purchase order form
-const gRNView = (ob, index) => {
+const supplierPaymentView = (ob, index) => {
     console.log("View", ob, index);
     //option 1
     //aluth window ekak open kara ganima
@@ -217,7 +217,7 @@ const checkFormError = () => {
 
 
 //GRN form submit event function 
-const buttonGRNSubmit = () => {
+const buttonSupplierPaymentSubmit = () => {
     console.log('Add GRN', gRN);
 
     //check form error for required element
@@ -235,8 +235,8 @@ const buttonGRNSubmit = () => {
             let postResponce = getHTTPServiceRequest("/grn/insert", "POST", gRN);
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
-                refreshGRNTable();
-                refreshGRNForm();
+                refreshSupplierPaymentTable();
+                refreshSupplierPaymentForm();
                 $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
             } else {
                 window.alert("Failed to submit \n" + errors + postResponce);
@@ -339,17 +339,17 @@ const checkFormUpdate = () => {
 // }
 
 // form delete event function 
-const buttonGRNDelete = () => {
-    refreshGRNTable();
+const buttonSupplierPaymentDelete = () => {
+    refreshSupplierPaymentTable();
 }
 
 
-const refreshGRNForm = () => {
-    gRN = new Object();
+const refreshSupplierPaymentForm = () => {
+    supplierPayment = new Object();
     // main object ekata (gRN) list ekak (gRNHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
-    gRN.grnHasItemList = new Array();
+    supplierPayment.supplierpaymentHasGrnList = new Array();
 
-    formGRN.reset();
+    formSupplierPayment.reset();
 
     //validation colors iwath kirima main form sadaha
     setDefault([selectSupplier, textSupplierBillNo, dateReceivedDate, textDiscountRate, textTotalAmount, textNetAmount, selectGRNStatus]);
@@ -374,14 +374,14 @@ const refreshGRNForm = () => {
     selectGRNStatus.classList.add("is-valid");
 
     // inner form eka refresh karawima
-    refreshGRNInnerForm();
+    refreshSupplierPaymentInnerForm();
 
-    btnGRNUpdate.classList.add("d-none");
-    btnGRNSubmit.classList.remove("d-none");
+    btnSupplierPaymentUpdate.classList.add("d-none");
+    btnSupplierPaymentSubmit.classList.remove("d-none");
 }
 
 // define function for refresh inner form
-const refreshGRNInnerForm = () => {
+const refreshSupplierPaymentInnerForm = () => {
 
     // association eke class name ekata samanawa simple walin start kara gani
     grnHasItem = new Object();
@@ -423,14 +423,14 @@ const refreshGRNInnerForm = () => {
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoInnerTable(tableInnerBody, gRN.grnHasItemList, propertyList, gRNItemFormRefill, gRNItemDelete, "#offcanvasBottom");
+    fillDataIntoInnerTable(tableInnerBody, supplierPayment.grnHasItemList, propertyList, supplierPaymentItemFormRefill, supplierPaymentItemDelete, "#offcanvasBottom");
 
-    $('#tablePurchaseOrder').DataTable();
+    $('#tableSupplierPayment').DataTable();
 
     // "purchaseOrderHasItemList" mehi data thibunoth line price genarate kara gatha heka
 
     let totalAmount = 0.00;
-    for (const orderitem of gRN.grnHasItemList) {
+    for (const orderitem of supplierPayment.grnHasItemList) {
         totalAmount = parseFloat(totalAmount) + parseFloat(orderitem.lineprice);
 
     }
@@ -439,7 +439,7 @@ const refreshGRNInnerForm = () => {
     if (totalAmount != 0.00) {
         textTotalAmount.value = totalAmount.toFixed(2);
         // object ekata set karai
-        gRN.totalamount = textTotalAmount.value;
+        supplierPayment.totalamount = textTotalAmount.value;
         // validation color eka set karai
         prevElementTotalAmount = textTotalAmount.previousElementSibling;
         textTotalAmount.style.borderBottom = "4px solid green";
@@ -455,10 +455,10 @@ const genareateItemName = (dataob) => {
     return dataob.item_id.itemname;
 }
 
-const gRNItemFormRefill = (ob, index) => { }
-const gRNItemDelete = (ob, index) => {
-    console.log("Delete Purchase Order Item", purchaseOrderHasItem);
-    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?"
+const supplierPaymentItemFormRefill = (ob, index) => { }
+const supplierPaymentItemDelete = (ob, index) => {
+    console.log("Delete Supplier Payment Item", purchaseOrderHasItem);
+    let userConfirm = window.confirm("Are you sure to remove following item to Supplier Payment...?"
         // +
         // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
         // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
@@ -466,9 +466,9 @@ const gRNItemDelete = (ob, index) => {
         // "\n Line Price : " + purchaseOrderHasItem.lineprice
     );
     if (userConfirm) {
-        window.alert("Item removed successfully from purchase order...!");
+        window.alert("Item removed successfully from Supplier Payment...!");
         // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = purchaseOrder.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
+        let extIndex = SupplierPayment.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
         if (extIndex != -1) {
             purchaseOrder.purchaseOrderHasItemList.splice(extIndex, 1);
         }
@@ -478,9 +478,9 @@ const gRNItemDelete = (ob, index) => {
 
 const buttonGRNItemUpdate = (ob, index) => { }
 const buttonGRNItemSubmit = (ob, index) => {
-    console.log("GRN Item", grnHasItem);
+    console.log("Supplier Payment Item", grnHasItem);
 
-    let userConfirm = window.confirm("Are you sure to add following item to GRN...?"
+    let userConfirm = window.confirm("Are you sure to add following item to Supplier Payment...?"
         +
         "\n Item : " + grnHasItem.item_id.itemname +
         "\n Unit Price : " + grnHasItem.uniteprice +
@@ -492,7 +492,7 @@ const buttonGRNItemSubmit = (ob, index) => {
         // main form eke thiyena list ekata ob eka push karai
         // ema nisa table ekehida data atha.
         gRN.grnHasItemList.push(grnHasItem);
-        refreshGRNInnerForm();
+        refreshSupplierPaymentInnerForm();
     }
 
 }
