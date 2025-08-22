@@ -42,17 +42,14 @@ public class SupplierPayment {
     private String billno ;
 
     @Column(name = "transferid" , unique = true)
-    @NotNull // not null
     // @Length(max = 8 , min = 8)
     private String transferid ;
 
     @Column(name = "checkno" , unique = true)
-    @NotNull // not null
     // @Length(max = 8 , min = 8)
     private String checkno ;
 
     @Column(name = "checkdate")
-    @NotNull
     private LocalDate checkdate ;
 
     @Column(name ="totaldueamount")
@@ -75,7 +72,6 @@ public class SupplierPayment {
     private String paymentmethod ;
 
     @Column(name = "transferdatetime")
-    @NotNull
     private LocalDateTime transferdatetime;
 
     @Column(name = "addeddatetime")
@@ -109,7 +105,7 @@ public class SupplierPayment {
     // inner form eke data remove kirimata awashya wei e sadaha orphanRemoval = true yodai
     @OneToMany(mappedBy = "supplierpayment_id" , cascade = CascadeType.ALL , orphanRemoval = true) // mapped by main table id (purchaserequest_id)
     // CascadeType.ALL- read kirimata awasthawa laba dei
-    private List<SupplierPaymentHasGrn> purchaseOrderHasItemList;
+    private List<SupplierPaymentHasGrn> supplierpaymentHasGrnList;
 
 
 

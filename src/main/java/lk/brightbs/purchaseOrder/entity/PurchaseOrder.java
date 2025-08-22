@@ -16,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lk.brightbs.employee.entity.Employee;
 import lk.brightbs.supplier.entity.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Data;

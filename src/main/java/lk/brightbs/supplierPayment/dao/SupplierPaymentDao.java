@@ -6,6 +6,6 @@ import lk.brightbs.supplierPayment.entity.SupplierPayment;
 
 public interface SupplierPaymentDao extends JpaRepository<SupplierPayment, Integer>{
 
- @Query(value = "SELECT coalesce(concat('PO' , lpad(substring(max(PO.purchaserequestno),2) +1 , 5 , 0)) , 'PO00001')  FROM brightbookshop.purchaserequest as PO;" , nativeQuery = true) String getNextOrderNo();
+ @Query(value = "SELECT coalesce(concat('SP' , lpad(substring(max(SP.billno),3) +1 , 5 , 0)) , 'SP00001')  FROM brightbookshop.supplierpayment as SP;" , nativeQuery = true) String getNextSupplierPaymentNo();
 
 }

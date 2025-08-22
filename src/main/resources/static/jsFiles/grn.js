@@ -457,8 +457,8 @@ const genareateItemName = (dataob) => {
 
 const gRNItemFormRefill = (ob, index) => { }
 const gRNItemDelete = (ob, index) => {
-    console.log("Delete Purchase Order Item", purchaseOrderHasItem);
-    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?"
+    console.log("Delete GRN Item", grnHasItem);
+    let userConfirm = window.confirm("Are you sure to remove following item in GRN...?"
         // +
         // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
         // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
@@ -466,13 +466,13 @@ const gRNItemDelete = (ob, index) => {
         // "\n Line Price : " + purchaseOrderHasItem.lineprice
     );
     if (userConfirm) {
-        window.alert("Item removed successfully from purchase order...!");
+        window.alert("Item removed successfully from GRN...!");
         // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = purchaseOrder.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
+        let extIndex = gRN.grnHasItemList.map(grnitem => grnitem.item_id.id).indexOf(ob.item_id.id);
         if (extIndex != -1) {
-            purchaseOrder.purchaseOrderHasItemList.splice(extIndex, 1);
+            gRN.grnHasItemList.splice(extIndex, 1);
         }
-        refreshPurchaseOrderInnerForm();
+        refreshGRNInnerForm();
     }
 }
 

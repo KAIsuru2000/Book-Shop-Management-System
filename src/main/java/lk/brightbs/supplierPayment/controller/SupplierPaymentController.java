@@ -1,14 +1,15 @@
 package lk.brightbs.supplierPayment.controller;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import lk.brightbs.supplierPayment.entity.SupplierPaymentHasGrn;
+import lk.brightbs.user.dao.UserDao;
+import lk.brightbs.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.privilege.controller.UserPrivilegeController;
@@ -28,8 +29,8 @@ public class SupplierPaymentController {
     private
      UserPrivilegeController userPrivilegeController;
 
-    // @Autowired
-	// private UserDao userDao; 
+	@Autowired
+	private UserDao userDao;
 
     //request mapping for load supplier payment ui url - /supplierPayment
 	@RequestMapping("/supplierPayments") //request eka meka awoth yata function eka run karanawa
@@ -56,7 +57,7 @@ public class SupplierPaymentController {
 	}
 
       //load supplierPayments all data
-   @GetMapping(value = "/supplierPayments/alldata" , produces = "application/json")
+   @GetMapping(value = "/supplierPayment/alldata" , produces = "application/json")
    public List<SupplierPayment> findAllData(){// check user authentication and authorization
 		// log una kena saoya ganimata authentication object eka ganima
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -77,44 +78,44 @@ public class SupplierPaymentController {
    }
 
    //define post mapping
-	// @PostMapping(value = "/purchaseOrders/insert")
-	// public String insertPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
-	// 	// check user authentication and authorization
-	// 	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	// 	//log una user object eka ara ganima
-	// 	User logedUser = userDao.getByUsername(auth.getName());
-	// 	Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
-	// 	if (userPrivilege.getInst()) {
-	// 		//check duplicate
-	// 		// PurchaseOrder extPurchaseOrder = purchaseOrderDao.getByOrderNumber(purchaseOrder.getOrderNumber());
-	// 		// if(extPurchaseOrder != null){
-	// 		// 	return "Save not completed : entered Order number " + purchaseOrder.getOrderNumber() +"Value Allready ext..!";
-	// 		// }
+	@PostMapping(value = "/supplierPayment/insert")
+	public String insertPurchaseOrder(@RequestBody SupplierPayment supplierPayment) {
+		// check user authentication and authorization
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		//log una user object eka ara ganima
+		User logedUser = userDao.getByUsername(auth.getName());
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SUPPLIERPAYMENT");
+		if (userPrivilege.getInst()) {
+			//check duplicate
+			// PurchaseOrder extPurchaseOrder = purchaseOrderDao.getByOrderNumber(purchaseOrder.getOrderNumber());
+			// if(extPurchaseOrder != null){
+			// 	return "Save not completed : entered Order number " + purchaseOrder.getOrderNumber() +"Value Allready ext..!";
+			// }
 			
 
-	// 		try {
-	// 			//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
-	// 		purchaseOrder.setAddeddatetime(LocalDateTime.now());
-	// 		purchaseOrder.setAddeduserid(logedUser.getId());
-	// 		purchaseOrder.setPurchaserequestno(purchaseOrderDao.getNextOrderNo());
+			try {
+				//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
+				supplierPayment.setAddeddatetime(LocalDateTime.now());
+				supplierPayment.setAddeduserid(logedUser.getId());
+				supplierPayment.setBillno(supplierPaymentDao.getNextSupplierPaymentNo());
 		
-	// 			// save operator
-    //             // purchaserequest_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya purchaseOrder laga athi list eka illa gena (purchaseOrderHasItemList)
-    //           for (PurchaseOrderHasItem poItem : purchaseOrder.getPurchaseOrderHasItemList()) {
-    //               poItem.setPurchaserequest_id(purchaseOrder);
-    //           }
+				// save operator
+                // purchaserequest_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya purchaseOrder laga athi list eka illa gena (purchaseOrderHasItemList)
+              for (SupplierPaymentHasGrn supBrand : supplierPayment.getSupplierpaymentHasGrnList()){
+				  supBrand.setSupplierpayment_id(supplierPayment);
+              }
 
-	// 			purchaseOrderDao.save(purchaseOrder);
-	// 			return "OK";
-	// 		} catch (Exception e) {
+				supplierPaymentDao.save(supplierPayment);
+				return "OK";
+			} catch (Exception e) {
 
-	// 			return "Insert not completed : " + e.getMessage();
+				return "Insert not completed : " + e.getMessage();
 
-	// 		}
-	// 	} else {
-	// 		return "Insert not completed : you haven't permission...";
-	// 	}
-	// }
+			}
+		} else {
+			return "Insert not completed : you haven't permission...";
+		}
+	}
 
     
 

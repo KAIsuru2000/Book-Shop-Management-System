@@ -15,15 +15,15 @@ window.addEventListener("load", () => {
 //refresh table Area
 const refreshSupplierPaymentTable = () => {
 
-    let gRNs = getServiceRequest("/supplierPayment/alldata");
+    let supplierPayments = getServiceRequest("/supplierPayment/alldata");
 
     let propertyList = [
-        { propertyName: "grnno", dataType: "string" },
+        { propertyName: "billno", dataType: "string" },
         { propertyName: generateSupplierName, dataType: "function" },
-        { propertyName: "receivedate", dataType: "string" },
-        { propertyName: generateItemList, dataType: "function" },
-        { propertyName: "totalamount", dataType: "decimal" },
-        { propertyName: getGRNStatus, dataType: "function" },
+        { propertyName: "totaldueamount", dataType: "decimal" },
+        { propertyName: "paidamount", dataType: "decimal" },
+        { propertyName: "balanceamount", dataType: "decimal" },
+        { propertyName: getSupplierPaymentStatus, dataType: "function" },
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
@@ -36,38 +36,42 @@ const refreshSupplierPaymentTable = () => {
 }
 
 const generateSupplierName = (dataob) => {
-    return dataob.purchaserequest_id.supplier_id.suppliername;
+    return dataob.supplier_id.suppliername;
 }
-const getGRNStatus = (dataob) => {
+const getSupplierPaymentStatus = (dataob) => {
 
-    if (dataob.grnstatus_id.name == "Received") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;"></i>'
+    if (dataob.suplierpaymentstatus_id.name == "Pending") {
+        return '<i class="fa-solid fa-circle-notch fa-spin fa-xl" style="color: #fa0000;"></i>'
     }
 
-    if (dataob.grnstatus_id.name == "Not received") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
+    if (dataob.suplierpaymentstatus_id.name == "Partially Paid") {
+        return '<i class="fa-solid fa-circle-half-stroke fa-beat fa-xl" style="color: #f78502;"></i>'
+    }
+
+    if (dataob.suplierpaymentstatus_id.name == "Paid") {
+        return '<i class="fa-solid fa-circle fa-beat fa-xl" style="color: #1eff00;"></i>'
     }
 
 
 }
-const generateItemList = (dataob) => {
-    //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
-    let itemList = "";
-    // item list ekak ena nisa
-    dataob.grnHasItemList.forEach((item, index) => {
-        if (dataob.grnHasItemList.length - 1 == index) {
-            //last item eken pasu "," ekak set nokarai
-            itemList = itemList + item.item_id.itemname;
-        } else {
-            //items veriable ekata concatinate kara ganimata item object eke name access karala
-            //name athara gap ekak thaba gani
-            itemList = itemList + item.item_id.itemname + " , ";
-        }
+// const generateItemList = (dataob) => {
+//     //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
+//     let itemList = "";
+//     // item list ekak ena nisa
+//     dataob.grnHasItemList.forEach((item, index) => {
+//         if (dataob.grnHasItemList.length - 1 == index) {
+//             //last item eken pasu "," ekak set nokarai
+//             itemList = itemList + item.item_id.itemname;
+//         } else {
+//             //items veriable ekata concatinate kara ganimata item object eke name access karala
+//             //name athara gap ekak thaba gani
+//             itemList = itemList + item.item_id.itemname + " , ";
+//         }
 
-    });
-    //awasanaye roles object eka return karanawa
-    return itemList;
-}
+//     });
+//     //awasanaye roles object eka return karanawa
+//     return itemList;
+// }
 //function for re fill purchase order form
 const supplierPaymentFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
@@ -180,36 +184,28 @@ const buttonPrintRow = () => {
 const checkFormError = () => {
     let errors = "";
 
-    if (gRN.purchaserequest_id == null) {
-        errors = errors + "Please Enter valid Supplier Name...! \n";
+    if (supplierPayment.balanceamount == null) {
+        errors = errors + "Please Enter valid balance amount...! \n";
     }
 
-    if (gRN.suplierbillno == null) {
-        errors = errors + "Please Enter valid Supplier Bill No...! \n";
+    if (supplierPayment.paidamount == null) {
+        errors = errors + "Please Enter valid paid amount...! \n";
     }
 
-    if (gRN.receivedate == null) {
-        errors = errors + "Please Enter valid Received Date...! \n";
+    if (supplierPayment.paymentmethod == null) {
+        errors = errors + "Please Enter valid payment method...! \n";
     }
 
-    if (gRN.discountrate == null) {
-        errors = errors + "Please Enter valid Discount Rate...! \n";
+    if (supplierPayment.supplier_id == null) {
+        errors = errors + "Please Enter valid supplier...! \n";
     }
 
-    if (gRN.totalamount == null) {
-        errors = errors + "Please Enter valid Total amount...! \n";
+    if (supplierPayment.suplierpaymentstatus_id == null) {
+        errors = errors + "Please Enter valid supplier payment status...! \n";
     }
 
-    if (gRN.netamount == null) {
-        errors = errors + "Please Enter valid Net amount...! \n";
-    }
-
-    if (gRN.grnstatus_id == null) {
-        errors = errors + "Please Select valid GRN Status...! \n";
-    }
-
-    if (gRN.grnHasItemList.length == 0) {
-        errors = errors + "Please Enter valid GRN Items...! \n";
+    if (supplierPayment.totaldueamount == null) {
+        errors = errors + "Please Enter valid total dueamount...! \n";
     }
 
     return errors;
@@ -218,21 +214,20 @@ const checkFormError = () => {
 
 //GRN form submit event function 
 const buttonSupplierPaymentSubmit = () => {
-    console.log('Add GRN', gRN);
+    console.log('Add supplier Payment', supplierPayment);
 
     //check form error for required element
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following GRN...?" +
-            "\n Supplier name : " + gRN.purchaserequest_id
-                .supplier_id.suppliername +
-            "\n GRN Receive date : " + gRN.receivedate +
-            "\n GRN total amount : " + gRN.totalamount
+        let userConfirm = window.confirm("Are you sure to add following Supplier Payment Details...?" +
+            "\n Supplier name : " + supplierPayment.supplier_id.suppliername +
+            "\n paid amount : " + supplierPayment.paidamount +
+            "\n balance amount : " + supplierPayment.balanceamount
         );
         if (userConfirm) {
             // call post service
-            let postResponce = getHTTPServiceRequest("/grn/insert", "POST", gRN);
+            let postResponce = getHTTPServiceRequest("/supplierPayment/insert", "POST", supplierPayment);
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
                 refreshSupplierPaymentTable();
@@ -352,26 +347,26 @@ const refreshSupplierPaymentForm = () => {
     formSupplierPayment.reset();
 
     //validation colors iwath kirima main form sadaha
-    setDefault([selectSupplier, textSupplierBillNo, dateReceivedDate, textDiscountRate, textTotalAmount, textNetAmount, selectGRNStatus]);
+    setDefault([selectSupplier, textTotalDueAmount, textPaidItemAmount, textBalanceAmount, textPaymentmethod, textChequeNo, textChequeDate, textTransferId, textNote, selectSupplierPaymentStatus]);
 
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('purchaseOrders/alldata');
-    fillDataIntoSelectSupplier(selectSupplier, "Please Select Supplier..!!", suppliers);
+    let suppliers = getServiceRequest('supplier/alldata');
+    fillDataIntoSelect(selectSupplier, "Please Select Supplier..!!", suppliers, "suppliername");
 
-    let gRNStatues = getServiceRequest('/grnStatus/alldata');
-    fillDataIntoSelect(selectGRNStatus, "Please Select Status..!!", gRNStatues, "name");
+    let supplierPaymentStatues = getServiceRequest('/supplierPaymentStatus/alldata');
+    fillDataIntoSelect(selectSupplierPaymentStatus, "Please Select Status..!!", supplierPaymentStatues, "name");
 
     // status eka form eka load wana wita select wi thibimata
     // selected value eka string walin ena nisa stringify kara gani
-    selectGRNStatus.value = JSON.stringify(gRNStatues[0]);
+    selectSupplierPaymentStatus.value = JSON.stringify(supplierPaymentStatues[0]);
     // ema value eka newatha object ekata set kala yuththa object format ekeni
-    gRN.grnstatus_id = JSON.parse(selectGRNStatus.value);
+    supplierPayment.suplierpaymentstatus_id = JSON.parse(selectSupplierPaymentStatus.value);
     // status field eka sadaha validation colour eka laba deema
-    prevElementGRNStatus = selectGRNStatus.previousElementSibling;
-    selectGRNStatus.style.borderBottom = "4px solid green";
-    prevElementGRNStatus.style.backgroundColor = "green";
-    selectGRNStatus.classList.remove("is-invalid");
-    selectGRNStatus.classList.add("is-valid");
+    prevElementSupplierPaymentStatus = selectSupplierPaymentStatus.previousElementSibling;
+    selectSupplierPaymentStatus.style.borderBottom = "4px solid green";
+    prevElementSupplierPaymentStatus.style.backgroundColor = "green";
+    selectSupplierPaymentStatus.classList.remove("is-invalid");
+    selectSupplierPaymentStatus.classList.add("is-valid");
 
     // inner form eka refresh karawima
     refreshSupplierPaymentInnerForm();
@@ -384,7 +379,7 @@ const refreshSupplierPaymentForm = () => {
 const refreshSupplierPaymentInnerForm = () => {
 
     // association eke class name ekata samanawa simple walin start kara gani
-    grnHasItem = new Object();
+    supplierpaymentHasGrn = new Object();
 
 
     // mehi form eka reset kala wita main form ekath reset wana nisa esa kala noheka
@@ -396,17 +391,15 @@ const refreshSupplierPaymentInnerForm = () => {
     // code ekai name ekai dekama drop down ekak thula penwa ganima
     fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
 
-    textUnitPrice.value = "";
-    textQuantity.value = "";
-    textLinePrice.value = "";
-    textFreeQuantity.value = "";
-    textTotalQuantity.value = "";
+    textPreviousDueAmount.value = "";
+    textPaidAmount.value = "";
+    textAfterDueAmount.value = "";
 
     // colors wenas kala heka
-    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice,textFreeQuantity,textTotalQuantity]);
+    setDefault([selectItem, textPreviousDueAmount, textPaidAmount, textAfterDueAmount]);
 
-    btnGRNItemUpdate.classList.add("d-none");
-    btnGRNItemSubmit.classList.remove("d-none");
+    btnSupplierPaymentItemUpdate.classList.add("d-none");
+    btnSupplierPaymentItemSubmit.classList.remove("d-none");
 
     // Reresh inner table
     // array eka awashya netha main object ekata array eka gani
@@ -414,51 +407,51 @@ const refreshSupplierPaymentInnerForm = () => {
 
     let propertyList = [
         { propertyName: genareateItemName, dataType: "function" },
-        { propertyName: "uniteprice", dataType: "decimal" },
-        { propertyName: "quentity", dataType: "string" },
-        { propertyName: "lineprice", dataType: "decimal" },
-        { propertyName: "freequentity", dataType: "decimal" },
-        { propertyName: "totalquentity", dataType: "decimal" }
+        { propertyName: "previousdueamount", dataType: "decimal" },
+        { propertyName: "paidamount", dataType: "decimal" },
+        { propertyName: "afterdueamount", dataType: "decimal" }
 
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoInnerTable(tableInnerBody, supplierPayment.grnHasItemList, propertyList, supplierPaymentItemFormRefill, supplierPaymentItemDelete, "#offcanvasBottom");
+    fillDataIntoInnerTable(tableInnerBody, supplierPayment.supplierpaymentHasGrnList, propertyList, supplierPaymentItemFormRefill, supplierPaymentItemDelete, "#offcanvasBottom");
 
-    $('#tableSupplierPayment').DataTable();
+    $('#tableInner').DataTable();
 
-    // "purchaseOrderHasItemList" mehi data thibunoth line price genarate kara gatha heka
+    // "grnHasItemList" mehi data thibunoth line price genarate kara gatha heka
 
-    let totalAmount = 0.00;
-    for (const orderitem of supplierPayment.grnHasItemList) {
-        totalAmount = parseFloat(totalAmount) + parseFloat(orderitem.lineprice);
+    // let totalAmount = 0.00;
+    // for (const supplierPaymentItem of supplierPayment.supplierpaymentHasGrnList) {
+    //     totalAmount = parseFloat(totalAmount) + parseFloat(supplierPaymentItem.lineprice);
 
-    }
+    // }
+
+    // grn wala athi total amount eka 
     // ui eke athi total amount field ekata value eka set kirima
     // total amount eka 0.00 nowe nam value eka ui ekata set karai
-    if (totalAmount != 0.00) {
-        textTotalAmount.value = totalAmount.toFixed(2);
-        // object ekata set karai
-        supplierPayment.totalamount = textTotalAmount.value;
-        // validation color eka set karai
-        prevElementTotalAmount = textTotalAmount.previousElementSibling;
-        textTotalAmount.style.borderBottom = "4px solid green";
-        prevElementTotalAmount.style.backgroundColor = "green";
-        textTotalAmount.classList.remove("is-invalid");
-        textTotalAmount.classList.add("is-valid");
-    }
+    // if (totalAmount != 0.00) {
+    //     textTotalAmount.value = totalAmount.toFixed(2);
+    //     // object ekata set karai
+    //     supplierPayment.totalamount = textTotalAmount.value;
+    //     // validation color eka set karai
+    //     prevElementTotalAmount = textTotalAmount.previousElementSibling;
+    //     textTotalAmount.style.borderBottom = "4px solid green";
+    //     prevElementTotalAmount.style.backgroundColor = "green";
+    //     textTotalAmount.classList.remove("is-invalid");
+    //     textTotalAmount.classList.add("is-valid");
+    // }
 
 }
 
 const genareateItemName = (dataob) => {
     // itemcode + " - " + itemname
-    return dataob.item_id.itemname;
+    return dataob.grn_id.itemname;
 }
 
 const supplierPaymentItemFormRefill = (ob, index) => { }
 const supplierPaymentItemDelete = (ob, index) => {
-    console.log("Delete Supplier Payment Item", purchaseOrderHasItem);
-    let userConfirm = window.confirm("Are you sure to remove following item to Supplier Payment...?"
+    console.log("Delete Supplier Payment Item", supplierpaymentHasGrn);
+    let userConfirm = window.confirm("Are you sure to remove following item in Supplier Payment...?"
         // +
         // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
         // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
@@ -468,62 +461,69 @@ const supplierPaymentItemDelete = (ob, index) => {
     if (userConfirm) {
         window.alert("Item removed successfully from Supplier Payment...!");
         // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = SupplierPayment.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
+        let extIndex = supplierPayment.supplierpaymentHasGrnList.map(paymentitem => paymentitem.grn_id.id).indexOf(ob.grn_id.id);
         if (extIndex != -1) {
-            purchaseOrder.purchaseOrderHasItemList.splice(extIndex, 1);
+            supplierPayment.supplierpaymentHasGrnList.splice(extIndex, 1);
         }
-        refreshPurchaseOrderInnerForm();
+        refreshSupplierPaymentInnerForm();
     }
 }
 
 const buttonGRNItemUpdate = (ob, index) => { }
-const buttonGRNItemSubmit = (ob, index) => {
-    console.log("Supplier Payment Item", grnHasItem);
+const buttonSupplierPaymentItemSubmit = (ob, index) => {
+    console.log("Supplier Payment Item", supplierpaymentHasGrn);
 
     let userConfirm = window.confirm("Are you sure to add following item to Supplier Payment...?"
         +
-        "\n Item : " + grnHasItem.item_id.itemname +
-        "\n Unit Price : " + grnHasItem.uniteprice +
-        "\n Quantity : " + grnHasItem.quentity +
-        "\n Line Price : " + grnHasItem.lineprice
+        "\n Item : " + supplierpaymentHasGrn.grn_id.itemname +
+        "\n After Due Amount : " + supplierpaymentHasGrn.afterdueamount +
+        "\n Paid Amount : " + supplierpaymentHasGrn.paidamount +
+        "\n Previous Due Amount : " + supplierpaymentHasGrn.previousdueamount
     );
     if (userConfirm) {
-        window.alert("Item added successfully to GRN...!");
+        window.alert("Item added successfully...!");
         // main form eke thiyena list ekata ob eka push karai
         // ema nisa table ekehida data atha.
-        gRN.grnHasItemList.push(grnHasItem);
+        supplierPayment.supplierpaymentHasGrnList.push(supplierpaymentHasGrn);
         refreshSupplierPaymentInnerForm();
     }
 
 }
 
-// Define function to fill supplier names into a <select> dropdown
-const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
-    // Clear existing options
-    parentId.innerHTML = "";
+// // Define function to fill supplier names into a <select> dropdown
+// const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
+//     // Clear existing options
+//     parentId.innerHTML = "";
+//
+//     // Add a default disabled placeholder if message is provided
+//     // if (message !== "") {
+//     const optionMsg = document.createElement("option");
+//     optionMsg.value = "";
+//     optionMsg.selected = true;
+//     optionMsg.disabled = true;
+//     optionMsg.innerText = message;
+//     parentId.appendChild(optionMsg);
+//     // }
+//
+//     // Loop through the data and extract supplier names
+//     dataList.forEach(dataOb => {
+//         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
+//         const option = document.createElement("option");
+//         option.value = JSON.stringify(dataOb); // or dataOb.id if needed
+//         option.innerText = dataOb.supplier_id.suppliername;
+//         parentId.appendChild(option);
+//         // }
+//     });
+// };
 
-    // Add a default disabled placeholder if message is provided
-    // if (message !== "") {
-    const optionMsg = document.createElement("option");
-    optionMsg.value = "";
-    optionMsg.selected = true;
-    optionMsg.disabled = true;
-    optionMsg.innerText = message;
-    parentId.appendChild(optionMsg);
-    // }
-
-    // Loop through the data and extract supplier names
-    dataList.forEach(dataOb => {
-        // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
-        const option = document.createElement("option");
-        option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-        option.innerText = dataOb.supplier_id.suppliername;
-        parentId.appendChild(option);
-        // }
-    });
-};
-
-
+// // supplier select kala pasu ema supplierta adala total amount eka auto fill wima sadaha
+// // supplier element eka catch kara ganima
+// let selectSupplierElement = document.getElementById("selectSupplier");
+// // supplier element eka change una pasu
+// selectSupplierElement.addEventListener("change", () => {
+// // supplier element eka value eka json parse kara ganima(supplier value eka string format thibena nisa) dan supplier object ekak lebai
+// let supplier = JSON.parse(selectSupplierElement.value);
+// });
 
 
 

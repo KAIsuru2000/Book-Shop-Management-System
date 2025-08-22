@@ -11,8 +11,8 @@
 
     <div class="container-fluid"> <!--Use for a full width container-->
         <!-- title area start -->
-        <div class="row p-1 mt-1"><!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)
-            0.25rem  margin-top  -->
+        <div class="row p-1 mt-1">
+            <!-- 0.25rem padding on all 4 sides of the element (1 rem = 16 pixels)0.25rem  margin-top  -->
 
             <div class="col-12 p-3 d-flex justify-content-center divTitle">
                 <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
@@ -26,8 +26,9 @@
         <div class="row">
             <div class="col-1"></div>
             <div class="col-2">
-                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas" onclick="refreshPriceRequestForm()"
-                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
+                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    onclick="refreshPriceRequestForm()" data-bs-target="#offcanvasBottom"
+                    aria-controls="offcanvasBottom">
                     <i class="fa-solid fa-circle-plus"></i>
                     Add New Price Request
                 </button>
@@ -101,13 +102,13 @@
                                     <!-- Supplier area start-->
                                     <div class="col-6">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectSupplier">Supplier &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <label class="input-group-text lablBg" for="selectSupplier">Supplier &nbsp;
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span></label>
                                             <select class="form-select" id="selectSupplier"
                                                 onchange="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
                                                 onclick="selectDainamicElementValidater(this , 'priceRequest', 'supplier_id')"
-                                                data-bs-toggle="tooltip"
-                                                title="Select the Supplier correctly here.">
+                                                data-bs-toggle="tooltip" title="Select the Supplier correctly here.">
                                                 <option selected disabled>Select Supplier</option>
                                                 <option value=""></option>
                                                 <option value=""></option>
@@ -125,7 +126,8 @@
                                             <input type="date" placeholder="
                                             Enter Required Date " class="form-control"
                                                 aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="dateRequireDate" onkeyup="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
+                                                aria-describedby="inputGroup-sizing-default" id="dateRequireDate"
+                                                onkeyup="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
                                                 onclick="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
                                                 oninput="textValidator(this, '^.*$', 'priceRequest', 'requireddate')"
                                                 required data-bs-toggle="tooltip"
@@ -134,7 +136,7 @@
 
                                     </div>
                                     <!-- Require Date end-->
-                                     </div>
+                                </div>
                                 <!-- Supplier , Require Date row end-->
 
                                 <!-- Price RequestStatus , note row start-->
@@ -143,7 +145,8 @@
                                     <!-- Price Request Status area start-->
                                     <div class="col-6">
                                         <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectPriceRequestStatus">Price Request Status:
+                                            <label class="input-group-text lablBg" for="selectPriceRequestStatus">Price
+                                                Request Status:
                                                 <span class="fw-bold text-danger">*</span></label>
                                             <select class="form-select" id="selectPriceRequestStatus"
                                                 onchange="selectDainamicElementValidater(this , 'priceRequest', 'pricelistrequeststatus_id')"
@@ -163,7 +166,8 @@
                                         <div class="input-group">
                                             <span class="input-group-text lablBg">Note&nbsp;: <span
                                                     class="text-danger">(optional)</span></span>
-                                            <textarea id="textNote" class="form-control" placeholder="Enter Note" aria-label="With textarea"
+                                            <textarea id="textNote" class="form-control" placeholder="Enter Note"
+                                                aria-label="With textarea"
                                                 onkeyup="textValidator(this, '^.*$', 'priceRequest', 'note')"
                                                 onclick="textValidator(this, '^.*$', 'priceRequest', 'note')"
                                                 data-bs-toggle="tooltip"
@@ -171,7 +175,7 @@
                                         </div>
                                     </div>
                                     <!-- note area end -->
-                                 </div>
+                                </div>
                                 <!-- Price RequestStatus , note row end-->
 
                                 <!-- inner form area start -->
@@ -181,11 +185,13 @@
                                     <!-- All Items area start -->
                                     <div class="col-5">
                                         <label for="selectAllItems" class="form-label fw-bold h5">All Items : </label>
-                                        <select class="form-select" id="selectAllItems" multiple style="height: 165px;"></select>
+                                        <select class="form-select" id="selectAllItems" multiple
+                                            style="height: 165px;"></select>
                                     </div>
                                     <!-- All Items area end -->
                                     <!-- Button area start -->
-                                    <div class="col-2 mt-4 d-flex flex-column align-items-center justify-content-center">
+                                    <div
+                                        class="col-2 mt-4 d-flex flex-column align-items-center justify-content-center">
                                         <div>
                                             <button type="button" onclick="addSelectedItems()" style="width : 75px;"
                                                 class="btn  offCanvasCloseBtn"> <i class="fa-solid fa-play"
@@ -207,7 +213,8 @@
                                     <div class="col-5">
                                         <label for="selectSelectedItems" class="form-label fw-bold h5">Selected Items :
                                         </label>
-                                        <select class="form-select" id="selectSelectedItems" multiple style="height: 165px;"></select>
+                                        <select class="form-select" id="selectSelectedItems" multiple
+                                            style="height: 165px;"></select>
                                     </div>
                                     <!-- Selected Items area end -->
                                     <!-- <div class="col-2"></div> -->
@@ -215,7 +222,7 @@
                                 </div>
                                 <!-- inner form area end -->
 
-                                
+
 
                                 <!-- button row start-->
                                 <div class="row mt-3 mb-4">
@@ -332,7 +339,8 @@
                                                             alt="User photo" width="30" height="30"></th>
                                                 </tr>
                                                 <tr>
-                                                    <th style="color:black; text-align: left;border: none;">Supplier Name</th>
+                                                    <th style="color:black; text-align: left;border: none;">Supplier
+                                                        Name</th>
                                                     <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp;
                                                         &nbsp; </th>
                                                     <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
@@ -347,7 +355,8 @@
                                                         id="requireDateView"></th>
                                                 </tr>
                                                 <tr>
-                                                    <th style="color:black;border: none; text-align: left;">Price Request Status</th>
+                                                    <th style="color:black;border: none; text-align: left;">Price
+                                                        Request Status</th>
                                                     <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
                                                         &nbsp; </th>
                                                     <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
@@ -363,13 +372,14 @@
                                                         id="noteView"></th>
                                                 </tr>
                                                 <tr>
-                                                    <th style="color:black; text-align: left;border: none;">Selected Items</th>
+                                                    <th style="color:black; text-align: left;border: none;">Selected
+                                                        Items</th>
                                                     <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
                                                         &nbsp; </th>
                                                     <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
                                                         id="selectedItemsView"></th>
                                                 </tr>
-                                                
+
                                             </tbody>
 
                                         </table>
@@ -402,6 +412,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
     <!-- link js files -->
     <script src="/jsFiles/common.js"></script>

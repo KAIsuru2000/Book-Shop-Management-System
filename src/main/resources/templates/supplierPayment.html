@@ -125,7 +125,7 @@
                                         <!-- Total Due Amount area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span for="textTotalAmount" class="input-group-text lablBg">Total Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;: <span class="fw-bold text-danger">*</span></span>
+                                                <span class="input-group-text lablBg">Total Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;: <span class="fw-bold text-danger">*</span></span>
                                                 <input type="text" placeholder="Enter Total Due Amount"
                                                     class="form-control" aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textTotalDueAmount"
@@ -140,7 +140,7 @@
                                         <!-- Paid Amount area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span for="textPaidItemAmount" class="input-group-text lablBg">Paid
+                                                <span class="input-group-text lablBg">Paid
                                                     Amount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; : <span class="fw-bold text-danger">*</span></span>
                                                 <input type="text" placeholder="Enter Paid Amount" class="form-control"
                                                     aria-label="Sizing example input"
@@ -156,7 +156,7 @@
                                         <!-- Balance Amount area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span for="textBalanceAmount" class="input-group-text lablBg">Balance
+                                                <span class="input-group-text lablBg">Balance
                                                     Amount &nbsp; &nbsp; &nbsp; &nbsp;: <span class="fw-bold text-danger">*</span></span>
                                                 <input type="text" placeholder="Enter Balance Amount"
                                                     class="form-control" aria-label="Sizing example input"
@@ -172,7 +172,7 @@
                                         <!-- Payment method area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span for="textPaymentmethod" class="input-group-text lablBg">Payment
+                                                <span class="input-group-text lablBg">Payment
                                                     method &nbsp; &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></span>
                                                 <input type="text" placeholder="Enter Payment Method"
                                                     class="form-control" aria-label="Sizing example input"
@@ -204,7 +204,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text lablBg">Cheque Date:<span
                                                         class="text-danger">(optional)</span></span>
-                                                <input type="text" id="textChequeDate" class="form-control"
+                                                <input type="date" id="textChequeDate" class="form-control"
                                                     placeholder="Enter Cheque Date" aria-label="With textarea"
                                                     onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'checkdate')"
                                                     onclick="textValidator(this, '^.*$', 'supplierPayment', 'checkdate')"
@@ -247,8 +247,7 @@
                                         <!--Supplier Payment Status area start-->
                                         <div class="row mt-4">
                                             <div class="input-group mb-3">
-                                                <label class="input-group-text lablBg" for="selectSupplierPaymentStatus">Supplier Payment Status &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; :
-                                                    <span class="fw-bold text-danger">*</span></label>
+                                                <label class="input-group-text lablBg" for="selectSupplierPaymentStatus">Supplier Payment Status:<span class="fw-bold text-danger">*</span></label>
                                                 <select class="form-select" id="selectSupplierPaymentStatus"
                                                     onchange="selectDainamicElementValidater(this , 'supplierPayment', 'suplierpaymentstatus_id')"
                                                     onclick="selectDainamicElementValidater(this , 'supplierPayment', 'suplierpaymentstatus_id')"
@@ -290,7 +289,7 @@
                                             <!-- Previous Due Amount area start-->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textPreviousDueAmount" class="input-group-text lablBg"
+                                                    <span class="input-group-text lablBg"
                                                         id="inputGroup-sizing-default">Previous Due Amount:<span
                                                             class="fw-bold text-danger">*</span></span>
                                                     <input placeholder="Enter Previous Due Amount" type="text"
@@ -312,7 +311,7 @@
                                             <!-- Paid Amount area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textPaidAmount" class="input-group-text lablBg">Paid
+                                                    <span class="input-group-text lablBg">Paid
                                                         Amount:<span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Paid Amount"
@@ -329,7 +328,7 @@
                                             <!-- After Due Amount area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span for="textAfterDueAmount" class="input-group-text lablBg">After Due Amount &nbsp; &nbsp; &nbsp; :
+                                                    <span class="input-group-text lablBg">After Due Amount &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter After Due Amount"
@@ -369,8 +368,8 @@
 
                                             <!-- update button area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderItemUpdate"
-                                                    class=" btn btnUpdate" onclick="buttonSupplierPaymentGrnUpdate()">
+                                                <button type="button" id="btnSupplierPaymentItemUpdate"
+                                                    class=" btn btnUpdate" onclick="buttonSupplierPaymentItemUpdate()">
                                                     <i class="fa-solid fa-file-pen"></i>
                                                     Update
                                                 </button>
@@ -379,8 +378,8 @@
 
                                             <!-- Add btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnSupplierPaymentGrnSubmit"
-                                                    class=" btn btnAdd" onclick="buttonSupplierPaymentGrnSubmit()">
+                                                <button type="button" id="btnSupplierPaymentItemSubmit"
+                                                    class=" btn btnAdd" onclick="buttonSupplierPaymentItemSubmit()">
                                                     <!-- buttonEmpSubmit function eka (employee.js)-->
                                                     <i class="fa-solid fa-file-circle-plus"></i>
                                                     Add
@@ -437,7 +436,7 @@
 
                                         <!-- update button area start -->
                                         <div class="col-3">
-                                            <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
+                                            <button type="button" id="btnSupplierPaymentUpdate" class=" btn btnUpdate"
                                                 onclick="buttonEmployeeUpdate()">
                                                 <i class="fa-solid fa-file-pen"></i>
                                                 Update

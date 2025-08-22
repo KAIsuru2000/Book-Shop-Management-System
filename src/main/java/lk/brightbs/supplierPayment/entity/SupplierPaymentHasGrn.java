@@ -42,7 +42,6 @@ public class SupplierPaymentHasGrn {
     private BigDecimal afterdueamount;
 
     // foreign key
-    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "grn_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka
@@ -50,7 +49,6 @@ public class SupplierPaymentHasGrn {
     private Item grn_id;
 
     // foreign key
-    @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "supplierpayment_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka PurchaseOrder
