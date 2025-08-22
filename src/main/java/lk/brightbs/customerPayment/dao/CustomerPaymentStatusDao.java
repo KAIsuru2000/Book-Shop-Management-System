@@ -1,11 +1,10 @@
-package lk.brightbs.customerPayment.dao;
-
-import lk.brightbs.customerPayment.entity.CustomerPaymentStatus;
+package lk.brightbs.customer.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import lk.brightbs.customer.entity.CustomerStatus;
 
 
-public interface CustomerPaymentStatusDao extends JpaRepository<CustomerPaymentStatus, Integer> {
-
+public interface CustomerStatusDao extends JpaRepository<CustomerStatus, Integer>{
+    
 }
