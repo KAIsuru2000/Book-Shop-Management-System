@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import lk.brightbs.item.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -204,5 +205,15 @@ public class ItemController {
 
         return itemDao.getListWithoutRequest(pricelistrequestid);
     }
+
+	// request mapping for get item with brand url - "/item/getListByBrand?brandid="
+	// mehidee brandid eka pathvariable widiyata gannawa path veriable eka lesa pass wana id ekata "brandid" lesa bawitha karai
+	@GetMapping(value = "/item/getListByBrand/{brandid}" , produces = "application/json")
+	public List<Item> getLisByBrand(@PathVariable("brandid") Integer brandid){
+
+		return itemDao.getLisByBrand(brandid);
+	}
+
+
 
 }

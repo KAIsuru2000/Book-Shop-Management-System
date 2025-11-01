@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lk.brightbs.item.entity.Brand;
 import lk.brightbs.item.entity.Item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,6 +49,12 @@ public class PurchaseOrderHasItem {
     // foreign key lesa another table ekaka record ekak ana nisa type eka
     // PriceRequest
     private Item item_id;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", referencedColumnName = "id")
+    // foreign key lesa another table ekaka record ekak ana nisa type eka
+    // PriceRequest
+    private Brand brand_id;
 
     // foreign key
 //    @Id // primary key nisa

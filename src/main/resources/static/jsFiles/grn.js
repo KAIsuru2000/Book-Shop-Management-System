@@ -41,11 +41,13 @@ const generateSupplierName = (dataob) => {
 const getGRNStatus = (dataob) => {
 
     if (dataob.grnstatus_id.name == "Received") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;"></i>'
+        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Received"></i>'
     }
 
     if (dataob.grnstatus_id.name == "Not received") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
+        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Not received"></i>'
     }
 
 

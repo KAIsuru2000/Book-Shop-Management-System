@@ -44,9 +44,11 @@ const refreshCustomerTable = () => {
 // table ekehi status eka penwimata 
 const getCustomerStatus = (dataob) => {
     if (dataob.customerstatus_id.name == "Active") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Active"></i>'
     } else {
-        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"></i>'
+        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;" data-bs-toggle="tooltip"\n' +
+            '                                                title="In-Active"></i>'
     }
 
 }

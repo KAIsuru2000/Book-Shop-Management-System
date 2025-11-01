@@ -18,13 +18,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+    @Entity //mema class eka database table ekak represent karana entity ekak. me class eke object ekek create kalama table eke row ekak represent wana bawa prakaasha kirima
 // make as an persistence entity
     @Table(name = "employee") // for map table name
     @Data // getter , setter tostring
 
-    @NoArgsConstructor
+    @NoArgsConstructor //mema class ekata no-argument constructor ekak generate karala denna" kiyana Lombok annotation ekak.
+    //No-Argument Constructor (default constructor kiyala kiyana eka) kiyanna parameters kisiwak nethi constructor ekak.meya object ekak create kirimedi argument kisiwak pass nokara object eka initialize karanawa.
+
     @AllArgsConstructor
+    //mema class ekata all-argument constructor ekak generate karala denna" kiyana Lombok annotation ekak.
+    //All-Argument Constructor kiyanna class eke thiyena thama properties (fields) walata samasta parameters thiyena constructor ekak.
+    //meya object ekak create kirimedi class eke thiyena samasta properties (fields) walata values assign karanna puluwan.
+    
     public class Employee {
 
     @Id //pk

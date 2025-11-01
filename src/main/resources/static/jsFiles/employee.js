@@ -1,4 +1,5 @@
-//browser load event
+//browser ekee window object eka load wana wita sidu wimata functoin ekak laba dei
+// window.addEventListener(event, function)
 window.addEventListener("load", () => {
 
     console.log("browser load Event");
@@ -15,8 +16,15 @@ window.addEventListener("load", () => {
 //refresh table Area 
 const refreshEmployeeTable = () => {
 
+    // mema functon eka common js eka thula define kara thibee me sadaha controller wala athi alldata service eka magin data laba gani
     let employees = getServiceRequest("/employee/alldata");
 
+    //column list eka sadaa ganima
+    //ui ekehi table eka bala meya sadai
+    //object,boolean walata function yodagani
+    //ui table ekahi column piliwelata property name laba dei
+    //string => string / data / number
+    //function => object / array / boolean
     let propertyList = [
         { propertyName: "fullname", dataType: "string" },
         { propertyName: "nic", dataType: "string" },
@@ -29,28 +37,34 @@ const refreshEmployeeTable = () => {
     fillDataIntoTable(tableEmployeeBody, employees, propertyList, employeeRowFormRefill, employeeRowDelete, employeeRowView, "#offcanvasBottom");
 
 
+    // ui ekehi table eka datatable formate ekata convert kara gannima
     $('#tableEmployee').DataTable();
 
 
 }
 
+// table eke designation column eka fill wima sadaha function ekak
 const getDesignation = (dataob) => {
     return dataob.designation_id.name;
 }
+
+// table eke employee status column eka fill wima sadaha function ekak
 const getEmployeeStatus = (dataob) => {
     if (dataob.employeestatus_id.name == "working") {
-        return '<i class="fa-solid fa-person-circle-check fa-beat fa-xl" style="color: #07f702;"></i>'
+        return '<i class="fa-solid fa-person-circle-check fa-beat fa-xl" style="color: #07f702;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Working"></i>'
     }
 
     if (dataob.employeestatus_id.name == "resign") {
-        return '<i class="fa-solid fa-person-circle-minus fa-beat fa-xl" style="color: #f6ee04;"></i>'
+        return '<i class="fa-solid fa-person-circle-minus fa-beat fa-xl" style="color: #f6ee04;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Resign"></i>'
     }
 
     if (dataob.employeestatus_id.name == "delete") {
-        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;"></i>'
+        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Delete"></i>'
     }
-    
-    
+
 }
 //function for re fill employee form
 const employeeRowFormRefill = (ob, index) => {
@@ -71,6 +85,7 @@ const employeeRowFormRefill = (ob, index) => {
 
     telMobil.value = ob.mobile;
 
+    // optional field sadaha
     if (ob.landno == undefined) {
         telLand.value = "";
     } else {
@@ -85,50 +100,58 @@ const employeeRowFormRefill = (ob, index) => {
         textNote.value = ob.note;
     }
 
+    // js array eka json string ekakata convert kirima JSON.stringify() magin sidu karai
     selectDesignation.value = JSON.stringify(ob.designation_id);
 
     selectCivil.value = ob.civilstatus;
 
+    // js array eka json string ekakata convert kirima JSON.stringify() magin sidu karai
     selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
 
+    // re fill una pasu add kirimak sidu nowe ema nisa add button eka hide karai
     buttonEmpAdd.style.display = "none";
 
 
 
 
     //employee = ob
-    //oldEmployee = ob melesa thibuu wita ob array ekak nisa heap eka thula ekma idehi variable 2 ka awita ekak wenas kala wita anikath wenas we.
-    employee = JSON.parse(JSON.stringify(ob));// string kala witra ram ekehi wena wenama seedi heap ekata giya wita 2k lesa pawathi.
+    //oldEmployee = ob melesa thibuu wita ob array ekak nisa heap eka thula ekma idehi variable 2 ka ewita ekak wenas kala wita anikath wenas we.
+    employee = JSON.parse(JSON.stringify(ob));// string kala wita ram ekehi wena wenama seedi heap ekata giya wita 2k lesa pawathi.
     oldEmployee = JSON.parse(JSON.stringify(ob));
+    //json string eka newatha js object ekakata convert kirima JSON.parse() magin sidu karai
+    //ewita originam object ekata balapeemak nowana paridi object eka clone ekak sada gatha heka
 
-    //form eka refill wana wita model eka open kara ganima jquary magin
-    // $("#staticBackdrop").modal("show");
 
 }
 
 //function for delete employee form
+// meya delete button eka click karama call wei
 const employeeRowDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
-    // activeTableRow(tableEmployeeBody, index, "red");
-
-
+    // employeewa delete kirimata confirmation eka gannima
+    // window.confirm yanu ok/cancel button thibena dialog box ekak open kara dena method ekaki
     let userConfirm = window.confirm("Are you sure to delete following employee...?" +
         "\n Employee full name : " + ob.fullname +
         "\n Employee nic : " + ob.nic +
         "\n Employee designation : " + ob.designation_id.name
     );
+    // window.confirm magin laba dena dialog box eka ok kaloth userConfirm veriable ekata true pass wei cancel kaloth false pass wei
     if (userConfirm) {
+        // true nam
         // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
+        //anthima parameter eka sadaha employeeDelete function eken pass wana object ekehi name eka yodai
+        // getHTTPServiceRequest = (url, method, data)
         let deleteResponce = getHTTPServiceRequest("/employee/delete", "DELETE", ob);
 
+        // controller file ekehi athi delete service eka "OK" return kala wita
         if (deleteResponce == "OK") {
             window.alert("Delete successfully ");
             refreshEmployeeTable();
             refreshEmployeeform();
 
         } else {
+
             window.alert("Delete not successfully" + deleteResponce);
 
         }
@@ -140,29 +163,10 @@ const employeeRowDelete = (ob, index) => {
 }
 
 //employee table eka thula athi view button eke function eka
+// memagin print ekata open wana view eka sadaha data laba dei
 const employeeRowView = (dataob, index) => {
     console.log("View", dataob, index);
-    //option 1
-    //aluth window ekak open kara ganima
-    // let newWindow = window.open();
-    // //ema window ekata title ekak demima
-    // //title eke html code tika venama verible ekakata dama ganima
-    // let printView = "<head><title>Print</title></head>"+"<body><table>"+
-    //                 "<tr><th> Employee Fullname </th><td>"+ ob.fullname+"</td></tr>"+
-    //                 "<tr><th> Employee callingname </th><td>"+ ob.callingname+"</td></tr>"+
-    //                 "<tr><th> Employee nic </th><td>"+ ob.nic+"</td></tr>"+
-    //                 "<tr><th> Employee designation </th><td>"+ ob.designation_id.name+"</td></tr>"+
-    //                 "</table></body>";
-    // newWindow.document.write(printView);
-    // //open wana tab eka tika welawak open wee thibee print ekata open weema
-    // setTimeout(()=>{
-    //     newWindow.stop();
-    //     newWindow.print();
-    //     newWindow.close();
-    // }, 1500)
 
-    //option 2
-    // html wala athi modal ekak open weema 
     fullNameView.innerText = dataob.fullname;
     callingNameView.innerText = dataob.callingname;
     nicView.innerText = dataob.nic;
@@ -193,11 +197,10 @@ const employeeRowView = (dataob, index) => {
 const buttonPrintRow = () => {
     
     //aluth window ekak open kara ganima
+    // ema window eka newWindow variable ekata dama ganima
     let newWindow = window.open();
-    //ema window ekata title ekak demima
-    //title eke html code tika venama verible ekakata dama ganima
-    // let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/printView.css'></head>" + "<body>" + bodyView.outerHTML +
-    //     "</body>";
+
+    // open kala nawa window ekata content eka write kara gannima
     newWindow.document.write(`
             <html>
             <head>
@@ -212,15 +215,16 @@ const buttonPrintRow = () => {
                     <link rel="stylesheet" href="/Style/printView.css">
             </head>
             <body>
+<!--            html file eka thula athi print view ekata sadu view ekehi body eke id eka methanata laba dei-->
                 ${document.querySelector('.bodyPrintView').outerHTML}
             </body>
             </html>
         `);
     //open wana tab eka tika welawak open wee thibee print ekata open weema
     setTimeout(() => {
-        newWindow.stop();
-        newWindow.print();
-        newWindow.close();
+        newWindow.stop();//window loading process eka stop kara gannima
+        newWindow.print(); //print dialog box eka open kara gannima
+        newWindow.close(); //js walin open karana tab eka close kara gannima
     }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
 }
 
@@ -268,22 +272,30 @@ const checkFormError = () => {
     return errors;
 }
 
-//Employee form submit event function 
+//Employee form submit event function
+// meya html form ekehi submit button eka click karama call wei
 const buttonEmployeeSubmit = () => {
     console.log('Add Employee', employee);
 
     //check form error for required element
     let errors = checkFormError();
+
     if (errors == "") {
         //no errors get user confirmation
+        // window.confirm yanu ok/cancel button thibena dialog box ekak open kara dena method ekaki
         let userConfirm = window.confirm("Are you sure to add following employee...?" +
             "\n Employee full name : " + employee.fullname +
             "\n Employee nic : " + employee.nic +
             "\n Employee designation : " + employee.designation_id.name
         );
+        // window.confirm magin laba dena dialog box eka ok kaloth userConfirm veriable ekata true pass wei cancel kaloth false pass wei
         if (userConfirm) {
+            // true nam
             // call post service
+            //anthima parameter eka sadaha employee object eka yodai
+            // getHTTPServiceRequest = (url, method, data)
             let postResponce = getHTTPServiceRequest("/employee/insert", "POST", employee);
+            // controller file ekehi athi insert service eka "OK" return kala wita
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
                 refreshEmployeeTable();
@@ -294,6 +306,7 @@ const buttonEmployeeSubmit = () => {
             }
         }
     } else {
+        // errors veriable ekahi errors thibee nam
         window.alert("Something went wrong...\n" + errors);
     }
 
@@ -301,10 +314,13 @@ const buttonEmployeeSubmit = () => {
 }
 
 //check form update function
+//me sadaha rowFormRefill function eka thula sadagath object 2ka yoda gani
 const checkFormUpdate = () => {
     let updates = "";
 
     if (employee != null && oldEmployee != null) {
+        // mul awasthawe object 2hima data pawathi pasuwa update ekak sidu kala pasu ema update ekata adla property eka employee object eka thula wenas wei
+        // employee object eke athi property 1k 1k oldEmployee object eke athi property 1k 1k samana nadda balai
 
         if (employee.fullname != oldEmployee.fullname) {
             updates = updates + "Full name is changed  ....! \n";
@@ -355,7 +371,8 @@ const checkFormUpdate = () => {
     return updates;
 }
 
-// form update event function 
+// form update event function
+// meya html eka thula athi update button eka click karama call wei
 const buttonEmployeeUpdate = () => {
 
     //need to check form errors
@@ -363,20 +380,28 @@ const buttonEmployeeUpdate = () => {
     if (errors == "") {
         // need to check form update
         let updates = checkFormUpdate();
+        // updates nomathi nam
         if (updates == "") {
             window.alert("nothing to update..\n");
         } else {
+            // update thibe nam
             //need to get user confirmation
+            // window.confirm yanu ok/cancel button thibena dialog box ekak open kara dena method ekaki
             let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
             if (userConfirm) {
-                //call put service
+                // true nam
+                // call PUT service
+                //anthima parameter eka sadaha employee object eka yodai
+                // getHTTPServiceRequest = (url, method, data)
                 let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
+                // controller file ekehi athi insert service eka "OK" return kala wita
                 if (putResponce == "OK") {
                     window.alert("Update Successfully...!");
                     refreshEmployeeTable();
                     refreshEmployeeform();
                     $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
                 } else {
+                    // controller file ekehi athi insert service eka "OK" return nokala wita
                     window.alert("Failed to update...!" + putResponce);
                 }
             } else {
@@ -384,17 +409,15 @@ const buttonEmployeeUpdate = () => {
             }
         }
     } else {
+        // errors veriable ekahi errors thibee nam
         window.alert("something went wrong.. \n" + errors);
     }
 
 }
 
-// form delete event function 
-const buttonEmployeeDelete = () => {
-    refreshEmployeeTable();
-}
-
 //full name validation
+//browser ekee textFullName element eka   wana wita sidu wimata functoin ekak laba dei
+//window.addEventListener(event, function)
 textFullName.addEventListener("keyup", () => {
 
     // Navigate to the parent element and then to the associated span
@@ -425,7 +448,7 @@ textFullName.addEventListener("keyup", () => {
             spanElementCalName.style.backgroundColor = "green";
             textCallingName.classList.remove("is-invalid");
             textCallingName.classList.add("is-valid");
-            employee.callingname = textCallingName.value; //value add to employee object
+            employee.callingname = textCallingName.value;  //value add to employee object
             fullNamePart.forEach(element => {
                 let option = document.createElement("option");
                 option.value = element;

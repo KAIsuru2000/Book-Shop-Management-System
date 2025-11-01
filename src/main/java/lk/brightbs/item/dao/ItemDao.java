@@ -1,6 +1,7 @@
 package lk.brightbs.item.dao;
 
 
+import lk.brightbs.item.entity.Brand;
 import lk.brightbs.item.entity.Item;
 
 import java.util.List;
@@ -28,5 +29,11 @@ public interface ItemDao extends JpaRepository<Item, Integer> {
 
     @Query("select i from Item i where i.id not in (select PRI.item_id.id from PriceListRequestHasItem PRI where PRI.pricelistrequest_id.id=?1)" )
     public List<Item> getListWithoutRequest(Integer pricelistrequestid);
+
+    @Query("select i from Item i where i.id in (select PRI.item_id.id from PriceListRequestHasItem PRI where PRI.pricelistrequest_id.id=?1)" )
+    List<Item> getListBySupplier(Integer supplierid);
+
+    @Query("select i from Item i where i.brand_id=?1")
+    public List<Item> getLisByBrand(Integer brandid);
     
 }

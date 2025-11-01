@@ -40,23 +40,28 @@ const generateSupplierName = (dataob) => {
 }
 const getOrderStatus = (dataob) => {
     if (dataob.purchaserequeststatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;"></i>'
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Pending"></i>'
     }
 
     if (dataob.purchaserequeststatus_id.name == "Recived") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;"></i>'
+        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Recived"></i>'
     }
 
     if (dataob.purchaserequeststatus_id.name == "Completed") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Completed"></i>'
     }
 
     if (dataob.purchaserequeststatus_id.name == "Cancelled ") {
-        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;"></i>'
+        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Cancelled"></i>'
     }
 
     if (dataob.purchaserequeststatus_id.name == "Deleted") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
+        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Deleted"></i>'
     }
 
 
@@ -413,11 +418,55 @@ const refreshPurchaseOrderForm = () => {
     selectOrderStatus.classList.remove("is-invalid");
     selectOrderStatus.classList.add("is-valid");
 
+    // required date ekata min max add kara ganima
+    //min - current date eka
+    //max - current date eka + 2 weeks
+    //date format eka yyyy-mm-dd
+    let currentDate = new Date();
+    // get month wala value eka 0-11 wena nisa +1 karai
+    let currentMonth = currentDate.getMonth() +1;
+    // 9n pasuwa cracter 2k atha ema nisa 9n pasuwa 0k add kara gannawa
+    if(currentMonth < 10){
+        currentMonth = "0" + currentMonth;
+    }
+    // get date eka 1-31 wena nisa 9n pasuwa cracter 2k atha
+    let currentDay = currentDate.getDate();
+    if (currentDay < 10) {
+        currentDay = "0" + currentDay;
+    }
+    dateRequireDate.min = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay ;
+
+    // max date eka 14 days add kara gannawa
+    currentDate.setDate(currentDate.getDate() + 14);
+    let maxCurrentMonth = currentDate.getMonth()+1;
+    // 9n pasuwa cracter 2k atha ema nisa 9n pasuwa 0k add kara gannawa
+    if(maxCurrentMonth < 10){
+        maxCurrentMonth = "0" + maxCurrentMonth;
+    }
+    // get date eka 1-31 wena nisa 9n pasuwa cracter 2k atha
+    let maxCurrentDay = currentDate.getDate();
+    if (maxCurrentDay < 10) {
+        maxCurrentDay = "0" + maxCurrentDay;
+    }
+    dateRequireDate.max = currentDate.getFullYear() + "-" + maxCurrentMonth + "-" + maxCurrentDay ;
+
+
+
     // inner form eka refresh karawima
     refreshPurchaseOrderInnerForm();
 
     btnPurchaseOrderUpdate.classList.add("d-none");
     btnPurchaseOrderSubmit.classList.remove("d-none");
+}
+
+// define function for filter brand by supplier
+const filterBrandBySupplier = () => {
+
+    // select karana supplierta adala brand tika load kara gannima
+    let brands = getServiceRequest('/brand/getListBySupply/'+JSON.parse(selectSupplier.value).id);
+    fillDataIntoSelect(selectBrand, "Please Select Brand..!!", brands, "name");
+
+   //in pasu meya supplier dropdown eka laga call karai
 }
 
 // define function for refresh inner form
@@ -426,12 +475,13 @@ const refreshPurchaseOrderInnerForm = () => {
     // association eke class name ekata samanawa simple walin start kara gani
     purchaseOrderHasItem = new Object();
 
-
     // mehi form eka reset kala wita main form ekath reset wana nisa esa kala noheka
     // formPurchaseOrder.reset();
     // ema nisa element tika clean kirima sidu karai
     // selectItem dynamic nisa clean nokarai
     // dynamic element refill kala yuthuya
+    // item dropdown ekata load wiya yuththa select karana supplierta adala item pamani
+    // e sadaha item controller ekehi service eka hadai
     let items = getServiceRequest('/item/alldata');
     // code ekai name ekai dekama drop down ekak thula penwa ganima
     fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");

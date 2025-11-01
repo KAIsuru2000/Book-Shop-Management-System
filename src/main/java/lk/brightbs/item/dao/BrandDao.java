@@ -19,4 +19,7 @@ public interface BrandDao extends JpaRepository<Brand, Integer>{
     @Query("select b from Brand b where b.id not in (select shb.brand_id.id from SupplierHasBrand shb where shb.supplier_id.id=?1)" )
     public List<Brand> getListWithoutSupply(Integer supplierid);
 
+    @Query("select b from Brand b where b.id in (select shb.brand_id.id from SupplierHasBrand shb where shb.supplier_id.id=?1)" )
+    public List<Brand> getLisBySupply(Integer supplierid);
+
 }

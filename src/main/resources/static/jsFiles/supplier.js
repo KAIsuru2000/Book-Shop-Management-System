@@ -63,13 +63,16 @@ const getBrand = (dataob) => {
 // table ekehi status eka penwimata 
 const getSupplierStatus = (dataob) => {
     if (dataob.supplierstatus_id.name == "Active") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Active"></i>'
     }
     if (dataob.supplierstatus_id.name == "In-Active") {
-        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color:rgb(254, 174, 1);"></i>'
+        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color:rgb(254, 174, 1);" data-bs-toggle="tooltip"\n' +
+            '                                                title="In-Active"></i>'
     }
     if (dataob.supplierstatus_id.name == "Deleted") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;"></i>'
+        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Deleted"></i>'
     }
 
 }

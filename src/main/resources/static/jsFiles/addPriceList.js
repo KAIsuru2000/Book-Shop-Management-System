@@ -38,13 +38,15 @@ const generateSupplierName = (dataob) => {
 }
 const getAddPriceListStatus = (dataob) => {
     if (dataob.addpriceliststatus_id.name == "Active") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>'
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Active"></i>'
     }
 
 
 
     if (dataob.addpriceliststatus_id.name == "In-Active") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;"></i>'
+        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
+            '                                                title="In-Active"></i>'
     }
 }
 

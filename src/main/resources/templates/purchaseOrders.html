@@ -112,7 +112,7 @@
                                                     <span class="fw-bold text-danger">*</span></label>
                                                 <select class="form-select" id="selectSupplier"
                                                     onchange="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrder', 'supplier_id'); filterBrandBySupplier();"
                                                     data-bs-toggle="tooltip"
                                                     title="Select the Supplier correctly here.">
                                                     <option selected disabled>Select Supplier</option>
@@ -134,7 +134,7 @@
                                                     aria-describedby="inputGroup-sizing-default" id="dateRequireDate"
                                                     onchange="textValidator(this, '^.*$', 'purchaseOrder', 'requireddate')"
                                                     required data-bs-toggle="tooltip"
-                                                    title="Please enter the required date correctly">
+                                                    title="Please enter the required date correctly" onkeydown="return false;">
                                             </div>
 
                                         </div>
@@ -193,8 +193,26 @@
                                     <!-- inner form and table start -->
                                     <div class="col-6">
                                         <!-- inner form area start -->
-                                        <!-- Item and Unit Price area start -->
+                                        <!-- Brand and Item area start -->
                                         <div class="row">
+                                            <!-- Brand area start-->
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <label class="input-group-text lablBg" for="selectItem">Brand
+                                                        &nbsp; &nbsp; &nbsp; :
+                                                        <span class="fw-bold text-danger">*</span></label>
+                                                    <select class="form-select" id="selectBrand"
+                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'brand_id')"
+                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'brand_id')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Select the Brand correctly here.">
+                                                        <option selected disabled>Select Brand</option>
+                                                        <option value=""></option>
+                                                        <option value=""></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- Brand area end-->
                                             <!-- Item area start-->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -202,10 +220,10 @@
                                                         &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></label>
                                                     <select class="form-select" id="selectItem"
-                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
-                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Select the Item correctly here.">
+                                                            onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                                            onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Select the Item correctly here.">
                                                         <option selected disabled>Select Item</option>
                                                         <option value=""></option>
                                                         <option value=""></option>
@@ -213,27 +231,28 @@
                                                 </div>
                                             </div>
                                             <!-- Item area end-->
+
+                                        </div>
+                                        <!-- Brand and Item area end -->
+                                        <!-- Unite and Quantity area start -->
+                                        <div class="row mt-4">
                                             <!-- Unit Price area start-->
                                             <div class="col-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text lablBg"
-                                                        id="inputGroup-sizing-default">Unit Price : <span
+                                                          id="inputGroup-sizing-default">Unit Price : <span
                                                             class="fw-bold text-danger">*</span></span>
                                                     <input placeholder="Enter Unit Price" type="text" class="form-control"  aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Unit Price correctly here.">
+                                                           aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
+                                                           required
+                                                           onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
+                                                           onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
+                                                           data-bs-toggle="tooltip"
+                                                           title="Enter the Unit Price correctly here.">
                                                 </div>
                                             </div>
 
                                             <!-- Unit Price area end-->
-                                        </div>
-                                        <!-- Item and Unit Price area end -->
-                                        <!-- Quantity and Line Price area start -->
-                                        <div class="row mt-4">
                                             <!-- Quantity area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -250,6 +269,13 @@
                                                 </div>
                                             </div>
                                             <!-- Quantity area end -->
+
+
+
+                                        </div>
+                                        <!--  Unite and Quantity area end -->
+                                        <!--Line price area start -->
+                                        <div class="row mt-4">
                                             <!-- Line Price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -257,20 +283,18 @@
                                                         Price :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
-                                                        placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textLinePrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Line Price correctly here.">
+                                                           placeholder="Enter Line Price" aria-label="Sizing example input"
+                                                           aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                           required
+                                                           onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                           onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                           data-bs-toggle="tooltip"
+                                                           title="Enter the Line Price correctly here.">
                                                 </div>
                                             </div>
                                             <!-- Line Price area end -->
-
-
                                         </div>
-                                        <!-- Quantity and Line Price area end -->
+                                        <!--Line price area end -->
                                         <!-- inner form area end -->
 
 

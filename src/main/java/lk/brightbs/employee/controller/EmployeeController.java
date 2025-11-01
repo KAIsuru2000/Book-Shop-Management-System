@@ -21,10 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@RestController
+@RestController //return karana data eka automatically HTTP response body ekata serialize wenawa (mostly JSON format eka).
+
 public class EmployeeController {
 
-	@Autowired
+	@Autowired //variable/constructor/setter ekata gelapana Bean ekak container eka thiye nam, eka auto-assign (inject) karanawa.
 	private EmployeeDao employeeDao;
 
 	@Autowired

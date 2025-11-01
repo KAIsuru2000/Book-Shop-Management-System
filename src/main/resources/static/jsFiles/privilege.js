@@ -48,37 +48,45 @@ const getModuleStatus = (dataob) => {
 
 const getSel = (dataob) => {
     if (dataob.sel) {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>';
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Granted"></i>';
 
     } else {
-        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"></i>';
+        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Not Granted"></i>';
     }
 }
 
 const getInst = (dataob) => {
     if (dataob.inst) {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>';
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"data-bs-toggle="tooltip"\n' +
+            '                                                title="Granted"></i>';
 
     } else {
-        return ' <i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"></i>';
+        return ' <i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"data-bs-toggle="tooltip"\n' +
+            '                                                title="Not Granted"></i>';
     }
 }
 
 const getUpt = (dataob) => {
     if (dataob.upd) {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>';
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"data-bs-toggle="tooltip"\n' +
+            '                                                title="Granted"></i>';
 
     } else {
-        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"></i>';
+        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"data-bs-toggle="tooltip"\n' +
+            '                                                title="Not Granted"></i>';
     }
 }
 
 const getDel = (dataob) => {
     if (dataob.del) {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"></i>';
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;"data-bs-toggle="tooltip"\n' +
+            '                                                title="Granted"></i>';
 
     } else {
-        return ' <i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"></i>';
+        return ' <i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;"data-bs-toggle="tooltip"\n' +
+            '                                                title="Not Granted"></i>';
     }
 }
 

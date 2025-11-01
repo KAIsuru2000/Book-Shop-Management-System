@@ -49,13 +49,16 @@ const refreshItemTable = () => {
 // table ekehi status eka penwimata 
 const getItemStatus = (dataob) => {
     if (dataob.itemstatus_id.name == "Available") {
-        return '<i class="fa-solid fa-store fa-beat fa-xl" style="color: #00fa11;"></i>'
+        return '<i class="fa-solid fa-store fa-beat fa-xl" style="color: #00fa11;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Available"></i>'
     }
     if (dataob.itemstatus_id.name == "Not-Available") {
-        return '<i class="fa-solid fa-store-slash fa-beat fa-xl" style="color:rgb(249, 236, 1);"></i>'
+        return '<i class="fa-solid fa-store-slash fa-beat fa-xl" style="color:rgb(249, 236, 1);" data-bs-toggle="tooltip"\n' +
+            '                                                title="Not-Available"></i>'
     }
     if (dataob.itemstatus_id.name == "Deleted") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;"></i>'
+        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Deleted"></i>'
     }
 
 }
@@ -374,10 +377,10 @@ const generateItemName = () => {
 
         textItemName.value = brand.name + " " + subCategory.name;
 
-        textItemName.style.borderBottom = "4px solid green";
-        spanElement.style.backgroundColor = "green";
-        textItemName.classList.remove("is-invalid");
-        textItemName.classList.add("is-valid");
+        textItemName.style.borderBottom = "4px solid red";
+        spanElement.style.backgroundColor = "red";
+        textItemName.classList.add("is-invalid");
+        textItemName.classList.remove("is-valid");
         item.itemname = textItemName.value; //value add to item object
 
     } else {

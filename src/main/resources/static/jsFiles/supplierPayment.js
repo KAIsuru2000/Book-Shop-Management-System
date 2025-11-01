@@ -41,15 +41,18 @@ const generateSupplierName = (dataob) => {
 const getSupplierPaymentStatus = (dataob) => {
 
     if (dataob.suplierpaymentstatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-circle-notch fa-spin fa-xl" style="color: #fa0000;"></i>'
+        return '<i class="fa-solid fa-circle-notch fa-spin fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Pending"></i>'
     }
 
     if (dataob.suplierpaymentstatus_id.name == "Partially Paid") {
-        return '<i class="fa-solid fa-circle-half-stroke fa-beat fa-xl" style="color: #f78502;"></i>'
+        return '<i class="fa-solid fa-circle-half-stroke fa-beat fa-xl" style="color: #f78502;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Partially Paid"></i>'
     }
 
     if (dataob.suplierpaymentstatus_id.name == "Paid") {
-        return '<i class="fa-solid fa-circle fa-beat fa-xl" style="color: #1eff00;"></i>'
+        return '<i class="fa-solid fa-circle fa-beat fa-xl" style="color: #1eff00;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Paid"></i>'
     }
 
 
