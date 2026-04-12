@@ -201,9 +201,10 @@
                                                     <label class="input-group-text lablBg" for="selectItem">Brand
                                                         &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></label>
+                                                    <!-- brand drop down eka select kala pasu item drop down eka refresh wimata filterItemByBrand function eka onchange saha onclick events walata add karai -->
                                                     <select class="form-select" id="selectBrand"
-                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'brand_id')"
-                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'brand_id')"
+                                                        onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'brand_id'); filterItemByBrand();"
+                                                        onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'brand_id'); filterItemByBrand();"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Brand correctly here.">
                                                         <option selected disabled>Select Brand</option>

@@ -31,7 +31,8 @@ public class MyUserServiceDetail implements UserDetailsService {
 
     //transaction annotation nomathiwa list access kala noheka
     @Transactional
-    
+
+//    log una userge details genwa ganima
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
         System.out.println(username);

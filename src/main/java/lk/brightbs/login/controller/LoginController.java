@@ -87,7 +87,7 @@ public class LoginController {
         //adminta role set kirima esadaha role set ekak thibiya yuthuya
         Set<Role> roles = new HashSet<>();
         //dao gen role object ekak illa ganima
-        Role adminRole = roleDao.getReferenceById(3);
+        Role adminRole = roleDao.getReferenceById(1);
         //role object eka role set ekata set kirima
         roles.add(adminRole);
         //eya admin userta set kirima

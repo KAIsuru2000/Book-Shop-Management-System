@@ -47,6 +47,7 @@ public class WebConfiguration {
             .requestMatchers("/privilege/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
             .requestMatchers("/user/**").hasAnyAuthority("Admin" , "Manager")
             .requestMatchers("/item/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
+            .requestMatchers("/inventory/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
             .requestMatchers("/customer/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
             .anyRequest().authenticated();
 
@@ -75,6 +76,8 @@ public class WebConfiguration {
             logout
             //logout lesa request kala wita logout eka weda karai 
             .logoutUrl("/logout")
+            //Authentication clear kirima
+                    .clearAuthentication(true)
             //logout eka succesfully nam login page ekata yai
             .logoutSuccessUrl("/login");
 
@@ -100,7 +103,7 @@ public class WebConfiguration {
         }
 
     //password eka encrypt kirima sadaha   
-    @Bean // memagin object ekak sede
+    @Bean // memagin object ekak sede password encoder instance ekak hada ganimata
     //memagin one way encript wimak siduwe.(encrypt karanna witharai puluwan decrypt karanna be)
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         //return karanawa constructur call karala instant ekak eya project eka thula onama thanaka use kala heka

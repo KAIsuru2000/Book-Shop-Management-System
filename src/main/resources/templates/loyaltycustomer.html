@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- nav bar start -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+    <!-- nav bar end -->
+
+    <div class="container-fluid">
+        <!-- title area start -->
+        <div class="row p-1 mt-1">
+            <div class="col-12 p-3 d-flex justify-content-center divTitle">
+                <i class="fa-solid fa-crown fa-2x"></i>
+                <h2 class="h2 ms-3">Loyalty Customer</h2>
+            </div>
+        </div>
+        <!-- title area end -->
+
+        <!-- offcanvas button area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-2">
+                <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshLoyaltycustomerForm()">
+                    <i class="fa-solid fa-plus"></i>
+                    Add New Tier
+                </button>
+            </div>
+            <div class="col-9"></div>
+        </div>
+        <!-- offcanvas button area end -->
+
+        <!-- table area start -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 mt-1 divTable">
+                <div class="container-fluid">
+                <table class="table" id="tableLoyaltycustomer">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Card Name</th>
+                            <th>Start Point</th>
+                            <th>End Point</th>
+                            <th>Point Increase Amount</th>
+                            <th>Discount (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableLoyaltycustomerBody">
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- table arae end -->
+
+        <!-- offcanvas area start -->
+        <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+            data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas-body small">
+
+                <!-- form area start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="divForm">
+                            <form onsubmit="return false"  id="formLoyaltycustomer">
+
+                                <!-- required mark and offcanvas close button start -->
+                                <div class="row">
+                                    <div class="col-1">
+                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                    </div>
+                                    <div class="col-9"></div>
+                                    <div class="col-1">
+                                        <span class="fw-bold text-danger">*Required</span>
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                                <!-- required mark and offcanvas close button end -->
+
+                                <!-- Card name area start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Card Name &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="Enter Card Name" id="textCardName" required onkeyup="textValidator(this, '^([A-Za-z\\s\\-]{3,50})$', 'loyaltycustomer', 'cardname')" onclick="textValidator(this, '^([A-Za-z\\s\\-]{3,50})$', 'loyaltycustomer', 'cardname')" data-bs-toggle="tooltip" 
+                                                title="Enter Card Name (e.g., Gold Card)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!-- Card name area end-->
+
+                                <!-- Start Point start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Start Point &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="number" class="form-control" placeholder="Enter Start Point" id="numStartPoint" required onkeyup="textValidator(this, '^[0-9]+$', 'loyaltycustomer', 'startpoint')" onclick="textValidator(this, '^[0-9]+$', 'loyaltycustomer', 'startpoint')" data-bs-toggle="tooltip" 
+                                                title="Enter Start Point (e.g., 0)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!-- Start Point end-->
+
+                                <!-- End Point start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">End Point &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="number" class="form-control" placeholder="Enter End Point" id="numEndPoint" required onkeyup="textValidator(this, '^[0-9]+$', 'loyaltycustomer', 'endpoint')" onclick="textValidator(this, '^[0-9]+$', 'loyaltycustomer', 'endpoint')" data-bs-toggle="tooltip" 
+                                                title="Enter End Point (e.g., 1000)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!-- End Point end-->
+
+                                <!-- Point Increase start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Point Amount &nbsp; : <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="Point Increase Amount" id="numPointIncrease" required onkeyup="textValidator(this, '^\\d{1,6}(\\.\\d{1,2})?$', 'loyaltycustomer', 'pointincreaseamount')" onclick="textValidator(this, '^\\d{1,6}(\\.\\d{1,2})?$', 'loyaltycustomer', 'pointincreaseamount')" data-bs-toggle="tooltip" 
+                                                title="Enter Point Increase Amount (e.g., 100.00)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!-- Point Increase end-->
+
+                                <!-- Discount start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Discount &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
+                                                    class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="Discount Percentage" id="numDiscount" required onkeyup="textValidator(this, '^\\d{1,3}(\\.\\d{1,2})?$', 'loyaltycustomer', 'discount')" onclick="textValidator(this, '^\\d{1,3}(\\.\\d{1,2})?$', 'loyaltycustomer', 'discount')" data-bs-toggle="tooltip" 
+                                                title="Enter Discount Percentage (e.g., 5.00)">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!-- Discount end-->
+                                
+
+                                <!-- button row start-->
+                                <div class="row mt-3 mb-4">
+                                    <div class="col-1"></div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btnClear" onclick="clearLoyaltycustomerForm()">
+                                            <i class="fa-solid fa-eraser"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <div class="col-5"></div>
+                                    <div class="col-2">
+                                        <button type="button" class=" btn btnUpdate" id="updateButton" onclick="buttonLoyaltycustomerUpdate()">
+                                            <i class="fa-solid fa-file-pen"></i>
+                                            Update
+                                        </button>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class=" btn btnAdd" id="submitButton" onclick="buttonLoyaltycustomerSubmit()">
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- button row end -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- offcanvas area end -->
+
+    </div>
+
+    <!-- link js files -->
+    <script src="/jsFiles/common.js"></script>
+    <script src="/jsFiles/tableFunction.js"></script>
+    <script src="/jsFiles/validatorFunction.js"></script>
+    <script src="/jsFiles/loyaltycustomer.js"></script>
+
+</body>
+</html>

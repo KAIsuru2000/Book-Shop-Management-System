@@ -48,26 +48,27 @@ const refreshItemTable = () => {
 
 // table ekehi status eka penwimata 
 const getItemStatus = (dataob) => {
-    if (dataob.itemstatus_id.name == "Available") {
+    let statusName = dataob.itemstatus_id.name;
+    if (statusName == "Available" || statusName == "Instock" || statusName == "Use" || statusName == "Active") {
         return '<i class="fa-solid fa-store fa-beat fa-xl" style="color: #00fa11;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Available"></i>'
+            '                                                title="' + statusName + '"></i>';
     }
-    if (dataob.itemstatus_id.name == "Not-Available") {
+    if (statusName == "Not-Available" || statusName == "Out of Stock" || statusName == "Not Use" || statusName == "In-Active") {
         return '<i class="fa-solid fa-store-slash fa-beat fa-xl" style="color:rgb(249, 236, 1);" data-bs-toggle="tooltip"\n' +
-            '                                                title="Not-Available"></i>'
+            '                                                title="' + statusName + '"></i>';
     }
-    if (dataob.itemstatus_id.name == "Deleted") {
+    if (statusName == "Deleted" || statusName == "Delete") {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Deleted"></i>'
+            '                                                title="' + statusName + '"></i>';
     }
-
+    return statusName;
 }
 
 // define function for genarate sales price
 const genarateSalesPrice = () => {
     let profitRatio = textProfitRatio.value;
     let purchasePrice = textPurchasePrice.value;
-    let salesPrice = parseFloat(purchasePrice)+(parseFloat(purchasePrice) * parseFloat(profitRatio)/100);
+    let salesPrice = parseFloat(purchasePrice) + (parseFloat(purchasePrice) * parseFloat(profitRatio) / 100);
     textSalesPrice.value = parseFloat(salesPrice).toFixed(2);
 
     // validation colour and binding
@@ -87,12 +88,12 @@ const rowFormRefill = (dataob, rowIndex) => {
 
 
     // refill value in to element
-   
+
 
     let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + dataob.subcategory_id.category_id.id);
     fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
 
-     selectItemCategory.value = JSON.stringify(dataob.subcategory_id.category_id);
+    selectItemCategory.value = JSON.stringify(dataob.subcategory_id.category_id);
 
     let brandByCategory = getServiceRequest('/brand/bycategory/' + dataob.subcategory_id.category_id.id);
     fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
@@ -117,8 +118,8 @@ const rowFormRefill = (dataob, rowIndex) => {
     console.log("oldItem", oldItem);
 
     //disable submit button
-     submitButton.style.visibility = "hidden";
-     updateButton.style.visibility = "visible";
+    submitButton.style.visibility = "hidden";
+    updateButton.style.visibility = "visible";
 
 
 }
@@ -237,10 +238,10 @@ const refreshItemForm = () => {
     let brand = getServiceRequest('/brand/alldata')
     let categories = getServiceRequest('/Category/alldata');
 
-    
+
     let itemStatus = getServiceRequest('/itemStatus/alldata');
     let subCategory = getServiceRequest('/subCategory/alldata');
-    
+
 
     fillDataIntoSelect(selectItemBrand, "Please Select brand..!", brand, "name");
     fillDataIntoSelect(selectItemCategory, "Please Select categories..!", categories, "name");
@@ -270,19 +271,19 @@ selectCategoryElement.addEventListener("change", () => {
 
     // validation color laba deema
     if (selectCategoryElement.value != "") {
-    prevElementItemCategory = selectItemCategory.previousElementSibling;
-    selectItemCategory.style.borderBottom = "4px solid green";
-    prevElementItemCategory.style.backgroundColor = "green";
-    selectItemCategory.classList.remove("is-invalid");
-    selectItemCategory.classList.add("is-valid");
-    }else{
-    prevElementItemCategory = selectItemCategory.previousElementSibling;
-    selectItemCategory.style.borderBottom = "4px solid red";
-    prevElementItemCategory.style.backgroundColor = "red";
-    selectItemCategory.classList.add("is-invalid");
-    selectItemCategory.classList.remove("is-valid");
+        prevElementItemCategory = selectItemCategory.previousElementSibling;
+        selectItemCategory.style.borderBottom = "4px solid green";
+        prevElementItemCategory.style.backgroundColor = "green";
+        selectItemCategory.classList.remove("is-invalid");
+        selectItemCategory.classList.add("is-valid");
+    } else {
+        prevElementItemCategory = selectItemCategory.previousElementSibling;
+        selectItemCategory.style.borderBottom = "4px solid red";
+        prevElementItemCategory.style.backgroundColor = "red";
+        selectItemCategory.classList.add("is-invalid");
+        selectItemCategory.classList.remove("is-valid");
     }
-    
+
 
     if (category.name == "Book") {
         // elementId.disabled = "disabled";
@@ -341,20 +342,20 @@ selectCategoryElement.addEventListener("change", () => {
     spanItemBrandElement = selectItemBrand.previousElementSibling;
     spanItemSubcategoryElement = selectItemSubcategory.previousElementSibling;
 
-        textItemName.value ="";
-        textItemName.style.borderBottom = "4px solid red";
-        selectItemBrand.style.borderBottom = "4px solid red";
-        selectItemSubcategory.style.borderBottom = "4px solid red";
-        spanItemNameElement.style.backgroundColor = "red";
-        spanItemBrandElement.style.backgroundColor = "red";
-        spanItemSubcategoryElement.style.backgroundColor = "red";
-        textItemName.classList.add("is-invalid");
-        selectItemBrand.classList.add("is-invalid");
-        selectItemSubcategory.classList.add("is-invalid");
-        textItemName.classList.remove("is-valid");
-        selectItemBrand.classList.remove("is-valid");
-        selectItemSubcategory.classList.remove("is-valid");
-        item.itemname = null; //item object add to value null
+    textItemName.value = "";
+    textItemName.style.borderBottom = "4px solid red";
+    selectItemBrand.style.borderBottom = "4px solid red";
+    selectItemSubcategory.style.borderBottom = "4px solid red";
+    spanItemNameElement.style.backgroundColor = "red";
+    spanItemBrandElement.style.backgroundColor = "red";
+    spanItemSubcategoryElement.style.backgroundColor = "red";
+    textItemName.classList.add("is-invalid");
+    selectItemBrand.classList.add("is-invalid");
+    selectItemSubcategory.classList.add("is-invalid");
+    textItemName.classList.remove("is-valid");
+    selectItemBrand.classList.remove("is-valid");
+    selectItemSubcategory.classList.remove("is-valid");
+    item.itemname = null; //item object add to value null
 
 });
 
@@ -373,7 +374,7 @@ const generateItemName = () => {
     // validation wala colour eka laba deema sadaha
     spanElement = textItemName.previousElementSibling;
 
-    if (item.brand_id != null && item.subcategory_id.name != null ){
+    if (item.brand_id != null && item.subcategory_id.name != null) {
 
         textItemName.value = brand.name + " " + subCategory.name;
 
@@ -385,7 +386,7 @@ const generateItemName = () => {
 
     } else {
 
-        textItemName.value ="";
+        textItemName.value = "";
         textItemName.style.borderBottom = "4px solid red";
         spanElement.style.backgroundColor = "red";
         textItemName.classList.add("is-invalid");
@@ -406,7 +407,7 @@ const checkItemFormError = () => {
     if (item.subcategory_id == null) {
         errors = errors + "Please select item subcategory...\n";
     }
-    
+
     if (item.itemstatus_id == null) {
         errors = errors + "Please select item status...\n";
     }
@@ -483,7 +484,7 @@ const checkItemFormUpdate = () => {
         if (item.subcategory_id.name != oldItem.subcategory_id.name) {
             updates = updates + "subcategory is change...! \n";
         }
-        
+
         if (item.itemstatus_id.name != oldItem.itemstatus_id.name) {
             updates = updates + "item status is change...! \n";
         }

@@ -408,15 +408,18 @@ const refreshPurchaseOrderForm = () => {
 
     // status eka form eka load wana wita select wi thibimata
     // selected value eka string walin ena nisa stringify kara gani
-    selectOrderStatus.value = JSON.stringify(orderStatues[0]);
-    // ema value eka newatha object ekata set kala yuththa object format ekeni
-    purchaseOrder.purchaserequeststatus_id = JSON.parse(selectOrderStatus.value);
-    // status field eka sadaha validation colour eka laba deema
-    prevElementOrderStatus = selectOrderStatus.previousElementSibling;
-    selectOrderStatus.style.borderBottom = "4px solid green";
-    prevElementOrderStatus.style.backgroundColor = "green";
-    selectOrderStatus.classList.remove("is-invalid");
-    selectOrderStatus.classList.add("is-valid");
+    // database eken data nopathiyanam error ekak ena nisa data array ekehi values thibeda balima (if condition) 
+    if (orderStatues.length > 0) {
+        selectOrderStatus.value = JSON.stringify(orderStatues[0]);
+        // ema value eka newatha object ekata set kala yuththa object format ekeni
+        purchaseOrder.purchaserequeststatus_id = JSON.parse(selectOrderStatus.value);
+        // status field eka sadaha validation colour eka laba deema
+        prevElementOrderStatus = selectOrderStatus.previousElementSibling;
+        selectOrderStatus.style.borderBottom = "4px solid green";
+        prevElementOrderStatus.style.backgroundColor = "green";
+        selectOrderStatus.classList.remove("is-invalid");
+        selectOrderStatus.classList.add("is-valid");
+    }
 
     // required date ekata min max add kara ganima
     //min - current date eka
@@ -463,10 +466,28 @@ const refreshPurchaseOrderForm = () => {
 const filterBrandBySupplier = () => {
 
     // select karana supplierta adala brand tika load kara gannima
-    let brands = getServiceRequest('/brand/getListBySupply/'+JSON.parse(selectSupplier.value).id);
-    fillDataIntoSelect(selectBrand, "Please Select Brand..!!", brands, "name");
+    // supplier element eka select nowee empty ("") value eka passe wuwoth JSON.parse error eka ei >> eya welakwimata if yoda check karai
+    if(selectSupplier.value !== "") {
+        let brands = getServiceRequest('/brand/getListBySupply/'+JSON.parse(selectSupplier.value).id);
+        fillDataIntoSelect(selectBrand, "Please Select Brand..!!", brands, "name");
+    }
 
    //in pasu meya supplier dropdown eka laga call karai
+}
+
+// define function for filter item by brand
+const filterItemByBrand = () => {
+    // select karana brand ta adala item tika load kara gannima
+    // brand value eka select nowee empty ("") nam error eya heki nisa if condition yodai
+    if(selectBrand.value !== "") {
+        // service request eka magin list eka laba ganima
+        let items = getServiceRequest('/item/getListByBrand/'+JSON.parse(selectBrand.value).id);
+        // code ekai name ekai dekama drop down ekak thula penwa ganima
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
+    } else {
+        // value eka empty nam empty array ekak load kirima
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", [], "itemcode", "itemname");
+    }
 }
 
 // define function for refresh inner form
@@ -480,11 +501,9 @@ const refreshPurchaseOrderInnerForm = () => {
     // ema nisa element tika clean kirima sidu karai
     // selectItem dynamic nisa clean nokarai
     // dynamic element refill kala yuthuya
-    // item dropdown ekata load wiya yuththa select karana supplierta adala item pamani
+    // item dropdown ekata load wiya yuththa select karana brand ekata adala item pamani
     // e sadaha item controller ekehi service eka hadai
-    let items = getServiceRequest('/item/alldata');
-    // code ekai name ekai dekama drop down ekak thula penwa ganima
-    fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
+    fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", [], "itemcode", "itemname");
 
     textUnitPrice.value = "";
     textQuantity.value = "";

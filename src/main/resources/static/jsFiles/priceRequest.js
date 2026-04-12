@@ -10,7 +10,7 @@ window.addEventListener("load", () => {
     refreshPriceRequestTable();
 
     //Call refresh form function
-    refreshPriceRequestForm(); 
+    refreshPriceRequestForm();
 
 });
 
@@ -61,47 +61,46 @@ const getItem = (dataob) => {
 
 // table ekehi status eka penwimata 
 const getPriceRequestStatus = (dataob) => {
-    if (dataob.pricelistrequeststatus_id.name == "Active") {
+    if (dataob.pricelistrequeststatus_id.name == "Completed") {
         return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Active"></i>'
-    } 
-    // if (dataob.pricelistrequeststatus_id.name == "pending") {
-    //     return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color:rgb(254, 174, 1);"></i>'
-    // }
-    if (dataob.pricelistrequeststatus_id.name == "In-Active") {
-        return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
-            '                                                title="In-Active"></i>'
+            '                                                title="Completed"></i>'
     }
+    if (dataob.pricelistrequeststatus_id.name == "Pending") {
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Pending"></i>'
+    }
+
+
 
 }
 
 // inner form button function area start
-const addSelectedItems=() => {
+const addSelectedItems = () => {
     // mehidee selected ekak thibunoth pamanak add wimata sakas karai neththan click kala pasu erros ei >> eya welakwimata if yoda liyai
     if (selectAllItems.value != "") {
-       // selected element eka veriable ekakata dama ganima
-    let selectedItem =JSON.parse(selectAllItems.value);
-    // ema element eka anith list ekata push kirima
-    priceRequest.items.push(selectedItem);
-    // ema dropdown eka load kirima
-    fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
-    // ema element eka thibu list eken iwath kirima
-    // e sadaha allItem let nowiya yuthuya
-    // map eka sadaha allitem.map walin eka item object ekak gena eya ema item eke id eka selected item id ekata samana wiya yuthuya >> elesa samana nam exit wenawa >> exit unoth allItem list eken splice karanna ona selected element eka
-    let extIndex = allItem.map(item=>item.id).indexOf(selectedItem.id);
-    // extIndex eka asamanai -1 nam allready exit wei
-    if (extIndex != -1) {
-        // extIndex,1 >> selected element eka idan eka element ekak makanna ona ewita selected eka ayath wei
-       allItem.splice(extIndex,1) 
-    }
-    fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
-    }else{
-       // error message eka show karanawa
-       window.alert("Please select an item to add!");
+        // selected element eka veriable ekakata dama ganima
+        let selectedItem = JSON.parse(selectAllItems.value);
+        // ema element eka anith list ekata push kirima
+        priceRequest.items.push(selectedItem);
+        // ema dropdown eka load kirima
+        fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
+        // ema element eka thibu list eken iwath kirima
+        // e sadaha allItem let nowiya yuthuya
+        // map eka sadaha allitem.map walin eka item object ekak gena eya ema item eke id eka selected item id ekata samana wiya yuthuya >> elesa samana nam exit wenawa >> exit unoth allItem list eken splice karanna ona selected element eka
+        let extIndex = allItem.map(item => item.id).indexOf(selectedItem.id);
+        // extIndex eka asamanai -1 nam allready exit wei
+        if (extIndex != -1) {
+            // extIndex,1 >> selected element eka idan eka element ekak makanna ona ewita selected eka ayath wei
+            allItem.splice(extIndex, 1)
+        }
+        fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
+    } else {
+        // error message eka show karanawa
+        window.alert("Please select an item to add!");
 
     }
 }
-const addAllItems=() => {
+const addAllItems = () => {
     // selected side eke list ekata all side eke siyalla add wiya yuthuya
     // for of ekak dama all side eke list eka read kala yuthuya
     for (const item of allItem) {
@@ -114,28 +113,28 @@ const addAllItems=() => {
     fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
 }
 
-const removeSelectedItems=() => {
+const removeSelectedItems = () => {
     // mehidee selected ekak thibunoth pamanak remove wimata sakas karai neththan click kala pasu erros ei >> eya welakwimata if yoda liyai
     if (selectSelectedItems.value != "") {
         // selected side eken aragena all side ekata add karanawa
-    // selected side eken remove kirima
-    let selectedItem =JSON.parse(selectSelectedItems.value);
-    allItem.push(selectedItem);
-    fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
+        // selected side eken remove kirima
+        let selectedItem = JSON.parse(selectSelectedItems.value);
+        allItem.push(selectedItem);
+        fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
 
-    let extIndex = priceRequest.items.map(item=>item.id).indexOf(selectedItem.id);
-    if (extIndex != -1) {
-        priceRequest.items.splice(extIndex,1) 
-    }
-    fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
-    }else{
-       // error message eka show karanawa
-       window.alert("Please select an item to remove!");
+        let extIndex = priceRequest.items.map(item => item.id).indexOf(selectedItem.id);
+        if (extIndex != -1) {
+            priceRequest.items.splice(extIndex, 1)
+        }
+        fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
+    } else {
+        // error message eka show karanawa
+        window.alert("Please select an item to remove!");
 
     }
 }
 
-const removeAllItems=() => {
+const removeAllItems = () => {
     // selected side list eka one by one read karala all paththata push kirima
     for (const item of priceRequest.items) {
         allItem.push(item);
@@ -146,6 +145,30 @@ const removeAllItems=() => {
     fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
 }
 // inner form button function area end
+
+const filterItemsBySupplier = () => {
+    if (priceRequest.supplier_id != null) {
+        // Clear selected items because they might not belong to the new supplier
+        priceRequest.items = [];
+        fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
+
+        let supplierItems = getServiceRequest('/item/getListBySupplier/' + priceRequest.supplier_id.id);
+
+        // Exclude items already selected in priceRequest.items
+        allItem = supplierItems.filter(item => {
+            return !priceRequest.items.some(di => di.id === item.id);
+        });
+
+        fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
+    } else {
+        allItem = [];
+        fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
+
+        priceRequest.items = [];
+        fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
+    }
+}
+
 
 const rowFormRefill = (dataob, rowIndex) => {
 
@@ -160,10 +183,13 @@ const rowFormRefill = (dataob, rowIndex) => {
     dateRequireDate.value = dataob.requireddate;
     selectPriceRequestStatus.value = JSON.stringify(dataob.pricelistrequeststatus_id);
     textNote.value = dataob.note;
-    
+
 
     // all side ekata me priceRequest ekata apply karan nethi items tika ganima 
-    allItem = getServiceRequest('/items/getListWithoutRequest/' + dataob.id);
+    let supplierItems = getServiceRequest('/item/getListBySupplier/' + dataob.supplier_id.id);
+    allItem = supplierItems.filter(item => {
+        return !dataob.items.some(di => di.id === item.id);
+    });
     fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
 
     // inner form eka selected paththa fill kara ganima
@@ -182,8 +208,8 @@ const rowFormRefill = (dataob, rowIndex) => {
     console.log("oldPriceRequest", oldPriceRequest);
 
     //disable submit button
-     submitButton.style.visibility = "hidden";
-     updateButton.style.visibility = "visible";
+    submitButton.style.visibility = "hidden";
+    updateButton.style.visibility = "visible";
 }
 
 
@@ -218,7 +244,7 @@ const priceRequestRowDelete = (dataob, rowIndex) => {
 
     }
 }
- // table eka thula athi view button ekata click kalaama view modal eka open karanawa   
+// table eka thula athi view button ekata click kalaama view modal eka open karanawa   
 const priceRequestRowPrint = (dataob, rowIndex) => {
     console.log("View", dataob, rowIndex);
     // html wala athi modal ekak open weema
@@ -245,7 +271,7 @@ const priceRequestRowPrint = (dataob, rowIndex) => {
 
     });
     document.getElementById("selectedItemsView").textContent = selectedItems;
-    
+
     $("#offcanvasBottomPriceRequestView").offcanvas("show"); // show the offcanvas
 }
 //print offcanvas model eka thula athi print button eka function eka
@@ -291,14 +317,14 @@ const refreshPriceRequestForm = () => {
     formPriceRequest.reset();
 
     //validation colors iwath kirima
-    setDefault([selectSupplier,dateRequireDate,selectPriceRequestStatus,textNote]);
+    setDefault([selectSupplier, dateRequireDate, selectPriceRequestStatus, textNote]);
 
     suppliers = getServiceRequest("/supplier/alldata");
 
     fillDataIntoSelect(selectSupplier, 'Select Supplier...!!!', suppliers, 'suppliername');
 
     // dynamic element refill kala yuthuya
-    allItem = getServiceRequest('/item/alldata')
+    allItem = [];
     let priceRequestStatuses = getServiceRequest('/priceRequestStatus/alldata')
 
     fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
@@ -317,7 +343,7 @@ const refreshPriceRequestForm = () => {
 }
 
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
-const checkPriceRequestFormErrors = () =>{
+const checkPriceRequestFormErrors = () => {
     let errors = "";
 
     if (priceRequest.supplier_id == null) {
@@ -334,7 +360,7 @@ const checkPriceRequestFormErrors = () =>{
     return errors;
 }
 
-    //PriceRequest form submit event function 
+//PriceRequest form submit event function 
 const buttonPriceRequestSubmit = () => {
     console.log('Add Price Request', priceRequest);
 
@@ -343,7 +369,7 @@ const buttonPriceRequestSubmit = () => {
     if (errors == "") {
         //no errors get user confirmation
         let userConfirm = window.confirm("Are you sure to add following supplier...?" +
-            "\n Required date : " + priceRequest.requireddate 
+            "\n Required date : " + priceRequest.requireddate
         );
         if (userConfirm) {
             // call post service

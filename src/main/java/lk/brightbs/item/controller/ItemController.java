@@ -214,6 +214,10 @@ public class ItemController {
 		return itemDao.getLisByBrand(brandid);
 	}
 
+	@GetMapping(value = "/item/getListBySupplier/{supplierid}" , produces = "application/json")
+	public List<Item> getListBySupplier(@PathVariable("supplierid") Integer supplierid){
 
+		return itemDao.getListBySupplier(supplierid);
+	}
 
 }

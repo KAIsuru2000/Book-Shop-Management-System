@@ -553,7 +553,7 @@ const callingNameValidator = (callingNameElement) => {
 
     // Navigate to the parent element and then to the associated span
     // validation wala colour eka laba deema sadaha
-    spanElement = textCallingName.previousElementSibl
+    spanElement = textCallingName.previousElementSibling
     const callingNameValue = callingNameElement.value;
     const fullNameValue = textFullName.value;
     let fullNameParts = fullNameValue.split(" ");

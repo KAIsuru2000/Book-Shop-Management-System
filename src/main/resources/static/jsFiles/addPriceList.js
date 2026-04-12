@@ -410,6 +410,22 @@ const refreshAddPriceListForm = () => {
     btnaddPriceListSubmit.classList.remove("d-none");
 }
 
+// supplier (Price List Request Number) select karama eata adala items drop down ekata filter kirimata function eka
+const filterItemByPriceRequest = () => {
+    // mehi addPriceList.pricelistrequest_id null nethnam pamanak (e kiyanne supplier form eken select kara ethnam) pahatha deya sidhu wiya yuthuya
+    if (addPriceList.pricelistrequest_id != null) {
+        // select kala price list request eke athi items tika array ekakata gani
+        let priceRequestItems = addPriceList.pricelistrequest_id.items;
+        
+        // mema item list eka 'selectItem' element ekata fill kirimata code ekai name ekai dekama drop down ekak thula penwana function eka pawichchi karai
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", priceRequestItems, "itemcode", "itemname");
+    } else {
+        // supplier select kara nethnam item drop down eka empty kara thabimata empty array ekak add karai
+        let items = [];
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
+    }
+}
+
 // define function for refresh inner form
 const refreshAddPriceListInnerForm = () => {
 
@@ -421,10 +437,8 @@ const refreshAddPriceListInnerForm = () => {
     // formPurchaseOrder.reset();
     // ema nisa element tika clean kirima sidu karai
     // selectItem dynamic nisa clean nokarai
-    // dynamic element refill kala yuthuya
-    let items = getServiceRequest('/item/alldata');
-    // code ekai name ekai dekama drop down ekak thula penwa ganima
-    fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
+    // default washayen selectItem eka clear kara thabai ho supplier select kara ethnam eata adala item load kirimata function eka keda wai
+    filterItemByPriceRequest();
 
     textUnitPrice.value = "";
     numberMinQuantity.value = "";
@@ -550,12 +564,13 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
 
     // Loop through the data and extract supplier names
     dataList.forEach(dataOb => {
-        // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
+        // Only include suppliers with Pending price list requests
+        if (dataOb.pricelistrequeststatus_id && dataOb.pricelistrequeststatus_id.name === "Pending") {
             const option = document.createElement("option");
             option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-            option.innerText = dataOb.supplier_id.suppliername;
+            option.innerText = dataOb.requestno + " - " + dataOb.supplier_id.suppliername;
             parentId.appendChild(option);
-        // }
+        }
     });
 };
 

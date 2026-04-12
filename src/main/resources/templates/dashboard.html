@@ -8,6 +8,261 @@
     <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
     <!-- nav bar end -->
 
+    <!-- offcanvas button area start -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-2">
+            <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshCustomerPaymentForm()">
+                <img src="/image/quick%20payment%20icon.png" alt="icon" width="60" height="60"> <br>
+                Quick Payment
+            </button>
+        </div>
+        <div class="col-9"></div>
+    </div>
+    <!-- offcanvas button area end -->
+
+    <!-- offcanvas area start -->
+    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+         data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-body small">
+
+            <!-- form area start -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
+                        <form onsubmit="return false"  id="formCustomerPayment">
+
+                            <!-- required mark and offcanvas close button start -->
+                            <div class="row">
+
+                                <!-- offcanvas close button start -->
+                                <div class="col-1">
+                                    <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                </div>
+                                <!-- offcanvas close button close -->
+
+                                <div class="col-9"></div>
+
+                                <!-- required mark start -->
+                                <div class="col-1">
+                                    <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                </div>
+                                <!-- required mark end -->
+
+                                <div class="col-1"></div>
+
+                            </div>
+                            <!-- required mark and offcanvas close button end -->
+
+                            <!-- Customer name area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <label class="input-group-text lablBg" for="selectCusName"> Customer Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <span class="fw-bold text-danger">*</span></label>
+                                        <select class="form-select" id="selectCusName"
+                                                onchange="selectDainamicElementValidater(this , 'customerPayment', 'invoice_id')"
+                                                onclick="selectDainamicElementValidater(this , 'customerPayment', 'invoice_id')"
+                                                data-bs-toggle="tooltip" title="Select the customer Name correctly here.">
+                                            <option selected disabled>Select Customer Name</option>
+                                            <option value=""></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Customer name area end-->
+
+                            <!-- Payment Method area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Payment Method &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                        <input type="text" placeholder="
+                                            Enter Payment Method" class="form-control" aria-label="Sizing example input"
+                                               aria-describedby="inputGroup-sizing-default" id="textPaymentMethod" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'paymentmethod')" onclick="textValidator(this, '^.*$', 'customerPayment', 'paymentmethod')" data-bs-toggle="tooltip"
+                                               title="Enter the customer's Payment Method correctly here.">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Payment Method area end-->
+
+                            <!-- Invoice Amount area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Invoice Amount
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                        <input type="text" placeholder="
+                                            Enter Invoice Amount" class="form-control" aria-label="Sizing example input"
+                                               aria-describedby="inputGroup-sizing-default" id="textInvoiceAmount" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'invoiceamount')" onclick="textValidator(this, '^.*$', 'customerPayment', 'invoiceamount')" data-bs-toggle="tooltip"
+                                               title="Enter the customer's Invoice Amount correctly here.">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Invoice Amount area end-->
+
+                            <!-- Paid Amount area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Paid Amount
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                        <input type="text" placeholder="
+                                            Enter Paid Amount" class="form-control" aria-label="Sizing example input"
+                                               aria-describedby="inputGroup-sizing-default" id="textPaidAmount" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'paidamount')" onclick="textValidator(this, '^.*$', 'customerPayment', 'paidamount')" data-bs-toggle="tooltip"
+                                               title="Enter the customer's Paid Amount correctly here.">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Paid Amount area end-->
+
+                            <!-- Balance Amount area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Balance Amount
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                        <input type="text" placeholder="
+                                            Enter Balance Amount" class="form-control" aria-label="Sizing example input"
+                                               aria-describedby="inputGroup-sizing-default" id="textBalanceAmount" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'balanceamount')" onclick="textValidator(this, '^.*$', 'customerPayment', 'balanceamount')" data-bs-toggle="tooltip"
+                                               title="Enter the customer's Balance Amount correctly here.">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Balance Amount area end-->
+
+                            <!-- Card Type area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Card Type
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                                <span class="fw-bold text-danger">*</span></span>
+                                        <input type="text" placeholder="
+                                            Enter Card Type" class="form-control" aria-label="Sizing example input"
+                                               aria-describedby="inputGroup-sizing-default" id="textCardType" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'cardtype')" onclick="textValidator(this, '^.*$', 'customerPayment', 'cardtype')" data-bs-toggle="tooltip"
+                                               title="Enter the customer's Card Type correctly here.">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Card Type area end-->
+
+                            <!-- Reference No area start-->
+                            <div class="row mt-3">
+
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Reference No &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                        <input type="text" placeholder="
+                                            Enter Reference No" class="form-control" aria-label="Sizing example input"
+                                               aria-describedby="inputGroup-sizing-default" id="textReferenceNo" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'referenceno')" onclick="textValidator(this, '^.*$', 'customerPayment', 'referenceno')" data-bs-toggle="tooltip"
+                                               title="Enter the Reference No correctly here.">
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+
+                            </div>
+                            <!-- Reference No area end-->
+
+                            <!--Status  start-->
+                            <div class="row mt-3">
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <label class="input-group-text lablBg" for="selectCusPaymentStatus"> Customer Payment Status:
+                                            <span class="fw-bold text-danger">*</span></label>
+                                        <select class="form-select" id="selectCusPaymentStatus"
+                                                onchange="selectDainamicElementValidater(this , 'customerPayment', 'customerpaymentstatus_id')"
+                                                onclick="selectDainamicElementValidater(this , 'customerPayment', 'customerpaymentstatus_id')"
+                                                data-bs-toggle="tooltip" title="Select the customer
+                                            Payment Status correctly here.">
+                                            <option selected disabled>Select Customer Payment Status</option>
+                                            <option value=""></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3"></div>
+                            </div>
+                            <!--Status  end-->
+                            <!-- button row start-->
+                            <div class="row mt-3 mb-4">
+
+                                <div class="col-1"></div>
+
+                                <!-- clear btn area start -->
+                                <div class="col-2">
+                                    <button type="button" class="btn btnClear" onclick="clearCustomerForm()">
+                                        <i class="fa-solid fa-eraser"></i>
+                                        Clear
+                                    </button>
+                                </div>
+                                <!-- clear btn area end -->
+
+                                <div class="col-5"></div>
+
+                                <!-- update button area start -->
+                                <div class="col-2">
+                                    <button type="button" class=" btn btnUpdate" id="btnCusUpdate" onclick="buttonCustomerUpdate()">
+                                        <i class="fa-solid fa-file-pen"></i>
+                                        Update
+                                    </button>
+                                </div>
+                                <!-- update button area end -->
+
+                                <!-- Add btn area start -->
+                                <div class="col-2">
+                                    <button type="button" class=" btn btnAdd" id="btnCusSubmit" onclick="buttonCusSubmit()">
+                                        <!-- buttonEmpSubmit function eka (employee.js)-->
+                                        <i class="fa-solid fa-file-circle-plus"></i>
+                                        Add
+                                    </button>
+                                </div>
+                                <!-- Add btn area end -->
+
+                            </div>
+                            <!-- button row end -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- offcanvas area end -->
+
 </body>
 
 </html>
