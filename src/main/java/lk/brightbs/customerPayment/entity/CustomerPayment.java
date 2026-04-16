@@ -89,11 +89,11 @@ public class CustomerPayment {
     private Integer deleteuserid;
    
     @ManyToOne
-    @JoinColumn(name = "customerpaymentstatus_id" , referencedColumnName = "id")
+    @JoinColumn(name = "customerpaymentstatus_id" , referencedColumnName = "id", foreignKey = @jakarta.persistence.ForeignKey(name = "fk_payment_status"))
     private CustomerPaymentStatus customerpaymentstatus_id ;
     
     @ManyToOne
-    @JoinColumn(name = "invoice_id" , referencedColumnName = "id")
+    @JoinColumn(name = "invoice_id" , referencedColumnName = "id", foreignKey = @jakarta.persistence.ForeignKey(name = "fk_customerpayment_invoice"))
     private Invoice invoice_id ; 
 
 

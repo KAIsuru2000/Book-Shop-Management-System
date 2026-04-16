@@ -247,23 +247,23 @@
                                                 </div>
                                             </div>
                                             <!-- Item area end-->
-                                            <!-- Unit Price area start-->
+                                            <!-- Purchase Price area start-->
                                             <div class="col-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text lablBg"
-                                                        id="inputGroup-sizing-default">Unit Price : <span
+                                                        id="inputGroup-sizing-default">Purchase Price : <span
                                                             class="fw-bold text-danger">*</span></span>
-                                                    <input placeholder="Enter Unit Price" type="text" class="form-control"  aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
+                                                    <input placeholder="Enter Purchase Price" type="text" class="form-control"  aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="textPurchasePrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'uniteprice')"
-                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'uniteprice')"
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'purchaseprice')"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'purchaseprice')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Unit Price correctly here.">
+                                                        title="Enter the Purchase Price correctly here.">
                                                 </div>
                                             </div>
 
-                                            <!-- Unit Price area end-->
+                                            <!-- Purchase Price area end-->
                                         </div>
                                         <!-- Item and Unit Price area end -->
                                         <!-- Quantity and Line Price area start -->
@@ -343,6 +343,63 @@
 
                                         </div>
                                         <!--Free Quantity and Total Quantity area end --> 
+                                        
+                                        <!-- Profit Rate and Sales Price area start -->
+                                        <div class="row mt-4">
+                                            <!-- Profit Rate area start -->
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text lablBg">Profit Ratio :
+                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Enter Profit Ratio" aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="textProfitRatio"
+                                                        required
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'profitrate')"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'profitrate')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Enter the Profit Ratio correctly here.">
+                                                </div>
+                                            </div>
+                                            <!-- Profit Rate area end -->
+                                            <!-- Sales Price area start -->
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text lablBg">Sales Price :
+                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Enter Sales Price" aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="textSalesPrice"
+                                                        required
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'salesprice')"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'salesprice')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Enter the Sales Price correctly here.">
+                                                </div>
+                                            </div>
+                                            <!-- Sales Price area end -->
+                                        </div>
+                                        <!-- Profit Rate and Sales Price area end -->
+                                        <!-- Discount Rate area start -->
+                                        <div class="row mt-4">
+                                            <!-- Discount Rate area start -->
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text lablBg">Discount Ratio :
+                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="Enter Discount Ratio" aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="textDiscountRatio"
+                                                        required
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'discountrate')"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'discountrate')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Enter the Discount Ratio correctly here.">
+                                                </div>
+                                            </div>
+                                            <!-- Discount Rate area end -->
+                                        </div>
+                                        <!-- Discount Rate area end -->
                                         <!-- inner form area end -->
 
 
