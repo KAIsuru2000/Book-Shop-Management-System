@@ -7,7 +7,8 @@ const refreshInventoryTable = () => {
     let inventoryData = getServiceRequest("/inventory/alldata");
 
     let propertyList = [
-        { propertyName: generateItemName, dataType: "function" },
+        { propertyName: getItemCode, dataType: "function" },
+        { propertyName: getItemName, dataType: "function" },
         { propertyName: "salesprice", dataType: "decimal" },
         { propertyName: "avalablequantity", dataType: "string" },
         { propertyName: "totalquantity", dataType: "string" }
@@ -23,6 +24,10 @@ const refreshInventoryTable = () => {
     $('#tableInventory').DataTable();
 };
 
-const generateItemName = (dataob) => {
-    return dataob.item_id.itemcode + " - " + dataob.item_id.itemname;
+const getItemCode = (dataob) => {
+    return dataob.item_id.itemcode;
+};
+
+const getItemName = (dataob) => {
+    return dataob.item_id.itemname;
 };

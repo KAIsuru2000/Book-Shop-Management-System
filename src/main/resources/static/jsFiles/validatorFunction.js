@@ -97,12 +97,27 @@ const selectDainamicElementValidater = (element, object, property) => {
         // dynamic ekaka value eka java script object ekak bawata change kara gathanyuthuya
         ob[property] = JSON.parse(elementValue); 
     } else {
-        element.style.borderBottom = "4px solid red";
-        prevElement.style.backgroundColor = "red";
-        element.classList.add("is-invalid");
-        element.classList.remove("is-valid");
-        //employee object ekata null diima
-        ob[property] = null;
+        if (element.required) {
+            element.style.borderBottom = "4px solid red";
+            prevElement.style.backgroundColor = "red";
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+            //employee object ekata null diima
+            ob[property] = null;
+        } else if (element.classList.contains("optional")) {
+            element.style.borderBottom = "1px solid #ced4da";
+            prevElement.style.backgroundColor = "black"; // matching the original textValidator normal state
+            element.classList.remove("is-invalid");
+            element.classList.remove("is-valid");
+            ob[property] = null;
+        } else {
+            element.style.borderBottom = "4px solid red";
+            prevElement.style.backgroundColor = "red";
+            element.classList.add("is-invalid");
+            element.classList.remove("is-valid");
+            //employee object ekata null diima
+            ob[property] = null;
+        }
     }
 }
 

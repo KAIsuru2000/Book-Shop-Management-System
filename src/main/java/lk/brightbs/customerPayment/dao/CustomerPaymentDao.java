@@ -13,6 +13,6 @@ public interface CustomerPaymentDao extends JpaRepository<CustomerPayment, Integ
     Customer getByEmail(@Param("email") String email);
 
     //querry for genarate ext customer number
-    @Query(value = "SELECT coalesce(concat('CP' , lpad(substring(max(i.billno),3) +1 , 5 , 0)) , 'CP00001')  FROM brightbookshop.customerpayment as CP;" , nativeQuery = true)  String getNextBillNo();
+    @Query(value = "SELECT coalesce(concat('CP' , lpad(substring(max(CP.billno),3) +1 , 5 , 0)) , 'CP00001')  FROM brightbookshop.customerpayment as CP;" , nativeQuery = true)  String getNextBillNo();
 
 }

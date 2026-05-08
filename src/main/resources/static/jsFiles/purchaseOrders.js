@@ -224,7 +224,7 @@ const purchaseOrderView = (ob, index) => {
 const buttonPrintRow = () => {
 
     //aluth window ekak open kara ganima
-    let newWindow = window.open();
+    const newWindow = window.open();
     //ema window ekata title ekak demima
     //title eke html code tika venama verible ekakata dama ganima
     let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/common.css'></head>" + "<body style='background-color:white;  justify-content: center; display: flex;'>" + tableView.outerHTML +
@@ -268,7 +268,7 @@ const buttonPurchaseOrderSubmit = () => {
 
     //check form error for required element
     let errors = checkFormError();
-    if (errors == "") {
+    if (errors === "") {
         //no errors get user confirmation
         let userConfirm = window.confirm("Are you sure to add following Purchase Order...?" +
             "\n Supplier name : " + purchaseOrder.supplier_id.suppliername +

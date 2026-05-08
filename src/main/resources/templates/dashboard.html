@@ -79,11 +79,168 @@
                             </div>
                             <!-- Customer name area end-->
 
-                            <!-- Payment Method area start-->
+                            <!-- inner form and table start -->
                             <div class="row mt-3">
+                                <div class="col-2"></div>
+                                <div class="col-8">
+                                    <!-- Item and Unit Price area start -->
+                                    <div class="row">
+                                        <!-- Item area start-->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <label class="input-group-text lablBg" for="selectItem">Item
+                                                    &nbsp; &nbsp; &nbsp; :
+                                                    <span class="fw-bold text-danger">*</span></label>
+                                                <select class="form-select" id="selectItem"
+                                                    onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                                    onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Select the Item correctly here.">
+                                                    <option selected disabled>Select Item</option>
+                                                    <option value=""></option>
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Item area end-->
+                                        <!-- Unit Price area start-->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg"
+                                                    id="inputGroup-sizing-default">Unit Price : <span
+                                                        class="fw-bold text-danger">*</span></span>
+                                                <input placeholder="Enter Unit Price" type="text" class="form-control"  aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Unit Price correctly here.">
+                                            </div>
+                                        </div>
 
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                        <!-- Unit Price area end-->
+                                    </div>
+                                    <!-- Item and Unit Price area end -->
+                                    <!-- Discounted Price and Quantity area start -->
+                                    <div class="row mt-4">
+                                        <!-- Discounted Price area start -->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg"
+                                                    id="inputGroup-sizing-default">Discount Price : <span
+                                                        class="fw-bold text-danger">*</span></span>
+                                                <input placeholder="Enter Discount Price" type="text" class="form-control"  aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textDiscountedPrice"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Discount Price correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Discounted Price area end -->
+                                        <!-- Quantity area start -->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg">Quantity :
+                                                    <span class="fw-bold text-danger">*</span></span>
+                                                <input type="number" class="form-control"
+                                                    placeholder="Enter Quantity" aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textQuantity"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Quantity correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Quantity area end -->
+                                    </div>
+                                    <!-- Discounted Price and Quantity area end -->
+                                    <!-- Line Price area start -->
+                                    <div class="row mt-4">
+                                        <!-- Line Price area start -->
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <span class="input-group-text lablBg">Line
+                                                    Price :
+                                                    <span class="fw-bold text-danger">*</span></span>
+                                                <input type="number" class="form-control"
+                                                    placeholder="Enter Line Price" aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Line Price correctly here.">
+                                            </div>
+                                        </div>
+                                        <!-- Line Price area end -->
+                                        <div class="col-6"></div>
+                                    </div>
+                                    <!-- Line Price area end -->
+
+                                    <!--inner form button row start -->
+                                    <div class="row mt-4">
+
+                                        <div class="col-1"></div>
+
+                                        <!-- clear btn area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="btnInnerClear" class="btn btnClear">
+                                                <i class="fa-solid fa-eraser"></i>
+                                                Clear
+                                            </button>
+                                        </div>
+                                        <!-- clear btn area end -->
+
+                                        <div class="col-5"></div>
+
+
+                                        <!-- Add btn area start -->
+                                        <div class="col-3">
+                                            <button type="button" id="btnPurchaseOrderItemSubmit"
+                                                class=" btn btnAdd" onclick="buttonPurchaseOrderItemSubmit()">
+                                                <i class="fa-solid fa-file-circle-plus"></i>
+                                                Add
+                                            </button>
+                                        </div>
+                                        <!-- Add btn area end -->
+
+                                    </div>
+                                    <!--inner form button row end -->
+                                    <!--inner table row start -->
+                                    <div class="row mt-4 ms-1 me-1 mb-4">
+                                        <div class="col-12 divTable">
+                                            <div class="container-fluid">
+                                                <table class="table" id="tableInner">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Item Name</th>
+                                                            <th>Unit Price(Rs.)</th>
+                                                            <th>Quantity</th>
+                                                            <th>Line Price(Rs.)</th>
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableInnerBody">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--inner table row end -->
+                                </div>
+                                <div class="col-2"></div>
+                            </div>
+                            <!-- inner form and table end -->                            <!-- Payment Method and Invoice Amount area start-->
+                            <div class="row mt-3">
+                                <div class="col-1"></div>
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">Payment Method &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span></span>
@@ -93,16 +250,7 @@
                                                title="Enter the customer's Payment Method correctly here.">
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-
-                            </div>
-                            <!-- Payment Method area end-->
-
-                            <!-- Invoice Amount area start-->
-                            <div class="row mt-3">
-
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                             <span class="input-group-text lablBg" id="inputGroup-sizing-default">Invoice Amount
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
@@ -113,16 +261,14 @@
                                                title="Enter the customer's Invoice Amount correctly here.">
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-
+                                <div class="col-1"></div>
                             </div>
-                            <!-- Invoice Amount area end-->
+                            <!-- Payment Method and Invoice Amount area end-->
 
-                            <!-- Paid Amount area start-->
+                            <!-- Paid Amount and Balance Amount area start-->
                             <div class="row mt-3">
-
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                <div class="col-1"></div>
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">Paid Amount
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
@@ -133,16 +279,7 @@
                                                title="Enter the customer's Paid Amount correctly here.">
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-
-                            </div>
-                            <!-- Paid Amount area end-->
-
-                            <!-- Balance Amount area start-->
-                            <div class="row mt-3">
-
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">Balance Amount
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
@@ -153,16 +290,14 @@
                                                title="Enter the customer's Balance Amount correctly here.">
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-
+                                <div class="col-1"></div>
                             </div>
-                            <!-- Balance Amount area end-->
+                            <!-- Paid Amount and Balance Amount area end-->
 
-                            <!-- Card Type area start-->
+                            <!-- Card Type and Reference No area start-->
                             <div class="row mt-3">
-
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                <div class="col-1"></div>
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">Card Type
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
@@ -173,16 +308,7 @@
                                                title="Enter the customer's Card Type correctly here.">
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-
-                            </div>
-                            <!-- Card Type area end-->
-
-                            <!-- Reference No area start-->
-                            <div class="row mt-3">
-
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">Reference No &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
                                                 <span class="fw-bold text-danger">*</span></span>
@@ -192,15 +318,14 @@
                                                title="Enter the Reference No correctly here.">
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
-
+                                <div class="col-1"></div>
                             </div>
-                            <!-- Reference No area end-->
+                            <!-- Card Type and Reference No area end-->
 
                             <!--Status  start-->
                             <div class="row mt-3">
-                                <div class="col-3"></div>
-                                <div class="col-6">
+                                <div class="col-1"></div>
+                                <div class="col-5">
                                     <div class="input-group mb-3">
                                         <label class="input-group-text lablBg" for="selectCusPaymentStatus"> Customer Payment Status:
                                             <span class="fw-bold text-danger">*</span></label>
@@ -215,7 +340,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-3"></div>
+                                <div class="col-6"></div>
                             </div>
                             <!--Status  end-->
                             <!-- button row start-->
@@ -232,16 +357,7 @@
                                 </div>
                                 <!-- clear btn area end -->
 
-                                <div class="col-5"></div>
-
-                                <!-- update button area start -->
-                                <div class="col-2">
-                                    <button type="button" class=" btn btnUpdate" id="btnCusUpdate" onclick="buttonCustomerUpdate()">
-                                        <i class="fa-solid fa-file-pen"></i>
-                                        Update
-                                    </button>
-                                </div>
-                                <!-- update button area end -->
+                                <div class="col-7"></div>
 
                                 <!-- Add btn area start -->
                                 <div class="col-2">

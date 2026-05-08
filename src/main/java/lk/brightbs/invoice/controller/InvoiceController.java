@@ -57,7 +57,7 @@ public class InvoiceController {
 		return invoiceView;
 	}
 
-      //load invoice all data
+   //load invoice all data
    @GetMapping(value = "/invoice/alldata" , produces = "application/json")
    public List<Invoice> findAllData(){// check user authentication and authorization
 		// log una kena saoya ganimata authentication object eka ganima
@@ -76,6 +76,17 @@ public class InvoiceController {
 			//empty array list ekak yawanawa
 			return new ArrayList<>();
 		}
+   }
+
+   @GetMapping(value = "/invoice/pending" , produces = "application/json")
+   public List<Invoice> findPendingData(){
+       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+       Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "CUSTOMERPAYMENT");
+       if (userPrivilege.getSel()) {
+           return invoiceDao.getPendingInvoices();
+       } else {
+           return new ArrayList<>();
+       }
    }
 
 //    //define post mapping

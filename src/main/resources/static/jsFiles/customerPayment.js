@@ -7,51 +7,52 @@ window.addEventListener("load", () => {
     $('[data-bs-toggle="tooltip"]').tooltip();
 
     //call table refresh function for refresh table
-    refreshCustomerTable();
+    refreshCustomerPaymentTable();
 
     //Call refresh form function
-    refreshCustomerForm();
+    refreshCustomerPaymentForm();
 
 })
 
 //create function for refresh table
-const refreshCustomerTable = () => {
+const refreshCustomerPaymentTable = () => {
+    const customerPayments = getServiceRequest("/customerPayment/alldata");
 
-    //controller wala hadapu service eka magin data array eka laba ganima
-    const customers = getServiceRequest("/customer/alldata");
-
-    //create display property list
-    //data types
-    //string => string / data / number
-    //function => object / array / boolean
     displayPropertyList = [
-        //function name ekak add karai call kirimak sidu nowe
-        
-        { dataType: 'string', propertyName: 'regno' },
-        { dataType: 'string', propertyName: 'fullname' },
-        { dataType: 'string', propertyName: 'mobileno' },
-        { dataType: 'string', propertyName: 'email' },
-        { dataType: 'function', propertyName: getCustomerStatus }
+        { dataType: 'string', propertyName: 'billno' },
+        { dataType: 'function', propertyName: getCustomerName },
+        { dataType: 'string', propertyName: 'paymentmethod' },
+        { dataType: 'string', propertyName: 'invoiceamount' },
+        { dataType: 'string', propertyName: 'paidamount' },
+        { dataType: 'string', propertyName: 'balanceamount' },
+        { dataType: 'function', propertyName: getCustomerPaymentStatus }
     ];
 
-    // call tablefill function
-    fillDataIntoTable(tableCustomerBody, customers, displayPropertyList, customerRowFormRefill, customerRowDelete, customerRowPrint, "#offcanvasBottom");
-
-    //call jquerry data table
-    $('#tableCustomer').dataTable();
+    fillDataIntoTable(tableCustomerPaymentBody, customerPayments, displayPropertyList, customerPaymentRowFormRefill, customerPaymentRowDelete, customerPaymentRowPrint, "#offcanvasBottom");
+    $('#tableCustomerPayment').dataTable();
 }
 
-// table ekehi status eka penwimata 
-const getCustomerStatus = (dataob) => {
-    if (dataob.customerstatus_id.name == "Active") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Active"></i>'
-    } else {
-        return '<i class="fa-solid fa-circle-xmark fa-beat fa-xl" style="color: #fe0101;" data-bs-toggle="tooltip"\n' +
-            '                                                title="In-Active"></i>'
+const getCustomerName = (dataob) => {
+    if (dataob.invoice_id != null && dataob.invoice_id.customer_id != null) {
+        return dataob.invoice_id.customer_id.fullname;
     }
-
+    return "-";
 }
+
+const getCustomerPaymentStatus = (dataob) => {
+    if (dataob.customerpaymentstatus_id != null) {
+        if (dataob.customerpaymentstatus_id.name == "Completed") {
+            return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip" title="Completed"></i>';
+        } else {
+            return '<p>'+dataob.customerpaymentstatus_id.name+'</p>';
+        }
+    }
+    return "-";
+}
+
+const customerPaymentRowFormRefill = (dataob, rowIndex) => {}
+const customerPaymentRowDelete = (dataob, rowIndex) => {}
+const customerPaymentRowPrint = (dataob, rowIndex) => {}
 
 const customerRowFormRefill = (dataob, rowIndex) => {
 
@@ -172,48 +173,70 @@ const buttonPrintRow = () => {
     }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
 }
 
-const refreshCustomerForm = () => {
+const refreshCustomerPaymentForm = () => {
 
-    customer = new Object();
+    customerPayment = new Object();
 
-    formCustomer.reset();
+    formCustomerPayment.reset();
 
-    //validation colors iwath kirima
-    setDefault([textFullName, telMobil, inputEmail, selectCusStatus, textNote]);
+    // validation colors iwath kirima
+    setDefault([selectCusName, textPaymentMethod, textInvoiceAmount, textPaidAmount, textBalanceAmount, textCardType, textReferenceNo, selectCusPaymentStatus]);
+
+    // get pending invoices
+    let pendingInvoices = getServiceRequest('/invoice/pending');
+    
+    // custom fill data for selectCusName to display customer name and invoice no
+    selectCusName.innerHTML = "";
+    let optionMsgEs = document.createElement("option");
+    optionMsgEs.value = "";
+    optionMsgEs.selected = "selected";
+    optionMsgEs.disabled = "disabled";
+    optionMsgEs.innerText = "Select Customer Name";
+    selectCusName.appendChild(optionMsgEs);
+
+    pendingInvoices.forEach(invoice => {
+        let option = document.createElement("option");
+        option.value = JSON.stringify(invoice);
+        // show customer name + invoice no
+        option.innerText = invoice.customer_id.fullname + " (" + invoice.invoiceno + ")";
+        selectCusName.appendChild(option);
+    });
 
     // dynamic element refill kala yuthuya
-    let customerStatus = getServiceRequest('/customerStatus/alldata')
-    
-    fillDataIntoSelect(selectCusStatus, "Please Select Customer Status..!", customerStatus, "name");
-    // status eka form eka load wana wita select wi thibimata
-    // selected value eka string walin ena nisa stringify kara gani
-    selectCusStatus.value = JSON.stringify(customerStatus[0]);
-    // ema value eka newatha object ekata set kala yuththa object format ekeni
-    customer.customerstatus_id = JSON.parse(selectCusStatus.value);
-    // status field eka sadaha validation colour eka laba deema
-    prevElementCusStatus = selectCusStatus.previousElementSibling;
-    selectCusStatus.style.borderBottom = "4px solid green";
-    prevElementCusStatus.style.backgroundColor = "green";
-    selectCusStatus.classList.remove("is-invalid");
-    selectCusStatus.classList.add("is-valid");
+    let customerPaymentStatus = getServiceRequest('/customerPaymentStatus/alldata')
+    if(customerPaymentStatus != null && customerPaymentStatus.length > 0) {
+        fillDataIntoSelect(selectCusPaymentStatus, "Please Select Customer Payment Status..!", customerPaymentStatus, "name");
+    }
 }
 
+//form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
 const checkFormError = () => {
     let errors = "";
 
-    if (customer.fullname == null) {
-        errors = errors + "Please Enter valid Full Name...! \n";
+    if (customerPayment.invoice_id == null) {
+        errors = errors + "Please Select a Customer/Invoice...! \n";
     }
-
-    if (customer.email == null) {
-        errors = errors + "Please Enter valid email...! \n";
+    if (customerPayment.paymentmethod == null) {
+        errors = errors + "Please Enter Payment Method...! \n";
     }
-    if (customer.mobileno == null) {
-        errors = errors + "Please Enter valid mobile no...! \n";
+    if (customerPayment.invoiceamount == null) {
+        errors = errors + "Please Enter Invoice Amount...! \n";
     }
-    if (customer.customerstatus_id == null) {
-        errors = errors + "Please Enter valid customer status...! \n";
+    if (customerPayment.paidamount == null) {
+        errors = errors + "Please Enter Paid Amount...! \n";
+    }
+    if (customerPayment.balanceamount == null) {
+        errors = errors + "Please Enter Balance Amount...! \n";
+    }
+    if (customerPayment.cardtype == null) {
+        errors = errors + "Please Enter Card Type...! \n";
+    }
+    if (customerPayment.referenceno == null) {
+        errors = errors + "Please Enter Reference No...! \n";
+    }
+    if (customerPayment.customerpaymentstatus_id == null) {
+        errors = errors + "Please Select Customer Payment Status...! \n";
     }
 
     return errors;
@@ -221,35 +244,32 @@ const checkFormError = () => {
 
 //form submit event function 
 const buttonCusSubmit = () => {
-    console.log('Add Customer', customer);
+    console.log('Add Customer Payment', customerPayment);
 
     //check form error for required element
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following customer...?" +
-            "\n Customer full name : " + customer.fullname +
-            "\n Customer email : " + customer.email +
-            "\n Customer mobileno : " + customer.mobileno +
-            "\n Customer status : " + customer.customerstatus_id.name
+        let userConfirm = window.confirm("Are you sure to add following customer payment...?" +
+            "\n Customer : " + customerPayment.invoice_id.customer_id.fullname +
+            "\n Paid Amount : " + customerPayment.paidamount +
+            "\n Payment Method : " + customerPayment.paymentmethod
         );
         if (userConfirm) {
             // call post service
-            let postResponce = getHTTPServiceRequest("/customer/insert", "POST", customer);
+            let postResponce = getHTTPServiceRequest("/customerPayment/insert", "POST", customerPayment);
             if (postResponce == "OK") {
                 window.alert("Save successfully ");
-                refreshCustomerTable();
-                refreshCustomerForm();
+                refreshCustomerPaymentTable();
+                refreshCustomerPaymentForm();
                 $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
             } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+                window.alert("Failed to submit \n" + postResponce);
             }
         }
     } else {
         window.alert("Something went wrong...\n" + errors);
     }
-
-
 }
 
 //check form update function
@@ -320,7 +340,7 @@ const clearCustomerForm = () => {
 
     let userConfirm = window.confirm("Do you need to refresh form...?");
     if (userConfirm) {
-        refreshCustomerForm();
+        refreshCustomerPaymentForm();
     }
 }
 

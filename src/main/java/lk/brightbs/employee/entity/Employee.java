@@ -18,57 +18,65 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-    @Entity //mema class eka database table ekak represent karana entity ekak. me class eke object ekek create kalama table eke row ekak represent wana bawa prakaasha kirima
+@Entity // mema class eka database table ekak represent karana entity ekak. me class eke
+        // object ekek create kalama table eke row ekak represent wana bawa prakaasha
+        // kirima
 // make as an persistence entity
-    @Table(name = "employee") // for map table name
-    @Data // getter , setter tostring
+@Table(name = "employee") // for map table name
+@Data // getter , setter tostring
 
-    @NoArgsConstructor //mema class ekata no-argument constructor ekak generate karala denna" kiyana Lombok annotation ekak.
-    //No-Argument Constructor (default constructor kiyala kiyana eka) kiyanna parameters kisiwak nethi constructor ekak.meya object ekak create kirimedi argument kisiwak pass nokara object eka initialize karanawa.
+@NoArgsConstructor // mema class ekata no-argument constructor ekak generate karala denna" kiyana
+                   // Lombok annotation ekak.
+// No-Argument Constructor (default constructor kiyala kiyana eka) kiyanna
+// parameters kisiwak nethi constructor ekak.meya object ekak create kirimedi
+// argument kisiwak pass nokara object eka initialize karanawa.
 
-    @AllArgsConstructor
-    //mema class ekata all-argument constructor ekak generate karala denna" kiyana Lombok annotation ekak.
-    //All-Argument Constructor kiyanna class eke thiyena thama properties (fields) walata samasta parameters thiyena constructor ekak.
-    //meya object ekak create kirimedi class eke thiyena samasta properties (fields) walata values assign karanna puluwan.
-    
-    public class Employee {
+@AllArgsConstructor
+// mema class ekata all-argument constructor ekak generate karala denna" kiyana
+// Lombok annotation ekak.
+// All-Argument Constructor kiyanna class eke thiyena thama properties (fields)
+// walata samasta parameters thiyena constructor ekak.
+// meya object ekak create kirimedi class eke thiyena samasta properties
+// (fields) walata values assign karanna puluwan.
 
-    @Id //pk
+public class Employee {
+
+    @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
-    private Integer id ;
+    private Integer id;
 
-    @Column(name = "employeenumber" , unique = true)
+    @Column(name = "employeenumber", unique = true)
     @NotNull // not null
     // @Length(max = 8 , min = 8)
-    private String employeenumber ;
-    
-    @Column(name ="fullname")
-    @NotNull
-    private String fullname ;
+    private String employeenumber;
 
-    @Column(name = "nic" , unique = true)
+    @Column(name = "fullname")
+    @NotNull
+    private String fullname;
+
+    @Column(name = "nic", unique = true)
     @NotNull
     // @Length(max = 12 , min = 10)
-    private String nic ;
+    private String nic;
 
     @Column(name = "callingname")
     @NotNull
-    private String callingname ;
+    private String callingname;
 
-    @Column(name = "email" , unique = true)
+    @Column(name = "email", unique = true)
     @NotNull
-    private String email ;
+    private String email;
 
-    @Column(name = "mobile" )
+    @Column(name = "mobile")
     @NotNull
-    @Length(max = 10 , min = 10)
+    @Length(max = 10, min = 10)
     private String mobile;
 
     @Column(name = "landno")
-    @Length(max = 10 , min = 10)
+    @Length(max = 10, min = 10)
     private String landno;
 
-    @Column(name= "note")
+    @Column(name = "note")
     private String note;
 
     @Column(name = "dob")
@@ -98,13 +106,14 @@ import lombok.NoArgsConstructor;
     private Integer updateuserid;
     private LocalDateTime deletedatetime;
     private Integer deleteuserid;
+    private byte[] employee_photo;
 
     @ManyToOne
-    @JoinColumn(name = "employeestatus_id" , referencedColumnName = "id")
-    private EmployeeStatus employeestatus_id ;
-    
-    @ManyToOne
-    @JoinColumn(name = "designation_id" , referencedColumnName = "id")
-    private Designation designation_id ; 
+    @JoinColumn(name = "employeestatus_id", referencedColumnName = "id")
+    private EmployeeStatus employeestatus_id;
 
-    }
+    @ManyToOne
+    @JoinColumn(name = "designation_id", referencedColumnName = "id")
+    private Designation designation_id;
+
+}

@@ -1,4 +1,5 @@
 package lk.brightbs.user.entity;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity // entity file ekak nisa
-@Table(name = "user") //DB wala laba dee athi table name eka laba deema
+@Table(name = "user") // DB wala laba dee athi table name eka laba deema
 @Data
 
 @NoArgsConstructor
@@ -32,58 +33,50 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @NotNull
     private String password;
 
-
     @NotNull
-    @Column(name="username" , unique = true)
+    @Column(name = "username", unique = true)
     private String username;
 
-
     @NotNull
-    @Column(name="email" , unique = true)
+    @Column(name = "email", unique = true)
     private String email;
-
 
     @NotNull
     private Boolean status;
 
-
     @NotNull
     private LocalDateTime added_datetime;
 
-
     private LocalDateTime updatedatetime;
-
 
     private LocalDateTime deletedatetime;
 
-
     private String note;
-
 
     private String photopath;
 
-   
+    private byte[] user_photo;
 
-    //user many employee one
-    //foreing key eka one side eke sita many side ekata ei ema nisa many to one
-    @ManyToOne(optional = true)  //meya optional
-    //table name eka(employee_id) foreing key wana table eke id eka(referencedColumnName=primary key)
-    @JoinColumn(name = "employee_id" , referencedColumnName = "id")
+    // user many employee one
+    // foreing key eka one side eke sita many side ekata ei ema nisa many to one
+    @ManyToOne(optional = true) // meya optional
+    // table name eka(employee_id) foreing key wana table eke id
+    // eka(referencedColumnName=primary key)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee_id;
 
-    //eka user kenakta role godai
-    //user and role athara association ekak atha
-    //ema association eka user eke sita handle karai
-    //anith side eke data access karanna ona ewa remove karannath ona wenawa e sadaha cascade type MERGE damai 
+    // eka user kenakta role godai
+    // user and role athara association ekak atha
+    // ema association eka user eke sita handle karai
+    // anith side eke data access karanna ona ewa remove karannath ona wenawa e
+    // sadaha cascade type MERGE damai
     @ManyToMany(cascade = CascadeType.MERGE)
-    //many to many sadaha join table ekak atha
-    //join column eka lesa main eka gani
-    //anith side eka(inverseJoinColumns)
-    @JoinTable(name = "user_has_role" , joinColumns = @JoinColumn(name="user_id") , 
-    inverseJoinColumns = @JoinColumn(name="role_id"))
+    // many to many sadaha join table ekak atha
+    // join column eka lesa main eka gani
+    // anith side eka(inverseJoinColumns)
+    @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 }

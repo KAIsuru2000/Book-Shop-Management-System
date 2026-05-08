@@ -61,17 +61,24 @@ const getItem = (dataob) => {
 
 // table ekehi status eka penwimata 
 const getPriceRequestStatus = (dataob) => {
-    if (dataob.pricelistrequeststatus_id.name == "Completed") {
-        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Completed"></i>'
+    if (dataob.pricelistrequeststatus_id != null) {
+        if (dataob.pricelistrequeststatus_id.name == "Completed") {
+            return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
+                '                                                title="Completed"></i>'
+        }
+        if (dataob.pricelistrequeststatus_id.name == "Pending") {
+            return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+                '                                                title="Pending"></i>'
+        }
+        if (dataob.pricelistrequeststatus_id.name == "Deleted") {
+            return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
+                '                                                title="Deleted"></i>'
+        }
+        
+        return dataob.pricelistrequeststatus_id.name;
+    } else {
+        return "-";
     }
-    if (dataob.pricelistrequeststatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Pending"></i>'
-    }
-
-
-
 }
 
 // inner form button function area start

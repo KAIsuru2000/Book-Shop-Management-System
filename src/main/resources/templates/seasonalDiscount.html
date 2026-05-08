@@ -24,7 +24,8 @@
             <div class="col-1"></div>
             <div class="col-2">
                 <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshSeasonalDiscountForm()">
+                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"
+                    onclick="refreshSeasonalDiscountForm()">
                     <i class="fa-solid fa-circle-plus"></i>
                     Add New Discount
                 </button>
@@ -45,7 +46,7 @@
                                 <th>Offer Name</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
-                                <th>Max Discount Amount</th>
+                                <th>Invoice Amount</th>
                                 <th>Discount</th>
                                 <th>Offer Type</th>
                             </tr>
@@ -119,8 +120,7 @@
                                                 aria-describedby="inputGroup-sizing-default" id="dateStartDate" required
                                                 onchange="textValidator(this, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$', 'seasonalDiscount', 'validfrom')"
                                                 onclick="textValidator(this, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$', 'seasonalDiscount', 'validfrom')"
-                                                data-bs-toggle="tooltip"
-                                                title="Enter the Start Date correctly here.">
+                                                data-bs-toggle="tooltip" title="Enter the Start Date correctly here.">
                                         </div>
                                     </div>
                                     <!-- Start Date area end-->
@@ -128,11 +128,13 @@
                                     <!-- End Date area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">End Date
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="fw-bold text-danger">*</span>
+                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">End
+                                                Date
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span
+                                                    class="fw-bold text-danger">*</span>
                                             </span>
-                                            <input type="date" placeholder="Enter End Date"
-                                                class="form-control" aria-label="Sizing example input"
+                                            <input type="date" placeholder="Enter End Date" class="form-control"
+                                                aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="dateEndDate"
                                                 onchange="textValidator(this, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$', 'seasonalDiscount', 'validto')"
                                                 onclick="textValidator(this, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$', 'seasonalDiscount', 'validto')"
@@ -150,15 +152,16 @@
                                     <!-- Maximum Bill Amount area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Max Discount Amount :
+                                            <span class="input-group-text lablBg">Invoice Amount :
                                                 <span class="fw-bold text-danger">*</span></span>
-                                            <input type="number" placeholder="Enter Max Discount Amount" class="form-control"
-                                                aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="numMaxBillAmount" required
+                                            <input type="number" placeholder="Enter Max Discount Amount"
+                                                class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="numMaxBillAmount"
+                                                required
                                                 onkeyup="textValidator(this, '^(([1-9][0-9]{0,5})|([1-9][0-9]{0,5}[.][0-9]{2}))$', 'seasonalDiscount', 'maximaldiscount')"
                                                 onclick="textValidator(this, '^(([1-9][0-9]{0,5})|([1-9][0-9]{0,5}[.][0-9]{2}))$', 'seasonalDiscount', 'maximaldiscount')"
                                                 data-bs-toggle="tooltip"
-                                                title="Enter the Maximum Discount Amount correctly here.">
+                                                title="Enter the Invoice Amount correctly here.">
                                         </div>
                                     </div>
                                     <!-- Maximum Bill Amount area end-->
@@ -168,9 +171,10 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">Discount Amount&nbsp; &nbsp; &nbsp; :
                                                 <span class="fw-bold text-danger">*</span></span>
-                                            <input type="number" placeholder="Enter Discount Amount" class="form-control"
-                                                aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="numberDiscountRate" required
+                                            <input type="number" placeholder="Enter Discount Amount"
+                                                class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="numberDiscountRate"
+                                                required
                                                 onkeyup="textValidator(this, '^(([1-9][0-9]{0,5})|([1-9][0-9]{0,5}[.][0-9]{2}))$', 'seasonalDiscount', 'discount')"
                                                 onclick="textValidator(this, '^(([1-9][0-9]{0,5})|([1-9][0-9]{0,5}[.][0-9]{2}))$', 'seasonalDiscount', 'discount')"
                                                 data-bs-toggle="tooltip"
@@ -186,10 +190,10 @@
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                                 <span class="fw-bold text-danger">*</span></label>
                                             <select class="form-select" id="selectOfferType"
-                                                    onchange="selectDainamicElementValidater(this , 'seasonalDiscount', 'offertype_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'seasonalDiscount', 'offertype_id')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Select the Offer Type correctly here." required>
+                                                onchange="selectDainamicElementValidater(this , 'seasonalDiscount', 'offertype_id')"
+                                                onclick="selectDainamicElementValidater(this , 'seasonalDiscount', 'offertype_id')"
+                                                data-bs-toggle="tooltip" title="Select the Offer Type correctly here."
+                                                required>
                                                 <option value="" selected disabled>Select Offer Type</option>
                                             </select>
                                         </div>
@@ -253,7 +257,8 @@
 
                                     <!-- clear btn area start -->
                                     <div class="col-2">
-                                        <button type="button" class="btn btnClear" onclick="clearSeasonalDiscountForm()">
+                                        <button type="button" class="btn btnClear"
+                                            onclick="clearSeasonalDiscountForm()">
                                             <i class="fa-solid fa-eraser"></i>
                                             Clear
                                         </button>
@@ -295,7 +300,7 @@
     </div>
 
     <!-- view/print item -->
-    <!-- Modal --> 
+    <!-- Modal -->
     <!-- offcanvas area start -->
     <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
         data-bs-backdrop="false" id="offcanvasBottomSeasonalDiscountView" aria-labelledby="offcanvasBottomLabel">
@@ -314,6 +319,7 @@
         <div class="offcanvas-body small">
 
             <!--user print view area start-->
+
             <head>
                 <!-- link css file -->
                 <link rel="stylesheet" href="/Style/printView.css">
@@ -367,7 +373,8 @@
                                                     id="endDateView"></th>
                                             </tr>
                                             <tr>
-                                                <th style="color:black; text-align: left;border: none;">Max Discount Amount
+                                                <th style="color:black; text-align: left;border: none;">Max Discount
+                                                    Amount
                                                 </th>
                                                 <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
                                                     &nbsp; </th>

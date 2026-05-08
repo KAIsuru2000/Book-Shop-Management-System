@@ -63,7 +63,7 @@ public class Item {
     private BigDecimal roq;
 
     @Column(name = "note")
-    private String note; 
+    private String note;
 
     @Column(name = "addeddatetime")
     @NotNull
@@ -76,6 +76,7 @@ public class Item {
     private Integer updateuserid;
     private LocalDateTime deletedatetime;
     private Integer deleteuserid;
+    private byte[] item_photo;
 
     // (optional = true) magin null pass kala heki bawa hegawei
     @ManyToOne(optional = false)
@@ -90,25 +91,24 @@ public class Item {
     @JoinColumn(name = "itemstatus_id", referencedColumnName = "id")
     private Itemstatus itemstatus_id;
 
-   
-
     // table eka fill kirima sadaha selected data genwa ganimata dao hi query eka
     // sadaha awashya constructer eka sadima >> construnter eka class name ekenma
     // sadai new keyword eka en ne
     // mewaye "i" wenuwata data type eka damiya yuthuya
     // inpasu constructer properties set kala yuthuya
-    // public Item(Integer id , String itemcode , String itemname , BigDecimal purchaseprice , BigDecimal profitrate , BigDecimal salesprice , BigDecimal roq , Itemstatus itemstatus_id){
+    // public Item(Integer id , String itemcode , String itemname , BigDecimal
+    // purchaseprice , BigDecimal profitrate , BigDecimal salesprice , BigDecimal
+    // roq , Itemstatus itemstatus_id){
 
-    //     this.id = id;
-    //     this.itemcode = itemcode;
-    //     this.itemname = itemname;
-    //     this.purchaseprice = purchaseprice;
-    //     this.profitrate = profitrate;
-    //     this.salesprice = salesprice;
-    //     this.roq = roq;
-    //     this.itemstatus_id = itemstatus_id;
+    // this.id = id;
+    // this.itemcode = itemcode;
+    // this.itemname = itemname;
+    // this.purchaseprice = purchaseprice;
+    // this.profitrate = profitrate;
+    // this.salesprice = salesprice;
+    // this.roq = roq;
+    // this.itemstatus_id = itemstatus_id;
 
     // }
 
-
-    }
+}

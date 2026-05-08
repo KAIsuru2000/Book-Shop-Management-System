@@ -292,6 +292,30 @@
 
                                 </div>
 
+                                <!-- photo select and review row -->
+                                <div class="row mt-3">
+                                    <!-- photo select area -->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Employee Photo : <span class="text-danger">(optional)</span></span>
+                                            <div class="form-control d-flex justify-content-around align-items-center">
+                                                <input type="button" class="btn btn-secondary btn-sm" value="Select Photo" onclick="document.getElementById('fileEmployeePhoto').click()">
+                                                <input type="button" class="btn btn-info btn-sm" value="Clear" onclick="clearEmployeePhoto()">
+                                            </div>
+                                        </div>
+                                        <input class="d-none" type="file" id="fileEmployeePhoto" onchange="previewEmployeePhoto()">
+                                    </div>
+                                    <!-- photo review area -->
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Photo Review &nbsp; : <span class="text-danger">(optional)</span></span>
+                                            <div class="form-control d-flex justify-content-center align-items-center">
+                                                <img id="imgEmployeePhotoPreview" style="max-height: 100px; max-width: 100%;" src="/images/images.jpeg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- designation,civilstatus,status row -->
                                 <div class="row mt-4">
 
@@ -310,6 +334,8 @@
                                                 <option value="Senior Manager">Senior Manager</option>
                                                 <option value="Cashier">Cashier</option>
                                             </select>
+                                            <button class="btn offCanvasCloseBtn offCanvasButton" data-bs-toggle="offcanvas"
+                                                data-bs-target="#offcanvasDesignation" aria-controls="offcanvasBottom" type="button" id="new_model">+</button>
                                         </div>
                                     </div>
                                     <!-- designation area end -->
@@ -609,12 +635,160 @@
     </div>
     <!-- offcanvas area end -->
 
+    <!-- designation offcanvas area start -->
+    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+        data-bs-backdrop="false" id="offcanvasDesignation" aria-labelledby="offcanvasDesignationLabel">
+        <div class="offcanvas-body small">
+
+            <!-- form area start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="divForm">
+                            <!-- form eke action/method magin thibena submisson bawitha nokarai -->
+                            <!-- eya thibunoth form eka submit kala pasu refresh we  -->
+                            <form onsubmit="return false" id="designationForm">
+                                <!-- form eka validate kara genima sadaha -->
+                                <!-- required mark and offcanvas close button start -->
+                                <div class="row">
+
+                                    <!-- offcanvas close button start -->
+                                    <div class="col-1">
+                                        <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
+                                            aria-label="Close">X</button>
+                                    </div>
+                                    <!-- offcanvas close button close -->
+
+                                    <div class="col-9"></div>
+
+                                    <!-- required mark start -->
+                                    <div class="col-1">
+                                        <span class="fw-bold text-danger">*Required</span><!--The letters are red  -->
+                                    </div>
+                                    <!-- required mark end -->
+
+                                    <div class="col-1"></div>
+
+                                </div>
+                                <!-- required mark and offcanvas close button end -->
+
+                                <!--Designation Name  start-->
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Designation Name &nbsp;
+                                                &nbsp;:<span class="fw-bold text-danger">*</span></span>
+                                            <input type="text" class="form-control" placeholder="
+                                            Enter Designation name" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textDesignationName"
+                                                required data-bs-toggle="tooltip"
+                                                title="Enter the Designation name correctly here. (Ex-Manger)"
+                                                onkeyup="textValidator(this,'^[A-Za-z0-9]{4,20}$','designation','name')"
+                                                onclick="textValidator(this,'^[A-Za-z0-9]{4,20}$','designation','name')">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Designation Name  end-->
+
+                                <!--Role  start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <label for="divRoles" class="fw-bold">
+                                            Role :
+                                        </label>
+                                        <div id="divRoles">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                                                <label class="form-check-label" for="inlineCheckbox1">Manger</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                                                <label class="form-check-label" for="inlineCheckbox2">Cashier</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                                                <label class="form-check-label" for="inlineCheckbox3">Store Manger</label>
+                                            </div>
+                                            <!-- <input type="checkbox" name="role" />Manger
+                                            <input type="checkbox" name="role" />Cashier
+                                            <input type="checkbox" name="role" />Store Manger -->
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Role  end-->
+
+                                <!--Need User Account  start-->
+                                <div class="row mt-3">
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label for="checkboxNeedUserAccount" class="col-for-lable fw-bold">
+                                                Need User Account :
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                id="checkboxNeedUserAccount"
+                                                onchange="checkBoxValidator(this,'','designation','useraccount',true,false,labelNeedUserAccount , 'User Account is Needed','User account is not Needed')">
+                                            <label class="form-check-label" for="checkboxNeedUserAccount"
+                                                id="labelNeedUserAccount">User
+                                                Account is Not Needed</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <!--Need User Account  end-->
+
+
+                                <!-- button row start-->
+                                <div class="row mt-3 mb-4">
+
+                                    <div class="col-1"></div>
+
+                                    <!-- clear btn area start -->
+                                    <div class="col-2">
+                                        <button type="button" class="btn btnClear" onclick="clearUserForm()">
+                                            <i class="fa-solid fa-eraser"></i>
+                                            Clear
+                                        </button>
+                                    </div>
+                                    <!-- clear btn area end -->
+
+                                    <div class="col-5"></div>
+
+                                    <!-- Add btn area start -->
+                                    <div class="col-2">
+                                        <button id="buttonSubmit" type="button" class=" btn btnAdd"
+                                            onclick="submitUserForm()">
+                                            <!-- buttonEmpSubmit function eka (employee.js)-->
+                                            <i class="fa-solid fa-file-circle-plus"></i>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <!-- Add btn area end -->
+
+                                </div>
+                                <!-- button row end -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+    <!-- designation offcanvas area end -->
+
     <!-- link js files -->
     <script src="/jsFiles/common.js"></script>
 
     <script src="/jsFiles/tableFunction.js"></script>
 
     <script src="/jsFiles/employee.js"></script>
+
+    <script src="/jsFiles/addDesignation.js"></script>
 
     <script src="/jsFiles/validatorFunction.js"></script>
 

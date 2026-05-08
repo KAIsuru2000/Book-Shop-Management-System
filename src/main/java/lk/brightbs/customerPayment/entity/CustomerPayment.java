@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lk.brightbs.invoice.entity.Invoice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -62,16 +63,6 @@ public class CustomerPayment {
     @Column(name = "cardtype")
     private String cardtype ;
 
-    @Column(name = "requireddate")
-    @NotNull
-    private LocalDate requireddate ;
-
-    @Column(name ="totalamount")
-    @NotNull
-    private BigDecimal totalamount ;
-
-    @Column(name = "note")
-    private String note ;
 
     @Column(name = "addeddatetime")
     @NotNull
@@ -88,13 +79,15 @@ public class CustomerPayment {
 
     private Integer deleteuserid;
    
+    @JsonProperty("customerpaymentstatus_id")
     @ManyToOne
     @JoinColumn(name = "customerpaymentstatus_id" , referencedColumnName = "id", foreignKey = @jakarta.persistence.ForeignKey(name = "fk_payment_status"))
     private CustomerPaymentStatus customerpaymentstatus_id ;
     
+    @JsonProperty("invoice_id")
     @ManyToOne
     @JoinColumn(name = "invoice_id" , referencedColumnName = "id", foreignKey = @jakarta.persistence.ForeignKey(name = "fk_customerpayment_invoice"))
-    private Invoice invoice_id ; 
+    private Invoice invoice_id ;
 
 
     }

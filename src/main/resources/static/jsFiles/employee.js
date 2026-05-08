@@ -914,8 +914,35 @@ const clearEmployeeForm = () => {
     }
 }
 
+// function to preview employee photo
+const previewEmployeePhoto = () => {
+    const fileEmployeePhoto = document.getElementById('fileEmployeePhoto');
+    const imgEmployeePhotoPreview = document.getElementById('imgEmployeePhotoPreview');
+    
+    if (fileEmployeePhoto.files && fileEmployeePhoto.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            imgEmployeePhotoPreview.src = e.target.result;
+            if(typeof employee !== 'undefined' && employee !== null) {
+                // optionally store the photo data into the employee object if the backend requires it later
+                employee.employeephoto = e.target.result; 
+            }
+        }
+        
+        reader.readAsDataURL(fileEmployeePhoto.files[0]);
+    }
+}
 
-
-
-
-
+// function to clear employee photo
+const clearEmployeePhoto = () => {
+    const fileEmployeePhoto = document.getElementById('fileEmployeePhoto');
+    const imgEmployeePhotoPreview = document.getElementById('imgEmployeePhotoPreview');
+    
+    fileEmployeePhoto.value = ''; // clear the file input
+    imgEmployeePhotoPreview.src = '/images/images.jpeg'; // set to default image
+    
+    if(typeof employee !== 'undefined' && employee !== null) {
+        employee.employeephoto = null;
+    }
+}
