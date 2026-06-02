@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 
 import lk.brightbs.invoice.entity.Invoice;
 
-public interface InvoiceDao extends JpaRepository<Invoice, Integer>{
+public interface InvoiceDao extends JpaRepository<Invoice, Integer> {
 
- @Query(value = "SELECT coalesce(concat('PO' , lpad(substring(max(PO.purchaserequestno),2) +1 , 5 , 0)) , 'PO00001')  FROM brightbookshop.purchaserequest as PO;" , nativeQuery = true) String getNextOrderNo();
+  @Query(value = "SELECT coalesce(concat('INV' , lpad(substring(max(i.invoiceno),4) + 1 , 5 , '0')) , 'INV00001')  FROM brightbookshop.invoice as i;", nativeQuery = true)
+  String getNextInvoiceNo();
 
- @Query("SELECT i FROM Invoice i WHERE i.invoicestatus_id.name = 'Pending'")
- List<Invoice> getPendingInvoices();
+  @Query("SELECT i FROM Invoice i WHERE i.invoicestatus_id.name = 'pending'")
+  List<Invoice> getPendingInvoices();
 
 }

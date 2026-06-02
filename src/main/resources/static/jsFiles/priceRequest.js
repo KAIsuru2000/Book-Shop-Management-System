@@ -74,7 +74,7 @@ const getPriceRequestStatus = (dataob) => {
             return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Deleted"></i>'
         }
-        
+
         return dataob.pricelistrequeststatus_id.name;
     } else {
         return "-";
@@ -183,7 +183,7 @@ const rowFormRefill = (dataob, rowIndex) => {
 
     suppliers = getServiceRequest("/supplier/alldata");
 
-    fillDataIntoSelect(selectSupplier, 'Select Supplier...!!!', suppliers, 'suppliername');
+    fillDataIntoSelectSupplier(selectSupplier, 'Select Supplier...!!!', suppliers);
 
     // dataob object eka use karala form fields refill karanna
     selectSupplier.value = JSON.stringify(dataob.supplier_id);
@@ -214,9 +214,11 @@ const rowFormRefill = (dataob, rowIndex) => {
     console.log("priceRequest", priceRequest);
     console.log("oldPriceRequest", oldPriceRequest);
 
-    //disable submit button
-    submitButton.style.visibility = "hidden";
-    updateButton.style.visibility = "visible";
+    ///     hide add button
+    divButtonAdd.style.display = "none";
+
+//     show update button
+    divButtonUpdate.style.display = "flex";
 }
 
 
@@ -328,7 +330,7 @@ const refreshPriceRequestForm = () => {
 
     suppliers = getServiceRequest("/supplier/alldata");
 
-    fillDataIntoSelect(selectSupplier, 'Select Supplier...!!!', suppliers, 'suppliername');
+    fillDataIntoSelectSupplier(selectSupplier, "Select Supplier", suppliers);
 
     // dynamic element refill kala yuthuya
     allItem = [];
@@ -347,6 +349,12 @@ const refreshPriceRequestForm = () => {
     prevElementStatus.style.backgroundColor = "green";
     selectPriceRequestStatus.classList.remove("is-invalid");
     selectPriceRequestStatus.classList.add("is-valid");
+
+    //     hide update button
+    divButtonUpdate.style.display = "none";
+
+//     show add button
+    divButtonAdd.style.display = "flex";
 }
 
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
@@ -491,5 +499,35 @@ const clearPriceRequestForm = () => {
     if (userConfirm) {
         refreshPriceRequestForm();
     }
+}
+
+// Define function to fill supplier name along with their brands into select dropdown
+const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
+    parentId.innerHTML = "";
+    if (message != "") {
+        let optionMsgEs = document.createElement("option");
+        optionMsgEs.value = "";
+        optionMsgEs.selected = "selected";
+        optionMsgEs.disabled = "disabled";
+        optionMsgEs.innerText = message;
+        parentId.appendChild(optionMsgEs);
+    }
+
+    dataList.forEach(dataOb => {
+        let option = document.createElement("option");
+        option.value = JSON.stringify(dataOb);
+
+        let brands = "";
+
+        let brandNames = [];
+        dataOb.brands.forEach(brand => {
+            brandNames.push(brand.name);
+        });
+        brands = " - (" + brandNames.join(" , ") + ")";
+
+
+        option.innerText = dataOb.suppliername + brands;
+        parentId.appendChild(option);
+    });
 }
 

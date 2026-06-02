@@ -9,7 +9,8 @@ public class BrightbsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BrightbsApplication.class, args);
 
-		System.out.println("**************************************  Application Started  ***************************************");
+		System.out.println(
+				"**************************************  Application Started  ***************************************");
 	}
 
 }

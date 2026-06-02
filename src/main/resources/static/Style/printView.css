@@ -22,3 +22,18 @@
 /*    height: 100vh;          !* Full viewport height *!*/
 /*    background-color: yellow;*/
 /*}*/
+
+/* @media - browser magin print kirimedi background colour auto iwath karanawa memagin warna iwath wima walakwai */
+/* body - body eka cover karai, * - siyaluma htnl element cover karai :after :before - element samaga join wee athi siyaluma daynamic designs cover karai*/
+/* -webkit- chrome browser sadaha vishasha kethayaki(vendor prefix) */
+/* print-color-adjust - background image photos elesama print kirimata bala karai */
+/* !important - wenatha css bootstrap walin balapam wen ne */
+/* print-color-adjust - standerd kkramaya mozilla firefox weni thana wala weda karai */
+@media print {
+
+    body,
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

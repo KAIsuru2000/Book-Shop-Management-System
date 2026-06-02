@@ -47,10 +47,7 @@
                                 <th>#</th>
                                 <th>Item code</th>
                                 <th>Item Name</th>
-                                <th>Purchase price</th>
-                                <th>Profit rate</th>
-                                <th>Sales Price</th>
-
+                                <th>ROP</th>
                                 <th>ROQ</th>
                                 <th>Status</th>
 
@@ -217,8 +214,8 @@
                                             <input type="text" class="form-control" placeholder="
                                             Enter ROP" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textROP" required
-                                                onkeyup="textValidator(this, '^.*$', 'item', 'rop')"
-                                                onclick="textValidator(this, '^.*$', 'item', 'rop')"
+                                                onkeyup="textValidator(this, '^[0-9]+$', 'item', 'rop')"
+                                                onclick="textValidator(this, '^[0-9]+$', 'item', 'rop')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the re-order point correctly here.">
                                         </div>
@@ -233,8 +230,8 @@
                                             <input type="text" class="form-control" placeholder="
                                             Enter ROQ" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textROQ" required
-                                                onkeyup="textValidator(this, '^.*$', 'item', 'roq')"
-                                                onclick="textValidator(this, '^.*$', 'item', 'roq')"
+                                                onkeyup="textValidator(this, '^[0-9]+$', 'item', 'roq')"
+                                                onclick="textValidator(this, '^[0-9]+$', 'item', 'roq')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the re-order quentity correctly here.">
                                         </div>
@@ -242,7 +239,7 @@
                                     <!-- ROQ area end-->
 
 
- 
+
                                 </div>
                                 <!-- ROP , ROQ and Purchase Price row end -->
 
@@ -316,7 +313,7 @@
                                     <div class="col-5"></div>
 
                                     <!-- update button area start -->
-                                    <div class="col-2">
+                                    <div class="col-2" id="divButtonUpdate">
                                         <button type="button" id="updateButton" class=" btn btnUpdate"
                                             onclick="buttonItemUpdate()">
                                             <i class="fa-solid fa-file-pen"></i>
@@ -326,7 +323,7 @@
                                     <!-- update button area end -->
 
                                     <!-- Add btn area start -->
-                                    <div class="col-2">
+                                    <div class="col-2" id="divButtonAdd">
                                         <button type="button" id="submitButton" class=" btn btnAdd"
                                             onclick="submitItemForm()">
                                             <!-- button Submit function eka (item.js)-->
@@ -458,38 +455,38 @@
                                                         <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
                                                             id="rOQView"></th>
                                                     </tr>
-                                                    <tr>
-                                                        <th style="color:black; text-align: left;border: none;">Purchase
-                                                            Price</th>
-                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
-                                                            &nbsp; </th>
-                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                            id="purchasePriceView"></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="color:black; text-align: left;border: none;">Profit
-                                                            Ratio</th>
-                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
-                                                            &nbsp; </th>
-                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                            id="profitRatioView"></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="color:black; text-align: left;border: none;">Sales
-                                                            Price</th>
-                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
-                                                            &nbsp; </th>
-                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                            id="salesPriceView"></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th style="color:black; text-align: left;border: none;">Discount
-                                                            Ratio</th>
-                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
-                                                            &nbsp; </th>
-                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                            id="discountRatioView"></th>
-                                                    </tr>
+<!--                                                    <tr>-->
+<!--                                                        <th style="color:black; text-align: left;border: none;">Purchase-->
+<!--                                                            Price</th>-->
+<!--                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;-->
+<!--                                                            &nbsp; </th>-->
+<!--                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"-->
+<!--                                                            id="purchasePriceView"></th>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <th style="color:black; text-align: left;border: none;">Profit-->
+<!--                                                            Ratio</th>-->
+<!--                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;-->
+<!--                                                            &nbsp; </th>-->
+<!--                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"-->
+<!--                                                            id="profitRatioView"></th>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <th style="color:black; text-align: left;border: none;">Sales-->
+<!--                                                            Price</th>-->
+<!--                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;-->
+<!--                                                            &nbsp; </th>-->
+<!--                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"-->
+<!--                                                            id="salesPriceView"></th>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <th style="color:black; text-align: left;border: none;">Discount-->
+<!--                                                            Ratio</th>-->
+<!--                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;-->
+<!--                                                            &nbsp; </th>-->
+<!--                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"-->
+<!--                                                            id="discountRatioView"></th>-->
+<!--                                                    </tr>-->
                                                     <tr>
                                                         <th style="color:black; text-align: left;border: none;">Note
                                                         </th>
@@ -543,8 +540,8 @@
                 <script src="/jsFiles/item.js"></script>
 
             </div>
-            </div>
-            </div>
+        </div>
+    </div>
 </body>
 
 </html>

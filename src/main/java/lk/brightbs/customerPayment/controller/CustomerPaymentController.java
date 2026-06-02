@@ -3,6 +3,10 @@ package lk.brightbs.customerPayment.controller;
 import lk.brightbs.customerPayment.dao.CustomerPaymentDao;
 import lk.brightbs.customerPayment.dao.CustomerPaymentStatusDao;
 import lk.brightbs.customerPayment.entity.CustomerPayment;
+import lk.brightbs.invoice.dao.InvoiceDao;
+import lk.brightbs.invoice.dao.InvoiceStatusDao;
+import lk.brightbs.invoice.entity.Invoice;
+import lk.brightbs.invoice.entity.InvoiceStatus;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.user.dao.UserDao;
@@ -29,6 +33,15 @@ public class CustomerPaymentController {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private InvoiceDao invoiceDao;
+
+	@Autowired
+	private InvoiceStatusDao invoiceStatusDao;
+
+	// @Autowired
+	// private InvoiceDao invoiceDao;
 
 	@Autowired
 	private CustomerPaymentStatusDao customerPaymentStatusDao;
@@ -67,18 +80,27 @@ public class CustomerPaymentController {
 			return "Insert not completed : you haven't permission...";
 		}
 
-        try{
-            customerPayment.setAddeddatetime(LocalDateTime.now());
-            customerPayment.setAddeduserid(logedUser.getId());
-            customerPayment.setBillno(customerPaymentDao.getNextBillNo());
+		try {
+			customerPayment.setAddeddatetime(LocalDateTime.now());
+			customerPayment.setAddeduserid(logedUser.getId());
+			customerPayment.setBillno(customerPaymentDao.getNextBillNo());
 
+			customerPaymentDao.save(customerPayment);
 
+			// Update associated invoice status to "Paid"
+			if (customerPayment.getInvoice_id() != null) {
+				Invoice invoice = invoiceDao.getReferenceById(customerPayment.getInvoice_id().getId());
+				InvoiceStatus paidStatus = invoiceStatusDao.getByName("paid");
+				if (paidStatus != null) {
+					invoice.setInvoicestatus_id(paidStatus);
+					invoiceDao.save(invoice);
+				}
+			}
 
-            customerPaymentDao.save(customerPayment);
-            return "OK";
+			return "OK";
 
-        } catch (Exception e) {
-            return "Save Customer Payment Failed: " + e.getMessage();
-        }
-    }
+		} catch (Exception e) {
+			return "Save Customer Payment Failed: " + e.getMessage();
+		}
+	}
 }

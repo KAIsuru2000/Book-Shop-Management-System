@@ -101,7 +101,7 @@ public class ItemController {
 		if (userPrivilege.getDel()) {
 			//check ext
 			//exting user object ekak ganima 
-			Item extItem = itemDao.getReferenceById(item.getId());
+			Item extItem = itemDao.findById(item.getId()).orElse(null);
 			if(extItem == null ){
 				// ehema kenek neththan
 				return "Item not exit";

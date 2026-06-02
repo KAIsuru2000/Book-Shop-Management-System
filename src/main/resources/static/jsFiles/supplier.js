@@ -158,7 +158,7 @@ const rowFormRefill = (dataob, rowIndex) => {
 
     // dataob object eka use karala form fields refill karanna
     textSupplierName.value = dataob.suppliername;
-    charBRN.value = dataob.brn;
+    textBRN.value = dataob.brn;
     textConPersonName.value = dataob.contact_person;
     telContactNo.value = dataob.contactno;
     inputEmail.value = dataob.email;
@@ -166,8 +166,8 @@ const rowFormRefill = (dataob, rowIndex) => {
     // selectAllBrand.value = supplier.brands;
     // selectSelectedBrand.value = supplier.brands;
     selectSupplierStatus.value = JSON.stringify(dataob.supplierstatus_id);
+    selectBankName.value = JSON.stringify(dataob.bank_name_id);
 
-    textBankName.value = dataob.bankname;
     textBranchName.value = dataob.branchname;
     telAccountNo.value = dataob.accuntno;
     textHolderName.value = dataob.accuntholdername;
@@ -191,9 +191,11 @@ const rowFormRefill = (dataob, rowIndex) => {
     console.log("supplier", supplier);
     console.log("oldSupplier", oldSupplier);
 
-    //disable submit button
-    submitButton.style.visibility = "hidden";
-    updateButton.style.visibility = "visible";
+    //     hide add button
+    divButtonAdd.style.display = "none";
+
+//     show update button
+    divButtonUpdate.style.display = "flex";
 }
 
 const supplierRowDelete = (dataob, rowIndex) => {
@@ -237,7 +239,7 @@ const supplierRowPrint = (dataob, rowIndex) => {
     contactNoView.innerText = dataob.contactno;
     emailView.innerText = dataob.email;
     addressView.innerText = dataob.address;
-    bankNameView.innerText = dataob.bankname;
+    bankNameView.innerText = dataob.bank_name_id.name;
     branchNameView.innerText = dataob.branchname;
     accountNoView.innerText = dataob.accountno;
     holderNameView.innerText = dataob.accuntholdername;
@@ -311,16 +313,19 @@ const refreshSupplierForm = () => {
     formSupplier.reset();
 
     //validation colors iwath kirima
-    setDefault([textSupplierName, telContactNo, inputEmail, selectSupplierStatus]);
+    setDefault([textSupplierName, textBRN, textConPersonName, telContactNo, inputEmail, selectSupplierStatus, textAddress, selectSupplierStatus, selectBankName, textBranchName, telAccountNo, textHolderName, textNote]);
 
     // dynamic element refill kala yuthuya
-    allBrand = getServiceRequest('/brand/alldata')
+    allBrand = getServiceRequest('/brand/getBrandListWithoutSupplier')
     // allBrandWithoutSupply = getServiceRequest('/brand/getListWithoutSupply/' + dataob.id);
     let supplierStatuses = getServiceRequest('/supplierStatus/alldata')
 
     fillDataIntoSelect(selectAllBrand, "", allBrand, "name");
     fillDataIntoSelect(selectSelectedBrand, "", supplier.brands, "name");
     fillDataIntoSelect(selectSupplierStatus, "Please select status...!", supplierStatuses, "name");
+
+    let bankNames = getServiceRequest('/bankname/alldata')
+    fillDataIntoSelect(selectBankName, "Please select bank name...!", bankNames, "name");
 
     // supplier status eka auto active wee thibimata
     selectSupplierStatus.value = JSON.stringify(supplierStatuses[0]);
@@ -331,6 +336,12 @@ const refreshSupplierForm = () => {
     prevElementSupplierStatus.style.backgroundColor = "green";
     selectSupplierStatus.classList.remove("is-invalid");
     selectSupplierStatus.classList.add("is-valid");
+
+    //     hide update button
+    divButtonUpdate.style.display = "none";
+
+//     show add button
+    divButtonAdd.style.display = "flex";
 }
 
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
@@ -339,10 +350,6 @@ const checkSupplierFormErrors = () => {
 
     if (supplier.suppliername == null) {
         errors = errors + "Please Enter valid Full Name...! \n";
-    }
-
-    if (supplier.brn == null) {
-        errors = errors + "Please Enter valid Business Registration number...! \n";
     }
     if (supplier.contact_person == null) {
         errors = errors + "Please Enter valid contact person name...! \n";
@@ -362,7 +369,7 @@ const checkSupplierFormErrors = () => {
     if (supplier.supplierstatus_id == null) {
         errors = errors + "Please Enter valid Supplier Status...! \n";
     }
-    if (supplier.bankname == null) {
+    if (supplier.bank_name_id == null) {
         errors = errors + "Please Enter valid Bank Name...! \n";
     }
     if (supplier.branchname == null) {
@@ -469,7 +476,7 @@ const checkSupplierFormUpdate = () => {
             updates = updates + "supplier status is changed  ....! \n";
         }
 
-        if (supplier.bankname != oldSupplier.bankname) {
+        if (supplier.bank_name_id.name != oldSupplier.bank_name_id.name) {
             updates = updates + "Bank name is change...! \n";
         }
         if (supplier.branchname != oldSupplier.branchname) {
@@ -545,4 +552,4 @@ const clearSupplierForm = () => {
     }
 }
 
-    
+

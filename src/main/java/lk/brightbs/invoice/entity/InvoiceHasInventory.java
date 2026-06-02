@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lk.brightbs.item.entity.Item;
+import lk.brightbs.inventory.entity.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,20 +41,25 @@ public class InvoiceHasInventory {
     @NotNull
     private BigDecimal lineprice;
 
+    @Column(name = "discountprice")
+    @NotNull
+    private BigDecimal discountprice;
+
     // foreign key
-    @Id // primary key nisa
+    // @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "inventory_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka
     // PriceRequest
-    private Item inventory_id;
+    private Inventory inventory_id;
 
     // foreign key
-    @Id // primary key nisa
+    // @Id // primary key nisa
     @ManyToOne
     @JoinColumn(name = "invoice_id", referencedColumnName = "id")
     // foreign key lesa another table ekaka record ekak ana nisa type eka Invoice
-    // recursion walek wima sadaha purchaserequest_id read kirima walakwai(JsonIgnore)
+    // recursion walek wima sadaha purchaserequest_id read kirima
+    // walakwai(JsonIgnore)
     // meya block kala wita save kala noheka
     @JsonIgnore
     private Invoice invoice_id;

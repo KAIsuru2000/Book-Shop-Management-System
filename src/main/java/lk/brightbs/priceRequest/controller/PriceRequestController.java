@@ -137,7 +137,7 @@ public class PriceRequestController {
 			}
 
 			try {
-				extPriceRequest.setPricelistrequeststatus_id(priceRequestStatusDao.getReferenceById(2));
+				extPriceRequest.setPricelistrequeststatus_id(priceRequestStatusDao.getReferenceById(3));
 				extPriceRequest.setDeletedatetime(LocalDateTime.now());
 
 				// fontend eken ena eka wenas karala awoth eka balapemak wena hinda exit record

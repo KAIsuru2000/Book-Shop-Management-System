@@ -1,4 +1,4 @@
-package lk.brightbs.item.entity;
+package lk.brightbs.supplier.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,23 +7,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "brand")
+@Table(name = "bank_name")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Brand {
-   
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)    
-@EqualsAndHashCode.Include
-private Integer id;
+public class BankName {
 
-private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
 }
-
-

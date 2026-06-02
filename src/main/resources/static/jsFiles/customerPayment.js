@@ -44,15 +44,15 @@ const getCustomerPaymentStatus = (dataob) => {
         if (dataob.customerpaymentstatus_id.name == "Completed") {
             return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip" title="Completed"></i>';
         } else {
-            return '<p>'+dataob.customerpaymentstatus_id.name+'</p>';
+            return '<p>' + dataob.customerpaymentstatus_id.name + '</p>';
         }
     }
     return "-";
 }
 
-const customerPaymentRowFormRefill = (dataob, rowIndex) => {}
-const customerPaymentRowDelete = (dataob, rowIndex) => {}
-const customerPaymentRowPrint = (dataob, rowIndex) => {}
+const customerPaymentRowFormRefill = (dataob, rowIndex) => { }
+const customerPaymentRowDelete = (dataob, rowIndex) => { }
+const customerPaymentRowPrint = (dataob, rowIndex) => { }
 
 const customerRowFormRefill = (dataob, rowIndex) => {
 
@@ -73,7 +73,7 @@ const customerRowFormRefill = (dataob, rowIndex) => {
         textNote.value = dataob.note;
     }
 
-    
+
     btnCusSubmit.style.visibility = "hidden";
     btnCusUpdate.style.visibility = "visible";
 
@@ -92,7 +92,7 @@ const customerRowFormRefill = (dataob, rowIndex) => {
 }
 
 const customerRowDelete = (dataob, rowIndex) => {
-     console.log("Delete", dataob, rowIndex);
+    console.log("Delete", dataob, rowIndex);
 
     // activeTableRow(tableEmployeeBody, index, "red");
 
@@ -122,7 +122,7 @@ const customerRowDelete = (dataob, rowIndex) => {
 
     }
 }
-    
+
 const customerRowPrint = (dataob, rowIndex) => {
     console.log("View", dataob, rowIndex);
     // html wala athi modal ekak open weema
@@ -173,41 +173,7 @@ const buttonPrintRow = () => {
     }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
 }
 
-const refreshCustomerPaymentForm = () => {
 
-    customerPayment = new Object();
-
-    formCustomerPayment.reset();
-
-    // validation colors iwath kirima
-    setDefault([selectCusName, textPaymentMethod, textInvoiceAmount, textPaidAmount, textBalanceAmount, textCardType, textReferenceNo, selectCusPaymentStatus]);
-
-    // get pending invoices
-    let pendingInvoices = getServiceRequest('/invoice/pending');
-    
-    // custom fill data for selectCusName to display customer name and invoice no
-    selectCusName.innerHTML = "";
-    let optionMsgEs = document.createElement("option");
-    optionMsgEs.value = "";
-    optionMsgEs.selected = "selected";
-    optionMsgEs.disabled = "disabled";
-    optionMsgEs.innerText = "Select Customer Name";
-    selectCusName.appendChild(optionMsgEs);
-
-    pendingInvoices.forEach(invoice => {
-        let option = document.createElement("option");
-        option.value = JSON.stringify(invoice);
-        // show customer name + invoice no
-        option.innerText = invoice.customer_id.fullname + " (" + invoice.invoiceno + ")";
-        selectCusName.appendChild(option);
-    });
-
-    // dynamic element refill kala yuthuya
-    let customerPaymentStatus = getServiceRequest('/customerPaymentStatus/alldata')
-    if(customerPaymentStatus != null && customerPaymentStatus.length > 0) {
-        fillDataIntoSelect(selectCusPaymentStatus, "Please Select Customer Payment Status..!", customerPaymentStatus, "name");
-    }
-}
 
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
@@ -218,7 +184,7 @@ const checkFormError = () => {
         errors = errors + "Please Select a Customer/Invoice...! \n";
     }
     if (customerPayment.paymentmethod == null) {
-        errors = errors + "Please Enter Payment Method...! \n";
+        errors = errors + "Please Select Payment Method...! \n";
     }
     if (customerPayment.invoiceamount == null) {
         errors = errors + "Please Enter Invoice Amount...! \n";
@@ -229,11 +195,27 @@ const checkFormError = () => {
     if (customerPayment.balanceamount == null) {
         errors = errors + "Please Enter Balance Amount...! \n";
     }
-    if (customerPayment.cardtype == null) {
-        errors = errors + "Please Enter Card Type...! \n";
+    if (customerPayment.paymentmethod == "Card") {
+        if (customerPayment.cardtype == null) {
+            errors = errors + "Please Enter Card Type...! \n";
+        }
+        if (customerPayment.referenceno == null) {
+            errors = errors + "Please Enter Reference No...! \n";
+        }
     }
-    if (customerPayment.referenceno == null) {
-        errors = errors + "Please Enter Reference No...! \n";
+    if (customerPayment.paymentmethod == "Cash & Card") {
+        if (customerPayment.cashamount == null) {
+            errors = errors + "Please Enter Cash Amount...! \n";
+        }
+        if (customerPayment.cardamount == null) {
+            errors = errors + "Please Enter Card Amount...! \n";
+        }
+        if (customerPayment.cardtype == null) {
+            errors = errors + "Please Enter Card Type...! \n";
+        }
+        if (customerPayment.referenceno == null) {
+            errors = errors + "Please Enter Reference No...! \n";
+        }
     }
     if (customerPayment.customerpaymentstatus_id == null) {
         errors = errors + "Please Select Customer Payment Status...! \n";
@@ -246,12 +228,24 @@ const checkFormError = () => {
 const buttonCusSubmit = () => {
     console.log('Add Customer Payment', customerPayment);
 
+    // If payment method is Cash, fill cardtype and referenceno with dummy unique values
+    if (customerPayment.paymentmethod == "Cash") {
+        customerPayment.cardtype = "-";
+        customerPayment.referenceno = "CASH-" + new Date().getTime();
+        customerPayment.cashamount = customerPayment.paidamount;
+        customerPayment.cardamount = 0;
+    }
+    if (customerPayment.paymentmethod == "Card") {
+        customerPayment.cashamount = 0;
+        customerPayment.cardamount = customerPayment.paidamount;
+    }
+
     //check form error for required element
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
         let userConfirm = window.confirm("Are you sure to add following customer payment...?" +
-            "\n Customer : " + customerPayment.invoice_id.customer_id.fullname +
+            "\n Customer : " + customerPayment.invoice_id.invoiceno +
             "\n Paid Amount : " + customerPayment.paidamount +
             "\n Payment Method : " + customerPayment.paymentmethod
         );
@@ -286,7 +280,7 @@ const checkFormUpdate = () => {
             updates = updates + "mobile no is changed  ....! \n" + oldCustomer.mobileno + " -> " + customer.mobileno + "\n";
         }
 
-         if (customer.email != oldCustomer.email) {
+        if (customer.email != oldCustomer.email) {
             updates = updates + "email is changed  ....! \n";
         }
 
@@ -295,7 +289,7 @@ const checkFormUpdate = () => {
         }
 
 
-        
+
     }
 
 
@@ -344,4 +338,195 @@ const clearCustomerForm = () => {
     }
 }
 
-    
+// create function to get selected invoice netamount
+const getCustomerPaymentInvoiceAmount = () => {
+    if (customerPayment.invoice_id != null) {
+        textInvoiceAmount.value = parseFloat(customerPayment.invoice_id.netamount).toFixed(2);
+        textValidator(textInvoiceAmount, '^.*$', 'customerPayment', 'invoiceamount');
+    } else {
+        textInvoiceAmount.value = "";
+        setDefault([textInvoiceAmount]);
+        customerPayment.invoiceamount = null;
+    }
+}
+
+// create function to handle payment method dropdown changes
+const handlePaymentMethodChange = () => {
+    let method = selectPaymentMethod.value;
+    if (method === "Card") {
+        divCardType.style.display = "flex";
+        divReferenceNo.style.display = "flex";
+        divCashAmount.style.display = "none";
+        divCardAmount.style.display = "none";
+
+        // Paid Amount should be editable
+        textPaidAmount.readOnly = false;
+
+        // Clear split values
+        textCashAmount.value = "";
+        textCardAmount.value = "";
+        setDefault([textCashAmount, textCardAmount]);
+        customerPayment.cashamount = null;
+        customerPayment.cardamount = null;
+    } else if (method === "Cash") {
+        divCardType.style.display = "none";
+        divReferenceNo.style.display = "none";
+        divCashAmount.style.display = "none";
+        divCardAmount.style.display = "none";
+
+        // Paid Amount should be editable
+        textPaidAmount.readOnly = false;
+
+        // Clear card & split values
+        textCardType.value = "";
+        textReferenceNo.value = "";
+        textCashAmount.value = "";
+        textCardAmount.value = "";
+        setDefault([textCardType, textReferenceNo, textCashAmount, textCardAmount]);
+        customerPayment.cardtype = null;
+        customerPayment.referenceno = null;
+        customerPayment.cashamount = null;
+        customerPayment.cardamount = null;
+    } else if (method === "Cash & Card") {
+        divCardType.style.display = "flex";
+        divReferenceNo.style.display = "flex";
+        divCashAmount.style.display = "flex";
+        divCardAmount.style.display = "flex";
+
+        // Paid Amount should be read-only since it is calculated
+        textPaidAmount.readOnly = true;
+        textPaidAmount.value = "";
+        setDefault([textPaidAmount]);
+        customerPayment.paidamount = null;
+
+        // Reset Card values
+        selectCardType.value = "";
+        textReferenceNo.value = "";
+        setDefault([textCardType, textReferenceNo]);
+        customerPayment.cardtype = null;
+        customerPayment.referenceno = null;
+    }
+}
+
+// balance amount eka auto genarate wima sadaha
+const genarateBalanceAmount = () => {
+
+    // validation colour sadaha
+    // Navigate to the parent element and then to the associated span
+    spanElementBalanceAmount = textBalanceAmount.previousElementSibling;
+
+    let invoiceAmount = customerPayment.invoiceamount;
+    let paidAmount = customerPayment.paidamount;
+
+    if (invoiceAmount != null && paidAmount != null && invoiceAmount !== "" && paidAmount !== "") {
+        let balanceAmount = parseFloat(paidAmount) - parseFloat(invoiceAmount);
+        //isNaN(100) nam false laba dei
+        if (balanceAmount >= 0) {
+            textBalanceAmount.value = balanceAmount.toFixed(2);
+            // trigger validation and bind to customerPayment object
+            textValidator(textBalanceAmount, '^.*$', 'customerPayment', 'balanceamount');
+        } else {
+            textBalanceAmount.value = balanceAmount.toFixed(2);
+            textBalanceAmount.style.borderBottom = "4px solid red";
+            spanElementBalanceAmount.style.backgroundColor = "red";
+            textBalanceAmount.classList.add("is-invalid");
+            textBalanceAmount.classList.remove("is-valid");
+            customerPayment.balanceamount = null;
+        }
+    } else {
+        textBalanceAmount.value = "";
+        setDefault([textBalanceAmount]);
+        customerPayment.balanceamount = null;
+    }
+}
+
+// create function to calculate split total
+const calculateSplitTotal = () => {
+    let cashAmt = textCashAmount.value;
+    let cardAmt = textCardAmount.value;
+
+    let cashVal = parseFloat(cashAmt);
+    let cardVal = parseFloat(cardAmt);
+
+    // If both values are valid numbers, calculate total paid amount
+    if (!isNaN(cashVal) && !isNaN(cardVal)) {
+        let totalPaid = cashVal + cardVal;
+        textPaidAmount.value = totalPaid.toFixed(2);
+
+        // Trigger validation and bind to customerPayment object
+        textValidator(textPaidAmount, '^.*$', 'customerPayment', 'paidamount');
+
+        // Calculate balance amount
+        genarateBalanceAmount();
+    } else {
+        textPaidAmount.value = "";
+        setDefault([textPaidAmount]);
+        customerPayment.paidamount = null;
+
+        textBalanceAmount.value = "";
+        setDefault([textBalanceAmount]);
+        customerPayment.balanceamount = null;
+    }
+}
+
+const refreshCustomerPaymentForm = () => {
+
+    customerPayment = new Object();
+
+    formCustomerPayment.reset();
+
+    // validation colors iwath kirima
+    setDefault([selectInvNo, selectPaymentMethod, textInvoiceAmount, textPaidAmount, textBalanceAmount, selectCardType, textReferenceNo, selectCusPaymentStatus, textCashAmount, textCardAmount]);
+
+    // Hide card and split fields initially
+    document.getElementById("divCardType").style.display = "none";
+    document.getElementById("divReferenceNo").style.display = "none";
+    document.getElementById("divCashAmount").style.display = "none";
+    document.getElementById("divCardAmount").style.display = "none";
+    document.getElementById("textPaidAmount").readOnly = false;
+
+    // get pending invoices
+    let pendingInvoices = getServiceRequest('/invoice/pending');
+
+    // custom fill data for selectInvNo to display customer name and invoice no
+    selectInvNo.innerHTML = "";
+    let optionMsgEs = document.createElement("option");
+    optionMsgEs.value = "";
+    optionMsgEs.selected = "selected";
+    optionMsgEs.disabled = "disabled";
+    optionMsgEs.innerText = "Select Customer Name";
+    selectInvNo.appendChild(optionMsgEs);
+
+
+    pendingInvoices.forEach(invoice => {
+
+        let option = document.createElement("option");
+        option.value = JSON.stringify(invoice);
+
+        if (invoice.customer_id != null) {
+            // show customer name + invoice no
+            option.innerText = invoice.invoiceno + " " + invoice.customer_id.fullname + " " + invoice.customer_id.mobileno;
+            selectInvNo.appendChild(option);
+        } else {
+            option.innerText = invoice.invoiceno;
+            selectInvNo.appendChild(option);
+        }
+
+    });
+
+    // dynamic element refill kala yuthuya
+    let customerPaymentStatus = getServiceRequest('/customerPaymentStatus/alldata')
+    fillDataIntoSelect(selectCusPaymentStatus, "Please Select Customer Payment Status..!", customerPaymentStatus, "name");
+    // status eka form eka load wana wita select wi thibimata
+    // selected value eka string walin ena nisa stringify kara gani
+    selectCusPaymentStatus.value = JSON.stringify(customerPaymentStatus[1]);
+    // ema value eka newatha object ekata set kala yuththa object format ekeni
+    customerPayment.customerpaymentstatus_id = JSON.parse(selectCusPaymentStatus.value);
+    // status field eka sadaha validation colour eka laba deema
+    prevElementCusPaymentStatus = selectCusPaymentStatus.previousElementSibling;
+    selectCusPaymentStatus.style.borderBottom = "4px solid green";
+    prevElementCusPaymentStatus.style.backgroundColor = "green";
+    selectCusPaymentStatus.classList.remove("is-invalid");
+    selectCusPaymentStatus.classList.add("is-valid");
+
+}

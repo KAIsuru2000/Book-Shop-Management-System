@@ -65,10 +65,6 @@ public class Supplier {
     @NotNull
     private String address;
 
-    @Column(name= "bankname")
-    @NotNull
-    private String bankname;
-
     @Column(name = "branchname")
     @NotNull
     private String branchname;
@@ -96,6 +92,10 @@ public class Supplier {
     @ManyToOne
     @JoinColumn(name = "supplierstatus_id" , referencedColumnName = "id")
     private SupplierStatus supplierstatus_id ;
+
+    @ManyToOne
+    @JoinColumn(name = "bank_name_id" , referencedColumnName = "id")
+    private BankName bank_name_id ;
     
     @ManyToMany(cascade = CascadeType.MERGE)
     //many to many sadaha join table ekak atha

@@ -30,41 +30,40 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Seasonaldiscount {
-    
-    @Id //pk
+
+    @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
-    private Integer id ;
+    private Integer id;
 
-    @Column(name = "offername" , unique = true)
+    @Column(name = "offername", unique = true)
     @NotNull // not null
-    private String discountname ;
-    
-    @Column(name ="discountrate")
-    @NotNull
-    private BigDecimal discount ;
+    private String discountname;
 
-    @Column(name = "maximunbillamount")
+    @Column(name = "discountrate")
     @NotNull
-    private BigDecimal maximaldiscount ;
+    private BigDecimal discount;
+
+    @Column(name = "invoiceamount")
+    @NotNull
+    private BigDecimal invoiceamount;
 
     @Column(name = "startdate")
     @NotNull
-    private LocalDate validfrom ;
+    private LocalDate validfrom;
 
     @Column(name = "enddate")
     @NotNull
-    private LocalDate validto ;
+    private LocalDate validto;
 
     @ManyToOne
-    @JoinColumn(name = "offertype_id" , referencedColumnName = "id")
-    private Offertype offertype_id ;
+    @JoinColumn(name = "offertype_id", referencedColumnName = "id")
+    private Offertype offertype_id;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    //many to many sadaha join table ekak atha
-    //join column eka lesa main eka gani
-    //anith side eka(inverseJoinColumns)
-    @JoinTable(name = "seosonaldiscount_has_item" , joinColumns = @JoinColumn(name="seosonaldiscount_id") , 
-    inverseJoinColumns = @JoinColumn(name="item_id"))
+    // many to many sadaha join table ekak atha
+    // join column eka lesa main eka gani
+    // anith side eka(inverseJoinColumns)
+    @JoinTable(name = "seosonaldiscount_has_item", joinColumns = @JoinColumn(name = "seosonaldiscount_id"), inverseJoinColumns = @JoinColumn(name = "item_id"))
     private Set<Item> items;
 
 }

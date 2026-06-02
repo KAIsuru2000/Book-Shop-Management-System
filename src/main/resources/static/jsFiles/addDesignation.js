@@ -215,12 +215,12 @@ const refreshDesignationForm = () => {
     });
 
     //refill kirimedi disable kala ewa unable kala yuthuya
-    selectEmployee.disabled = false;
-    passwordField.disabled = false;
-    rePasswordField.disabled = false;
-
-    buttonUpdate.classList.add("d-none");
-    buttonSubmit.classList.remove("d-none");
+    // selectEmployee.disabled = false;
+    // passwordField.disabled = false;
+    // rePasswordField.disabled = false;
+    //
+    // buttonUpdate.classList.add("d-none");
+    // buttonSubmit.classList.remove("d-none");
 
 }
 

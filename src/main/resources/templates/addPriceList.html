@@ -115,7 +115,7 @@
                                                     onchange="selectDainamicElementValidater(this , 'addPriceList', 'pricelistrequest_id'); filterItemByPriceRequest()"
                                                     onclick="selectDainamicElementValidater(this , 'addPriceList', 'pricelistrequest_id')"
                                                     data-bs-toggle="tooltip"
-                                                    title="Select the Supplier correctly here.">
+                                                    title="Select the Supplier related to price list request correctly here.">
                                                     <option selected disabled>Select Supplier</option>
                                                     <option value=""></option>
                                                     <option value=""></option>
@@ -225,11 +225,11 @@
                                             <div class="col-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text lablBg">Min Quantity :
-                                                        <span class="fw-bold text-danger">*</span></span>
+                                                        <span class="fw-bold text-danger">(optional)</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default"
-                                                        id="numberMinQuantity" required
+                                                        id="numberMinQuantity"
                                                         onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'mincountity')"
                                                         onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'mincountity')"
                                                         data-bs-toggle="tooltip"
@@ -237,22 +237,22 @@
                                                 </div>
                                             </div>
                                             <!-- MinQuantity area end -->
-                                            <!-- Last line Price area start -->
+                                            <!-- MinQu. Unit Price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span class="input-group-text lablBg">Last Unit Price :
-                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <span class="input-group-text lablBg">Min Qu. Unit Price :
+                                                        <span class="fw-bold text-danger">(optional)</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Line Price" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default"
-                                                        id="numberLastUnitePrice" required
-                                                        onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'lastunitprice')"
-                                                        onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'lastunitprice')"
+                                                        id="numberMinQuUnitePrice"
+                                                        onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'minquunitprice')"
+                                                        onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'minquunitprice')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Last Unite Price correctly here.">
+                                                        title="Enter the Min Quantity  Unite Price correctly here.">
                                                 </div>
                                             </div>
-                                            <!-- Last Unite Price area end -->
+                                            <!-- Min Quantity  Unite Price area end -->
 
 
                                         </div>
@@ -287,7 +287,8 @@
 
                                             <!-- clear btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnInnerClear" class="btn btnClear">
+                                                <button type="button" id="btnInnerClear" class="btn btnClear"
+                                                    onclick="buttonaddPriceListClear()">
                                                     <i class="fa-solid fa-eraser"></i>
                                                     Clear
                                                 </button>
@@ -330,7 +331,7 @@
                                                                 <th>Item Name</th>
                                                                 <th>Unit Price(Rs.)</th>
                                                                 <th>MinQuantity</th>
-                                                                <th>Last Unit Price(Rs.)</th>
+                                                                <th>Min Qu. Unit Price(Rs.)</th>
                                                                 <th>Market Price(Rs.)</th>
 
 

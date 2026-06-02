@@ -400,7 +400,7 @@ const refreshAddPriceListForm = () => {
 
     // dynamic element refill kala yuthuya
     let suppliers = getServiceRequest('priceRequest/alldata');
-    fillDataIntoSelectSupplier(selectSupplier, "Please Select Supplier..!!", suppliers);
+    fillDataIntoSelectSupplier(selectSupplier, "Select Supplier related to price list request..!!", suppliers);
 
     let addPriceListStatues = getServiceRequest('/addPriceListStatus/alldata');
     fillDataIntoSelect(selectaddPriceListStatus, "Please Select Status..!!", addPriceListStatues, "name");
@@ -430,7 +430,7 @@ const filterItemByPriceRequest = () => {
     if (addPriceList.pricelistrequest_id != null) {
         // select kala price list request eke athi items tika array ekakata gani
         let priceRequestItems = addPriceList.pricelistrequest_id.items;
-        
+
         // mema item list eka 'selectItem' element ekata fill kirimata code ekai name ekai dekama drop down ekak thula penwana function eka pawichchi karai
         fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", priceRequestItems, "itemcode", "itemname");
     } else {
@@ -456,11 +456,11 @@ const refreshAddPriceListInnerForm = () => {
 
     textUnitPrice.value = "";
     numberMinQuantity.value = "";
-    numberLastUnitePrice.value = "";
+    numberMinQuUnitePrice.value = "";
     numberMarketPrice.value = "";
 
     // colors wenas kala heka
-    setDefault([selectItem, textUnitPrice, numberMinQuantity, numberLastUnitePrice, numberMarketPrice]);
+    setDefault([selectItem, textUnitPrice, numberMinQuantity, numberMinQuUnitePrice, numberMarketPrice]);
 
     btnaddPriceListItemUpdate.classList.add("d-none");
     btnaddPriceListItemSubmit.classList.remove("d-none");
@@ -472,7 +472,7 @@ const refreshAddPriceListInnerForm = () => {
         { propertyName: genareateItemName, dataType: "function" },
         { propertyName: "unitprice", dataType: "decimal" },
         { propertyName: "mincountity", dataType: "string" },
-        { propertyName: "lastunitprice", dataType: "decimal" },
+        { propertyName: "minquunitprice", dataType: "decimal" },
         { propertyName: "marketprice", dataType: "decimal" }
 
     ];
@@ -500,7 +500,7 @@ const refreshAddPriceListInnerForm = () => {
     document.getElementById("textItemList").textContent = itemList;
 
     if (itemList != "") {
-    // object ekata set karai
+        // object ekata set karai
         addPriceList.itemlist = textItemList.value;
         // validation color eka set karai
         prevElementItemList = textItemList.previousElementSibling;
@@ -510,7 +510,7 @@ const refreshAddPriceListInnerForm = () => {
         textItemList.classList.add("is-valid");
     }
 
-    
+
 }
 
 const genareateItemName = (dataob) => {
@@ -547,8 +547,6 @@ const buttonAddPriceListItemSubmit = (ob, index) => {
         +
         "\n Item : " + addPricelistHasItem.item_id.itemname +
         "\n Unit Price : " + addPricelistHasItem.unitprice +
-        "\n Minquantity : " + addPricelistHasItem.mincountity +
-        "\n Last Unit Price : " + addPricelistHasItem.lastunitprice +
         "\n Market Price : " + addPricelistHasItem.marketprice
     );
     if (userConfirm) {
@@ -568,12 +566,12 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
 
     // Add a default disabled placeholder if message is provided
     // if (message !== "") {
-        const optionMsg = document.createElement("option");
-        optionMsg.value = "";
-        optionMsg.selected = true;
-        optionMsg.disabled = true;
-        optionMsg.innerText = message;
-        parentId.appendChild(optionMsg);
+    const optionMsg = document.createElement("option");
+    optionMsg.value = "";
+    optionMsg.selected = true;
+    optionMsg.disabled = true;
+    optionMsg.innerText = message;
+    parentId.appendChild(optionMsg);
     // }
 
     // Loop through the data and extract supplier names
@@ -589,7 +587,10 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
 };
 
 
-
+// add price list clear button eka magin inner form eka clear wimta
+const buttonaddPriceListClear = () => {
+    refreshAddPriceListInnerForm();
+}
 
 
 

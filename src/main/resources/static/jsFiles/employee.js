@@ -108,9 +108,11 @@ const employeeRowFormRefill = (ob, index) => {
     // js array eka json string ekakata convert kirima JSON.stringify() magin sidu karai
     selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
 
-    // re fill una pasu add kirimak sidu nowe ema nisa add button eka hide karai
-    buttonEmpAdd.style.display = "none";
+    //     hide add button
+    divButtonAdd.style.display = "none";
 
+//     show update button
+    divButtonUpdate.style.display = "flex";
 
 
 
@@ -412,6 +414,8 @@ const buttonEmployeeUpdate = () => {
         // errors veriable ekahi errors thibee nam
         window.alert("something went wrong.. \n" + errors);
     }
+
+
 
 }
 
@@ -903,6 +907,12 @@ const refreshEmployeeform = () => {
     prevElementEmpStatus.style.backgroundColor = "green";
     selectEmpStatus.classList.remove("is-invalid");
     selectEmpStatus.classList.add("is-valid");
+
+//     hide update button
+    divButtonUpdate.style.display = "none";
+
+//     show add button
+    divButtonAdd.style.display = "flex";
 }
 
 // form eke clear button eka sadaha

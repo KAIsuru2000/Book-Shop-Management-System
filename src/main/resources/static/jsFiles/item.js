@@ -32,10 +32,8 @@ const refreshItemTable = () => {
 
         { dataType: 'string', propertyName: 'itemcode' },
         { dataType: 'string', propertyName: 'itemname' },
-        { dataType: 'decimal', propertyName: 'purchaseprice' },
-        { dataType: 'string', propertyName: 'profitrate' },
-        { dataType: 'decimal', propertyName: 'salesprice' },
         { dataType: 'string', propertyName: 'roq' },
+        { dataType: 'string', propertyName: 'rop' },
         { dataType: 'function', propertyName: getItemStatus },
     ];
 
@@ -49,15 +47,15 @@ const refreshItemTable = () => {
 // table ekehi status eka penwimata 
 const getItemStatus = (dataob) => {
     let statusName = dataob.itemstatus_id.name;
-    if (statusName == "Available" || statusName == "Instock" || statusName == "Use" || statusName == "Active") {
+    if (statusName == "Instock") {
         return '<i class="fa-solid fa-store fa-beat fa-xl" style="color: #00fa11;" data-bs-toggle="tooltip"\n' +
             '                                                title="' + statusName + '"></i>';
     }
-    if (statusName == "Not-Available" || statusName == "Out of Stock" || statusName == "Not Use" || statusName == "In-Active") {
+    if (statusName == "Out of Stock") {
         return '<i class="fa-solid fa-store-slash fa-beat fa-xl" style="color:rgb(249, 236, 1);" data-bs-toggle="tooltip"\n' +
             '                                                title="' + statusName + '"></i>';
     }
-    if (statusName == "Deleted" || statusName == "Delete") {
+    if (statusName == "Delete") {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
             '                                                title="' + statusName + '"></i>';
     }
@@ -65,20 +63,20 @@ const getItemStatus = (dataob) => {
 }
 
 // define function for genarate sales price
-const genarateSalesPrice = () => {
-    let profitRatio = textProfitRatio.value;
-    let purchasePrice = textPurchasePrice.value;
-    let salesPrice = parseFloat(purchasePrice) + (parseFloat(purchasePrice) * parseFloat(profitRatio) / 100);
-    textSalesPrice.value = parseFloat(salesPrice).toFixed(2);
+// const genarateSalesPrice = () => {
+//     let profitRatio = textProfitRatio.value;
+//     let purchasePrice = textPurchasePrice.value;
+//     let salesPrice = parseFloat(purchasePrice) + (parseFloat(purchasePrice) * parseFloat(profitRatio) / 100);
+//     textSalesPrice.value = parseFloat(salesPrice).toFixed(2);
 
-    // validation colour and binding
-    prevElementSalesPrice = textSalesPrice.previousElementSibling;
-    textSalesPrice.style.borderBottom = "4px solid green";
-    prevElementSalesPrice.style.backgroundColor = "green";
-    textSalesPrice.classList.remove("is-invalid");
-    textSalesPrice.classList.add("is-valid");
-    item.salesprice = textSalesPrice.value;
-}
+//     // validation colour and binding
+//     prevElementSalesPrice = textSalesPrice.previousElementSibling;
+//     textSalesPrice.style.borderBottom = "4px solid green";
+//     prevElementSalesPrice.style.backgroundColor = "green";
+//     textSalesPrice.classList.remove("is-invalid");
+//     textSalesPrice.classList.add("is-valid");
+//     item.salesprice = textSalesPrice.value;
+// }
 
 // form refill function
 const rowFormRefill = (dataob, rowIndex) => {
@@ -104,10 +102,6 @@ const rowFormRefill = (dataob, rowIndex) => {
     textItemName.value = dataob.itemname;
     textROP.value = dataob.rop;
     textROQ.value = dataob.roq;
-    textPurchasePrice.value = dataob.purchaseprice;
-    textProfitRatio.value = dataob.profitrate;
-    textSalesPrice.value = dataob.salesprice;
-    textDiscountRatio.value = dataob.discountrate;
     textNote.value = dataob.note;
 
     //update kirima sadaha awashya object 2 sada ganima
@@ -117,9 +111,11 @@ const rowFormRefill = (dataob, rowIndex) => {
     console.log("item", item);
     console.log("oldItem", oldItem);
 
-    //disable submit button
-    submitButton.style.visibility = "hidden";
-    updateButton.style.visibility = "visible";
+    //     hide add button
+    divButtonAdd.style.display = "none";
+
+//     show update button
+    divButtonUpdate.style.display = "flex";
 
 
 }
@@ -134,7 +130,8 @@ const rowDelete = (dataob, rowIndex) => {
     let userConfirm = window.confirm("Are you sure to delete following item...?" +
         "\n Item code : " + dataob.itemcode +
         "\n Item name : " + dataob.itemname +
-        "\n Item sale price : " + dataob.salesprice
+        "\n Item sale price : " + dataob.rop +
+        "\n Item Reorder Quantity : " + dataob.roq
     );
     if (userConfirm) {
         // call post service
@@ -166,12 +163,8 @@ const itemRowView = (dataob, rowIndex) => {
     SubcategoryView.innerText = dataob.subcategory_id.name;
     itemNameView.innerText = dataob.itemname;
     statusView.innerText = dataob.itemstatus_id.name;
-    rOPView.innerText = dataob.rop;
-    purchasePriceView.innerText = dataob.purchaseprice;
+    rOPView.innerText = dataob.rop
     rOQView.innerText = dataob.roq;
-    profitRatioView.innerText = dataob.profitrate;
-    salesPriceView.innerText = dataob.salesprice;
-    discountRatioView.innerText = dataob.discountrate;
     if (dataob.note == undefined) {
         noteView.innerText = "-";
     } else {
@@ -232,7 +225,7 @@ const refreshItemForm = () => {
 
 
     //validation colors iwath kirima
-    setDefault([selectItemCategory, selectItemBrand, selectItemSubcategory, selectItemStatus, textItemName, textROP, textROQ, textPurchasePrice, textProfitRatio, textSalesPrice, textDiscountRatio, textNote]);
+    setDefault([selectItemCategory, selectItemBrand, selectItemSubcategory, selectItemStatus, textItemName, textROP, textROQ, textNote]);
 
     // dynamic element refill kala yuthuya
     let brand = getServiceRequest('/brand/alldata')
@@ -260,6 +253,12 @@ const refreshItemForm = () => {
     selectItemStatus.classList.add("is-valid");
 
     fillDataIntoSelect(selectItemSubcategory, "Please Select Item Subcategory..!", subCategory, "name");
+
+    //     hide update button
+    divButtonUpdate.style.display = "none";
+
+//     show add button
+    divButtonAdd.style.display = "flex";
 }
 
 // item category wala id eka cach karagena
@@ -357,24 +356,24 @@ selectCategoryElement.addEventListener("change", () => {
     selectItemSubcategory.classList.remove("is-valid");
     item.itemname = null; //item object add to value null
 
+
+
 });
 
 
 
-// define function for generate item name
 const generateItemName = () => {
 
     console.log("generateItemName", item);
 
-    let category = item.subcategory_id.category_id;
-    let brand = item.brand_id;
-    let subCategory = item.subcategory_id;
-
-
     // validation wala colour eka laba deema sadaha
     spanElement = textItemName.previousElementSibling;
 
-    if (item.brand_id != null && item.subcategory_id.name != null) {
+    // name eka genarate karanna subcategory brand field fill wi thibiya yuthuya
+    if (item.brand_id != null && item.subcategory_id != null && item.subcategory_id.name != null) {
+        let category = item.subcategory_id.category_id;
+        let brand = item.brand_id;
+        let subCategory = item.subcategory_id;
 
         textItemName.value = brand.name + " " + subCategory.name;
 
@@ -417,18 +416,6 @@ const checkItemFormError = () => {
     if (item.roq == null) {
         errors = errors + "Please enter roq...\n";
     }
-    if (item.purchaseprice == null) {
-        errors = errors + "Please enter purchase price...\n";
-    }
-    if (item.profitrate == null) {
-        errors = errors + "Please enter profit rate...\n";
-    }
-    if (item.salesprice == null) {
-        errors = errors + "Please enter sales price...\n";
-    }
-    if (item.discountrate == null) {
-        errors = errors + "Please enter discount rate...\n";
-    }
 
     return errors;
 }
@@ -445,8 +432,8 @@ const submitItemForm = () => {
     if (errors == "") {
         let userConfirm = window.confirm("Are you sure to add following item details" +
             "\n Item name : " + item.itemname +
-            "\n Item purchase price : " + item.purchaseprice +
-            "\n Item sales price : " + item.salesprice
+            "\n Item reorder quantity : " + item.roq +
+            "\n Item reorder price : " + item.rop
         );
 
         //call post service
@@ -497,18 +484,7 @@ const checkItemFormUpdate = () => {
         if (item.roq != oldItem.roq) {
             updates = updates + "roq is change...! \n";
         }
-        if (item.purchaseprice != oldItem.purchaseprice) {
-            updates = updates + "purchase price is change...! \n";
-        }
-        if (item.profitrate != oldItem.profitrate) {
-            updates = updates + "profit rate is change...! \n";
-        }
-        if (item.salesprice != oldItem.salesprice) {
-            updates = updates + "sales price is change...! \n";
-        }
-        if (item.discountrate != oldItem.discountrate) {
-            updates = updates + "discount rate is change...! \n";
-        }
+
         if (item.note != oldItem.note) {
             updates = updates + "note is change...! \n";
         }

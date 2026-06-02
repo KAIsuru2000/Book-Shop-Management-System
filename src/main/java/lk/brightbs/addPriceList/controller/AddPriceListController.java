@@ -83,6 +83,18 @@ public class AddPriceListController {
 		}
    }
 
+   @GetMapping(value = "/addPriceList/getPendingList", produces = "application/json")
+   public List<AddPriceList> getPendingList() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Privilege userPrivilegePO = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
+		Privilege userPrivilegeAPL = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ADDPRICELIST");
+		if (userPrivilegePO.getSel() || userPrivilegeAPL.getSel()) {
+			return addPriceListDao.getPendingList();
+		} else {
+			return new ArrayList<>();
+		}
+   }
+
    //define post mapping
 	@PostMapping(value = "/addPriceList/insert")
 	public String insertAddPriceList(@RequestBody AddPriceList addPriceList) {

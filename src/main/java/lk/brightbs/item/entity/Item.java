@@ -13,12 +13,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 // make as an persistence entity
 @Table(name = "item") // for map table name
 @Data // getter , setter tostring
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +28,7 @@ public class Item {
 
     @Id // pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Column(name = "itemcode", unique = true)
@@ -36,23 +39,6 @@ public class Item {
     @Column(name = "itemname")
     @NotNull
     private String itemname;
-
-    @Column(name = "profitrate", unique = true)
-    @NotNull
-    // @Length(max = 12 , min = 10)
-    private BigDecimal profitrate;
-
-    @Column(name = "salesprice")
-    @NotNull
-    private BigDecimal salesprice;
-
-    @Column(name = "purchaseprice", unique = true)
-    @NotNull
-    private BigDecimal purchaseprice;
-
-    @Column(name = "discountrate")
-    @NotNull
-    private BigDecimal discountrate;
 
     @Column(name = "rop")
     @NotNull

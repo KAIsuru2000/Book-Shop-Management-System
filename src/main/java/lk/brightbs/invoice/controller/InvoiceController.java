@@ -14,9 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.invoice.dao.InvoiceDao;
+import lk.brightbs.invoice.dao.InvoiceStatusDao;
 import lk.brightbs.invoice.entity.Invoice;
+import lk.brightbs.invoice.entity.InvoiceHasInventory;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
+import lk.brightbs.user.dao.UserDao;
+import lk.brightbs.user.entity.User;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import java.time.LocalDateTime;
 
 
 @RestController
@@ -30,8 +39,11 @@ public class InvoiceController {
     private
      UserPrivilegeController userPrivilegeController;
 
-    // @Autowired
-	// private UserDao userDao; 
+    @Autowired
+	private UserDao userDao; 
+
+    @Autowired
+    private InvoiceStatusDao invoiceStatusDao; 
 
     //request mapping for load purchase order ui url - /invoice
 	@RequestMapping("/invoice") //request eka meka awoth yata function eka run karanawa
@@ -89,50 +101,82 @@ public class InvoiceController {
        }
    }
 
-//    //define post mapping
-// 	@PostMapping(value = "/purchaseOrders/insert")
-// 	public String insertPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
-// 		// check user authentication and authorization
-// 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-// 		//log una user object eka ara ganima
-// 		User logedUser = userDao.getByUsername(auth.getName());
-// 		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
-// 		if (userPrivilege.getInst()) {
-// 			//check duplicate
-// 			// PurchaseOrder extPurchaseOrder = purchaseOrderDao.getByOrderNumber(purchaseOrder.getOrderNumber());
-// 			// if(extPurchaseOrder != null){
-// 			// 	return "Save not completed : entered Order number " + purchaseOrder.getOrderNumber() +"Value Allready ext..!";
-// 			// }
-			
+    // define post mapping
+    @PostMapping(value = "/invoice/insert")
+    public String insertInvoice(@RequestBody Invoice invoice) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User logedUser = userDao.getByUsername(auth.getName());
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "INVOICE");
+        if (userPrivilege.getInst()) {
+            try {
+                invoice.setAddeddatetime(LocalDateTime.now());
+                invoice.setAddeduserid(logedUser.getId());
+                invoice.setInvoiceno(invoiceDao.getNextInvoiceNo());
 
-// 			try {
-// 				//form eken set nowi backend eken set wiya yuthu data thibenam ewa set kirima
-// 			purchaseOrder.setAddeddatetime(LocalDateTime.now());
-// 			purchaseOrder.setAddeduserid(logedUser.getId());
-// 			purchaseOrder.setPurchaserequestno(purchaseOrderDao.getNextOrderNo());
-		
-// 				// save operator
-//                 // purchaserequest_id block kirima nisa save kirimata athiwana getaluwa magaharawa ganimata for each ekak liya purchaseOrder laga athi list eka illa gena (purchaseOrderHasItemList)
-//               for (PurchaseOrderHasItem poItem : purchaseOrder.getPurchaseOrderHasItemList()) {
-//                   poItem.setPurchaserequest_id(purchaseOrder);
-//               }
+                for (InvoiceHasInventory invItem : invoice.getInvoiceHasInventoryList()) {
+                    invItem.setInvoice_id(invoice);
+                }
 
-// 				purchaseOrderDao.save(purchaseOrder);
-// 				return "OK";
-// 			} catch (Exception e) {
+                invoiceDao.save(invoice);
+                return "OK";
+            } catch (Exception e) {
+                return "Insert not completed : " + e.getMessage();
+            }
+        } else {
+            return "Insert not completed : you haven't permission...";
+        }
+    }
 
-// 				return "Insert not completed : " + e.getMessage();
+    // define delete mapping
+    @DeleteMapping(value = "/invoice/delete")
+    public String deleteInvoice(@RequestBody Invoice invoice) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "INVOICE");
+        if (userPrivilege.getDel()) {
+            Invoice extInvoice = invoiceDao.getReferenceById(invoice.getId());
+            if (extInvoice == null) {
+                return "Invoice not exist";
+            }
+            try {
+                extInvoice.setInvoicestatus_id(invoiceStatusDao.getReferenceById(3)); // Canceled
+                extInvoice.setDeletedatetime(LocalDateTime.now());
+                extInvoice.setDeleteuserid(userDao.getByUsername(auth.getName()).getId());
 
-// 			}
-// 		} else {
-// 			return "Insert not completed : you haven't permission...";
-// 		}
-// 	}
+                invoiceDao.save(extInvoice);
+                return "OK";
+            } catch (Exception e) {
+                return "Delete not completed : " + e.getMessage();
+            }
+        } else {
+            return "Delete not completed : you haven't permission...";
+        }
+    }
 
-    
+    // define put mapping
+    @PutMapping(value = "/invoice/update")
+    public String updateInvoice(@RequestBody Invoice invoice) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "INVOICE");
+        if (userPrivilege.getUpd()) {
+            Invoice extInvoice = invoiceDao.getReferenceById(invoice.getId());
+            if (extInvoice == null) {
+                return "Invoice not exist";
+            }
+            try {
+                invoice.setUpdatedatetime(LocalDateTime.now());
+                invoice.setUpdateuserid(userDao.getByUsername(auth.getName()).getId());
 
+                for (InvoiceHasInventory invItem : invoice.getInvoiceHasInventoryList()) {
+                    invItem.setInvoice_id(invoice);
+                }
 
+                invoiceDao.save(invoice);
+                return "OK";
+            } catch (Exception e) {
+                return "Update not completed : " + e.getMessage();
+            }
+        } else {
+            return "Update not completed : you haven't permission...";
+        }
+    }
 }
-    
-
-   

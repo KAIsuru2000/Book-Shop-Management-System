@@ -63,6 +63,12 @@ public class CustomerPayment {
     @Column(name = "cardtype")
     private String cardtype ;
 
+    @Column(name = "cashamount")
+    private BigDecimal cashamount;
+
+    @Column(name = "cardamount")
+    private BigDecimal cardamount;
+
 
     @Column(name = "addeddatetime")
     @NotNull

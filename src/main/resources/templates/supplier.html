@@ -108,8 +108,8 @@
                                             <input type="text" placeholder="Enter Supplier Name" class="form-control"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textSupplierName"
-                                                oninput="textValidator(this, '^.*$', 'supplier', 'suppliername')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'suppliername')"
+                                                oninput="textValidator(this, '^[A-Za-z0-9 .,&()\\-]{3,100}$', 'supplier', 'suppliername')"
+                                                onclick="textValidator(this, '^[A-Za-z0-9 .,&()\\-]{3,100}$', 'supplier', 'suppliername')"
                                                 required data-bs-toggle="tooltip"
                                                 title="Please enter supplier name correctly">
                                         </div>
@@ -121,12 +121,12 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">BRN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                                 &nbsp; &nbsp; &nbsp;:
-                                                <span class="fw-bold text-danger">*</span></span>
-                                            <input type="tel" placeholder="Enter BRN" class="form-control"
+                                                <span class="fw-bold text-danger">(optional)</span></span>
+                                            <input type="text" placeholder="Enter BRN" class="form-control"
                                                 aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="charBRN" required
-                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'brn')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'brn')"
+                                                aria-describedby="inputGroup-sizing-default" id="textBRN" required
+                                                onkeyup="textValidator(this, '^[A-Za-z0-9\\/\\- ]{3,20}$', 'supplier', 'brn')"
+                                                onclick="textValidator(this, '^[A-Za-z0-9\\/\\- ]{3,20}$', 'supplier', 'brn')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the business registration number correctly here.">
                                         </div>
@@ -143,8 +143,8 @@
                                             <input type="text" placeholder="Enter Contact Person Name"
                                                 class="form-control" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textConPersonName"
-                                                oninput="textValidator(this, '^.*$', 'supplier', 'contact_person')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'contact_person')"
+                                                oninput="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'supplier', 'contact_person')"
+                                                onclick="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'supplier', 'contact_person')"
                                                 required data-bs-toggle="tooltip"
                                                 title="Please enter contact person name correctly">
                                         </div>
@@ -198,8 +198,8 @@
                                             </span>
                                             <textarea class="form-control" aria-label="With textarea"
                                                 placeholder="Enter address" id="textAddress" required
-                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'address')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'address')"
+                                                onkeyup="textValidator(this, '^[A-Za-z0-9 .,/()#-]{10,150}$', 'supplier', 'address')"
+                                                onclick="textValidator(this, '^[A-Za-z0-9 .,/()#-]{10,150}$', 'supplier', 'address')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the employee's Address correctly here. (Ex-50/1,Colombo road,Gampaha.)"></textarea>
                                         </div>
@@ -278,16 +278,14 @@
                                     <!-- Bank Name area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Bank
-                                                Name &nbsp; &nbsp; :
-                                                <span class="fw-bold text-danger">*</span>
-                                            </span>
-                                            <input type="text" placeholder="Enter Bank Name" class="form-control"
-                                                aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="textBankName"
-                                                oninput="textValidator(this, '^.*$', 'supplier', 'bankname')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'bankname')" required
-                                                data-bs-toggle="tooltip" title="Please enter Bank name correctly">
+                                            <label class="input-group-text lablBg" for="selectBankName">Bank Name :
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectBankName"
+                                                onchange="selectDainamicElementValidater(this , 'supplier', 'bank_name_id')"
+                                                onclick="selectDainamicElementValidater(this , 'supplier', 'bank_name_id')"
+                                                data-bs-toggle="tooltip" title="Select the Bank Name here.">
+                                                <option selected disabled>Select Bank Name</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <!-- Bank Name area end -->
@@ -302,9 +300,9 @@
                                             <input type="text" placeholder="Enter Branch Name" class="form-control"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textBranchName"
-                                                oninput="textValidator(this, '^.*$', 'supplier', 'branchname')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'branchname')" required
-                                                data-bs-toggle="tooltip"
+                                                oninput="textValidator(this, '^[A-Za-z0-9. -]{3,45}$', 'supplier', 'branchname')"
+                                                onclick="textValidator(this, '^[A-Za-z0-9. -]{3,45}$', 'supplier', 'branchname')"
+                                                required data-bs-toggle="tooltip"
                                                 title="Please enter Bank Branch name correctly">
                                         </div>
                                     </div>
@@ -324,8 +322,8 @@
                                             <input type="tel" class="form-control" placeholder="Enter Account No"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="telAccountNo" required
-                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'accuntno')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'accuntno')"
+                                                onkeyup="textValidator(this, '^[0-9]{4,50}$', 'supplier', 'accuntno')"
+                                                onclick="textValidator(this, '^[0-9]{4,50}$', 'supplier', 'accuntno')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the supplier's Account number correctly here.">
                                         </div>
@@ -335,7 +333,7 @@
                                     <!-- Holder Name area start -->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Holder
+                                            <span class="input-group-text lablBg">Account Holder
                                                 Name &nbsp; :
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
@@ -343,8 +341,8 @@
                                                 placeholder="Enter Account Holder Name"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textHolderName"
-                                                oninput="textValidator(this, '^.*$', 'supplier', 'accuntholdername')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'accuntholdername')"
+                                                oninput="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'supplier', 'accuntholdername')"
+                                                onclick="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'supplier', 'accuntholdername')"
                                                 required data-bs-toggle="tooltip"
                                                 title="Please enter Account Holder name correctly">
                                         </div>
@@ -386,7 +384,7 @@
                                     <div class="col-5"></div>
 
                                     <!-- update button area start -->
-                                    <div class="col-2">
+                                    <div class="col-2" id="divButtonUpdate">
                                         <button type="button" id="updateButton" class=" btn btnUpdate"
                                             onclick="buttonSupplierUpdate()">
                                             <i class="fa-solid fa-file-pen"></i>
@@ -396,7 +394,7 @@
                                     <!-- update button area end -->
 
                                     <!-- Add btn area start -->
-                                    <div class="col-2">
+                                    <div class="col-2" id="divButtonAdd">
                                         <button type="button" id="submitButton" class=" btn btnAdd"
                                             onclick="buttonSupplierSubmit()">
                                             <!-- button Submit function eka-->
@@ -419,7 +417,7 @@
     </div>
 
     <!-- view/print item -->
-    <!-- Modal --> 
+    <!-- Modal -->
     <!-- offcanvas area start -->
     <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
         data-bs-backdrop="false" id="offcanvasBottomSupplierView" aria-labelledby="offcanvasBottomLabel">

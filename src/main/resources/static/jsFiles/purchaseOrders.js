@@ -400,8 +400,8 @@ const refreshPurchaseOrderForm = () => {
     setDefault([selectSupplier, dateRequireDate, textTotalAmount, textNote, selectOrderStatus]);
 
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('supplier/alldata');
-    fillDataIntoSelect(selectSupplier, "Please Select Supplier..!!", suppliers, "suppliername");
+    let pendingPriceLists = getServiceRequest('/addPriceList/getPendingList');
+    fillDataIntoSelectSupplier(selectSupplier, "Select Supplier related to Add Price List..!!", pendingPriceLists);
 
     let orderStatues = getServiceRequest('/purchaseOrderStatues/alldata');
     fillDataIntoSelect(selectOrderStatus, "Please Select Status..!!", orderStatues, "name");
@@ -427,9 +427,9 @@ const refreshPurchaseOrderForm = () => {
     //date format eka yyyy-mm-dd
     let currentDate = new Date();
     // get month wala value eka 0-11 wena nisa +1 karai
-    let currentMonth = currentDate.getMonth() +1;
+    let currentMonth = currentDate.getMonth() + 1;
     // 9n pasuwa cracter 2k atha ema nisa 9n pasuwa 0k add kara gannawa
-    if(currentMonth < 10){
+    if (currentMonth < 10) {
         currentMonth = "0" + currentMonth;
     }
     // get date eka 1-31 wena nisa 9n pasuwa cracter 2k atha
@@ -437,13 +437,13 @@ const refreshPurchaseOrderForm = () => {
     if (currentDay < 10) {
         currentDay = "0" + currentDay;
     }
-    dateRequireDate.min = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay ;
+    dateRequireDate.min = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay;
 
     // max date eka 14 days add kara gannawa
     currentDate.setDate(currentDate.getDate() + 14);
-    let maxCurrentMonth = currentDate.getMonth()+1;
+    let maxCurrentMonth = currentDate.getMonth() + 1;
     // 9n pasuwa cracter 2k atha ema nisa 9n pasuwa 0k add kara gannawa
-    if(maxCurrentMonth < 10){
+    if (maxCurrentMonth < 10) {
         maxCurrentMonth = "0" + maxCurrentMonth;
     }
     // get date eka 1-31 wena nisa 9n pasuwa cracter 2k atha
@@ -451,7 +451,7 @@ const refreshPurchaseOrderForm = () => {
     if (maxCurrentDay < 10) {
         maxCurrentDay = "0" + maxCurrentDay;
     }
-    dateRequireDate.max = currentDate.getFullYear() + "-" + maxCurrentMonth + "-" + maxCurrentDay ;
+    dateRequireDate.max = currentDate.getFullYear() + "-" + maxCurrentMonth + "-" + maxCurrentDay;
 
 
 
@@ -467,21 +467,21 @@ const filterBrandBySupplier = () => {
 
     // select karana supplierta adala brand tika load kara gannima
     // supplier element eka select nowee empty ("") value eka passe wuwoth JSON.parse error eka ei >> eya welakwimata if yoda check karai
-    if(selectSupplier.value !== "") {
-        let brands = getServiceRequest('/brand/getListBySupply/'+JSON.parse(selectSupplier.value).id);
+    if (selectSupplier.value !== "") {
+        let brands = getServiceRequest('/brand/getListBySupply/' + JSON.parse(selectSupplier.value).id);
         fillDataIntoSelect(selectBrand, "Please Select Brand..!!", brands, "name");
     }
 
-   //in pasu meya supplier dropdown eka laga call karai
+    //in pasu meya supplier dropdown eka laga call karai
 }
 
 // define function for filter item by brand
 const filterItemByBrand = () => {
     // select karana brand ta adala item tika load kara gannima
     // brand value eka select nowee empty ("") nam error eya heki nisa if condition yodai
-    if(selectBrand.value !== "") {
+    if (selectBrand.value !== "") {
         // service request eka magin list eka laba ganima
-        let items = getServiceRequest('/item/getListByBrand/'+JSON.parse(selectBrand.value).id);
+        let items = getServiceRequest('/item/getListByBrand/' + JSON.parse(selectBrand.value).id);
         // code ekai name ekai dekama drop down ekak thula penwa ganima
         fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
     } else {
@@ -602,31 +602,28 @@ const buttonPurchaseOrderItemSubmit = (ob, index) => {
 
 }
 
-// // Define function to fill supplier names into a <select> dropdown
-// const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
-//     // Clear existing options
-//     parentId.innerHTML = "";
-//
-//     // Add a default disabled placeholder if message is provided
-//     // if (message !== "") {
-//     const optionMsg = document.createElement("option");
-//     optionMsg.value = "";
-//     optionMsg.selected = true;
-//     optionMsg.disabled = true;
-//     optionMsg.innerText = message;
-//     parentId.appendChild(optionMsg);
-//     // }
-//
-//     // Loop through the data and extract supplier names
-//     dataList.forEach(dataOb => {
-//         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
-//         const option = document.createElement("option");
-//         option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-//         option.innerText = dataOb.pricelistrequest_id.supplier_id.suppliername;
-//         parentId.appendChild(option);
-//         // }
-//     });
-// };
+// Define function to fill supplier names from pending price lists into a <select> dropdown
+const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
+    // Clear existing options
+    parentId.innerHTML = "";
+
+    const optionMsg = document.createElement("option");
+    optionMsg.value = "";
+    optionMsg.selected = true;
+    optionMsg.disabled = true;
+    optionMsg.innerText = message;
+    parentId.appendChild(optionMsg);
+
+    // Loop through the data and extract supplier names from pending price lists
+    dataList.forEach(dataOb => {
+        if (dataOb.pricelistrequest_id && dataOb.pricelistrequest_id.supplier_id) {
+            const option = document.createElement("option");
+            option.value = JSON.stringify(dataOb.pricelistrequest_id.supplier_id);
+            option.innerText = dataOb.addpricelistno + " - " + dataOb.pricelistrequest_id.supplier_id.suppliername;
+            parentId.appendChild(option);
+        }
+    });
+};
 
 
 

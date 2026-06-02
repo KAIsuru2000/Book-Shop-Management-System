@@ -33,12 +33,10 @@ public class AddPriceListHasItem {
     private BigDecimal unitprice;
 
     @Column(name = "mincountity")
-    @NotNull
     private Integer mincountity;
 
-    @Column(name = "lastunitprice")
-    @NotNull
-    private BigDecimal lastunitprice;
+    @Column(name = "minquunitprice")
+    private BigDecimal minquunitprice;
 
     @Column(name = "marketprice")
     @NotNull
@@ -54,9 +52,12 @@ public class AddPriceListHasItem {
     // foreign key
     @ManyToOne
     @JoinColumn(name = "addpricelist_id", referencedColumnName = "id")
-    // foreign key lesa another table ekaka record ekak ana nisa type eka addpricelist
+    // foreign key lesa another table ekaka record ekak ana nisa type eka
+    // addpricelist
     // recursion walek wima sadaha addpricelist_id read kirima walakwai(JsonIgnore)
-    // meya block kala wita save kala noheka eyata wisadumak lesa controller file eka thula for loop ekak liyala main object eka thula athi list eka illa gena eyata set karanawa addpricelist_id eka set karai
+    // meya block kala wita save kala noheka eyata wisadumak lesa controller file
+    // eka thula for loop ekak liyala main object eka thula athi list eka illa gena
+    // eyata set karanawa addpricelist_id eka set karai
     @JsonIgnore
     private AddPriceList addpricelist_id;
 

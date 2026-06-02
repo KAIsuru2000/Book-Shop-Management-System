@@ -236,8 +236,8 @@
                                                         id="inputGroup-sizing-default">Unit Price : <span
                                                             class="fw-bold text-danger">*</span></span>
                                                     <select class="form-select" id="selectUnitPrice"
-                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice')"
-                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice')"
+                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
+                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Unit Price correctly here.">
                                                         <option selected disabled value="">Select Unit Price</option>
@@ -250,9 +250,26 @@
                                             <!-- Unit Price area end-->
                                         </div>
                                         <!-- Item and Unit Price area end -->
-                                        <!-- Quantity and Line Price area start -->
+                                        <!-- discount price and Quantity area start -->
                                         <div class="row mt-4">
-                                            <!-- Quantity area start -->
+                                            <!-- discount price area start -->
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text lablBg">Discount Price :
+                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <input type="number" class="form-control"
+                                                        placeholder="Enter Discount Price"
+                                                        aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default"
+                                                        id="textDiscountPrice" required
+                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"
+                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Enter the Discount Price correctly here.">
+                                                </div>
+                                            </div>
+                                            <!-- discount price area end -->
+                                            <!--Quantity area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
                                                     <span class="input-group-text lablBg">Quantity :
@@ -261,13 +278,19 @@
                                                         placeholder="Enter Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textQuantity"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
+                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'quentity'); generateLinePrice();"
+                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'quentity'); generateLinePrice();"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Quantity correctly here.">
                                                 </div>
                                             </div>
                                             <!-- Quantity area end -->
+
+
+                                        </div>
+                                        <!-- discount price and Quantity area end -->
+                                        <!-- Line Price area start -->
+                                        <div class="row mt-4">
                                             <!-- Line Price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -278,8 +301,8 @@
                                                         placeholder="Enter Line Price" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textLinePrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                        onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
+                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Line Price correctly here.">
                                                 </div>
@@ -288,7 +311,7 @@
 
 
                                         </div>
-                                        <!-- Quantity and Line Price area end -->
+                                        <!--Line Price area end -->
                                         <!-- inner form area end -->
 
 
@@ -300,7 +323,8 @@
 
                                             <!-- clear btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnInnerClear" class="btn btnClear">
+                                                <button type="button" id="btnInnerClear" class="btn btnClear"
+                                                    onclick="buttonInvoiceItemClear()">
                                                     <i class="fa-solid fa-eraser"></i>
                                                     Clear
                                                 </button>
@@ -311,8 +335,8 @@
 
                                             <!-- update button area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderItemUpdate"
-                                                    class=" btn btnUpdate" onclick="buttonPurchaseOrderItemUpdate()">
+                                                <button type="button" id="btnInvoiceItemUpdate" class=" btn btnUpdate"
+                                                    onclick="buttonInvoiceItemUpdate()">
                                                     <i class="fa-solid fa-file-pen"></i>
                                                     Update
                                                 </button>
@@ -321,8 +345,8 @@
 
                                             <!-- Add btn area start -->
                                             <div class="col-3">
-                                                <button type="button" id="btnPurchaseOrderItemSubmit"
-                                                    class=" btn btnAdd" onclick="buttonPurchaseOrderItemSubmit()">
+                                                <button type="button" id="btnInvoiceItemSubmit" class=" btn btnAdd"
+                                                    onclick="buttonInvoiceItemSubmit()">
                                                     <!-- buttonEmpSubmit function eka (employee.js)-->
                                                     <i class="fa-solid fa-file-circle-plus"></i>
                                                     Add
@@ -342,6 +366,7 @@
                                                                 <th>#</th>
                                                                 <th>Item Name</th>
                                                                 <th>Unit Price(Rs.)</th>
+                                                                <th>Discount Price(Rs.)</th>
                                                                 <th>Quantity</th>
                                                                 <th>Line Price(Rs.)</th>
 
@@ -368,7 +393,8 @@
 
                                         <!-- clear btn area start -->
                                         <div class="col-3">
-                                            <button type="button" id="buttonEmpClear" class="btn btnClear">
+                                            <button type="button" id="buttonInvoiceClear" class="btn btnClear"
+                                                onclick="clearInvoiceForm()">
                                                 <i class="fa-solid fa-eraser"></i>
                                                 Clear
                                             </button>
@@ -379,8 +405,8 @@
 
                                         <!-- update button area start -->
                                         <div class="col-3">
-                                            <button type="button" id="btnPurchaseOrderUpdate" class=" btn btnUpdate"
-                                                onclick="buttonEmployeeUpdate()">
+                                            <button type="button" id="btnInvoiceUpdate" class=" btn btnUpdate"
+                                                onclick="buttonInvoiceUpdate()">
                                                 <i class="fa-solid fa-file-pen"></i>
                                                 Update
                                             </button>
@@ -389,9 +415,8 @@
 
                                         <!-- Add btn area start -->
                                         <div class="col-3">
-                                            <button type="button" id="btnPurchaseOrderSubmit" class=" btn btnAdd"
-                                                onclick="buttonPurchaseOrderSubmit()">
-                                                <!-- buttonEmpSubmit function eka (employee.js)-->
+                                            <button type="button" id="btnInvoiceSubmit" class=" btn btnAdd"
+                                                onclick="buttonInvoiceSubmit()">
                                                 <i class="fa-solid fa-file-circle-plus"></i>
                                                 Add
                                             </button>
