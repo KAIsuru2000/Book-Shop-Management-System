@@ -22,6 +22,12 @@ import lk.brightbs.purchaseOrder.entity.PurchaseOrder;
 import lk.brightbs.purchaseOrder.entity.PurchaseOrderHasItem;
 import lk.brightbs.user.dao.UserDao;
 import lk.brightbs.user.entity.User;
+import lk.brightbs.addPriceList.dao.AddPriceListDao;
+import lk.brightbs.addPriceList.dao.AddPriceListStatusDao;
+import lk.brightbs.addPriceList.entity.AddPriceList;
+import lk.brightbs.addPriceList.entity.AddPriceListHasItem;
+import lk.brightbs.addPriceList.entity.AddPricelistStatus;
+import lk.brightbs.item.entity.Item;
 
 @RestController
 public class PurchaseOrderController {
@@ -36,6 +42,14 @@ public class PurchaseOrderController {
 
     @Autowired
 	private UserDao userDao; 
+
+    // add price list dao control eka autowired karagannawa
+    @Autowired
+    private AddPriceListDao addPriceListDao;
+
+    // add price list status dao control eka autowired karagannawa
+    @Autowired
+    private AddPriceListStatusDao addPriceListStatusDao;
 
     //request mapping for load purchase order ui url - /purchaseOrders
 	@RequestMapping("/purchaseOrders") //request eka meka awoth yata function eka run karanawa
@@ -123,6 +137,73 @@ public class PurchaseOrderController {
               }
 
 				purchaseOrderDao.save(purchaseOrder);
+
+				// selected add price list eka null newe nam check karanna patan gannawa
+				if (purchaseOrder.getAddpricelist_id() != null) {
+					// selected add price list eka database eken gannawa
+					AddPriceList addPriceList = addPriceListDao.findById(purchaseOrder.getAddpricelist_id().getId()).orElse(null);
+					// addPriceList object eka valid nam pamanak meya sidu karanawa
+					if (addPriceList != null) {
+						// add price list eke thiyena okkoma items list eka gannawa
+						List<AddPriceListHasItem> requiredItemsList = addPriceList.getAddPriceListHasItemList();
+						// required items id collect karaganna list ekak hadagannawa
+						List<Integer> requiredItemIds = new ArrayList<>();
+						// required items array eka loop karala id gannawa
+						for (AddPriceListHasItem aplhi : requiredItemsList) {
+							// item object eka valid nam id eka add karanawa
+							if (aplhi.getItem_id() != null) {
+								// requiredItemIds list ekata id eka push karanawa
+								requiredItemIds.add(aplhi.getItem_id().getId());
+							}
+						}
+
+						// select karapu add price list id ekata adala, kalin database eke save wunu purchase orders tika gannawa
+						List<PurchaseOrder> savedPOs = purchaseOrderDao.findByAddPriceList(addPriceList.getId());
+						// database eke kalin save wunu items id collect karaganna list ekak hadagannawa
+						List<Integer> savedItemIds = new ArrayList<>();
+						// save wunu purchase orders list eka loop karanawa
+						for (PurchaseOrder po : savedPOs) {
+							// purchase order eke items array eka check karanawa
+							if (po.getPurchaseOrderHasItemList() != null) {
+								// items loop karala individual items gannawa
+								for (PurchaseOrderHasItem poItem : po.getPurchaseOrderHasItemList()) {
+									// item object eka null newe nam item id eka collect karanawa
+									if (poItem.getItem_id() != null) {
+										// savedItemIds list ekata item id eka add karanawa
+										savedItemIds.add(poItem.getItem_id().getId());
+									}
+								}
+							}
+						}
+
+						// okkoma required items database eke thiyeda kiyala check karanna variable ekak
+						boolean allCovered = true;
+						// required items id list eka loop karanawa
+						for (Integer reqItemId : requiredItemIds) {
+							// required item id eka saved list eke nathnam check eka false karanawa
+							if (!savedItemIds.contains(reqItemId)) {
+								// allCovered false karala loop eka break karanawa
+								allCovered = false;
+								// break loop
+								break;
+							}
+						}
+
+						// okkoma items save wela nam, add price list status eka Completed karanawa
+						if (allCovered) {
+							// status database eken "Completed" status object eka gannawa
+							AddPricelistStatus completedStatus = addPriceListStatusDao.findByName("Completed");
+							// status object eka valid nam
+							if (completedStatus != null) {
+								// add price list status eka Completed widihata set karanawa
+								addPriceList.setAddpriceliststatus_id(completedStatus);
+								// yawatakalina karapu add price list eka database save karanawa
+								addPriceListDao.save(addPriceList);
+							}
+						}
+					}
+				}
+
 				return "OK";
 			} catch (Exception e) {
 

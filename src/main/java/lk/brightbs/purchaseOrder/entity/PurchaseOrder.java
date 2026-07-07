@@ -17,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lk.brightbs.supplier.entity.Supplier;
+import lk.brightbs.addPriceList.entity.AddPriceList;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -76,12 +77,11 @@ public class PurchaseOrder {
     @JoinColumn(name = "supplier_id" , referencedColumnName = "id")
     private Supplier supplier_id ;
 
-//    //purchaseOrder many addpricelist one
-//    //foreing key eka one side eke sita many side ekata ei ema nisa many to one
-//    @ManyToOne(optional = true)  //meya optional
-//    //table name eka(addpricelist_id) foreing key wana table eke id eka(referencedColumnName=primary key)
-//    @JoinColumn(name = "addpricelist_id" , referencedColumnName = "id")
-//    private Employee addpricelist_id;
+    // purchaseOrder dynamic dropdown eken labena add pricelist property eka bind karagannawa
+    @ManyToOne(optional = true)
+    // table column eka addpricelist_id primary key eka id ekata join karagannawa
+    @JoinColumn(name = "addpricelist_id" , referencedColumnName = "id")
+    private AddPriceList addpricelist_id;
 
     // list ekak lebiya yuthuya
     // js wala hadapu list eka (purchaseOrderHasItemList)

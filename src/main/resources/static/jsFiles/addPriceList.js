@@ -46,14 +46,6 @@ const getAddPriceListStatus = (dataob) => {
             return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Completed"></i>'
         }
-        if (dataob.addpriceliststatus_id.name == "Active") {
-            return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
-                '                                                title="Active"></i>'
-        }
-        if (dataob.addpriceliststatus_id.name == "In-Active" || dataob.addpriceliststatus_id.name == "In-active") {
-            return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
-                '                                                title="In-Active"></i>'
-        }
         if (dataob.addpriceliststatus_id.name == "Deleted") {
             return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Deleted"></i>'

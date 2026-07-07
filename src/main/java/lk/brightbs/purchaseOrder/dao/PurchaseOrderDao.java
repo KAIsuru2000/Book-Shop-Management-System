@@ -13,4 +13,8 @@ public interface PurchaseOrderDao extends JpaRepository<PurchaseOrder, Integer>{
  @Query("SELECT po FROM PurchaseOrder po WHERE po.purchaserequeststatus_id.name = 'Pending'")
  List<PurchaseOrder> getPendingList();
 
+    // select karapu add price list id ekata adala, delete nowunu purchase orders set eka ganna query eka
+    @Query("SELECT p FROM PurchaseOrder p WHERE p.addpricelist_id.id = ?1 AND p.purchaserequeststatus_id.name <> 'Deleted'")
+    List<PurchaseOrder> findByAddPriceList(Integer addPriceListId);
+
 }

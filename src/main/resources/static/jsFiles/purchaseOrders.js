@@ -480,73 +480,157 @@ const getSelectedAddPriceList = () => {
     return addPriceListJson ? JSON.parse(addPriceListJson) : null;
 };
 
-// define function for filter brand by supplier
+// Supplier (Price List Request / Add Price List) select karama eata adala brand dropdown ekata filter karaganna function eka
 const filterBrandBySupplier = () => {
+    // select karala thiyena Add Price List object eka gannawa
     const addPriceList = getSelectedAddPriceList();
+    // addPriceList object eka null newe nam, brand select filter karanawa
+    if (addPriceList) {
+        // select karapu addPriceList object eka purchaseOrder object ekata assign karanawa
+        purchaseOrder.addpricelist_id = addPriceList;
+    } else {
+        // addPriceList object eka null karanawa
+        purchaseOrder.addpricelist_id = null;
+    }
+
+    // addPriceList and hasItemList valid nam brands collect karagannawa
     if (addPriceList && addPriceList.addPriceListHasItemList) {
+        // dynamic set ekak hadala brand names repeat wena eka nawatthanawa
         const brands = [];
+        // repeat wena brand id check karaganna set ekak
         const brandIds = new Set();
+        // hasItemList loop karala brands gannawa
         addPriceList.addPriceListHasItemList.forEach(hasItem => {
+            // item_id and brand_id valid nam brand list ekata danna check karanawa
             if (hasItem.item_id && hasItem.item_id.brand_id) {
+                // brand object eka gannawa
                 const brand = hasItem.item_id.brand_id;
+                // brandIds set eke me brand id eka nethnam list ekata add karanawa
                 if (!brandIds.has(brand.id)) {
+                    // set ekata brand id eka add karanawa
                     brandIds.add(brand.id);
+                    // brands list ekata brand object eka add karanawa
                     brands.push(brand);
                 }
             }
         });
+        // filter karala gaththa brand list selectBrand dropdown ekata fill karanawa
         fillDataIntoSelect(selectBrand, "Please Select Brand..!!", brands, "name");
     } else {
+        // lists empty karala dropdown empty karanawa
         fillDataIntoSelect(selectBrand, "Please Select Brand..!!", [], "name");
     }
 
-    // Since supplier changed, we must also reset/clear item dropdown and inner form elements
+    // selectBrand value reset karanawa
     selectBrand.value = "";
+    // selectItem value reset karanawa
     selectItem.value = "";
+    // textUnitPrice value reset karanawa
     textUnitPrice.value = "";
+    // textQuantity value reset karanawa
     textQuantity.value = "";
+    // textLinePrice value reset karanawa
     textLinePrice.value = "";
     
-    // Clear validation styles
+    // field classes design border set default karanawa
     setDefault([selectBrand, selectItem, textUnitPrice, textQuantity, textLinePrice]);
     
+    // hasItem object values reset karanawa
     if (typeof purchaseOrderHasItem !== 'undefined') {
+        // brand id object null karanawa
         purchaseOrderHasItem.brand_id = null;
+        // item id object null karanawa
         purchaseOrderHasItem.item_id = null;
+        // unit price null karanawa
         purchaseOrderHasItem.uniteprice = null;
+        // quantity null karanawa
         purchaseOrderHasItem.quentity = null;
+        // line price null karanawa
         purchaseOrderHasItem.lineprice = null;
     }
 }
 
-// define function for filter item by brand
+// Brand select karama eata adala items drop down ekata filter karaganna function eka
 const filterItemByBrand = () => {
+    // select karala thiyena Add Price List object eka gannawa
     const addPriceList = getSelectedAddPriceList();
+    // addPriceList data and brand dropdown selection valid nam items list eka filter karanawa
     if (addPriceList && selectBrand.value !== "") {
+        // select karapu brand id eka parse karala gannawa
         const selectedBrandId = JSON.parse(selectBrand.value).id;
+        // matching items collect karaganna array ekak
         const items = [];
+        // addPriceList eke has items loop karala matching brand items collect karanawa
         addPriceList.addPriceListHasItemList.forEach(hasItem => {
+            // brand id and selectBrand id match wena items select karagannawa
             if (hasItem.item_id && hasItem.item_id.brand_id && hasItem.item_id.brand_id.id === selectedBrandId) {
+                // items array ekata item object eka add karanawa
                 items.push(hasItem.item_id);
             }
         });
-        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
+
+        // Server eken okkoma save karapu purchase order data gannawa
+        let allPurchaseOrders = getServiceRequest("/purchaseOrders/alldata");
+
+        // Danata select karapu add price list id ekata adala, kalin save karapu items wala id collect karaganna array ekak
+        let savedItemIds = [];
+        // database eken gaththa purchase orders loop karala items id collect karanawa
+        allPurchaseOrders.forEach(savedPO => {
+            // status Deleted newe nam saha, select karala thiyena price list id ekatama adala nam
+            if ((!savedPO.purchaserequeststatus_id || savedPO.purchaserequeststatus_id.name !== "Deleted") && 
+                savedPO.addpricelist_id && savedPO.addpricelist_id.id === addPriceList.id) {
+                // poItem list loop karala savedItemIds collect karanawa
+                if (savedPO.purchaseOrderHasItemList) {
+                    // has items loop karanawa
+                    savedPO.purchaseOrderHasItemList.forEach(poItem => {
+                        // item id property eka valid nam array ekata push karanawa
+                        if (poItem.item_id) {
+                            // savedItemIds list ekata id eka collect karanawa
+                            savedItemIds.push(poItem.item_id.id);
+                        }
+                    });
+                }
+            }
+        });
+
+        // Inner table ekata eka parak add karapu items + database eke kalin save karapu items dropdown eken ain karanna filter karagannawa
+        let availableItems = items.filter(item => {
+            // inner table eke (purchaseOrderHasItemList) danata add karala thiyena item ekaka id eka mema item id ekata samanada balanawa
+            let isAddedInForm = purchaseOrder.purchaseOrderHasItemList.some(addedItem => addedItem.item_id.id === item.id);
+            // Kalin database ekata save karapu item ekakda balanawa
+            let isAlreadySaved = savedItemIds.includes(item.id);
+            // Form eke add wela nathi, database eke save wela nathi items pamanak dropdown ekata gannawa
+            return !isAddedInForm && !isAlreadySaved;
+        });
+
+        // filter karala gaththa availableItems selectItem dropdown ekata fill karanawa
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", availableItems, "itemcode", "itemname");
     } else {
+        // empty dropdown values fill karanawa
         fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", [], "itemcode", "itemname");
     }
 
-    // Since brand changed, we reset item dropdown selection, unit price, quantity, and line price
+    // selectItem value reset karanawa
     selectItem.value = "";
+    // textUnitPrice value reset karanawa
     textUnitPrice.value = "";
+    // textQuantity value reset karanawa
     textQuantity.value = "";
+    // textLinePrice value reset karanawa
     textLinePrice.value = "";
 
+    // default validation borders colors set karanawa
     setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice]);
 
+    // hasItem object values reset karanawa
     if (typeof purchaseOrderHasItem !== 'undefined') {
+        // item object eka null karanawa
         purchaseOrderHasItem.item_id = null;
+        // unit price null karanawa
         purchaseOrderHasItem.uniteprice = null;
+        // quantity null karanawa
         purchaseOrderHasItem.quentity = null;
+        // line price null karanawa
         purchaseOrderHasItem.lineprice = null;
     }
 }
