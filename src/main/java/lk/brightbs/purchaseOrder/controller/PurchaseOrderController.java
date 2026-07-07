@@ -82,6 +82,18 @@ public class PurchaseOrderController {
 		}
    }
 
+   @GetMapping(value = "/purchaseOrders/getPendingList", produces = "application/json")
+   public List<PurchaseOrder> getPendingList() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Privilege userPrivilegePO = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
+		Privilege userPrivilegeGRN = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GRN");
+		if (userPrivilegePO.getSel() || userPrivilegeGRN.getSel()) {
+			return purchaseOrderDao.getPendingList();
+		} else {
+			return new ArrayList<>();
+		}
+   }
+
    //define post mapping
 	@PostMapping(value = "/purchaseOrders/insert")
 	public String insertPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {

@@ -48,7 +48,6 @@ public class GRN {
     private String suplierbillno ;
 
     @Column(name = "discountrate")
-    @NotNull
     private BigDecimal discountrate;
 
     @Column(name ="netamount")

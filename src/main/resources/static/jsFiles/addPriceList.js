@@ -87,7 +87,9 @@ const addPriceListFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
 
     // refill value in to element -> elementId.value = ob.releventPropertyName
-    textFullName.value = ob.fullname;
+    let suppliers = getServiceRequest('priceRequest/alldata');
+    fillDataIntoSelectSupplier(selectSupplier, "Select Supplier related to price list request..!!", suppliers);
+    selectSupplier.value = JSON.stringify(dataob.supplier_id);
 
     textCallingName.value = ob.callingname;
 
@@ -580,7 +582,17 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
         if (dataOb.pricelistrequeststatus_id && dataOb.pricelistrequeststatus_id.name === "Pending") {
             const option = document.createElement("option");
             option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-            option.innerText = dataOb.requestno + " - " + dataOb.supplier_id.suppliername;
+            
+            let brands = "";
+            if (dataOb.supplier_id && dataOb.supplier_id.brands && dataOb.supplier_id.brands.length > 0) {
+                let brandNames = [];
+                dataOb.supplier_id.brands.forEach(brand => {
+                    brandNames.push(brand.name);
+                });
+                brands = " - (" + brandNames.join(" , ") + ")";
+            }
+
+            option.innerText = dataOb.requestno + " - " + dataOb.supplier_id.suppliername + brands;
             parentId.appendChild(option);
         }
     });

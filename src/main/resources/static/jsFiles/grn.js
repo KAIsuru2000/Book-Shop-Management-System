@@ -356,9 +356,34 @@ const refreshGRNForm = () => {
     //validation colors iwath kirima main form sadaha
     setDefault([selectSupplier, textSupplierBillNo, dateReceivedDate, textDiscountRate, textTotalAmount, textNetAmount, selectGRNStatus]);
 
+    // Received Date ekata ada dawase idan dawas 10k pitupalata wenakam dynamic limits hadanawa
+    let currentDate = new Date(); // Ada dawasa ganna new Date object ekak hadagannawa
+    let maxMonth = currentDate.getMonth() + 1; // Ada mase gannawa (getMonth eka 0-11 labena nisa eya 1-12 karaganna 1k ekathu karanawa)
+    if (maxMonth < 10) { // Mase 10ta adu nam (eka digit ekak nam)
+        maxMonth = "0" + maxMonth; // Mase issarahata 0k ekathu karanawa format eka hadanna
+    }
+    let maxDay = currentDate.getDate(); // Ada dawasa gannawa
+    if (maxDay < 10) { // Dawasa 10ta adu nam (eka digit ekak nam)
+        maxDay = "0" + maxDay; // Dawasa issarahata 0k ekathu karanawa format eka hadanna
+    }
+    let maxDate = currentDate.getFullYear() + "-" + maxMonth + "-" + maxDay; // Aurudda, mase saha dawasa ekathu karala YYYY-MM-DD format ekata maxDate eka hadagannawa
+    dateReceivedDate.max = maxDate; // Calendar eke select karanna puluwan uparima dawasa ada dawasata set karanawa
+
+    currentDate.setDate(currentDate.getDate() - 10); // Ada dawase idan dawas 10k pitupalata date object eka set karanawa
+    let minMonth = currentDate.getMonth() + 1; // Min date ekata adala mase gannawa (1k ekathu karala)
+    if (minMonth < 10) { // Mase 10ta adu nam
+        minMonth = "0" + minMonth; // Mase issarahata 0k ekathu karanawa
+    }
+    let minDay = currentDate.getDate(); // Min date ekata adala dawasa gannawa
+    if (minDay < 10) { // Dawasa 10ta adu nam
+        minDay = "0" + minDay; // Dawasa issarahata 0k ekathu karanawa
+    }
+    let minDate = currentDate.getFullYear() + "-" + minMonth + "-" + minDay; // Min date eka YYYY-MM-DD format ekata hadagannawa
+    dateReceivedDate.min = minDate; // Calendar eke select karanna puluwan aduma dawasa (dawas 10k pitupala) set karanawa
+
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('purchaseOrders/alldata');
-    fillDataIntoSelectSupplier(selectSupplier, "Please Select Supplier..!!", suppliers);
+    let suppliers = getServiceRequest('/purchaseOrders/getPendingList');
+    fillDataIntoSelectSupplier(selectSupplier, "Please Select Purchase Order No..!!", suppliers);
 
     let gRNStatues = getServiceRequest('/grnStatus/alldata');
     fillDataIntoSelect(selectGRNStatus, "Please Select Status..!!", gRNStatues, "name");
@@ -394,18 +419,31 @@ const refreshGRNInnerForm = () => {
     // ema nisa element tika clean kirima sidu karai
     // selectItem dynamic nisa clean nokarai
     // dynamic element refill kala yuthuya
-    let items = getServiceRequest('/item/alldata');
+    let items = [];
+    if (gRN.purchaserequest_id && gRN.purchaserequest_id.purchaseOrderHasItemList) {
+        let itemIds = new Set();
+        gRN.purchaserequest_id.purchaseOrderHasItemList.forEach(poHasItem => {
+            if (poHasItem.item_id && !itemIds.has(poHasItem.item_id.id)) {
+                itemIds.add(poHasItem.item_id.id);
+                items.push(poHasItem.item_id);
+            }
+        });
+    } else {
+        items = getServiceRequest('/item/alldata');
+    }
     // code ekai name ekai dekama drop down ekak thula penwa ganima
     fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
 
-    textUnitPrice.value = "";
+    textPurchasePrice.value = "";
     textQuantity.value = "";
     textLinePrice.value = "";
     textFreeQuantity.value = "";
     textTotalQuantity.value = "";
+    textProfitRatio.value = ""; // Inner form eka refresh weddi Profit Ratio input field eke value eka clear karanawa
+    textSalesPrice.value = ""; // Inner form eka refresh weddi Sales Price input field eke value eka clear karanawa
 
-    // colors wenas kala heka
-    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice,textFreeQuantity,textTotalQuantity]);
+    // colors wenas kala heka. Element wala validations colors (green/red borders) ain karanna setDefault call karanawa
+    setDefault([selectItem, textPurchasePrice, textQuantity, textLinePrice, textFreeQuantity, textTotalQuantity, textProfitRatio, textSalesPrice]);
 
     btnGRNItemUpdate.classList.add("d-none");
     btnGRNItemSubmit.classList.remove("d-none");
@@ -439,18 +477,148 @@ const refreshGRNInnerForm = () => {
     // ui eke athi total amount field ekata value eka set kirima
     // total amount eka 0.00 nowe nam value eka ui ekata set karai
     if (totalAmount != 0.00) {
-        textTotalAmount.value = totalAmount.toFixed(2);
+        textTotalAmount.value = totalAmount.toFixed(2); // textTotalAmount input field ekata decimal sthana 2kata values hadala set karanawa
         // object ekata set karai
-        gRN.totalamount = textTotalAmount.value;
+        gRN.totalamount = textTotalAmount.value; // gRN object eke totalamount property ekata value eka assign karanawa
         // validation color eka set karai
-        prevElementTotalAmount = textTotalAmount.previousElementSibling;
-        textTotalAmount.style.borderBottom = "4px solid green";
-        prevElementTotalAmount.style.backgroundColor = "green";
-        textTotalAmount.classList.remove("is-invalid");
-        textTotalAmount.classList.add("is-valid");
+        prevElementTotalAmount = textTotalAmount.previousElementSibling; // validation borders text input eke hadaganna kalin element eka gannawa
+        textTotalAmount.style.borderBottom = "4px solid green"; // Input field border eka green (valid) karanawa
+        prevElementTotalAmount.style.backgroundColor = "green"; // Span background eka green karanawa
+        textTotalAmount.classList.remove("is-invalid"); // is-invalid color class eka ain karanawa
+        textTotalAmount.classList.add("is-valid"); // is-valid color class eka add karanawa
+    } else { // totalAmount eka 0.00 nam (items mukuth nathi nam)
+        textTotalAmount.value = ""; // totalAmount input field eka clear karanawa
+        setDefault([textTotalAmount]); // validation styling default status ekata reset karanawa
+        gRN.totalamount = null; // gRN object eke totalamount property eka null karanawa
     }
 
+    calculateNetAmount(); // total amount eka wenas weddi net amount eka dynamically hadaganna call karanawa
+
 }
+
+const calculateLinePrice = () => {
+    let purchasePrice = grnHasItem.purchaseprice;
+    let quantity = grnHasItem.quentity;
+
+    if (purchasePrice != null && quantity != null && purchasePrice !== "" && quantity !== "") {
+        let linePrice = parseFloat(purchasePrice) * parseInt(quantity);
+        if (!isNaN(linePrice)) {
+            textLinePrice.value = linePrice.toFixed(2);
+            textValidator(textLinePrice, '^.*$', 'grnHasItem', 'lineprice');
+        } else {
+            textLinePrice.value = "";
+            setDefault([textLinePrice]);
+            grnHasItem.lineprice = null;
+        }
+    } else {
+        textLinePrice.value = "";
+        setDefault([textLinePrice]);
+        grnHasItem.lineprice = null;
+    }
+};
+
+const calculateTotalQuantity = () => {
+    let quantity = grnHasItem.quentity;
+    let freeQuantity = grnHasItem.freequentity;
+
+    if (quantity != null && quantity !== "" && !isNaN(quantity)) {
+        let qtyVal = parseInt(quantity);
+        let freeQtyVal = 0;
+        if (freeQuantity != null && freeQuantity !== "" && !isNaN(freeQuantity)) {
+            freeQtyVal = parseInt(freeQuantity);
+        } else {
+            grnHasItem.freequentity = 0;
+        }
+        let totalQuantity = qtyVal + freeQtyVal;
+        textTotalQuantity.value = totalQuantity;
+        textValidator(textTotalQuantity, '^.*$', 'grnHasItem', 'totalquentity');
+    } else {
+        textTotalQuantity.value = "";
+        setDefault([textTotalQuantity]);
+        grnHasItem.totalquentity = null;
+    }
+};
+
+// Sales Price eka calculate karala auto fill karana function eka
+const generateSalesPrice = () => {
+    let purchasePrice = grnHasItem.purchaseprice; // grnHasItem object eke purchaseprice eka variable ekakata gannawa
+    let profitRate = grnHasItem.profitrate; // grnHasItem object eke profitrate eka variable ekakata gannawa
+
+    // Purchase Price saha Profit Rate dekama valid nam (null noyana saha empty nowana nam)
+    if (purchasePrice != null && profitRate != null && purchasePrice !== "" && profitRate !== "") {
+        // Sales price eka hadagannawa: purchase price + (purchase price * profit rate / 100)
+        let salesPrice = parseFloat(purchasePrice) + (parseFloat(purchasePrice) * parseFloat(profitRate) / 100);
+        if (!isNaN(salesPrice)) { // Hadagaththa salesPrice eka number ekak nam (NaN nowana nam)
+            textSalesPrice.value = salesPrice.toFixed(2); // Eya decimal sthana dekakata hadala Sales Price input eke value ekata set karanawa
+            textValidator(textSalesPrice, '^.*$', 'grnHasItem', 'salesprice'); // Sales Price element eka validate karala binding eka karaganna validator eka call karanawa
+        } else { // Sales Price number ekak nowana nam
+            textSalesPrice.value = ""; // Input value eka clear karanawa
+            setDefault([textSalesPrice]); // Validation color styles ain karanawa
+            grnHasItem.salesprice = null; // grnHasItem object eke salesprice property eka null karanawa
+        }
+    } else { // Purchase Price ho Profit Rate dekesta ekak nathnam ho invalid nam
+        textSalesPrice.value = ""; // Input value eka clear karanawa
+        setDefault([textSalesPrice]); // Validation color styles ain karanawa
+        grnHasItem.salesprice = null; // grnHasItem object eke salesprice property eka null karanawa
+    }
+};
+
+// Net Amount eka calculate karala auto fill karana function eka
+const calculateNetAmount = () => {
+    let totalAmount = gRN.totalamount; // gRN object eke totalamount property eke value eka variable ekakata gannawa
+    let discountRate = gRN.discountrate; // gRN object eke discountrate property eke value eka variable ekakata gannawa
+
+    // Total Amount eka empty nowana, valid number ekak nam
+    if (totalAmount != null && totalAmount !== "" && !isNaN(totalAmount)) {
+        let discountVal = 0; // discount percentage eka mulinma 0k kiyala dagannawa
+        // Discount Rate eka valid number ekak washayen thiyenawanam
+        if (discountRate != null && discountRate !== "" && !isNaN(discountRate)) {
+            discountVal = parseFloat(discountRate); // discount rate value eka float number ekak karagannawa
+        }
+
+        // Net Amount calculate karanawa: Total Amount - (Total Amount * Discount Rate / 100)
+        let netAmount = parseFloat(totalAmount) - (parseFloat(totalAmount) * discountVal / 100);
+        if (!isNaN(netAmount) && netAmount >= 0) { // netAmount number ekak saha eya 0ta wada wadi nam
+            textNetAmount.value = netAmount.toFixed(2); // Net Amount input field ekata decimal sthana 2kata hadala value eka set karanawa
+            textValidator(textNetAmount, '^.*$', 'gRN', 'netamount'); // Net amount input field eka validate karala binding eka karaganna validator eka call karanawa
+        } else { // calculate una netAmount invalid nam
+            textNetAmount.value = ""; // Net Amount field eka clear karanawa
+            setDefault([textNetAmount]); // validation color patterns default karanawa
+            gRN.netamount = null; // gRN object eke netamount property eka null karanawa
+        }
+    } else { // totalAmount eka invalid nam
+        textNetAmount.value = ""; // Net Amount field eka clear karanawa
+        setDefault([textNetAmount]); // validation colors clear karanawa
+        gRN.netamount = null; // gRN object eke netamount property eka null karanawa
+    }
+};
+
+const selectItemChange = () => {
+    if (gRN.purchaserequest_id && selectItem.value !== "") {
+        const selectedItem = JSON.parse(selectItem.value);
+        const poItem = gRN.purchaserequest_id.purchaseOrderHasItemList.find(
+            poi => poi.item_id && poi.item_id.id === selectedItem.id
+        );
+        if (poItem) {
+            textPurchasePrice.value = parseFloat(poItem.uniteprice).toFixed(2);
+            textValidator(textPurchasePrice, '^.*$', 'grnHasItem', 'purchaseprice');
+            calculateLinePrice();
+            generateSalesPrice(); // Purchase price eka set unama sales price eka recalculate karanna call karanawa
+        } else {
+            textPurchasePrice.value = "";
+            setDefault([textPurchasePrice]);
+            grnHasItem.purchaseprice = null;
+            calculateLinePrice();
+            generateSalesPrice(); // Purchase price eka set unama sales price eka recalculate karanna call karanawa
+        }
+    } else {
+        textPurchasePrice.value = "";
+        setDefault([textPurchasePrice]);
+        grnHasItem.purchaseprice = null;
+        calculateLinePrice();
+        generateSalesPrice(); // Purchase price eka set unama sales price eka recalculate karanna call karanawa
+    }
+};
 
 const genareateItemName = (dataob) => {
     // itemcode + " - " + itemname
@@ -485,9 +653,13 @@ const buttonGRNItemSubmit = (ob, index) => {
     let userConfirm = window.confirm("Are you sure to add following item to GRN...?"
         +
         "\n Item : " + grnHasItem.item_id.itemname +
-        "\n Unit Price : " + grnHasItem.uniteprice +
+        "\n Purchase Price : " + grnHasItem.purchaseprice +
         "\n Quantity : " + grnHasItem.quentity +
-        "\n Line Price : " + grnHasItem.lineprice
+        "\n Line Price : " + grnHasItem.lineprice +
+        "\n Free Quantity : " + grnHasItem.freequentity +
+        "\n Total Quantity : " + grnHasItem.totalquentity +
+        "\n Profit Ratio : " + grnHasItem.profitrate +
+        "\n Sales Price : " + grnHasItem.salesprice
     );
     if (userConfirm) {
         window.alert("Item added successfully to GRN...!");
@@ -519,7 +691,18 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
         const option = document.createElement("option");
         option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-        option.innerText = dataOb.supplier_id.suppliername;
+        
+        let brands = [];
+        if (dataOb.purchaseOrderHasItemList) {
+            dataOb.purchaseOrderHasItemList.forEach(item => {
+                if (item.brand_id && item.brand_id.name && !brands.includes(item.brand_id.name)) {
+                    brands.push(item.brand_id.name);
+                }
+            });
+        }
+        let brandNames = brands.join(", ");
+        
+        option.innerText = dataOb.purchaserequestno + " - " + dataOb.supplier_id.suppliername + " - " + brandNames;
         parentId.appendChild(option);
         // }
     });

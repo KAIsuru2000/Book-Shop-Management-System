@@ -107,14 +107,14 @@
                                         <!-- Supplier area start-->
                                         <div class="row">
                                             <div class="input-group">
-                                                <label class="input-group-text lablBg" for="selectSupplier">Supplier &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <label class="input-group-text lablBg" for="selectSupplier">Purchase Order No:
                                                     <span class="fw-bold text-danger">*</span></label>
                                                 <select class="form-select" id="selectSupplier"
-                                                    onchange="selectDainamicElementValidater(this , 'gRN', 'purchaserequest_id')"
-                                                    onclick="selectDainamicElementValidater(this , 'gRN', 'purchaserequest_id')"
+                                                    onchange="selectDainamicElementValidater(this , 'gRN', 'purchaserequest_id'); refreshGRNInnerForm()"
+                                                    onclick="selectDainamicElementValidater(this , 'gRN', 'purchaserequest_id'); refreshGRNInnerForm()"
                                                     data-bs-toggle="tooltip"
-                                                    title="Select the Supplier correctly here.">
-                                                    <option selected disabled>Select Supplier</option>
+                                                    title="Select the Purchase Order No correctly here.">
+                                                    <option selected disabled>Select Purchase Order No</option>
                                                     <option value=""></option>
                                                     <option value=""></option>
                                                 </select>
@@ -131,7 +131,8 @@
                                             Enter Supplier Bill No " class="form-control"
                                                     aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textSupplierBillNo"
-                                                    onchange="textValidator(this, '^.*$', 'gRN', 'suplierbillno')"
+                                                    onkeyup="textValidator(this, '^.*$', 'gRN', 'suplierbillno')"
+                                                    onclick="textValidator(this, '^.*$', 'gRN', 'suplierbillno')"
                                                     required data-bs-toggle="tooltip"
                                                     title="Please enter the Supplier Bill No correctly">
                                             </div>
@@ -150,7 +151,7 @@
                                                     aria-describedby="inputGroup-sizing-default" id="dateReceivedDate"
                                                     onchange="textValidator(this, '^.*$', 'gRN', 'receivedate')"
                                                     required data-bs-toggle="tooltip"
-                                                    title="Please enter the Received date correctly">
+                                                    title="Please enter the Received date correctly" onkeydown="return false;" >
                                             </div>
 
                                         </div>
@@ -158,14 +159,13 @@
                                          <!-- Discount Rate start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span class="input-group-text lablBg">Discount Rate &nbsp; : <span
-                                                        class="fw-bold text-danger">*</span></span>
+                                                <span class="input-group-text lablBg">Discount Rate (%) &nbsp; : <span
+                                                        class="fw-bold text-danger">(Optional)</span></span>
                                                 <input type="text" placeholder="Enter Discount Rate" class="form-control"
                                                     aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textDiscountRate"
-                                                    required
-                                                    onkeyup="textValidator(this, '^.*$', 'gRN', 'discountrate')"
-                                                    onclick="textValidator(this, '^.*$', 'gRN', 'discountrate')"
+                                                    onkeyup="textValidator(this, '^.*$', 'gRN', 'discountrate'); calculateNetAmount()"
+                                                    onclick="textValidator(this, '^.*$', 'gRN', 'discountrate'); calculateNetAmount()"
                                                     data-bs-toggle="tooltip"
                                                     title="Enter the Discount Rate correctly here.">
                                             </div>
@@ -180,8 +180,8 @@
                                                     aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textTotalAmount"
                                                     required
-                                                    onkeyup="textValidator(this, '^.*$', 'gRN', 'totalamount')"
-                                                    onclick="textValidator(this, '^.*$', 'gRN', 'totalamount')"
+                                                    onkeyup="textValidator(this, '^.*$', 'gRN', 'totalamount'); calculateNetAmount()"
+                                                    onclick="textValidator(this, '^.*$', 'gRN', 'totalamount'); calculateNetAmount()"
                                                     data-bs-toggle="tooltip"
                                                     title="Enter the Total Amount correctly here.">
                                             </div>
@@ -199,7 +199,7 @@
                                                     onkeyup="textValidator(this, '^.*$', 'gRN', 'netamount')"
                                                     onclick="textValidator(this, '^.*$', 'gRN', 'netamount')"
                                                     data-bs-toggle="tooltip"
-                                                    title="Enter the Net Amount correctly here.">
+                                                    title="Enter the Net Amount correctly here." readonly>
                                             </div>
                                         </div>
                                         <!-- Net Amount area end-->
@@ -236,8 +236,8 @@
                                                         &nbsp; &nbsp; &nbsp; :
                                                         <span class="fw-bold text-danger">*</span></label>
                                                     <select class="form-select" id="selectItem"
-                                                        onchange="selectDainamicElementValidater(this , 'grnHasItem', 'item_id')"
-                                                        onclick="selectDainamicElementValidater(this , 'grnHasItem', 'item_id')"
+                                                        onchange="selectDainamicElementValidater(this , 'grnHasItem', 'item_id'); selectItemChange()"
+                                                        onclick="selectDainamicElementValidater(this , 'grnHasItem', 'item_id'); selectItemChange()"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Item correctly here.">
                                                         <option selected disabled>Select Item</option>
@@ -256,10 +256,10 @@
                                                     <input placeholder="Enter Purchase Price" type="text" class="form-control"  aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textPurchasePrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'purchaseprice')"
-                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'purchaseprice')"
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'purchaseprice'); calculateLinePrice(); generateSalesPrice()"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'purchaseprice'); calculateLinePrice(); generateSalesPrice()"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Purchase Price correctly here.">
+                                                        title="After selecting the Item correctly, Purchase Price will be displayed here." readonly>
                                                 </div>
                                             </div>
 
@@ -277,8 +277,8 @@
                                                         placeholder="Enter Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textQuantity"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'quentity')"
-                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'quentity')"
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'quentity'); calculateLinePrice(); calculateTotalQuantity()"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'quentity'); calculateLinePrice(); calculateTotalQuantity()"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Quantity correctly here.">
                                                 </div>
@@ -297,7 +297,7 @@
                                                         onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'lineprice')"
                                                         onclick="textValidator(this, '^.*$', 'grnHasItem', 'lineprice')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Line Price correctly here.">
+                                                        title="After entering the Quantity correctly, Line Price will be calculated" readonly>
                                                 </div>
                                             </div>
                                             <!-- Line Price area end -->
@@ -310,14 +310,13 @@
                                             <!--Free Quantity area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span class="input-group-text lablBg">Free Quantity :
-                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <span class="input-group-text lablBg">Free Quantity :<span
+                                                    class="text-danger">(optional)</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Free Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textFreeQuantity"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'freequentity')"
-                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'freequentity')"
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'freequentity'); calculateTotalQuantity()"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'freequentity'); calculateTotalQuantity()"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Free Quantity correctly here.">
                                                 </div>
@@ -329,13 +328,13 @@
                                                     <span class="input-group-text lablBg">Total Quantity :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
-                                                        placeholder="Enter Quantity" aria-label="Sizing example input"
+                                                        placeholder="Total Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textTotalQuantity"
                                                         required
                                                         onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'totalquentity')"
                                                         onclick="textValidator(this, '^.*$', 'grnHasItem', 'totalquentity')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Total Quantity correctly here.">
+                                                        title="After entering the Quantity and Free Quantity, Total Quantity will be calculated" readonly>
                                                 </div>
                                             </div>
                                             <!--Total Quantity area end -->
@@ -349,14 +348,14 @@
                                             <!-- Profit Rate area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span class="input-group-text lablBg">Profit Ratio :
+                                                    <span class="input-group-text lablBg">Profit Ratio(%) :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="text" class="form-control"
                                                         placeholder="Enter Profit Ratio" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textProfitRatio"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'profitrate')"
-                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'profitrate')"
+                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'profitrate'); generateSalesPrice()"
+                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'profitrate'); generateSalesPrice()"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Profit Ratio correctly here.">
                                                 </div>
@@ -374,31 +373,30 @@
                                                         onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'salesprice')"
                                                         onclick="textValidator(this, '^.*$', 'grnHasItem', 'salesprice')"
                                                         data-bs-toggle="tooltip"
-                                                        title="Enter the Sales Price correctly here.">
+                                                        title="Enter the Sales Price correctly here." readonly>
                                                 </div>
                                             </div>
                                             <!-- Sales Price area end -->
                                         </div>
                                         <!-- Profit Rate and Sales Price area end -->
                                         <!-- Discount Rate area start -->
-                                        <div class="row mt-4">
-                                            <!-- Discount Rate area start -->
+                                        <!-- <div class="row mt-4">
+                                            
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span class="input-group-text lablBg">Discount Ratio :
-                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <span class="input-group-text lablBg">Discount Ratio(%):
+                                                        <span class="text-danger">(optional)</span></span>
                                                     <input type="text" class="form-control"
                                                         placeholder="Enter Discount Ratio" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textDiscountRatio"
-                                                        required
                                                         onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'discountrate')"
                                                         onclick="textValidator(this, '^.*$', 'grnHasItem', 'discountrate')"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Discount Ratio correctly here.">
                                                 </div>
                                             </div>
-                                            <!-- Discount Rate area end -->
-                                        </div>
+                                            
+                                        </div> -->
                                         <!-- Discount Rate area end -->
                                         <!-- inner form area end -->
 

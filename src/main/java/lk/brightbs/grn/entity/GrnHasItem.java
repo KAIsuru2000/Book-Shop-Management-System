@@ -30,16 +30,15 @@ public class GrnHasItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "uniteprice")
+    @Column(name = "purchaseprice")
     @NotNull
-    private BigDecimal uniteprice;
+    private BigDecimal purchaseprice;
 
     @Column(name = "quentity")
     @NotNull
     private Integer quentity;
 
     @Column(name = "freequentity")
-    @NotNull
     private Integer freequentity;
 
     @Column(name = "totalquentity")
@@ -49,6 +48,14 @@ public class GrnHasItem {
     @Column(name = "lineprice")
     @NotNull
     private BigDecimal lineprice;
+
+    @Column(name = "profitrate")
+    @NotNull
+    private BigDecimal profitrate;
+
+    @Column(name = "salesprice")
+    @NotNull
+    private BigDecimal salesprice;
 
     // foreign key
 //    @Id // primary key nisa

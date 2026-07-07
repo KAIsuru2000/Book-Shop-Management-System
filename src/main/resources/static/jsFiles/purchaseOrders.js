@@ -394,6 +394,14 @@ const refreshPurchaseOrderForm = () => {
     // main object ekata (purchaseOrder) list ekak (purchaseOrderHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
     purchaseOrder.purchaseOrderHasItemList = new Array();
 
+    // set min and max value for reqired date
+    let minDate = new Date();
+    minDate.setDate(minDate.getDate() + 5);
+
+    let maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 14);
+
+
     formPurchaseOrder.reset();
 
     //validation colors iwath kirima main form sadaha
@@ -462,31 +470,182 @@ const refreshPurchaseOrderForm = () => {
     btnPurchaseOrderSubmit.classList.remove("d-none");
 }
 
+// define function for get selected AddPriceList
+const getSelectedAddPriceList = () => {
+    if (selectSupplier.value === "" || selectSupplier.selectedIndex <= 0) {
+        return null;
+    }
+    const selectedOption = selectSupplier.options[selectSupplier.selectedIndex];
+    const addPriceListJson = selectedOption.getAttribute("data-addpricelist");
+    return addPriceListJson ? JSON.parse(addPriceListJson) : null;
+};
+
 // define function for filter brand by supplier
 const filterBrandBySupplier = () => {
-
-    // select karana supplierta adala brand tika load kara gannima
-    // supplier element eka select nowee empty ("") value eka passe wuwoth JSON.parse error eka ei >> eya welakwimata if yoda check karai
-    if (selectSupplier.value !== "") {
-        let brands = getServiceRequest('/brand/getListBySupply/' + JSON.parse(selectSupplier.value).id);
+    const addPriceList = getSelectedAddPriceList();
+    if (addPriceList && addPriceList.addPriceListHasItemList) {
+        const brands = [];
+        const brandIds = new Set();
+        addPriceList.addPriceListHasItemList.forEach(hasItem => {
+            if (hasItem.item_id && hasItem.item_id.brand_id) {
+                const brand = hasItem.item_id.brand_id;
+                if (!brandIds.has(brand.id)) {
+                    brandIds.add(brand.id);
+                    brands.push(brand);
+                }
+            }
+        });
         fillDataIntoSelect(selectBrand, "Please Select Brand..!!", brands, "name");
+    } else {
+        fillDataIntoSelect(selectBrand, "Please Select Brand..!!", [], "name");
     }
 
-    //in pasu meya supplier dropdown eka laga call karai
+    // Since supplier changed, we must also reset/clear item dropdown and inner form elements
+    selectBrand.value = "";
+    selectItem.value = "";
+    textUnitPrice.value = "";
+    textQuantity.value = "";
+    textLinePrice.value = "";
+    
+    // Clear validation styles
+    setDefault([selectBrand, selectItem, textUnitPrice, textQuantity, textLinePrice]);
+    
+    if (typeof purchaseOrderHasItem !== 'undefined') {
+        purchaseOrderHasItem.brand_id = null;
+        purchaseOrderHasItem.item_id = null;
+        purchaseOrderHasItem.uniteprice = null;
+        purchaseOrderHasItem.quentity = null;
+        purchaseOrderHasItem.lineprice = null;
+    }
 }
 
 // define function for filter item by brand
 const filterItemByBrand = () => {
-    // select karana brand ta adala item tika load kara gannima
-    // brand value eka select nowee empty ("") nam error eya heki nisa if condition yodai
-    if (selectBrand.value !== "") {
-        // service request eka magin list eka laba ganima
-        let items = getServiceRequest('/item/getListByBrand/' + JSON.parse(selectBrand.value).id);
-        // code ekai name ekai dekama drop down ekak thula penwa ganima
+    const addPriceList = getSelectedAddPriceList();
+    if (addPriceList && selectBrand.value !== "") {
+        const selectedBrandId = JSON.parse(selectBrand.value).id;
+        const items = [];
+        addPriceList.addPriceListHasItemList.forEach(hasItem => {
+            if (hasItem.item_id && hasItem.item_id.brand_id && hasItem.item_id.brand_id.id === selectedBrandId) {
+                items.push(hasItem.item_id);
+            }
+        });
         fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
     } else {
-        // value eka empty nam empty array ekak load kirima
         fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", [], "itemcode", "itemname");
+    }
+
+    // Since brand changed, we reset item dropdown selection, unit price, quantity, and line price
+    selectItem.value = "";
+    textUnitPrice.value = "";
+    textQuantity.value = "";
+    textLinePrice.value = "";
+
+    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice]);
+
+    if (typeof purchaseOrderHasItem !== 'undefined') {
+        purchaseOrderHasItem.item_id = null;
+        purchaseOrderHasItem.uniteprice = null;
+        purchaseOrderHasItem.quentity = null;
+        purchaseOrderHasItem.lineprice = null;
+    }
+}
+
+// define function for populate unit price when an item is selected
+const selectItemChange = () => {
+    const addPriceList = getSelectedAddPriceList();
+    const divMinQtyNote = document.getElementById("divMinQtyNote");
+    const lblMinQty = document.getElementById("lblMinQty");
+    const lblMinQtyLimit = document.getElementById("lblMinQtyLimit");
+    const lblMinQtyPrice = document.getElementById("lblMinQtyPrice");
+
+    if (addPriceList && selectItem.value !== "") {
+        const selectedItem = JSON.parse(selectItem.value);
+        const hasItem = addPriceList.addPriceListHasItemList.find(hi => hi.item_id && hi.item_id.id === selectedItem.id);
+        if (hasItem) {
+            let finalUnitPrice = parseFloat(hasItem.unitprice);
+            
+            // Check if min quantity and min quantity price are defined and valid
+            if (hasItem.mincountity && parseFloat(hasItem.mincountity) > 0 && hasItem.minquunitprice && parseFloat(hasItem.minquunitprice) > 0) {
+                // Show the note
+                if (lblMinQty) lblMinQty.innerText = hasItem.mincountity;
+                if (lblMinQtyLimit) lblMinQtyLimit.innerText = hasItem.mincountity;
+                if (lblMinQtyPrice) lblMinQtyPrice.innerText = parseFloat(hasItem.minquunitprice).toFixed(2);
+                if (divMinQtyNote) divMinQtyNote.classList.remove("d-none");
+
+                // If quantity is already filled and >= mincountity, use the minquunitprice
+                const currentQty = parseInt(textQuantity.value);
+                if (!isNaN(currentQty) && currentQty >= parseInt(hasItem.mincountity)) {
+                    finalUnitPrice = parseFloat(hasItem.minquunitprice);
+                }
+            } else {
+                // Hide the note
+                if (divMinQtyNote) divMinQtyNote.classList.add("d-none");
+            }
+
+            textUnitPrice.value = finalUnitPrice.toFixed(2);
+            textValidator(textUnitPrice, '^.*$', 'purchaseOrderHasItem', 'uniteprice');
+            
+            // If quantity is already filled, calculate line price
+            if (textQuantity.value !== "") {
+                calculateLinePrice();
+            }
+        }
+    } else {
+        textUnitPrice.value = "";
+        setDefault([textUnitPrice]);
+        purchaseOrderHasItem.uniteprice = null;
+        
+        textLinePrice.value = "";
+        setDefault([textLinePrice]);
+        purchaseOrderHasItem.lineprice = null;
+
+        // Hide note
+        if (divMinQtyNote) {
+            divMinQtyNote.classList.add("d-none");
+        }
+    }
+}
+
+// define function to calculate line price automatically
+const calculateLinePrice = () => {
+    // Check if we have min qty price adjustment
+    const addPriceList = getSelectedAddPriceList();
+    if (addPriceList && selectItem.value !== "") {
+        const selectedItem = JSON.parse(selectItem.value);
+        const hasItem = addPriceList.addPriceListHasItemList.find(hi => hi.item_id && hi.item_id.id === selectedItem.id);
+        if (hasItem) {
+            let currentQty = parseInt(textQuantity.value);
+            let targetUnitPrice = parseFloat(hasItem.unitprice);
+
+            if (hasItem.mincountity && parseFloat(hasItem.mincountity) > 0 && hasItem.minquunitprice && parseFloat(hasItem.minquunitprice) > 0) {
+                if (!isNaN(currentQty) && currentQty >= parseInt(hasItem.mincountity)) {
+                    targetUnitPrice = parseFloat(hasItem.minquunitprice);
+                }
+            }
+
+            textUnitPrice.value = targetUnitPrice.toFixed(2);
+            textValidator(textUnitPrice, '^.*$', 'purchaseOrderHasItem', 'uniteprice');
+        }
+    }
+
+    let unitPrice = purchaseOrderHasItem.uniteprice;
+    let quantity = purchaseOrderHasItem.quentity;
+
+    if (unitPrice != null && quantity != null && unitPrice !== "" && quantity !== "") {
+        let linePrice = parseFloat(unitPrice) * parseInt(quantity);
+        if (!isNaN(linePrice)) {
+            textLinePrice.value = linePrice.toFixed(2);
+            textValidator(textLinePrice, '^.*$', 'purchaseOrderHasItem', 'lineprice');
+        } else {
+            textLinePrice.value = "";
+            setDefault([textLinePrice]);
+            purchaseOrderHasItem.lineprice = null;
+        }
+    } else {
+        textLinePrice.value = "";
+        setDefault([textLinePrice]);
+        purchaseOrderHasItem.lineprice = null;
     }
 }
 
@@ -503,14 +662,21 @@ const refreshPurchaseOrderInnerForm = () => {
     // dynamic element refill kala yuthuya
     // item dropdown ekata load wiya yuththa select karana brand ekata adala item pamani
     // e sadaha item controller ekehi service eka hadai
+    selectBrand.value = "";
     fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", [], "itemcode", "itemname");
 
     textUnitPrice.value = "";
     textQuantity.value = "";
     textLinePrice.value = "";
 
+    // Hide min qty note if exists
+    const divMinQtyNote = document.getElementById("divMinQtyNote");
+    if (divMinQtyNote) {
+        divMinQtyNote.classList.add("d-none");
+    }
+
     // colors wenas kala heka
-    setDefault([selectItem, textUnitPrice, textQuantity, textLinePrice]);
+    setDefault([selectBrand, selectItem, textUnitPrice, textQuantity, textLinePrice]);
 
     btnPurchaseOrderItemUpdate.classList.add("d-none");
     btnPurchaseOrderItemSubmit.classList.remove("d-none");
@@ -619,7 +785,22 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
         if (dataOb.pricelistrequest_id && dataOb.pricelistrequest_id.supplier_id) {
             const option = document.createElement("option");
             option.value = JSON.stringify(dataOb.pricelistrequest_id.supplier_id);
-            option.innerText = dataOb.addpricelistno + " - " + dataOb.pricelistrequest_id.supplier_id.suppliername;
+            option.setAttribute("data-addpricelist", JSON.stringify(dataOb));
+            
+            let brands = [];
+            if (dataOb.addPriceListHasItemList) {
+                dataOb.addPriceListHasItemList.forEach(hasItem => {
+                    if (hasItem.item_id && hasItem.item_id.brand_id && hasItem.item_id.brand_id.name) {
+                        const brandName = hasItem.item_id.brand_id.name;
+                        if (!brands.includes(brandName)) {
+                            brands.push(brandName);
+                        }
+                    }
+                });
+            }
+            let brandNames = brands.join(", ");
+
+            option.innerText = dataOb.addpricelistno + " - " + dataOb.pricelistrequest_id.supplier_id.suppliername + " - " + brandNames;
             parentId.appendChild(option);
         }
     });
