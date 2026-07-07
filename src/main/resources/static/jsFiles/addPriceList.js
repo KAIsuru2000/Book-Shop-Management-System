@@ -426,21 +426,171 @@ const refreshAddPriceListForm = () => {
     btnaddPriceListSubmit.classList.remove("d-none");
 }
 
-// supplier (Price List Request Number) select karama eata adala items drop down ekata filter kirimata function eka
+// Supplier (Price List Request Number) select karama eata adala items drop down ekata filter karaganna function eka
 const filterItemByPriceRequest = () => {
-    // mehi addPriceList.pricelistrequest_id null nethnam pamanak (e kiyanne supplier form eken select kara ethnam) pahatha deya sidhu wiya yuthuya
+    // addPriceList eke pricelistrequest_id eka null newe nam pamanak meya siduwiya yuthuy
     if (addPriceList.pricelistrequest_id != null) {
-        // select kala price list request eke athi items tika array ekakata gani
+        // select karapu price list request eke thiyena siyaluma items array ekata gannawa
         let priceRequestItems = addPriceList.pricelistrequest_id.items;
 
-        // mema item list eka 'selectItem' element ekata fill kirimata code ekai name ekai dekama drop down ekak thula penwana function eka pawichchi karai
-        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", priceRequestItems, "itemcode", "itemname");
+        // Server eken okkoma save karapu price list data gannawa
+        let allAddPriceLists = getServiceRequest("/addPriceList/alldata");
+
+        // Danata select karapu request no ekata adala, kalin save karapu items wala id collect karaganna array ekak
+        let savedItemIds = [];
+        // Siyaluma saved price lists loop karala adala items collect karagannawa
+        allAddPriceLists.forEach(savedAPL => {
+            // Price list eke status eka Deleted newe nam saha, danata select karala thiyena request id ekatama adala nam
+            if ((!savedAPL.addpriceliststatus_id || savedAPL.addpriceliststatus_id.name !== "Deleted") && 
+                savedAPL.pricelistrequest_id && savedAPL.pricelistrequest_id.id === addPriceList.pricelistrequest_id.id) {
+                // Kalin save karapu price list eke has items list eka thiyeda balala, thiyenam ewaye item id gannawa
+                if (savedAPL.addPriceListHasItemList) {
+                    // Items loop karala id gannawa
+                    savedAPL.addPriceListHasItemList.forEach(aplhi => {
+                        // Item object eka valid nam id eka push karanawa
+                        if (aplhi.item_id) {
+                            // savedItemIds array ekata id eka push karanawa
+                            savedItemIds.push(aplhi.item_id.id);
+                        }
+                    });
+                }
+            }
+        });
+
+        // Inner table ekata eka parak add karapu items dropdown eken ain karanna filter karagannawa
+        let availableItems = priceRequestItems.filter(item => {
+            // inner table eke (addPriceListHasItemList) danata add karala thiyena item ekaka id eka mema item id ekata samanada balanawa
+            let isAddedInForm = addPriceList.addPriceListHasItemList.some(addedItem => addedItem.item_id.id === item.id);
+            // Kalin database ekata save karapu (main table eke adala request id eke thiyena) item ekakda balanawa
+            let isAlreadySaved = savedItemIds.includes(item.id);
+            // Form eke add wela nathi, wagema database eke kalin save wela nathi items pamanak thora gannawa
+            return !isAddedInForm && !isAlreadySaved;
+        });
+
+        // Aluthin filter karala gaththa availableItems list eka 'selectItem' dropdown ekata fill karanawa
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", availableItems, "itemcode", "itemname");
     } else {
-        // supplier select kara nethnam item drop down eka empty kara thabimata empty array ekak add karai
+        // supplier select karala nethnam empty array ekak list eka widihata pass karala dropdown eka clean karanawa
         let items = [];
+        // empty items list eka selectItem dropdown ekata fill karanawa
         fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
     }
 }
+
+// Unit Price, Min Qu. Unit Price, saha Market Price validate karana function eka
+const validateItemPrices = () => {
+    // Input fields wala thiyena values gannawa
+    const unitPriceValue = textUnitPrice.value;
+    const minQuUnitPriceValue = numberMinQuUnitePrice.value;
+    const marketPriceValue = numberMarketPrice.value;
+
+    // String values numbers walata convert karagannawa (naththan null gannawa)
+    const unitPrice = unitPriceValue !== "" ? parseFloat(unitPriceValue) : null;
+    const minQuUnitPrice = minQuUnitPriceValue !== "" ? parseFloat(minQuUnitPriceValue) : null;
+    const marketPrice = marketPriceValue !== "" ? parseFloat(marketPriceValue) : null;
+
+    // Element eka valid (green color) karala object ekata value eka danna helper function eka
+    const setValid = (element, property, value) => {
+        const prevElement = element.previousElementSibling;
+        element.style.borderBottom = "4px solid green";
+        if (prevElement) prevElement.style.backgroundColor = "green";
+        element.classList.remove("is-invalid");
+        element.classList.add("is-valid");
+        addPricelistHasItem[property] = value;
+    };
+
+    // Element eka invalid (red color) karala object property eka null karanna helper function eka
+    const setInvalid = (element, property) => {
+        const prevElement = element.previousElementSibling;
+        element.style.borderBottom = "4px solid red";
+        if (prevElement) prevElement.style.backgroundColor = "red";
+        element.classList.add("is-invalid");
+        element.classList.remove("is-valid");
+        addPricelistHasItem[property] = null;
+    };
+
+    // Optional field ekak empty wela thiyeddi normal control style ekata reset karana helper function eka
+    const setEmpty = (element, property) => {
+        const prevElement = element.previousElementSibling;
+        element.style.borderBottom = "1px solid #ced4da";
+        if (prevElement) prevElement.style.backgroundColor = "black";
+        element.classList.remove("is-invalid");
+        element.classList.remove("is-valid");
+        addPricelistHasItem[property] = null;
+    };
+
+    // 1. Unit Price field eka validate kirima (Kalinma value ekak thiyenna ona, minus wenna ba)
+    let isUnitPriceValid = false;
+    if (unitPriceValue === "" || isNaN(unitPrice) || unitPrice < 0) {
+        setInvalid(textUnitPrice, 'unitprice'); // Valid naththan red color karanawa
+    } else {
+        setValid(textUnitPrice, 'unitprice', unitPriceValue); // Valid nam green color karanawa
+        isUnitPriceValid = true; // Unit price eka valid kiyala mark karagannawa
+    }
+
+    // 2. Validate Min Qu. Unit Price (Meya optional, habai dammoth Unit Price ekata wada adu ho saman wenna ona)
+    let isMinQuUnitPriceValid = false;
+    if (minQuUnitPriceValue === "") {
+        setEmpty(numberMinQuUnitePrice, 'minquunitprice'); // Empty nam normal style eka denawa
+        isMinQuUnitPriceValid = true; // Empty nisa valid kiyala mark karanawa
+    } else if (isNaN(minQuUnitPrice) || minQuUnitPrice < 0) {
+        setInvalid(numberMinQuUnitePrice, 'minquunitprice'); // Negative ho number nowena nam invalid
+    } else if (isUnitPriceValid && minQuUnitPrice >= unitPrice) {
+        setInvalid(numberMinQuUnitePrice, 'minquunitprice'); // Unit Price ekata wada wadi nam invalid (Mehi wadi wuna wita invalid kireema siduwei)
+    } else {
+        setValid(numberMinQuUnitePrice, 'minquunitprice', minQuUnitPriceValue); // Ethuru kisima prashnayak nathnam valid (green)
+        isMinQuUnitPriceValid = true;
+    }
+
+    // 3. Market Price field eka validate kirima (Kalinma thiyenna ona, saha Unit Price, Min Qu. Unit Price dekata wada adu wenna ba)
+    if (marketPriceValue === "" || isNaN(marketPrice) || marketPrice < 0) {
+        setInvalid(numberMarketPrice, 'marketprice'); // Empty ho negative nam invalid
+    } else {
+        let isMarketPriceValid = true;
+        
+        // Unit Price valid nam, Market Price eka Unit Price ekata wada adu wenna ba
+        if (isUnitPriceValid && marketPrice <= unitPrice) {
+            isMarketPriceValid = false; // Unit price ekata wada adu nam invalid karanawa
+        }
+        // Min Qu. Unit Price ekak daala thiyenawanam, Market Price eka Min Qu. Unit price ekatath wada adu wenna ba
+        if (minQuUnitPriceValue !== "" && isMinQuUnitPriceValid && marketPrice < minQuUnitPrice) {
+            isMarketPriceValid = false; // Min Qu. Unit price ekata wada adu nam invalid karanawa
+        }
+
+        if (isMarketPriceValid) {
+            setValid(numberMarketPrice, 'marketprice', marketPriceValue); // Valid nam green color karanawa
+        } else {
+            setInvalid(numberMarketPrice, 'marketprice'); // Invalid nam red color karanawa
+        }
+    }
+};
+
+// Inner form eke errors thiyeda balana function eka
+const checkInnerFormError = () => {
+    let errors = "";
+
+    // Item eka select karala neththan error message ekak set karanawa
+    if (addPricelistHasItem.item_id == null) {
+        errors = errors + "Please select a valid Item...! \n";
+    }
+
+    // Unit Price eka invalid nam ho naththan error message ekak set karanawa
+    if (addPricelistHasItem.unitprice == null) {
+        errors = errors + "Please enter a valid Unit Price...! \n";
+    }
+
+    // User input ekak daala thiyeddi Min Qu. Unit Price invalid wela nam, error message ekak set karanawa
+    if (numberMinQuUnitePrice.value !== "" && addPricelistHasItem.minquunitprice == null) {
+        errors = errors + "Min Qu. Unit Price must be less than or equal to Unit Price...! \n";
+    }
+
+    // Market price invalid wela nam (meaning adu wela nam) error message ekak set karanawa
+    if (addPricelistHasItem.marketprice == null) {
+        errors = errors + "Please enter a valid Market Price (must be greater than or equal to Unit Price and Min Qu. Unit Price)...! \n";
+    }
+
+    return errors; // Hadagaththa error message tika return karanawa
+};
 
 // define function for refresh inner form
 const refreshAddPriceListInnerForm = () => {
@@ -473,8 +623,8 @@ const refreshAddPriceListInnerForm = () => {
     let propertyList = [
         { propertyName: genareateItemName, dataType: "function" },
         { propertyName: "unitprice", dataType: "decimal" },
-        { propertyName: "mincountity", dataType: "string" },
-        { propertyName: "minquunitprice", dataType: "decimal" },
+        { propertyName: generateMinQuantity, dataType: "function" },
+        { propertyName: generateMinQuUnitPrice, dataType: "function" },
         { propertyName: "marketprice", dataType: "decimal" }
 
     ];
@@ -520,6 +670,30 @@ const genareateItemName = (dataob) => {
     return dataob.item_id.itemname;
 }
 
+// Inner table eke min quantity eka nathnam dash (-) ekak return karana function eka
+const generateMinQuantity = (dataob) => {
+    // dataob eke mincountity property eka null ho empty da kiyala pariksha karanawa
+    if (dataob.mincountity != null && dataob.mincountity !== "") {
+        // mincountity value eka thiyenam, eya return karanawa
+        return dataob.mincountity;
+    } else {
+        // mincountity value eka nethnam, dash (-) eka return karanawa
+        return "-";
+    }
+}
+
+// Inner table eke min qu. unit price eka nathnam dash (-) ekak return karana function eka
+const generateMinQuUnitPrice = (dataob) => {
+    // dataob eke minquunitprice property eka null ho empty da kiyala pariksha karanawa
+    if (dataob.minquunitprice != null && dataob.minquunitprice !== "") {
+        // minquunitprice value eka thiyenam, eka floating number ekak karala decimal sthana 2kata return karanawa
+        return parseFloat(dataob.minquunitprice).toFixed(2);
+    } else {
+        // minquunitprice value eka nethnam, dash (-) eka return karanawa
+        return "-";
+    }
+}
+
 const addPriceListItemFormRefill = (ob, index) => { }
 const addPriceListItemDelete = (ob, index) => {
     console.log("Delete Add Price List Item", addPricelistHasItem);
@@ -542,9 +716,18 @@ const addPriceListItemDelete = (ob, index) => {
 }
 
 const buttonAddPriceListItemUpdate = (ob, index) => { }
+// Inner form eken item detail eka list ekata submit karana function eka
 const buttonAddPriceListItemSubmit = (ob, index) => {
     console.log("Add Price List Item", addPricelistHasItem);
 
+    // Inner form eke errors thiyeda kiyala check karagannawa
+    let errors = checkInnerFormError();
+    if (errors !== "") {
+        window.alert("Something went wrong...\n" + errors); // Errors thiyenawanam alert ekak dala function eka nathara karanawa
+        return;
+    }
+
+    // User confirmation eka gannawa
     let userConfirm = window.confirm("Are you sure to add following item to add price list...?"
         +
         "\n Item : " + addPricelistHasItem.item_id.itemname +
@@ -553,9 +736,9 @@ const buttonAddPriceListItemSubmit = (ob, index) => {
     );
     if (userConfirm) {
         window.alert("Item added successfully to add price list...!");
-        // main form eke thiyena list ekata ob eka push karai
-        // ema nisa table ekehida data atha.
+        // Main object eke has list ekata addPricelistHasItem object eka push karanawa
         addPriceList.addPriceListHasItemList.push(addPricelistHasItem);
+        // Inner form eka clean karala refresh karanawa
         refreshAddPriceListInnerForm();
     }
 

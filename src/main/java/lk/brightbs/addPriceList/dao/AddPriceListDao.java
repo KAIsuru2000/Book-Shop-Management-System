@@ -13,5 +13,9 @@ public interface AddPriceListDao extends JpaRepository<AddPriceList, Integer>{
  @Query("SELECT a FROM AddPriceList a WHERE a.addpriceliststatus_id.name = 'Pending'")
  List<AddPriceList> getPendingList();
 
+    // select karapu price list request id ekata adala, delete nowunu price lists set eka ganna query eka
+    @Query("SELECT a FROM AddPriceList a WHERE a.pricelistrequest_id.id = ?1 AND a.addpriceliststatus_id.name <> 'Deleted'")
+    List<AddPriceList> findByPriceRequest(Integer priceRequestId);
+
 }
 

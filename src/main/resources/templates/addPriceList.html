@@ -206,8 +206,8 @@
                                                         class="form-control" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'unitprice')"
-                                                        onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'unitprice')"
+                                                        onkeyup="validateItemPrices()"
+                                                        onclick="validateItemPrices()"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Unit Price correctly here.">
                                                 </div>
@@ -243,8 +243,8 @@
                                                         placeholder="Enter Line Price" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default"
                                                         id="numberMinQuUnitePrice"
-                                                        onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'minquunitprice')"
-                                                        onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'minquunitprice')"
+                                                        onkeyup="validateItemPrices()"
+                                                        onclick="validateItemPrices()"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Min Quantity  Unite Price correctly here.">
                                                 </div>
@@ -265,8 +265,8 @@
                                                         aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default"
                                                         id="numberMarketPrice" required
-                                                        onkeyup="textValidator(this, '^.*$', 'addPricelistHasItem', 'marketprice')"
-                                                        onclick="textValidator(this, '^.*$', 'addPricelistHasItem', 'marketprice')"
+                                                        onkeyup="validateItemPrices()"
+                                                        onclick="validateItemPrices()"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Market Price correctly here.">
                                                 </div>

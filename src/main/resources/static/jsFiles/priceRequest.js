@@ -355,6 +355,38 @@ const refreshPriceRequestForm = () => {
 
 //     show add button
     divButtonAdd.style.display = "flex";
+
+    // required date ekata min max add kara ganima
+    //min - current date eka
+    //max - current date eka + 2 weeks
+    //date format eka yyyy-mm-dd
+    let currentDate = new Date();
+    // get month wala value eka 0-11 wena nisa +1 karai
+    let currentMonth = currentDate.getMonth() + 1;
+    // 9n pasuwa cracter 2k atha ema nisa 9n pasuwa 0k add kara gannawa
+    if (currentMonth < 10) {
+        currentMonth = "0" + currentMonth;
+    }
+    // get date eka 1-31 wena nisa 9n pasuwa cracter 2k atha
+    let currentDay = currentDate.getDate();
+    if (currentDay < 10) {
+        currentDay = "0" + currentDay;
+    }
+    dateRequireDate.min = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay;
+
+    // max date eka 14 days add kara gannawa
+    currentDate.setDate(currentDate.getDate() + 14);
+    let maxCurrentMonth = currentDate.getMonth() + 1;
+    // 9n pasuwa cracter 2k atha ema nisa 9n pasuwa 0k add kara gannawa
+    if (maxCurrentMonth < 10) {
+        maxCurrentMonth = "0" + maxCurrentMonth;
+    }
+    // get date eka 1-31 wena nisa 9n pasuwa cracter 2k atha
+    let maxCurrentDay = currentDate.getDate();
+    if (maxCurrentDay < 10) {
+        maxCurrentDay = "0" + maxCurrentDay;
+    }
+    dateRequireDate.max = currentDate.getFullYear() + "-" + maxCurrentMonth + "-" + maxCurrentDay;
 }
 
 //form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
