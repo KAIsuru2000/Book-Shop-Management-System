@@ -194,6 +194,16 @@ public class AddPriceListController {
 							// yawatakalina karapu price request eka database save karanawa
 							priceRequestDao.save(priceRequest);
 						}
+					} else {
+						// status database eken "Partially Added" status object eka gannawa
+						PriceRequestStatus partiallyAddedStatus = priceRequestStatusDao.findByName("Partially Added");
+						// status object eka valid nam
+						if (partiallyAddedStatus != null) {
+							// price request object eke status eka Partially Added widihata set karanawa
+							priceRequest.setPricelistrequeststatus_id(partiallyAddedStatus);
+							// yawatakalina karapu price request eka database save karanawa
+							priceRequestDao.save(priceRequest);
+						}
 					}
 				}
 

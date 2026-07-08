@@ -40,14 +40,24 @@ const generateSupplierName = (dataob) => {
 }
 const getGRNStatus = (dataob) => {
 
-    if (dataob.grnstatus_id.name == "Received") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Received"></i>'
+    if (dataob.grnstatus_id.name == "Pending") {
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #654321;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Pending"></i>'
     }
 
-    if (dataob.grnstatus_id.name == "Not received") {
+    if (dataob.grnstatus_id.name == "Partially Paid") {
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Partially Paid"></i>'
+    }
+
+    if (dataob.grnstatus_id.name == "Paid") {
+        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Paid"></i>'
+    }
+
+    if (dataob.grnstatus_id.name == "Deleted") {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Not received"></i>'
+            '                                                title="Deleted"></i>'
     }
 
 
@@ -192,10 +202,6 @@ const checkFormError = () => {
 
     if (gRN.receivedate == null) {
         errors = errors + "Please Enter valid Received Date...! \n";
-    }
-
-    if (gRN.discountrate == null) {
-        errors = errors + "Please Enter valid Discount Rate...! \n";
     }
 
     if (gRN.totalamount == null) {
@@ -419,20 +425,74 @@ const refreshGRNInnerForm = () => {
     // ema nisa element tika clean kirima sidu karai
     // selectItem dynamic nisa clean nokarai
     // dynamic element refill kala yuthuya
+    // empty items array ekak hadagannawa dropdown select list eka ganna
     let items = [];
+    // select karapu purchase order eka and eke items list valid da balanawa
     if (gRN.purchaserequest_id && gRN.purchaserequest_id.purchaseOrderHasItemList) {
+        // dynamic set ekak hadagannawa item ids duplicate wena eka nawatthanna
         let itemIds = new Set();
+        // purchase order eke items list eka loop karala items collect karanawa
         gRN.purchaserequest_id.purchaseOrderHasItemList.forEach(poHasItem => {
+            // item list dynamic set ekata repeat nowi add karaganna check karanawa
             if (poHasItem.item_id && !itemIds.has(poHasItem.item_id.id)) {
+                // item id eka set ekata add karanawa duplicate check karaganna
                 itemIds.add(poHasItem.item_id.id);
+                // items list ekata item structure eka push karanawa
                 items.push(poHasItem.item_id);
             }
         });
+
+        // Server eken okkoma save karapu grn data tika gannawa
+        let allGRNs = getServiceRequest("/grn/alldata");
+
+        // Danata select karapu purchase order id ekata adala, kalin save karapu items wala id collect karaganna array ekak
+        let savedItemIds = [];
+        // database eken gaththa grn records loop karala items id collect karanawa
+        allGRNs.forEach(savedGRN => {
+            // grn status eka Deleted newe nam saha, select karala thiyena purchase order id ekatama adala nam
+            if ((!savedGRN.grnstatus_id || savedGRN.grnstatus_id.name !== "Deleted") && 
+                savedGRN.purchaserequest_id && savedGRN.purchaserequest_id.id === gRN.purchaserequest_id.id) {
+                // grn eke items array eka thiyeda balala, thiyenam loop karala items collect karanawa
+                if (savedGRN.grnHasItemList) {
+                    // has items loop karanawa
+                    savedGRN.grnHasItemList.forEach(grnItem => {
+                        // item id property eka valid nam array ekata push karanawa
+                        if (grnItem.item_id) {
+                            // savedItemIds list ekata id eka collect karanawa
+                            savedItemIds.push(grnItem.item_id.id);
+                        }
+                    });
+                }
+            }
+        });
+
+        // Inner table ekata eka parak add karapu items + database eke kalin save karapu items dropdown eken ain karanna filter karagannawa
+        let availableItems = items.filter(item => {
+            // inner table eke (gRN.grnHasItemList) danata item eka add wela thiyeda balanawa
+            let isAddedInForm = gRN.grnHasItemList.some(addedItem => addedItem.item_id.id === item.id);
+            // Kalin database ekata save karapu item ekakda balanawa
+            let isAlreadySaved = savedItemIds.includes(item.id);
+            // Form eke add wela nathi, database eke save wela nathi items pamanak dropdown ekata gannawa
+            return !isAddedInForm && !isAlreadySaved;
+        });
+
+        // filter karala gaththa availableItems selectItem dropdown ekata fill karanawa
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", availableItems, "itemcode", "itemname");
     } else {
+        // selected purchase order ekak nathnam okkoma items database eken gannawa
         items = getServiceRequest('/item/alldata');
+        
+        // inner table ekata danata add karapu items dropdown eken ain karanna filter karagannawa
+        let availableItems = items.filter(item => {
+            // inner table eke (gRN.grnHasItemList) danata item eka add wela thiyeda balanawa
+            let isAdded = gRN.grnHasItemList.some(addedItem => addedItem.item_id.id === item.id);
+            // add wela nathnam pamanak drop down ekata filter karala select karaganna return karanawa
+            return !isAdded;
+        });
+
+        // code ekai name ekai dekama drop down ekak thula penwa ganima
+        fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", availableItems, "itemcode", "itemname");
     }
-    // code ekai name ekai dekama drop down ekak thula penwa ganima
-    fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
 
     textPurchasePrice.value = "";
     textQuantity.value = "";
@@ -454,11 +514,9 @@ const refreshGRNInnerForm = () => {
 
     let propertyList = [
         { propertyName: genareateItemName, dataType: "function" },
-        { propertyName: "uniteprice", dataType: "decimal" },
-        { propertyName: "quentity", dataType: "string" },
-        { propertyName: "lineprice", dataType: "decimal" },
-        { propertyName: "freequentity", dataType: "decimal" },
-        { propertyName: "totalquentity", dataType: "decimal" }
+        { propertyName: "purchaseprice", dataType: "decimal" },
+        { propertyName: "totalquentity", dataType: "string" },
+        { propertyName: "lineprice", dataType: "decimal" }
 
     ];
 

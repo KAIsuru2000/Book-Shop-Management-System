@@ -17,6 +17,11 @@ import lk.brightbs.grn.dao.GRNDao;
 import lk.brightbs.grn.entity.GRN;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
+import lk.brightbs.purchaseOrder.dao.PurchaseOrderDao;
+import lk.brightbs.purchaseOrder.dao.PurchaseOrderStatusDao;
+import lk.brightbs.purchaseOrder.entity.PurchaseOrder;
+import lk.brightbs.purchaseOrder.entity.PurchaseOrderHasItem;
+import lk.brightbs.purchaseOrder.entity.PurchaseOrderStatus;
 
 
 @RestController
@@ -32,6 +37,14 @@ public class GRNController {
     @Autowired
     private
      UserPrivilegeController userPrivilegeController;
+
+    // purchase order dao control eka autowired karagannawa
+    @Autowired
+    private PurchaseOrderDao purchaseOrderDao;
+
+    // purchase order status dao control eka autowired karagannawa
+    @Autowired
+    private PurchaseOrderStatusDao purchaseOrderStatusDao;
 
     // @Autowired
 	// private UserDao userDao; 
@@ -110,6 +123,77 @@ public class GRNController {
                }
 
 	 			grnDao.save(gRN);
+
+				// select karapu purchase order eka null newe nam check karanna patan gannawa
+				if (gRN.getPurchaserequest_id() != null) {
+					// select karapu purchase order eka database eken gannawa
+					PurchaseOrder purchaseOrder = purchaseOrderDao.findById(gRN.getPurchaserequest_id().getId()).orElse(null);
+					// purchaseOrder object eka valid nam pamanak meya sidu karanawa
+					if (purchaseOrder != null) {
+						// purchase order eke thiyena okkoma required items list eka gannawa
+						List<PurchaseOrderHasItem> requiredItemsList = purchaseOrder.getPurchaseOrderHasItemList();
+						// required items id collect karaganna list ekak hadagannawa
+						List<Integer> requiredItemIds = new ArrayList<>();
+						// required items array eka loop karala id gannawa
+						for (PurchaseOrderHasItem poItem : requiredItemsList) {
+							// item object eka valid nam id eka add karanawa
+							if (poItem.getItem_id() != null) {
+								// requiredItemIds list ekata id eka push karanawa
+								requiredItemIds.add(poItem.getItem_id().getId());
+							}
+						}
+
+						// select karapu purchase order id ekata adala, kalin database eke save wunu GRN records tika gannawa
+						List<GRN> savedGRNs = grnDao.findByPurchaseOrder(purchaseOrder.getId());
+						// database eke kalin save wunu items id collect karaganna list ekak hadagannawa
+						List<Integer> savedItemIds = new ArrayList<>();
+						// save wunu GRN list eka loop karanawa
+						for (GRN g : savedGRNs) {
+							// GRN eke items array eka check karanawa
+							if (g.getGrnHasItemList() != null) {
+								// items loop karala individual items gannawa
+								for (GrnHasItem grnItem : g.getGrnHasItemList()) {
+									// item object eka null newe nam item id eka collect karanawa
+									if (grnItem.getItem_id() != null) {
+										// savedItemIds list ekata item id eka add karanawa
+										savedItemIds.add(grnItem.getItem_id().getId());
+									}
+								}
+							}
+						}
+
+						// okkoma required items database eke thiyeda kiyala check karanna count variables hadagannawa
+						int coveredCount = 0;
+						// required items id list eka loop karanawa
+						for (Integer reqItemId : requiredItemIds) {
+							// required item id eka saved list eke thiyenawanam covered count eka wadi karanawa
+							if (savedItemIds.contains(reqItemId)) {
+								// covered count 1kin wadi karanawa
+								coveredCount++;
+							}
+						}
+
+						// purchase order status object eka hadagannawa
+						PurchaseOrderStatus newStatus = null;
+						// okkoma required items cover wela thiyenawanam
+						if (coveredCount == requiredItemIds.size() && requiredItemIds.size() > 0) {
+							// "Completed" status object eka database eken gannawa
+							newStatus = purchaseOrderStatusDao.findByName("Completed");
+						} else if (coveredCount > 0) {
+							// "Partially Received" status object eka database eken gannawa
+							newStatus = purchaseOrderStatusDao.findByName("Partially Received");
+						}
+
+						// newStatus eka null newe nam, purchase order status eka change karala save karanawa
+						if (newStatus != null) {
+							// status property eka newStatus object ekata set karanawa
+							purchaseOrder.setPurchaserequeststatus_id(newStatus);
+							// update karapu purchase order eka database eke save karanawa
+							purchaseOrderDao.save(purchaseOrder);
+						}
+					}
+				}
+
 	 			return "OK";
 	 		} catch (Exception e) {
 

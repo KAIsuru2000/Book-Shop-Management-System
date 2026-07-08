@@ -40,23 +40,19 @@ const generateSupplierName = (dataob) => {
 }
 const getOrderStatus = (dataob) => {
     if (dataob.purchaserequeststatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #654321;" data-bs-toggle="tooltip"\n' +
             '                                                title="Pending"></i>'
     }
 
-    if (dataob.purchaserequeststatus_id.name == "Recived") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Recived"></i>'
+    if (dataob.purchaserequeststatus_id.name == "Partially Received") {
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Partially Received"></i>'
     }
+    
 
     if (dataob.purchaserequeststatus_id.name == "Completed") {
         return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip"\n' +
             '                                                title="Completed"></i>'
-    }
-
-    if (dataob.purchaserequeststatus_id.name == "Cancelled ") {
-        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Cancelled"></i>'
     }
 
     if (dataob.purchaserequeststatus_id.name == "Deleted") {

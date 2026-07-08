@@ -200,6 +200,16 @@ public class PurchaseOrderController {
 								// yawatakalina karapu add price list eka database save karanawa
 								addPriceListDao.save(addPriceList);
 							}
+						} else {
+							// status database eken "Partially Ordered" status object eka gannawa
+							AddPricelistStatus partiallyOrderedStatus = addPriceListStatusDao.findByName("Partially Ordered");
+							// status object eka valid nam
+							if (partiallyOrderedStatus != null) {
+								// add price list status eka Partially Ordered widihata set karanawa
+								addPriceList.setAddpriceliststatus_id(partiallyOrderedStatus);
+								// yawatakalina karapu add price list eka database save karanawa
+								addPriceListDao.save(addPriceList);
+							}
 						}
 					}
 				}

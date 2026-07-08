@@ -39,7 +39,7 @@ const generateSupplierName = (dataob) => {
 const getAddPriceListStatus = (dataob) => {
     if (dataob.addpriceliststatus_id != null) {
         if (dataob.addpriceliststatus_id.name == "Pending") {
-            return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+            return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #654321;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Pending"></i>'
         }
         if (dataob.addpriceliststatus_id.name == "Completed") {
@@ -49,6 +49,10 @@ const getAddPriceListStatus = (dataob) => {
         if (dataob.addpriceliststatus_id.name == "Deleted") {
             return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Deleted"></i>'
+        }
+        if (dataob.addpriceliststatus_id.name == "Partially Ordered") {
+            return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
+                '                                                title="Partially Ordered"></i>'
         }
         return dataob.addpriceliststatus_id.name;
     } else {
@@ -753,8 +757,8 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
 
     // Loop through the data and extract supplier names
     dataList.forEach(dataOb => {
-        // Only include suppliers with Pending price list requests
-        if (dataOb.pricelistrequeststatus_id && dataOb.pricelistrequeststatus_id.name === "Pending") {
+        // Only include suppliers with Pending or Partially Added price list requests
+        if (dataOb.pricelistrequeststatus_id && (dataOb.pricelistrequeststatus_id.name === "Pending" || dataOb.pricelistrequeststatus_id.name === "Partially Added")) {
             const option = document.createElement("option");
             option.value = JSON.stringify(dataOb); // or dataOb.id if needed
             

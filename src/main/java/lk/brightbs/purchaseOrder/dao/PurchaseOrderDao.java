@@ -8,10 +8,12 @@ import lk.brightbs.purchaseOrder.entity.PurchaseOrder;
 
 public interface PurchaseOrderDao extends JpaRepository<PurchaseOrder, Integer>{
 
- @Query(value = "SELECT coalesce(concat('PO' , lpad(substring(max(PO.purchaserequestno),2) +1 , 5 , 0)) , 'PO00001')  FROM brightbookshop.purchaserequest as PO;" , nativeQuery = true) String getNextOrderNo();
+    // purchase order table eke thiyena aluthma order no eka generate karana native query eka
+    @Query(value = "SELECT coalesce(concat('PO' , lpad(substring(max(PO.purchaserequestno),3) +1 , 5 , 0)) , 'PO00001')  FROM brightbookshop.purchaserequest as PO;" , nativeQuery = true)
+    String getNextOrderNo();
 
- @Query("SELECT po FROM PurchaseOrder po WHERE po.purchaserequeststatus_id.name = 'Pending'")
- List<PurchaseOrder> getPendingList();
+@Query("SELECT po FROM PurchaseOrder po WHERE po.purchaserequeststatus_id.name = 'Pending' OR po.purchaserequeststatus_id.name = 'Partially Received'")
+List<PurchaseOrder> getPendingList();
 
     // select karapu add price list id ekata adala, delete nowunu purchase orders set eka ganna query eka
     @Query("SELECT p FROM PurchaseOrder p WHERE p.addpricelist_id.id = ?1 AND p.purchaserequeststatus_id.name <> 'Deleted'")
