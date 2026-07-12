@@ -2,6 +2,7 @@ package lk.brightbs.grn.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import lk.brightbs.grn.entity.GrnHasItem;
 import lk.brightbs.user.dao.UserDao;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import lk.brightbs.addPriceList.entity.AddPriceList;
 import lk.brightbs.grn.dao.GRNDao;
 import lk.brightbs.grn.entity.GRN;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
@@ -22,6 +24,8 @@ import lk.brightbs.purchaseOrder.dao.PurchaseOrderStatusDao;
 import lk.brightbs.purchaseOrder.entity.PurchaseOrder;
 import lk.brightbs.purchaseOrder.entity.PurchaseOrderHasItem;
 import lk.brightbs.purchaseOrder.entity.PurchaseOrderStatus;
+import lk.brightbs.inventory.dao.InventoryDao;
+import lk.brightbs.inventory.entity.Inventory;
 
 
 @RestController
@@ -37,6 +41,9 @@ public class GRNController {
     @Autowired
     private
      UserPrivilegeController userPrivilegeController;
+
+    @Autowired
+    private InventoryDao inventoryDao;
 
     // purchase order dao control eka autowired karagannawa
     @Autowired
@@ -94,6 +101,17 @@ public class GRNController {
 		}
    }
 
+   @GetMapping(value = "/grn/getPendingAndPartiallyPaidList", produces = "application/json")
+   public List<GRN> getPendingAndPartiallyPaidList() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Privilege userPrivilegeGRN = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GRN");
+		if (userPrivilegeGRN.getSel()) {
+			return grnDao.getPendingAndPartiallyPaidList();
+		} else {
+			return new ArrayList<>();
+		}
+   }
+
    //define post mapping
 	 @PostMapping(value = "/grn/insert")
 	 public String insertPurchaseOrder(@RequestBody GRN gRN) {
@@ -121,8 +139,36 @@ public class GRNController {
                for (GrnHasItem gnItem : gRN.getGrnHasItemList()) {
                    gnItem.setGrn_id(gRN);
                }
-
 	 			grnDao.save(gRN);
+
+				// Inventory eka update kirima ho aluthin athulath kirima
+				if (gRN.getGrnHasItemList() != null) { // GRN eke items list eka null newe nam pamanak
+					for (GrnHasItem gnItem : gRN.getGrnHasItemList()) { // GRN eke athi hema item ekakma loop karala gannawa
+						if (gnItem.getItem_id() != null && gnItem.getSalesprice() != null) { // Item id eka saha sales price eka null newe nam pamanak
+							// Ekathu kala yuthu quantity eka gannawa. Null nam 0 widiyata gannawa
+							int qtyToAdd = gnItem.getTotalquentity() != null ? gnItem.getTotalquentity() : 0;
+							// Item eka saha sales price eka matha database eke parana inventory record ekak thiyeda kiyala hoyanawa
+							Optional<Inventory> existingInv = inventoryDao.findByItemAndSalesprice(gnItem.getItem_id(), gnItem.getSalesprice());
+							if (existingInv.isPresent()) { // Kalin thibunu record ekak thiyenawa nam
+								Inventory inv = existingInv.get(); // Ema record eka gannawa
+								// Available quantity ekata aluth quantity eka ekathu karanawa
+								inv.setAvalablequantity(inv.getAvalablequantity() + qtyToAdd);
+								// Total quantity ekatath aluth quantity eka ekathu karanawa
+								inv.setTotalquantity(inv.getTotalquantity() + qtyToAdd);
+								// Update karapu record eka database eke save karanawa
+								inventoryDao.save(inv);
+							} else { // Kalin thibune nethnam aluth record ekak widiyata hadanawa
+								Inventory inv = new Inventory(); // Aluth inventory object ekak hadanawa
+								inv.setItem_id(gnItem.getItem_id()); // Item object eka set karanawa
+								inv.setSalesprice(gnItem.getSalesprice()); // Sales price eka set karanawa
+								inv.setAvalablequantity(qtyToAdd); // Available quantity eka set karanawa
+								inv.setTotalquantity(qtyToAdd); // Total quantity eka set karanawa
+								// Aluth inventory record eka database eke save karanawa
+								inventoryDao.save(inv);
+							}
+						}
+					}
+				}
 
 				// select karapu purchase order eka null newe nam check karanna patan gannawa
 				if (gRN.getPurchaserequest_id() != null) {

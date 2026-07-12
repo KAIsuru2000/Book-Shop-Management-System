@@ -110,8 +110,9 @@
                                                 <label class="input-group-text lablBg" for="selectCustomer">Customer
                                                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
                                                     <span class="text-danger">(optional)</span></label>
+                                                <!-- customer change una wita loyalty discount eka aye calc karanna call karanawa -->
                                                 <select class="form-select optional" id="selectCustomer"
-                                                    onchange="selectDainamicElementValidater(this , 'invoice', 'customer_id')"
+                                                    onchange="selectDainamicElementValidater(this , 'invoice', 'customer_id'); loyaltyDiscountCalculate();"
                                                     onclick="selectDainamicElementValidater(this , 'invoice', 'customer_id')"
                                                     data-bs-toggle="tooltip"
                                                     title="Select the Customer correctly here.">
@@ -142,16 +143,17 @@
                                         <!-- Discount Amount area start-->
                                         <div class="row mt-4">
                                             <div class="input-group">
-                                                <span class="input-group-text lablBg">Discount Amount : <span
+                                                <span class="input-group-text lablBg">Discounted Amount : <span
                                                         class="fw-bold text-danger">*</span></span>
+                                                <!-- user manual discount amount wenas karana wita net amount update karanna meya call karanawa -->
                                                 <input type="text" placeholder="Enter Discount Amount"
                                                     class="form-control" aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textDiscountAmount"
                                                     required
-                                                    onkeyup="textValidator(this, '^.*$', 'invoice', 'discountamount')"
-                                                    onclick="textValidator(this, '^.*$', 'invoice', 'discountamount')"
+                                                    onkeyup="updateDiscountAmountField(this)"
+                                                    onclick="updateDiscountAmountField(this)"
                                                     data-bs-toggle="tooltip"
-                                                    title="Enter the Discount Amount correctly here.">
+                                                    title="Enter the Discounted Amount correctly here.">
                                             </div>
                                         </div>
                                         <!-- Discount Amount area end-->
@@ -235,9 +237,10 @@
                                                     <span class="input-group-text lablBg"
                                                         id="inputGroup-sizing-default">Unit Price : <span
                                                             class="fw-bold text-danger">*</span></span>
+                                                    <!-- unit price selection wenas wana wita seasonal discount calculate karanna meya call karanawa -->
                                                     <select class="form-select" id="selectUnitPrice"
-                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
-                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
+                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); calculateSeasonalDiscount();"
+                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); calculateSeasonalDiscount();"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Unit Price correctly here.">
                                                         <option selected disabled value="">Select Unit Price</option>
@@ -255,7 +258,7 @@
                                             <!-- discount price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
-                                                    <span class="input-group-text lablBg">Discount Price :
+                                                    <span class="input-group-text lablBg">Discounted Price :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
                                                         placeholder="Enter Discount Price"
@@ -366,7 +369,7 @@
                                                                 <th>#</th>
                                                                 <th>Item Name</th>
                                                                 <th>Unit Price(Rs.)</th>
-                                                                <th>Discount Price(Rs.)</th>
+                                                                <th>Discounted Price(Rs.)</th>
                                                                 <th>Quantity</th>
                                                                 <th>Line Price(Rs.)</th>
 

@@ -353,8 +353,8 @@ const refreshSupplierPaymentForm = () => {
     setDefault([selectSupplier, textTotalDueAmount, textPaidItemAmount, textBalanceAmount, textPaymentmethod, textChequeNo, textChequeDate, textTransferId, textNote, selectSupplierPaymentStatus]);
 
     // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('supplier/alldata');
-    fillDataIntoSelect(selectSupplier, "Please Select Supplier..!!", suppliers, "suppliername");
+    let suppliers = getServiceRequest('/grn/getPendingAndPartiallyPaidList');
+    fillDataIntoSelectGRN(selectSupplier, "Select the Supplier related to GRN correctly here.", suppliers );
 
     let supplierPaymentStatues = getServiceRequest('/supplierPaymentStatus/alldata');
     fillDataIntoSelect(selectSupplierPaymentStatus, "Please Select Status..!!", supplierPaymentStatues, "name");
@@ -527,6 +527,56 @@ const buttonSupplierPaymentItemSubmit = (ob, index) => {
 // // supplier element eka value eka json parse kara ganima(supplier value eka string format thibena nisa) dan supplier object ekak lebai
 // let supplier = JSON.parse(selectSupplierElement.value);
 // });
+
+
+// GRN data select dropdown ekata fill karala penwana function eka
+const fillDataIntoSelectGRN = (parentId, message, dataList) => {
+    // dropdown eke kalin thibuna options okkoma clean karanawa
+    parentId.innerHTML = "";
+
+    // disabled message placeholder option ekak set karanawa mulinma select wela thiyenna
+    const optionMsg = document.createElement("option");
+    // option eke value property eka empty string set karanawa
+    optionMsg.value = "";
+    // me option eka mulinma select wela thiyenna true karanawa
+    optionMsg.selected = true;
+    // select unata passe aye eya select karanna bari wenna disabled true karanawa
+    optionMsg.disabled = true;
+    // option eke user-facing display text eka set karanawa
+    optionMsg.innerText = message;
+    // dropdown container select element ekata option optionMsg add karanawa
+    parentId.appendChild(optionMsg);
+
+    // database eken labuna grn records arrays data list loop karanawa
+    dataList.forEach(dataOb => {
+        // new dropdown option element ekak create karagannawa
+        const option = document.createElement("option");
+        // select option value ekata data object eka string format ekata convert karala add karanawa
+        option.value = JSON.stringify(dataOb);
+        
+        // brand name repeat wena eka nawatthan unique brand names list ekak ganna array ekak hadagannawa
+        let brands = [];
+        // grn record eke grnHasItemList property eka thiyeda balanawa
+        if (dataOb.grnHasItemList) {
+            // grn item has list loop karala items access karanawa
+            dataOb.grnHasItemList.forEach(grnItem => {
+                // item objects valid name brand name unique checklist filter karanawa
+                if (grnItem.item_id && grnItem.item_id.brand_id && grnItem.item_id.brand_id.name && !brands.includes(grnItem.item_id.brand_id.name)) {
+                    // unique check pass una brand name list ekata push karanawa
+                    brands.push(grnItem.item_id.brand_id.name);
+                }
+            });
+        }
+        // unique brands names join function use karala comma-separated string format ekata hadagannawa
+        let brandNames = brands.join(", ");
+        
+        // option elements displaying string target format eka set karanawa: grnno - suppliername - brands
+        option.innerText = dataOb.grnno + " - " + dataOb.purchaserequest_id.supplier_id.suppliername + " - " + brandNames;
+        // select drop down structure element parentId option element check push karanawa
+        parentId.appendChild(option);
+        
+    });
+};
 
 
 

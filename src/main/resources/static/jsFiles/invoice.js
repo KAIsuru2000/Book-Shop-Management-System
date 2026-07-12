@@ -47,10 +47,69 @@ const refreshInvoiceForm = () => {
     invoiceHasInventory = new Object();
     oldInvoiceHasInventory = null;
 
-    // get customer data from backend
+    // system eke active wela thiyena okkoma loyalty tiers details server eken gannawa
+    let loyaltyTiers = getServiceRequest("/loyaltycustomer/alldata");
+    // labuna list eka dynamic windows environment variable ekakata assign karagannawa
+    window.loyaltyTiersList = loyaltyTiers;
+
+    // active wela thiyena customers details server eken gannawa
     let customers = getServiceRequest("/customer/alldata");
-    // fill customer data into customer dropdown (mobile no and name)
-    fillDataIntoSelectTwo(selectCustomer, "Select Customer", customers, "mobileno", "fullname");
+    // selectCustomer dropdown element eka clear karagannawa
+    selectCustomer.innerHTML = "";
+    // default/placeholder selection message option ekak hadagannawa
+    let optionMsg = document.createElement("option");
+    // option value eka empty string set karanawa
+    optionMsg.value = "";
+    // default selection option eka widiyata select karagannawa
+    optionMsg.selected = "selected";
+    // user ta click karanna bari wenna disabled set karanawa
+    optionMsg.disabled = "disabled";
+    // option eke display text message set karanawa
+    optionMsg.innerText = "Select Customer";
+    // dynamic option elements customer dropdown ekata append karagannawa
+    selectCustomer.appendChild(optionMsg);
+
+    // loop eka magin customer lists elements ekata data fill karagannawa
+    customers.forEach(customer => {
+        // dynamic option element ekak hadagannawa
+        let option = document.createElement("option");
+        // customer object eke value details json parser string karala option value ekata set karanawa
+        option.value = JSON.stringify(customer);
+        
+        // customer ge wathman points gannawa points null nam eka 0 set karanawa
+        let pts = customer.points != null ? customer.points : 0;
+        // active card tier details placeholder name set karagannawa
+        let card = "No Tier";
+        // system loyalty list tiers thiyeda kiyala check karanawa
+        if (window.loyaltyTiersList) {
+            // customer ge points loop karala card levels map karagannawa check karanawa
+            for (let tier of window.loyaltyTiersList) {
+                // points limits tier levels limits verify karanawa
+                if (pts >= tier.startpoint && pts <= tier.endpoint) {
+                    // correct card level name assign karagannawa
+                    card = tier.cardname;
+                    // loop eken eliyata enawa
+                    break;
+                }
+            }
+            // points pramanaya maximum endpoint ekatath wada wadi nam maximum card name select karagannawa
+            if (card === "No Tier") {
+                // tiers loop eka use karagannawa
+                for (let tier of window.loyaltyTiersList) {
+                    // points range validation verify check karanawa
+                    if (pts >= tier.startpoint) {
+                        // highest card name assign karagannawa
+                        card = tier.cardname;
+                    }
+                }
+            }
+        }
+        
+        // display information and template layout string set karagannawa: Name (Points [Card]) - Mobile Number
+        option.innerText = customer.mobileno + " - " + customer.fullname + " (" + pts + "pts [" + card + "])";
+        // build option elements dropdown ekata append karagannawa
+        selectCustomer.appendChild(option);
+    });
 
     // get invoice status data and fill dropdown
     let invoiceStatuses = getServiceRequest("/invoiceStatues/alldata");
@@ -72,7 +131,8 @@ const refreshInvoiceForm = () => {
     window.activeInventoriesList = activeInventories;
 
     selectItem.innerHTML = "";
-    let optionMsg = document.createElement("option");
+    // optionMsg variable eka kalin define karala thiyena nisa let keyword eka nathuwa re-assign karanawa
+    optionMsg = document.createElement("option");
     optionMsg.value = "";
     optionMsg.selected = "selected";
     optionMsg.disabled = "disabled";
@@ -114,7 +174,7 @@ const filterSalesPrices = () => {
         if (typeof invoiceHasInventory !== 'undefined') {
             invoiceHasInventory.uniteprice = null;
         }
-        generateLinePrice();
+        calculateSeasonalDiscount();
         return;
     }
 
@@ -151,7 +211,7 @@ const filterSalesPrices = () => {
     if (typeof invoiceHasInventory !== 'undefined') {
         invoiceHasInventory.uniteprice = null;
     }
-    generateLinePrice();
+    calculateSeasonalDiscount();
 }
 
 // get customer name function
@@ -177,7 +237,12 @@ const getItemList = (dataob) => {
     let itemList = "";
     if (dataob.invoiceHasInventoryList && dataob.invoiceHasInventoryList.length > 0) {
         for (let i = 0; i < dataob.invoiceHasInventoryList.length; i++) {
-            itemList += dataob.invoiceHasInventoryList[i].inventory_id.item_id.itemname;
+            const hasInv = dataob.invoiceHasInventoryList[i];
+            if (hasInv.inventory_id && hasInv.inventory_id.item_id) {
+                itemList += hasInv.inventory_id.item_id.itemname;
+            } else {
+                itemList += "Unknown Item";
+            }
             if (i < dataob.invoiceHasInventoryList.length - 1) {
                 itemList += ", ";
             }
@@ -342,7 +407,7 @@ const invoiceRowView = (ob, index) => {
                         <tbody>
                             ${ob.invoiceHasInventoryList.map(item => `
                                 <tr>
-                                    <td>${item.inventory_id.item_id.itemname}</td>
+                                    <td>${item.inventory_id && item.inventory_id.item_id ? item.inventory_id.item_id.itemname : 'Unknown Item'}</td>
                                     <td>Rs. ${parseFloat(item.uniteprice).toFixed(2)}</td>
                                     <td>${item.quentity}</td>
                                     <td>Rs. ${parseFloat(item.lineprice).toFixed(2)}</td>
@@ -358,24 +423,31 @@ const invoiceRowView = (ob, index) => {
     $("#offcanvasBottomView").offcanvas("show");
 }
 
-// define function for generate line price automatically
+// line price eka automatically generate karanna use karana function eka
 const generateLinePrice = () => {
-    let unitPrice = invoiceHasInventory.uniteprice;
+    // invoiceHasInventory object eken discounted price eka gannawa
+    let discountPrice = invoiceHasInventory.discountprice;
+    // quantity variable eka gannawa
     let quantity = invoiceHasInventory.quentity;
 
-    if (unitPrice != null && quantity != null && unitPrice !== "" && quantity !== "") {
-        let linePrice = parseFloat(unitPrice) * parseInt(quantity);
-        //isNaN(100) nam false laba dei
+    // discounted price saha quantity select wela thiyeda kiyala check karanawa
+    if (discountPrice != null && quantity != null && discountPrice !== "" && quantity !== "") {
+        // line price eka calculate karagannawa: linePrice = discountedPrice * quantity
+        let linePrice = parseFloat(discountPrice) * parseInt(quantity);
+        // linePrice value eka number ekakda kiyala check karanawa
         if (!isNaN(linePrice)) {
+            // UI text field ekata line price value eka set karanawa
             textLinePrice.value = linePrice.toFixed(2);
-            // trigger validation and bind to invoiceHasInventory object
+            // textValidator function eka run karala object ekata bind karagannawa
             textValidator(textLinePrice, '^.*$', 'invoiceHasInventory', 'lineprice');
         } else {
+            // error ekak thiyeda lines reset karanawa
             textLinePrice.value = "";
             setDefault([textLinePrice]);
             invoiceHasInventory.lineprice = null;
         }
     } else {
+        // fields empty nam line price fields clear karanawa
         textLinePrice.value = "";
         setDefault([textLinePrice]);
         invoiceHasInventory.lineprice = null;
@@ -440,13 +512,15 @@ const refreshInvoiceInnerForm = () => {
         invoice.totalamount = null;
         setDefault([textTotalAmount]);
     }
+
+    // new items add/remove una wita dynamic discount eka aye hadaganna loyaltyDiscountCalculate call karanawa
+    loyaltyDiscountCalculate();
 }
 
 // Generate item name for inner table
 const generateInnerItemName = (dataob) => {
-    if (dataob.inventory_id) {
-        return dataob.inventory_id.item_id
-            .itemname;
+    if (dataob.inventory_id && dataob.inventory_id.item_id) {
+        return dataob.inventory_id.item_id.itemname;
     }
     return "-";
 }
@@ -465,67 +539,72 @@ const invoiceItemDelete = (ob, index) => {
 }
 
 const buttonInvoiceItemSubmit = () => {
-    // check required elements
-    // let errors = "";
-    // if (invoiceHasInventory.inventory_id == null) {
-    //     errors += "Please select an Item!\n";
-    // }
-    // if (invoiceHasInventory.uniteprice == null) {
-    //     errors += "Please select a Unit Price!\n";
-    // }
-    // if (invoiceHasInventory.quentity == null) {
-    //     errors += "Please enter a valid Quantity!\n";
-    // }
-    // if (invoiceHasInventory.lineprice == null) {
-    //     errors += "Please enter a valid Line Price!\n";
-    // }
-
-    // if (errors === "") {
-    //     // Map the inventory_id to the actual Item object (item_id) as expected by Java backend
-    //     let inventoryObj = invoiceHasInventory.inventory_id;
-    //     invoiceHasInventory.inventory_id = inventoryObj.item_id;
-
-    //     // Check if item already exists in the list
-    //     let isExist = false;
-    //     for (const item of invoice.invoiceHasInventoryList) {
-    //         if (item.inventory_id.id === invoiceHasInventory.inventory_id.id) {
-    //             isExist = true;
-    //             break;
-    //         }
-    //     }
-
-    //     if (isExist) {
-    //         window.alert("This item has already been added to the list!");
-    //         // Restore inventoryObj in case user wants to select again
-    //         invoiceHasInventory.inventory_id = inventoryObj;
-    //     } else {
-    //         // Push to main list
-    //         invoice.invoiceHasInventoryList.push(invoiceHasInventory);
-    //         window.alert("Item added successfully to invoice list!");
-    //         refreshInvoiceInnerForm();
-    //     }
-    // } else {
-    //     window.alert("Please fill all required fields correctly:\n" + errors);
-    // }
-
-    console.log("Add invoice Item", invoiceHasInventory);
-
-    let userConfirm = window.confirm("Are you sure to add following item to invoice...?"
-        +
-        "\n Item : " + invoiceHasInventory.inventory_id.itemname +
-        "\n Unit Price : " + invoiceHasInventory.uniteprice +
-        "\n Quantity : " + invoiceHasInventory.quentity +
-        "\n Line Price : " + invoiceHasInventory.lineprice
-    );
-    if (userConfirm) {
-        window.alert("Item added successfully to invoice...!");
-        // main form eke thiyena list ekata ob eka push karai
-        // ema nisa table ekehida data atha.
-        invoice.invoiceHasInventoryList.push(invoiceHasInventory);
-        refreshInvoiceInnerForm();
+    // errors record karaganna patha empty string ekak thiyagannawa
+    let errors = "";
+    
+    // item select karala thiyeda kiyala check karanawa
+    if (invoiceHasInventory.inventory_id == null) {
+        errors += "Please select an Item!\n";
+    }
+    // unit price select karala thiyeda kiyala check karanawa
+    if (invoiceHasInventory.uniteprice == null) {
+        errors += "Please select a Unit Price!\n";
+    }
+    // discounted price calculate wela thiyeda kiyala check karanawa
+    if (invoiceHasInventory.discountprice == null) {
+        errors += "Please enter/calculate a valid Discounted Price!\n";
+    }
+    // quantity type karala thiyeda kiyala check karanawa
+    if (invoiceHasInventory.quentity == null) {
+        errors += "Please enter a valid Quantity!\n";
+    }
+    // line price calculate wela thiyeda kiyala check karanawa
+    if (invoiceHasInventory.lineprice == null) {
+        errors += "Please enter a valid Line Price!\n";
     }
 
+    // error mukuth nathnam pamanak confirm box eka penwanawa
+    if (errors === "") {
+        // e item eka kalin list ekata add karalada kiyala check karanna variable ekak 0 karagannawa
+        let isExist = false;
+        // list eke thiyena data loop karala check karanawa
+        for (const item of invoice.invoiceHasInventoryList) {
+            // matches item found check
+            if (item.inventory_id.id === invoiceHasInventory.inventory_id.id) {
+                // duplicate item kiyala set karanawa
+                isExist = true;
+                // loop eken eliyata enawa
+                break;
+            }
+        }
 
+        // item eka already check eka true nam alert ekak denawa
+        if (isExist) {
+            window.alert("This item has already been added to the list!");
+        } else {
+            // details conform check karanna dialog confirm box eka display karanawa
+            let userConfirm = window.confirm("Are you sure to add following item to invoice...?"
+                + "\n Item : " + invoiceHasInventory.inventory_id.item_id.itemname
+                + "\n Unit Price : " + invoiceHasInventory.uniteprice
+                + "\n Discounted Price : " + invoiceHasInventory.discountprice
+                + "\n Quantity : " + invoiceHasInventory.quentity
+                + "\n Line Price : " + invoiceHasInventory.lineprice
+            );
+            
+            // confirm kala nam dynamic list ekata push karala form eka refresh karanawa
+            if (userConfirm) {
+                // item successfully conform alert box eka display karanawa
+                window.alert("Item added successfully to invoice...!");
+                // main invoice inventory list ekata object eka push karanawa
+                invoice.invoiceHasInventoryList.push(invoiceHasInventory);
+                // refresh form action eka call karanawa
+                refreshInvoiceInnerForm();
+            }
+        }
+    } else {
+        // invalid data thiyeda kiyala errors alert box eke display karanawa
+        window.alert("Please fill all required fields correctly:\n" + errors);
+    }
 }
 
 const buttonPurchaseOrderItemUpdate = () => {
@@ -668,4 +747,147 @@ const clearInvoiceForm = () => {
 // invoice item clear button eka magin inner form eka clear wimta
 const buttonInvoiceItemClear = () => {
     refreshInvoiceInnerForm();
+}
+
+// customer ge loyalty points anuwa discount amount saha net amount calculate karana function eka
+const loyaltyDiscountCalculate = () => {
+    // total amount eka text field eken read karala float number ekak widiyata gannawa
+    let totalAmount = parseFloat(textTotalAmount.value);
+    
+    // total amount eka valid number ekakda kiyala check karanawa
+    if (!isNaN(totalAmount) && totalAmount > 0) {
+        // discount percentage eka default 0.00 widiyata thiyagannawa
+        let discountPercent = 0.00;
+        
+        // invoice object eke customer_id field ekak saha customer object eke points variable eka thiyeda kiyala check karanawa
+        if (invoice.customer_id && invoice.customer_id.points != null) {
+            // customer ge points anuwa adala loyalty tier eka server eken Get request ekak magin gannawa
+            let loyaltyTier = getServiceRequest("/loyaltycustomer/bycustomerpoints/" + invoice.customer_id.points);
+            // labunu loyalty tier eka null neththan saha eke discount percentage ekak thiyeda kiyala check karanawa
+            if (loyaltyTier && loyaltyTier.discount != null) {
+                // tier eke discount percentage eka discountPercent variable ekata assign karagannawa
+                discountPercent = parseFloat(loyaltyTier.discount);
+            }
+        }
+        
+        // customer ge loyalty discount percentage eka total amount eken adu karala discounted amount eka calculate karagannawa
+        let discountAmountValue = totalAmount - (totalAmount * (discountPercent / 100));
+        // net amount eka discounted amount value ekatama samanawa auto fill karagannawa
+        let netAmountValue = discountAmountValue;
+        
+        // UI text box walata calculate una values decimals 2k widiyata set karanawa
+        textDiscountAmount.value = discountAmountValue.toFixed(2);
+        textNetAmount.value = netAmountValue.toFixed(2);
+        
+        // invoice object eke properties walata me values set karagannawa
+        invoice.discountamount = textDiscountAmount.value;
+        invoice.netamount = textNetAmount.value;
+        
+        // discount amount field eke border color eka valid green karanawa
+        textDiscountAmount.style.borderBottom = "4px solid green";
+        textDiscountAmount.previousElementSibling.style.backgroundColor = "green";
+        textDiscountAmount.classList.remove("is-invalid");
+        textDiscountAmount.classList.add("is-valid");
+        
+        // net amount field eke border color eka valid green karanawa
+        textNetAmount.style.borderBottom = "4px solid green";
+        textNetAmount.previousElementSibling.style.backgroundColor = "green";
+        textNetAmount.classList.remove("is-invalid");
+        textNetAmount.classList.add("is-valid");
+    } else {
+        // total amount zero ho empty nam UI fields clear karagannawa
+        textDiscountAmount.value = "";
+        textNetAmount.value = "";
+        // invoice object properties null karanawa
+        invoice.discountamount = null;
+        invoice.netamount = null;
+        // validation border colors normal colors walata default karanawa
+        setDefault([textDiscountAmount, textNetAmount]);
+    }
+}
+
+// select karapu item ekata adala active seasonal discount eka check karala discounted price eka hadana function eka
+const calculateSeasonalDiscount = () => {
+    // selectItem eke value ekak thiyeda kiyala check karanawa
+    if (selectItem.value !== "" && selectUnitPrice.value !== "") {
+        // select karapu item object eka parse karala gannawa
+        let selectedInventoryObj = JSON.parse(selectItem.value);
+        // item id eka variable ekakata assign karagannawa
+        let itemId = selectedInventoryObj.item_id.id;
+        // selectUnitPrice element eke value eka float number ekak widiyata gannawa
+        let unitPrice = parseFloat(selectUnitPrice.value);
+        
+        // unit price valid check eka karanawa
+        if (!isNaN(unitPrice) && unitPrice > 0) {
+            // item id ekata adala active seasonal discount details server eken gannawa
+            let activeDiscount = getServiceRequest("/seasonaldiscount/activebyitem/" + itemId);
+            // discount rate/value variable eka default 0.00 karagannawa
+            let discountAmount = 0.00;
+            
+            // active discount object ekak thiyeda kiyala check karanawa
+            if (activeDiscount && activeDiscount.discount != null) {
+                // active discount value eka float type ekata convert karagannawa
+                discountAmount = parseFloat(activeDiscount.discount);
+            }
+            
+            // unit price eken seasonal discount amount eka adu karala discounted price eka calculate karanawa
+            let discountedPrice = unitPrice - discountAmount;
+            // discounted price 0 ta adu nam eka 0 set karanawa
+            if (discountedPrice < 0) {
+                discountedPrice = 0.00;
+            }
+            
+            // UI text field ekata calculate una discounted price eka decimals 2k widiyata set karanawa
+            textDiscountPrice.value = discountedPrice.toFixed(2);
+            
+            // invoiceHasInventory inner object ekata discounted price eka set karagannawa
+            invoiceHasInventory.discountprice = textDiscountPrice.value;
+            
+            // discounted price box eke color validation border eka valid (green) karanawa
+            textDiscountPrice.style.borderBottom = "4px solid green";
+            textDiscountPrice.previousElementSibling.style.backgroundColor = "green";
+            textDiscountPrice.classList.remove("is-invalid");
+            textDiscountPrice.classList.add("is-valid");
+            
+            // newatha line price eka generate karanna call karanawa
+            generateLinePrice();
+        } else {
+            // unit price value eka invalid nam fields default settings walata reset karanawa
+            textDiscountPrice.value = "";
+            invoiceHasInventory.discountprice = null;
+            setDefault([textDiscountPrice]);
+            generateLinePrice();
+        }
+    } else {
+        // select items empty nam fields clear karanawa
+        textDiscountPrice.value = "";
+        invoiceHasInventory.discountprice = null;
+        setDefault([textDiscountPrice]);
+        generateLinePrice();
+    }
+}
+
+// user manually discounted amount wenas karana wita net amount automatic fill karaganna use karana function eka
+const updateDiscountAmountField = (element) => {
+    // text validation check karagannawa
+    textValidator(element, '^.*$', 'invoice', 'discountamount');
+    
+    // discount amount value valid number ekakda kiyala check karanawa
+    if (invoice.discountamount != null && invoice.discountamount !== "") {
+        // net amount text field value set karanawa
+        textNetAmount.value = parseFloat(invoice.discountamount).toFixed(2);
+        // invoice object netamount bind karagannawa
+        invoice.netamount = textNetAmount.value;
+        
+        // net amount element styles valid green set karagannawa
+        textNetAmount.style.borderBottom = "4px solid green";
+        textNetAmount.previousElementSibling.style.backgroundColor = "green";
+        textNetAmount.classList.remove("is-invalid");
+        textNetAmount.classList.add("is-valid");
+    } else {
+        // invalid nam fields data clear karanawa
+        textNetAmount.value = "";
+        invoice.netamount = null;
+        setDefault([textNetAmount]);
+    }
 }

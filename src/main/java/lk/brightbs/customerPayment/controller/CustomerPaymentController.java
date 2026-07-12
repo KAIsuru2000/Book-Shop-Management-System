@@ -7,10 +7,13 @@ import lk.brightbs.invoice.dao.InvoiceDao;
 import lk.brightbs.invoice.dao.InvoiceStatusDao;
 import lk.brightbs.invoice.entity.Invoice;
 import lk.brightbs.invoice.entity.InvoiceStatus;
+import lk.brightbs.invoice.entity.InvoiceHasInventory;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.user.dao.UserDao;
 import lk.brightbs.user.entity.User;
+import lk.brightbs.inventory.dao.InventoryDao;
+import lk.brightbs.inventory.entity.Inventory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -39,6 +42,9 @@ public class CustomerPaymentController {
 
 	@Autowired
 	private InvoiceStatusDao invoiceStatusDao;
+
+	@Autowired
+	private InventoryDao inventoryDao;
 
 	// @Autowired
 	// private InvoiceDao invoiceDao;
@@ -88,12 +94,32 @@ public class CustomerPaymentController {
 			customerPaymentDao.save(customerPayment);
 
 			// Update associated invoice status to "Paid"
-			if (customerPayment.getInvoice_id() != null) {
-				Invoice invoice = invoiceDao.getReferenceById(customerPayment.getInvoice_id().getId());
-				InvoiceStatus paidStatus = invoiceStatusDao.getByName("paid");
-				if (paidStatus != null) {
-					invoice.setInvoicestatus_id(paidStatus);
-					invoiceDao.save(invoice);
+			if (customerPayment.getInvoice_id() != null) { // Customer payment ekata adala invoice ekak thiyenawa nam
+				// Invoice record eka database eken hoyagannawa
+				Invoice invoice = invoiceDao.findById(customerPayment.getInvoice_id().getId()).orElse(null);
+				if (invoice != null) { // Invoice record eka hambuna nam
+					InvoiceStatus paidStatus = invoiceStatusDao.getByName("paid"); // "paid" kiyana status object eka gannawa
+					if (paidStatus != null) { // Paid status eka valid nam
+						invoice.setInvoicestatus_id(paidStatus); // Invoice eke status eka update karanawa
+						invoiceDao.save(invoice); // Update karapu invoice eka save karanawa
+					}
+
+					// Payment eka sidu wathma total quantity eka inventory eken adu kirima
+					if (invoice.getInvoiceHasInventoryList() != null) { // Invoice eke items list eka null newe nam pamanak
+						for (InvoiceHasInventory invItem : invoice.getInvoiceHasInventoryList()) { // Invoice eke hema item ekakma loop karala gannawa
+							if (invItem.getInventory_id() != null && invItem.getQuentity() != null) { // Inventory reference eka saha quantity eka thibe nam pamanak
+								// Item ekata adala Inventory record eka database eken hoyagannawa
+								Inventory inventory = inventoryDao.findById(invItem.getInventory_id().getId()).orElse(null);
+								if (inventory != null) { // Ema inventory record eka thibe nam
+									int qtyToReduce = invItem.getQuentity(); // Adu kala yuthu quantity eka variable ekakata gannawa
+									// Inventory eke total quantity eken ema quantity eka adu karanawa
+									inventory.setTotalquantity(inventory.getTotalquantity() - qtyToReduce);
+									// Update karapu inventory record eka database eke save karanawa
+									inventoryDao.save(inventory);
+								}
+							}
+						}
+					}
 				}
 			}
 

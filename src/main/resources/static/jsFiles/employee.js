@@ -66,6 +66,7 @@ const getEmployeeStatus = (dataob) => {
     }
 
 }
+
 //function for re fill employee form
 const employeeRowFormRefill = (ob, index) => {
     console.log("Edit", ob, index);
@@ -131,37 +132,67 @@ const employeeRowFormRefill = (ob, index) => {
 const employeeRowDelete = (ob, index) => {
     console.log("Delete", ob, index);
 
-    // employeewa delete kirimata confirmation eka gannima
-    // window.confirm yanu ok/cancel button thibena dialog box ekak open kara dena method ekaki
-    let userConfirm = window.confirm("Are you sure to delete following employee...?" +
-        "\n Employee full name : " + ob.fullname +
-        "\n Employee nic : " + ob.nic +
-        "\n Employee designation : " + ob.designation_id.name
-    );
-    // window.confirm magin laba dena dialog box eka ok kaloth userConfirm veriable ekata true pass wei cancel kaloth false pass wei
-    if (userConfirm) {
-        // true nam
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana object ekehi name eka yodai
-        // getHTTPServiceRequest = (url, method, data)
-        let deleteResponce = getHTTPServiceRequest("/employee/delete", "DELETE", ob);
+    // employeewa delete kirima thahawuru kirimata SweetAlert2 modal box ekak open karai
+    Swal.fire({
+        title: "Confirm Delete", // alert eke title eka set karai
+        html: `Are you sure to delete the following employee?<br><br>` +
+              `<strong>Full Name:</strong> ${ob.fullname}<br>` +
+              `<strong>NIC:</strong> ${ob.nic}<br>` +
+              `<strong>Designation:</strong> ${ob.designation_id.name}`, // delete karanna yana employee ge details display karai
+        icon: "warning", // warning icon eka pennai
+        showCancelButton: true, // cancel button eka active karai
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete', // confirm button text eka icon ekath ekka set karai
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel', // cancel button text eka set karai
+        customClass: {
+            popup: 'swal-custom-popup', // dark teal background classes set karai
+            title: 'swal-custom-title', // custom gradient title style apply karai
+            htmlContainer: 'swal-custom-content', // body text style set karai
+            confirmButton: 'swal-custom-cancel-btn', // confirm button ekata rathu paata design eka yodai
+            cancelButton: 'swal-custom-confirm-btn' // cancel button ekata green paata design eka yodai
+        },
+        buttonsStyling: false // default buttons style remove karala custom style active karai
+    }).then((result) => {
+        // user click karapu button eka isConfirmed nam
+        if (result.isConfirmed) {
+            // employee delete kirime DELETE HTTP request eka service ekata yawai
+            let deleteResponce = getHTTPServiceRequest("/employee/delete", "DELETE", ob);
 
-        // controller file ekehi athi delete service eka "OK" return kala wita
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshEmployeeTable();
-            refreshEmployeeform();
-
-        } else {
-
-            window.alert("Delete not successfully" + deleteResponce);
-
+            // server reply eka OK returned unoth
+            if (deleteResponce == "OK") {
+                // delete successful kiyala modal popup ekak pennai
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Employee deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                refreshEmployeeTable(); // data table eka refresh karala aluth data load karai
+                refreshEmployeeform(); // form eka reset karala clear karai
+            } else {
+                // error ekak labunoth eya popup message ekin pennai
+                Swal.fire({
+                    title: "Error!",
+                    text: "Delete not successful: " + deleteResponce,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-
-
-
-
-    }
+    });
 }
 
 //employee table eka thula athi view button eke function eka
@@ -279,40 +310,88 @@ const checkFormError = () => {
 const buttonEmployeeSubmit = () => {
     console.log('Add Employee', employee);
 
-    //check form error for required element
+    // checkFormError function eken required data empty da balala error list eka gani
     let errors = checkFormError();
 
+    // errors nomathi nam (form eka valid nam)
     if (errors == "") {
-        //no errors get user confirmation
-        // window.confirm yanu ok/cancel button thibena dialog box ekak open kara dena method ekaki
-        let userConfirm = window.confirm("Are you sure to add following employee...?" +
-            "\n Employee full name : " + employee.fullname +
-            "\n Employee nic : " + employee.nic +
-            "\n Employee designation : " + employee.designation_id.name
-        );
-        // window.confirm magin laba dena dialog box eka ok kaloth userConfirm veriable ekata true pass wei cancel kaloth false pass wei
-        if (userConfirm) {
-            // true nam
-            // call post service
-            //anthima parameter eka sadaha employee object eka yodai
-            // getHTTPServiceRequest = (url, method, data)
-            let postResponce = getHTTPServiceRequest("/employee/insert", "POST", employee);
-            // controller file ekehi athi insert service eka "OK" return kala wita
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshEmployeeTable();
-                refreshEmployeeform();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-            } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+        // employee add karanna thahawuru kirime sweet alert popup dialog eka open karai
+        Swal.fire({
+            title: "Confirm Submission", // alert eke title eka set karai
+            html: `Are you sure to add the following employee?<br><br>` +
+                  `<strong>Full Name:</strong> ${employee.fullname}<br>` +
+                  `<strong>NIC:</strong> ${employee.nic}<br>` +
+                  `<strong>Designation:</strong> ${employee.designation_id.name}`, // employee details dakkwanna html text eka
+            icon: "question", // question mark icon eka pennai
+            showCancelButton: true, // cancel button eka active karai
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add', // Add button text set karai
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel', // cancel button text set karai
+            customClass: {
+                popup: 'swal-custom-popup', // style custom class set karai
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn', // green confirm style
+                cancelButton: 'swal-custom-cancel-btn' // red cancel style
+            },
+            buttonsStyling: false // custom styling valid kirimata default styles ain karai
+        }).then((result) => {
+            // confirm click kala nam
+            if (result.isConfirmed) {
+                // insert service request eka POST method eken database ekata yawai
+                let postResponce = getHTTPServiceRequest("/employee/insert", "POST", employee);
+                // record eka success saved unoth
+                if (postResponce == "OK") {
+                    // success message eka sweetalert ekin display karai
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Employee saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    refreshEmployeeTable(); // data table eka refresh karai
+                    refreshEmployeeform(); // form eka clear karai
+                    $("#offcanvasBottom").offcanvas("hide"); // employee adding offcanvas form model eka wahanawa (hide offcanvas)
+                } else {
+                    // post error ekak awoth popup ekin dakkwanna
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        // errors veriable ekahi errors thibee nam
-        window.alert("Something went wrong...\n" + errors);
+        // required errors thibe nam validation error alert dialog popup eka pennai
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
-
-
 }
 
 //check form update function
@@ -384,39 +463,95 @@ const buttonEmployeeUpdate = () => {
         let updates = checkFormUpdate();
         // updates nomathi nam
         if (updates == "") {
-            window.alert("nothing to update..\n");
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn' // warning yellow button styling apply karai
+                },
+                buttonsStyling: false
+            });
         } else {
-            // update thibe nam
-            //need to get user confirmation
-            // window.confirm yanu ok/cancel button thibena dialog box ekak open kara dena method ekaki
-            let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-            if (userConfirm) {
-                // true nam
-                // call PUT service
-                //anthima parameter eka sadaha employee object eka yodai
-                // getHTTPServiceRequest = (url, method, data)
-                let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
-                // controller file ekehi athi insert service eka "OK" return kala wita
-                if (putResponce == "OK") {
-                    window.alert("Update Successfully...!");
-                    refreshEmployeeTable();
-                    refreshEmployeeform();
-                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-                } else {
-                    // controller file ekehi athi insert service eka "OK" return nokala wita
-                    window.alert("Failed to update...!" + putResponce);
+            // wenas weem thibe nam confirmation SweetAlert2 popup box eka open karai
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update the following changes?<br><br>" + updates.replace(/\n/g, "<br>"), // updates check list eka alert box eke display karai
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn', // yellow update style
+                    cancelButton: 'swal-custom-cancel-btn' // red cancel style
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // updates thahawuru kala nam
+                if (result.isConfirmed) {
+                    // service update request eka PUT method ekin backend yawai
+                    let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
+                    // update status success returned unoth
+                    if (putResponce == "OK") {
+                        // success alert modal pop up box eka design pennanawa
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Employee details updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        refreshEmployeeTable(); // data table reload/refresh karai
+                        refreshEmployeeform(); // form clear refresh karai
+                        $("#offcanvasBottom").offcanvas("hide"); // form offcanvas slide eka hide karai
+                    } else {
+                        // error alert check popup eka display karai
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponce,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            } else {
-
-            }
+            });
         }
     } else {
-        // errors veriable ekahi errors thibee nam
-        window.alert("something went wrong.. \n" + errors);
+        // required items validation errors popup window dialog ekin dakkwana
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
-
-
-
 }
 
 //full name validation
@@ -586,27 +721,31 @@ const callingNameValidator = (callingNameElement) => {
 
 }
 
-//nic validater
+//nic validate check kirima
 textNic.addEventListener("keyup", () => {
 
-    // Navigate to the parent element and then to the associated tag
+    // inputfield ekata pera athi lable box eka colour kirima sadaha
     prevElementNic = textNic.previousElementSibling;
     prevElementGender = selectGender.previousElementSibling;
     prevElementDob = dateDOB.previousElementSibling;
 
+    // input karana nic value eka ganima
     const nicValue = textNic.value;
 
+    // lenth eka niweradi nm
     if (nicValue.length == 10 || nicValue.length == 12) {
 
+        //nic value eka empty nethi nm
         if (nicValue != "") {
+            // pattern ekata match nm
             if (new RegExp("^([0-9]{9}[VvXx])|([0-9]{12})$").test(nicValue)) {
-                //valid nic name
+                //valid nic name , input field ekata colours and icon add kirima
                 textNic.style.borderBottom = "4px solid green";
                 prevElementNic.style.backgroundColor = "green";
                 textNic.classList.remove("is-invalid");
                 textNic.classList.add("is-valid");
-                employee.nic = nicValue; //value add to employee object
-                //generate gender , DOB
+                employee.nic = nicValue; //value add kirima employee object ekata
+                // gender , DOB generate kirima
                 let year, days, month, date, dob;
                 if (nicValue.length == 10) {
                     days = nicValue.substring(2, 5);
@@ -917,11 +1056,28 @@ const refreshEmployeeform = () => {
 
 // form eke clear button eka sadaha
 const clearEmployeeForm = () => {
-
-    let userConfirm = window.confirm("Do you need to refresh form...?");
-    if (userConfirm) {
-        refreshEmployeeform();
-    }
+    // form clear thahawuru karanna sweetalert confirmation popup dialog eka active karai
+    Swal.fire({
+        title: "Confirm Refresh", // dialog title set
+        text: "Do you need to refresh form...?", // dialog text confirmation set
+        icon: "question", // question mark logo set
+        showCancelButton: true, // cancel button dakkwanawa
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes', // yes confirm button
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No', // no cancel button
+        customClass: {
+            popup: 'swal-custom-popup', // local styling parameters
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn', // green style confirm button
+            cancelButton: 'swal-custom-cancel-btn' // red style cancel button
+        },
+        buttonsStyling: false // custom classes implement karanna buttonsStyling disable karai
+    }).then((result) => {
+        // user 'Yes' button click kala nam
+        if (result.isConfirmed) {
+            refreshEmployeeform(); // employee form fields default refresh value set karala clear karai
+        }
+    });
 }
 
 // function to preview employee photo

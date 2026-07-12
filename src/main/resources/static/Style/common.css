@@ -179,11 +179,81 @@ td {
   text-align: left;
 } */
 
-/* input::placeholder {
-  text-align: left;
-} */
+/* Custom SweetAlert2 styling to match the application UI */
+.swal-custom-popup {
+    background-color: #004658 !important; /* matching .divTable or .divForm */
+    border: 4px solid #1202fb !important; /* thick blue border matching .divForm */
+    border-radius: 25px !important; /* rounded corners */
+    color: white !important;
+    font-family: sans-serif !important;
+}
 
+.swal-custom-title {
+    color: white !important;
+    background-image: linear-gradient(#1c1e1f, #009dc5, #131313) !important;
+    border: solid 2px white !important;
+    border-radius: 15px !important;
+    padding: 10px !important;
+    margin: 15px !important;
+    font-size: 1.5rem !important;
+    text-align: center !important;
+}
 
+.swal-custom-content {
+    color: white !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    text-align: center !important;
+}
 
-  
-  
+/* Custom buttons */
+.swal-custom-confirm-btn {
+    background-image: linear-gradient(black, rgb(57, 202, 4), black) !important; /* green gradient */
+    color: rgb(254, 254, 255) !important;
+    border: solid 2px white !important;
+    padding: 10px 32px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    border-radius: 15px !important;
+    margin: 10px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s !important;
+}
+
+.swal-custom-confirm-btn:hover {
+    transform: scale(1.08) !important;
+}
+
+.swal-custom-cancel-btn {
+    background-image: linear-gradient(black, rgb(253, 0, 0), black) !important; /* red gradient */
+    color: rgb(254, 254, 255) !important;
+    border: solid 2px white !important;
+    padding: 10px 32px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    border-radius: 15px !important;
+    margin: 10px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s !important;
+}
+
+.swal-custom-cancel-btn:hover {
+    transform: scale(1.08) !important;
+}
+
+.swal-custom-warning-btn {
+    background-image: linear-gradient(black, rgb(222, 197, 5), black) !important; /* yellow gradient */
+    color: rgb(254, 254, 255) !important;
+    border: solid 2px white !important;
+    padding: 10px 32px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    border-radius: 15px !important;
+    margin: 10px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s !important;
+}
+
+.swal-custom-warning-btn:hover {
+    transform: scale(1.08) !important;
+}

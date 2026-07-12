@@ -19,4 +19,9 @@ List<PurchaseOrder> getPendingList();
     @Query("SELECT p FROM PurchaseOrder p WHERE p.addpricelist_id.id = ?1 AND p.purchaserequeststatus_id.name <> 'Deleted'")
     List<PurchaseOrder> findByAddPriceList(Integer addPriceListId);
 
+    // Pending purchase orders count eka laba ganimata custom query eka
+    @Query("SELECT count(po) FROM PurchaseOrder po WHERE po.purchaserequeststatus_id.name = 'Pending'")
+    // Pending orders count eka Long type eken return karai
+    Long countPendingPurchaseOrders();
+
 }

@@ -14,4 +14,7 @@ public interface GRNDao extends JpaRepository<GRN, Integer>{
     @Query("SELECT g FROM GRN g WHERE g.purchaserequest_id.id = ?1 AND g.grnstatus_id.name <> 'Deleted'")
     List<GRN> findByPurchaseOrder(Integer purchaseOrderId);
 
+    @Query("SELECT a FROM GRN a WHERE a.grnstatus_id.name = 'Pending' OR a.grnstatus_id.name = 'Partially Paid'")
+ List<GRN> getPendingAndPartiallyPaidList();
+
 }

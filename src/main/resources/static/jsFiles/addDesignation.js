@@ -248,44 +248,98 @@ const submitDesignationForm = () => {
 
     console.log(designation);
 
-    //need to check form error
+    // checkDesignationFormError call karala validation check karai
     let errors = checkDesignationFormError();
 
-    //get user confurmation
+    // errors nathi nam (valid nam)
     if (errors == "") {
-        let designationConfirm = window.confirm("Are you sure to add following designation details"
-            + "\n Designation name : " + designation.name
-            + "\n Roles :" + designation.roles
-        );
+        // designation submission confirmation box eka SweetAlert2 eken open karai
+        Swal.fire({
+            title: "Confirm Designation", // dialog title set
+            html: `Are you sure to add the following designation details?<br><br>` +
+                  `<strong>Designation Name:</strong> ${designation.name}<br>` +
+                  `<strong>Roles:</strong> ${designation.roles.map(r => r.name).join(', ')}`, // designation details set
+            icon: "question", // question mark logo set
+            showCancelButton: true, // cancel button active
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add', // Add button text
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel', // Cancel button text
+            customClass: {
+                popup: 'swal-custom-popup', // custom css styling class
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn', // green theme confirm
+                cancelButton: 'swal-custom-cancel-btn' // red theme cancel
+            },
+            buttonsStyling: false // custom styles custom apply karanna default block styling disable karai
+        }).then((result) => {
+            // confirmation 'Add' select kala nam
+            if (result.isConfirmed) {
+                // HTTP post request eka service ekata yawai
+                let postResponce = getHTTPServiceRequest("/designation/insert", "POST", designation);
+                // output status success unoth
+                if (postResponce == "OK") {
+                    // designation added successfully modal popup box eka open karai
+                    Swal.fire({
+                        title: "Added!",
+                        text: "Designation Added Successfully...!",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    refreshDesignationForm(); // form eka reset refresh karai
+                    $("#offcanvasDesignation").offcanvas("hide"); // Close the designation sub-offcanvas
+                    $("#offcanvasBottom").offcanvas("show"); // open the main employee offcanvas
 
-        //call post service
-        if (designationConfirm) {
-            let postResponce = getHTTPServiceRequest("/designation/insert", "POST", designation);
-            if (postResponce == "OK") {
-                window.alert("Designation Added Successfully...!");
-                refreshDesignationForm();
-                $("#offcanvasDesignation").offcanvas("hide"); // Close the offcanvas
-                $("#offcanvasBottom").offcanvas("show"); // open the main offcanvas
-
-                // designation dropdown eke data eka display kirima
-                let designation = getServiceRequest('/designation/alldata')
-                fillDataIntoSelect(selectDesignation, "Please Select Designation..!!", designation, "name");
-                selectDesignation.value = JSON.stringify(designation[designation.length - 1]);
-                employee.designation_id = designation[designation.length - 1];
-                // status field eka sadaha validation colour eka laba deema
-                prevElementSelectDesignation= selectDesignation.previousElementSibling;
-                selectDesignation.style.borderBottom = "4px solid green";
-                prevElementSelectDesignation.style.backgroundColor = "green";
-                selectDesignation.classList.remove("is-invalid");
-                selectDesignation.classList.add("is-valid");
-
-
-            } else {
-                window.alert("Fail to submit has following error\n" + postResponce);
+                    // designation dropdown eka update karala re-select list active karanna
+                    let designationList = getServiceRequest('/designation/alldata')
+                    fillDataIntoSelect(selectDesignation, "Please Select Designation..!!", designationList, "name");
+                    selectDesignation.value = JSON.stringify(designationList[designationList.length - 1]);
+                    employee.designation_id = designationList[designationList.length - 1];
+                    // status field validation colors border change karanna
+                    prevElementSelectDesignation = selectDesignation.previousElementSibling;
+                    selectDesignation.style.borderBottom = "4px solid green";
+                    prevElementSelectDesignation.style.backgroundColor = "green";
+                    selectDesignation.classList.remove("is-invalid");
+                    selectDesignation.classList.add("is-valid");
+                } else {
+                    // error reply popup box layout display
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Fail to submit has following error:\n" + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Form has following errors \n" + errors);
+        // required input errors errors warnings popup layout display
+        Swal.fire({
+            title: "Validation Error",
+            html: "Form has following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 
 }
@@ -293,11 +347,28 @@ const submitDesignationForm = () => {
 
 
 const clearDesignationForm = () => {
-
-    let designationConfirm = window.confirm("Do you need to refresh form...?");
-    if (designationConfirm) {
-        refreshDesignationForm();
-    }
+    // clear data warning confirmation sweet alert dialog popup box open karai
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you need to refresh form...?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn', // green design
+            cancelButton: 'swal-custom-cancel-btn' // red design
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // confirm Yes click kala nam
+        if (result.isConfirmed) {
+            refreshDesignationForm(); // form fields clear reset default state reload karai
+        }
+    });
 }
 
 

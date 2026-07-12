@@ -8,22 +8,98 @@
     <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
     <!-- nav bar end -->
 
-    <!-- offcanvas button area start -->
-    <div class="row">
-        <div class="col-1"></div>
-        <div class="col-2">
-            <button class="btn btn-primary offCanvasButton" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshCustomerPaymentForm()">
-                <img src="/image/quick%20payment%20icon.png" alt="icon" width="60" height="60"> <br>
-                Quick Payment
-            </button>
+    <!-- Dashboard main grid area patan gannawa -->
+    <div class="container-fluid mt-3">
+        <!-- Stat cards row eka -->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="row g-4">
+                    <!-- Low Stock Items card eka -->
+                    <div class="col-md-3">
+                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                            <h5 style="color: #de8e05; font-weight: bold;">Low Stock Items</h5>
+                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="lowStockCount">-</h2>
+                            <a href="/inventory" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Expired Quotations card eka -->
+                    <div class="col-md-3">
+                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                            <h5 style="color: #de8e05; font-weight: bold;">Expired Quotations</h5>
+                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="expiredQuotationsCount">-</h2>
+                            <a href="#" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Pending Purchase Orders card eka -->
+                    <div class="col-md-3">
+                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                            <h5 style="color: #de8e05; font-weight: bold;">Pending Purchase Orders</h5>
+                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="pendingPurchaseOrdersCount">-</h2>
+                            <a href="/purchaseOrders" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                        </div>
+                    </div>
+                    <!-- Today Income card eka -->
+                    <div class="col-md-3">
+                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                            <h5 style="color: #de8e05; font-weight: bold;">Today Income</h5>
+                            <h2 style="color: black; font-weight: 800; font-size: 2rem; margin: 15px 0;" id="todayIncome">Rs.0.00</h2>
+                            <a href="/incomereport" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
         </div>
-        <div class="col-9"></div>
+
+        <!-- Quick payment button eka cards saha details row deka medata set karana container eka -->
+        <div class="row position-relative" style="height: 0; z-index: 100;">
+            <div class="col-12 d-flex justify-content-center">
+                <!-- Pill-shaped Quick payment offcanvas button eka. Clover icon eka ha "Quick Payment" text eka sahithai. -->
+                <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshCustomerPaymentForm()" style="background: linear-gradient(#1c1e1f, #009dc5, #131313); border: 2px solid white; border-radius: 25px; padding: 6px 18px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.3); transform: translateY(-50%); transition: transform 0.2s ease-in-out;" onmouseover="this.style.transform='translateY(-50%) scale(1.08)'" onmouseout="this.style.transform='translateY(-50%) scale(1)'">
+                    <!-- Clover custom SVG icon eka vama paththen -->
+                    <svg viewBox="0 0 100 100" style="width: 24px; height: 24px;">
+                        <path d="M 50 5 C 58 5, 62 22, 72 28 C 82 36, 95 42, 95 50 C 95 58, 82 64, 72 72 C 62 80, 58 95, 50 95 C 42 95, 38 80, 28 72 C 18 64, 5 58, 5 50 C 5 42, 18 36, 28 28 C 38 20, 42 5, 50 5 Z" fill="#ff9800" stroke="white" stroke-width="6"/>
+                    </svg>
+                    <!-- Quick Payment text description -->
+                    <span style="font-size: 14px; letter-spacing: 0.5px;">Quick Payment</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Details block row eka (Bookstore image eka ha monthly income chart eka) -->
+        <div class="row mt-4 mb-4">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="row">
+                    <!-- Bookstore Image panel eka (Usa adu karala sadasa thibe) -->
+                    <div class="col-md-6 d-flex mb-3">
+                        <div style="width: 100%; height: 230px; border: 4px solid white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <img src="/image/dashboard_img.png" alt="Shop Stock Image" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                    <!-- Six Month Income chart panel eka (Usa adu karala sadasa thibe) -->
+                    <div class="col-md-6 d-flex mb-3">
+                        <div class="divTable flex-grow-1 p-3 d-flex flex-column align-items-center justify-content-center" style="background-color: white; height: 230px; border-radius: 20px; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <h5 style="color: #004658; font-weight: bold;" class="mb-2">Previous Six Month Income Chart</h5>
+                            <!-- Chart body usa 160px dakwa adu karala thibe -->
+                            <div id="chartContainer" style="width: 100%; height: 160px; padding: 5px;">
+                                <!-- Offline dynamic SVG chart container design eka -->
+                                <svg id="dashboardChartSvg" width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none">
+                                    <text x="300" y="150" fill="#999" text-anchor="middle" font-family="sans-serif">Loading Chart Data...</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
     </div>
-    <!-- offcanvas button area end -->
+    <!-- Dashboard main grid area awasan wenawa -->
 
     <!-- offcanvas area start -->
-    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 600px;" tabindex="-1" data-bs-scroll="true"
+    <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 490px;" tabindex="-1" data-bs-scroll="true"
          data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
         <div class="offcanvas-body small">
 
@@ -378,6 +454,10 @@
         </div>
     </div>
     <!-- offcanvas area end -->
+
+    <!-- Page widgets scripts control path hadanawa -->
+    <script src="/jsFiles/common.js"></script>
+    <script src="/jsFiles/dashboard.js"></script>
 
 </body>
 

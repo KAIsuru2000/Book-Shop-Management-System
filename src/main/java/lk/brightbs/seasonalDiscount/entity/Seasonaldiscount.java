@@ -43,9 +43,9 @@ public class Seasonaldiscount {
     @NotNull
     private BigDecimal discount;
 
-    @Column(name = "invoiceamount")
-    @NotNull
-    private BigDecimal invoiceamount;
+    // @Column(name = "invoiceamount")
+    // @NotNull
+    // private BigDecimal invoiceamount;
 
     @Column(name = "startdate")
     @NotNull

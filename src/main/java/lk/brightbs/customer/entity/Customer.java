@@ -63,6 +63,11 @@ import lombok.NoArgsConstructor;
     @ManyToOne
     @JoinColumn(name = "customerstatus_id" , referencedColumnName = "id")
     private CustomerStatus customerstatus_id ;
+
+    // customerge loyalty points pramanaya database eke record karaganna me field eka use karanawa
+    @Column(name = "points")
+    // points kiyana integer variable eka 0 nawa default value ekak widiyata set karanawa
+    private Integer points = 0;
     
     }
 

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import org.springframework.web.bind.annotation.PathVariable;
+import java.time.LocalDate;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.seasonalDiscount.dao.SeasonaldiscountDao;
 import lk.brightbs.seasonalDiscount.entity.Seasonaldiscount;
@@ -147,6 +149,23 @@ public class SeasonaldiscountController {
         } else {
             return "Update not completed : you haven't permission...";
         }
+    }
+
+    // select karapu item id ekata adala active seasonal discount eka ganna GetMapping method eka
+    @GetMapping(value = "/seasonaldiscount/activebyitem/{itemId}", produces = "application/json")
+    // itemId parameter eka path variable ekakin methanata gannawa
+    public Seasonaldiscount getActiveDiscountByItem(@PathVariable("itemId") Integer itemId) {
+        // me welawe wathman date eka (current date) gannawa
+        LocalDate currentDate = LocalDate.now();
+        // dao class eke model method eka run karala active seasonal discounts list eka gannawa
+        List<Seasonaldiscount> activeDiscounts = seasonaldiscountDao.getActiveDiscountByItemAndDate(itemId, currentDate);
+        // list eka empty neththan palamu discount eka return karanawa
+        if (!activeDiscounts.isEmpty()) {
+            // palamu index eke thiyena active seasonal discount object eka return karanawa
+            return activeDiscounts.get(0);
+        }
+        // active seasonal discount ekak nathnam null object eka return karanawa
+        return null;
     }
 
 }

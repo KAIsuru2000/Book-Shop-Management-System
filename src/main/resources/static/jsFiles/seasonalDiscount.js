@@ -34,14 +34,14 @@ const refreshSeasonalDiscountForm = () => {
     textOfferName.style.border = '';
     dateStartDate.style.border = '';
     dateEndDate.style.border = '';
-    numMaxBillAmount.style.border = '';
+    // numMaxBillAmount.style.border = '';
     numberDiscountRate.style.border = '';
 
     // old data form ekata genwa ganimata
     textOfferName.value = '';
     dateStartDate.value = '';
     dateEndDate.value = '';
-    numMaxBillAmount.value = '';
+    // numMaxBillAmount.value = '';
     numberDiscountRate.value = '';
 
     // update button disabled kirima
@@ -136,7 +136,6 @@ const refreshSeasonalDiscountTable = () => {
         { dataType: 'string', propertyName: 'discountname' },
         { dataType: 'string', propertyName: 'validfrom' },
         { dataType: 'string', propertyName: 'validto' },
-        { dataType: 'decimal', propertyName: 'maximaldiscount' },
         { dataType: 'decimal', propertyName: 'discount' },
         { dataType: 'function', propertyName: getOfferType }
     ];
@@ -280,7 +279,7 @@ const refilForm = (item, index) => {
     textOfferName.value = seasonalDiscount.discountname;
     dateStartDate.value = seasonalDiscount.validfrom;
     dateEndDate.value = seasonalDiscount.validto;
-    numMaxBillAmount.value = seasonalDiscount.maximaldiscount;
+    // numMaxBillAmount.value = seasonalDiscount.maximaldiscount;
     numberDiscountRate.value = seasonalDiscount.discount;
 
     fillDataIntoSelect(selectOfferType, "Select Offer Type", offerTypes, "name");
@@ -297,7 +296,7 @@ const refilForm = (item, index) => {
     textOfferName.style.border = '2px solid green';
     dateStartDate.style.border = '2px solid green';
     dateEndDate.style.border = '2px solid green';
-    numMaxBillAmount.style.border = '2px solid green';
+    // numMaxBillAmount.style.border = '2px solid green';
     numberDiscountRate.style.border = '2px solid green';
     selectOfferType.style.border = '2px solid green';
 

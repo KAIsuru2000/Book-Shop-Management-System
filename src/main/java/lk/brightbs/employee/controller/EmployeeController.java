@@ -110,13 +110,13 @@ public class EmployeeController {
 		// duplicate nic check
 		Employee extEmployeeByNic = employeeDao.getByNic(employee.getNic());
 		if (extEmployeeByNic != null) {
-			return "Save Not Completed : Nic " + employee.getNic() + " Value Allready ext...!";
+			return "Save Not Completed : Nic " + employee.getNic() + " Value Already Exists...!";
 		}
 
 		// duplicate email ckeck
 		Employee extEmployeeByEmail = employeeDao.getByEmail(employee.getEmail());
 		if (extEmployeeByEmail != null) {
-			return "Save Not Completed : Email " + employee.getEmail() + " Value Allready ext...!";
+			return "Save Not Completed : Email " + employee.getEmail() + " Value Already Exists...!";
 		}
 
 		// DB ekath samaga access wana nisa try catch ekak liwima
@@ -267,12 +267,12 @@ public class EmployeeController {
 
 		Employee extEmployeeByNic = employeeDao.getByNic(employee.getNic());
 		if (extEmployeeByNic != null && extEmployeeByNic.getId() != employee.getId()) {
-			return "Save Not Completed : Nic " + employee.getNic() + " Value Allready ext...!";
+			return "Save Not Completed : Nic " + employee.getNic() + " Value Already Exists...!";
 		}
 
 		Employee extEmployeeByEmail = employeeDao.getByEmail(employee.getEmail());
 		if (extEmployeeByEmail != null && extEmployeeByEmail.getId() != employee.getId()) {
-			return "Save Not Completed : Email " + employee.getEmail() + " Value Allready ext...!";
+			return "Save Not Completed : Email " + employee.getEmail() + " Value Already Exists...!";
 		}
 
 		try {
