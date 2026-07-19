@@ -1,4 +1,4 @@
-package lk.brightbs.report;
+package lk.brightbs.report.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import lk.brightbs.employee.entity.Employee;
+import lk.brightbs.report.dao.RepoortDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +27,20 @@ import lk.brightbs.invoice.entity.Invoice;
 
 // Report serve kirima sadaha controller class eka hadanawa
 @RestController
-public class IncomeReportController {
+public class ReportController {
+
+    @Autowired
+//    report dao wala instent ekak sada genima
+    private RepoortDao repoortDao;
 
     // InvoiceDao eka autowire karagannawa data gannawa sadaha
     @Autowired
     private InvoiceDao invoiceDao;
+
+    @GetMapping(value = "/report/getemployeebydesignation" , params = {"designationid"})
+    public List<Employee> getEmployeeDataByDesignation(@RequestParam("designationid") Integer designationid){
+        return repoortDao.getEmployeeByDesignation(designationid);
+    }
 
     // Request mapping eka income report ui page eka serve kirima sadaha
     @GetMapping("/incomereport")

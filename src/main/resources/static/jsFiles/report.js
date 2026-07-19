@@ -9,7 +9,7 @@ window.addEventListener("load", () => {
 
     refreshEmployeeTable();
 
-    refreshEmployeeform();
+
 
 })
 
@@ -17,7 +17,7 @@ window.addEventListener("load", () => {
 const refreshEmployeeTable = () => {
 
     // mema functon eka common js eka thula define kara thibee me sadaha controller wala athi alldata service eka magin data laba gani
-    let employees = getServiceRequest("/employee/alldata");
+    let reportData = getServiceRequest("/report/getemployeebydesignation?designationid=1");
 
     //column list eka sadaa ganima
     //ui ekehi table eka bala meya sadai
@@ -27,14 +27,12 @@ const refreshEmployeeTable = () => {
     //function => object / array / boolean
     let propertyList = [
         { propertyName: "fullname", dataType: "string" },
-        { propertyName: "nic", dataType: "string" },
-        { propertyName: "mobile", dataType: "string" },
-        { propertyName: getDesignation, dataType: "function" },
-        { propertyName: getEmployeeStatus, dataType: "function" },
+        { propertyName: "email", dataType: "string" },
+        { propertyName: "mobile", dataType: "string" }
     ];
 
     //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tableEmployeeBody, employees, propertyList, employeeRowFormRefill, employeeRowDelete, employeeRowView, "#offcanvasBottom");
+    fillDataIntoTable(tableEmployeeReportBody, reportData, propertyList, employeeRowFormRefill, employeeRowDelete, employeeRowView, false);
 
 
     // ui ekehi table eka datatable formate ekata convert kara gannima
@@ -43,29 +41,7 @@ const refreshEmployeeTable = () => {
 
 }
 
-// table eke designation column eka fill wima sadaha function ekak
-const getDesignation = (dataob) => {
-    return dataob.designation_id.name;
-}
 
-// table eke employee status column eka fill wima sadaha function ekak
-const getEmployeeStatus = (dataob) => {
-    if (dataob.employeestatus_id.name == "working") {
-        return '<i class="fa-solid fa-person-circle-check fa-beat fa-xl" style="color: #07f702;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Working"></i>'
-    }
-
-    if (dataob.employeestatus_id.name == "resign") {
-        return '<i class="fa-solid fa-person-circle-minus fa-beat fa-xl" style="color: #f6ee04;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Resign"></i>'
-    }
-
-    if (dataob.employeestatus_id.name == "delete") {
-        return '<i class="fa-solid fa-person-circle-xmark fa-beat fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Delete"></i>'
-    }
-
-}
 
 //function for re fill employee form
 const employeeRowFormRefill = (ob, index) => {
@@ -108,6 +84,12 @@ const employeeRowFormRefill = (ob, index) => {
 
     // js array eka json string ekakata convert kirima JSON.stringify() magin sidu karai
     selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
+
+    // status eka form eka edit karana wita validation colour eka iwath kirima
+    selectEmpStatus.style.borderBottom = "1px solid #ced4da";
+    selectEmpStatus.previousElementSibling.style.backgroundColor = "black";
+    selectEmpStatus.classList.remove("is-valid");
+    selectEmpStatus.classList.remove("is-invalid");
 
     //     hide add button
     divButtonAdd.style.display = "none";
@@ -685,8 +667,6 @@ textFullName.addEventListener("click", () => {
         employee.fullname = null; //employee object this value null
     }
 });
-
-
 
 const callingNameValidator = (callingNameElement) => {
 

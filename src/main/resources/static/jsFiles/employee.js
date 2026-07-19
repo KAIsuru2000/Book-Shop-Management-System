@@ -43,6 +43,7 @@ const refreshEmployeeTable = () => {
 
 }
 
+
 // table eke designation column eka fill wima sadaha function ekak
 const getDesignation = (dataob) => {
     return dataob.designation_id.name;
@@ -108,6 +109,12 @@ const employeeRowFormRefill = (ob, index) => {
 
     // js array eka json string ekakata convert kirima JSON.stringify() magin sidu karai
     selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
+
+    // status eka form eka edit karana wita validation colour eka iwath kirima
+    selectEmpStatus.style.borderBottom = "1px solid #ced4da";
+    selectEmpStatus.previousElementSibling.style.backgroundColor = "black";
+    selectEmpStatus.classList.remove("is-valid");
+    selectEmpStatus.classList.remove("is-invalid");
 
     //     hide add button
     divButtonAdd.style.display = "none";
@@ -1053,6 +1060,8 @@ const refreshEmployeeform = () => {
 //     show add button
     divButtonAdd.style.display = "flex";
 }
+
+
 
 // form eke clear button eka sadaha
 const clearEmployeeForm = () => {

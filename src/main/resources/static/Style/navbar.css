@@ -128,3 +128,253 @@ body {
     transform: translateX(-50%);
 }
 
+/* desktop saha mobile views wenas karanna bawitha karana utility classes */
+.mobile-only {
+    display: none !important;
+}
+
+.desktop-only {
+    display: inline-flex !important;
+}
+
+/* navbar eke background gradient clip-path eka hariyata pennanna main navigation element eka transparent karanawa */
+.main-navbar {
+    background-color: transparent !important;
+    border: none;
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* desktop view eke links vertically center karala inline thiyanna container height eka 75px karanawa */
+.nav-container {
+    height: 75px;
+    display: flex;
+    align-items: center;
+}
+
+/* desktop layout (screen width eka 992px ho labadi) wada karana media query eka */
+@media screen and (min-width: 992px) {
+    /* desktop menu link eke pad, font, borders hover effects sadasa thibe */
+    .main-navbar .nav-link {
+        font-size: 0.95rem;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: background-color 0.2s, color 0.2s;
+        padding: 8px 16px !important;
+        color: #ffffff !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    /* mouse cursor link eka mathata yaddi black color background hover effect eka laba deemata */
+    .main-navbar .nav-link:hover {
+        background: #000000 !important;
+        color: #ffffff !important;
+    }
+    
+    /* desktop screen waladi cursor dropdown header item eka mathata geniyaddi auto open wenna */
+    .main-navbar .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+    }
+    
+    /* desktop screen size waladi logo image eka absolute mada (center) thanaka position karaganna */
+    .main-navbar .logo {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+    }
+}
+
+/* sub dropdown menu dark theme eka visual border radius ha black background ekata modify kirima */
+.dropdown-menu-dark {
+    background-color: #000000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 15px !important;
+    padding: 8px 0 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* dropdown menu eke sub options link pad, color and border details sadasa thibe */
+.dropdown-menu-dark .dropdown-item {
+    color: #ffffff !important;
+    text-align: center;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
+    padding: 8px 16px !important;
+    font-size: 0.95rem;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+/* dropdown menu eke anthima sub option eke bottom border eka hide kirima */
+.dropdown-menu-dark .dropdown-item:last-child {
+    border-bottom: none !important;
+}
+
+/* mouse pointer eka sub items mathata yaddi bright green color hover eka set karanna */
+.dropdown-menu-dark .dropdown-item:hover {
+    color: #b1f14b !important;
+    background-color: transparent !important;
+}
+
+/* mobile saha tablet screen size (width 991px saha adu screen) sandaha styles mehema sadasa thibe */
+@media screen and (max-width: 991px) {
+    /* mobile navigation header height eka scale down karala 60px set karanawa */
+    .nav-container {
+        height: 60px;
+        justify-content: flex-start;
+    }
+    
+    /* background cyan ribbon eke clip path shape layout and height eka mobile ekata adu karanawa */
+    .background-shape::before {
+        height: 60px;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%);
+    }
+    
+    /* mobile views dekatama logo eka header eke central position karaganna */
+    .logo {
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        margin: 0;
+    }
+    
+    /* mobile header eke adala logo width and height set karanna */
+    .logo img {
+        width: 50px;
+        height: 46px;
+        transition: transform 0.3s ease;
+    }
+    
+    /* mobile logo hover animation properties */
+    .logo img:hover {
+        transform: rotate(5deg) scale(1.05);
+    }
+    
+    /* mobile toggler toggling box button borders and outline remove karaganna */
+    .navbar-toggler {
+        padding: 4px 8px;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* bootstrap default light toggler toggle icon eka dark color inline SVG ekakata change kirima */
+    .navbar-toggler-icon {
+        width: 1.5em;
+        height: 1.5em;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    }
+    
+    /* mobile top header eke user area display positions block details */
+    .mobile-header-user {
+        z-index: 1000;
+    }
+    
+    /* user details name box backdrop transparent shadow style background set kirima */
+    .mobile-header-user span {
+        font-size: 0.85rem;
+        background: rgba(255, 255, 255, 0.45);
+        padding: 3px 8px;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* mobile screen logout button spacing and cursor setup adjustments */
+    .mobile-logout-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        margin-left: 5px;
+        transition: transform 0.2s ease;
+        text-decoration: none;
+    }
+    
+    /* pointer hover animation mobile logout icon set properties */
+    .mobile-logout-btn:hover {
+        transform: scale(1.15);
+    }
+    
+    /* mobile slide-out dark offcanvas screen container premium background transparent styles */
+    .offcanvas.text-bg-dark {
+        background-color: rgba(14, 21, 26, 0.96) !important;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        width: 280px !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* offcanvas header details background and spacing height properties */
+    .offcanvas-header {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 20px 15px;
+    }
+    
+    /* offcanvas lists body section padding spacing */
+    .offcanvas-body {
+        padding: 15px 10px;
+    }
+    
+    /* offcanvas mobile links spacing link styling lists font layout setups */
+    .offcanvas-body .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-weight: 500;
+        padding: 10px 15px !important;
+        border-radius: 8px;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 2px 0;
+    }
+    
+    /* offcanvas drawer lists yatin select and hover effect styles setup */
+    .offcanvas-body .nav-link:hover,
+    .offcanvas-body .nav-link.show {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #6bc7eb !important;
+        padding-left: 20px !important;
+    }
+    
+    /* drawer details menu icons setups fonts color set */
+    .offcanvas-body .nav-link i {
+        color: #73d8f1;
+        width: 20px;
+        text-align: center;
+    }
+    
+    /* nested dropdown mobile view dark sub-dropdown list configurations */
+    .offcanvas-body .dropdown-menu-dark {
+        background-color: rgba(0, 0, 0, 0.25) !important;
+        border: none !important;
+        border-radius: 8px !important;
+        margin: 2px 0 2px 15px !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    /* dropdown sub items alignments setups padding layouts sizes */
+    .offcanvas-body .dropdown-item {
+        padding: 8px 15px 8px 30px !important;
+        text-align: left !important;
+        border-bottom: none !important;
+        color: rgba(255, 255, 255, 0.65) !important;
+        font-size: 0.92rem;
+        border-radius: 6px;
+    }
+    
+    /* mouse hover settings for sub items links green highlights transition */
+    .offcanvas-body .dropdown-item:hover {
+        color: #b1f14b !important;
+        background-color: transparent !important;
+        padding-left: 35px !important;
+    }
+}
+

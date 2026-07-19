@@ -1,89 +1,144 @@
 <!-- nav bar start -->
-<nav th:fragment="topnavbarfragment">
+<nav th:fragment="topnavbarfragment" class="navbar navbar-expand-lg navbar-dark p-0 main-navbar">
+    <!-- background eke thiyena gradient shape polygen eka hadana div eka -->
     <div class="background-shape"></div>
-    <div class="nevLeft menu_bar">
-        <ul>
-            <li><a href="/dashboard"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
-        </ul>
-        <ul>
-            <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> Administration</a>
-                <div class="sub-menu-1">
-                    <ul>
-                        <li><a href="/employee">Employee</a></li>
-                        <li><a href="/user">User</a></li>
-                        <li><a href="/privilege">Privilege</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <ul>
-            <li><a href="#"><i class="fa-solid fa-warehouse" aria-hidden="true"></i> Inventory<br> Management</a>
-                <div class="sub-menu-1">
-                    <ul>
-                        <li><a href="/item">Item</a></li>
-                        <li><a href="/inventory">Inventory</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <ul>
-            <li><a href="#"><i class="fa-solid fa-truck-arrow-right" aria-hidden="true"></i> Supplier<br> Management</a>
-                <div class="sub-menu-1">
-                    <ul>
-                        <li><a href="/supplier">Supplier Registration</a></li>
-                        <li><a href="/priceRequest">Price List Request</a></li>
-                        <li><a href="/addPriceList">Add Price List</a></li>
-                        <li><a href="/purchaseOrders">Purchase Orders</a></li>
-                        <li><a href="/grn">GRN</a></li>
-                        <li><a href="/supplierPayments">Supplier Payment</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <ul>
-            <li><a href="#"><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i> Customer<br>
-                    Management</a>
-                <div class="sub-menu-1">
-                    <ul>
-                        <li><a href="/customer">Customer Registration</a></li>
-                        <li><a href="/loyaltycustomer">Loyalty Customer</a></li>
-                        <li><a href="/invoice">Invoice</a></li>
-                        <li><a href="/customerPayment">Customer Payment</a></li>
-                        <li><a href="/seasonalDiscount">Sesonal Discount</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        
-    </div>
-    <div class="logo">
-        <img src="/image/title.png" alt="Logo" width="67" height="62">
-    </div>
     
-    <div class="nevRight menu_bar">
-        <ul>
-            <li><a href="#"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Reports</a>
-                <!-- Reports menu eka navbar ekata add karanawa offline weda karana lesa -->
-                <div class="sub-menu-1">
-                    <ul>
-                        <!-- Income Report sub-menu eka open karaganna link eka -->
-                        <li><a href="/incomereport">Income Report</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <form class="d-flex">
-            <!-- methenta name eka genwa ganima 
-         apita ui ewanne back end eka haraha
-         apita ui service ekath samagama data yewiya heka
-         apita url ekehi thibena data illa gatha heka ewagema set karana data (th:text)illa gatha heka
-         e sadaha ui ekata loggedusername namin parameter ekak set kara thibiya yuthuya
-         e sadaha logincontroller wala dashboard eka load karana thanata authentication object ekak genwa gena-->
-            <span class="text-black fw-bold mt-1" th:text="${loggedusername}"> 123456 </span>
-            <a style="color: #ffffff;" class="btn" href="/logout">Logout<i class="fa-solid fa-right-from-bracket"
-                    style="color: #f60404;"></i>
+    <!-- meya mulu navbar container eka bootstrap fluid use karala thiyenne -->
+    <div class="container-fluid position-relative nav-container">
+        <!-- mobile screen waladi menu eka open karana hamburger menu toggle button eka -->
+        <button class="navbar-toggler border-0 ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <!-- hamburger icon eka adala span tag eka -->
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- desktop saha mobile views dekatama mada thiyena logo eka -->
+        <div class="logo">
+            <!-- logo image eka path eken load karanawa -->
+            <img src="/image/title.png" alt="Logo" width="67" height="62">
+        </div>
+
+        <!-- mobile screen waladi screen eke right side eken logged user ge nama saha logout icon eka load karaganna meya bawitha wenawa -->
+        <div class="d-flex align-items-center d-lg-none ms-auto me-2 mobile-header-user">
+            <!-- logged username eka thymeleaf th:text parameter eka haraha load wenawa -->
+            <span class="text-black fw-bold me-2" style="font-size: 0.85rem;" th:text="${loggedusername}"> 123456 </span>
+            <!-- logout wena link eka mobile header eka sandaha set karala thiyenawa -->
+            <a href="/logout" class="mobile-logout-btn">
+                <!-- logout button ekata adala bootstrap/font-awesome icon eka -->
+                <i class="fa-solid fa-right-from-bracket" style="color: #f60404; font-size: 1.15rem;"></i>
             </a>
-        </form>
+        </div>
+
+        <!-- offline bootstrap 5 components haraha mobile screen waladi vama paththen slide wena offcanvas menu drawer eka -->
+        <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <!-- offcanvas slide-menu eke top header eka, close button eka saha business title eka mehi thiyenawa -->
+            <div class="offcanvas-header border-bottom border-secondary">
+                <!-- header logo eka saha title eka mehi display wenawa -->
+                <div class="d-flex align-items-center">
+                    <img src="/image/title.png" alt="Logo" width="45" height="42">
+                    <span class="ms-2 text-white fw-bold" style="font-size: 1.1rem; letter-spacing: 0.5px;">Bright Book Shop</span>
+                </div>
+                <!-- mobile sidebar menu eka close karana podi white color X mark button eka -->
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            
+            <!-- offcanvas sidebar menu eke links okkoma thiyena main body block eka -->
+            <div class="offcanvas-body">
+                <!-- left navigation links (Home, Administration, Inventory, Supplier, Customer Management) display karana main navbar lists -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <!-- dashboard ekata yana main home link item eka -->
+                    <li class="nav-item">
+                        <a class="nav-link text-white px-2 px-lg-3 py-2" href="/dashboard"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                    </li>
+                    
+                    <!-- administration menu drop-down list item eka -->
+                    <li class="nav-item dropdown">
+                        <!-- dropdown menu header toggle link eka click karanna puluwan widihata -->
+                        <a class="nav-link dropdown-toggle text-white px-2 px-lg-3 py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user" aria-hidden="true"></i> Administration
+                        </a>
+                        <!-- drop down sub-menus meke thiyenne. employee, user, privilege sub items -->
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/employee">Employee</a></li>
+                            <li><a class="dropdown-item" href="/user">User</a></li>
+                            <li><a class="dropdown-item" href="/privilege">Privilege</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- inventory management menu drop-down list item eka -->
+                    <li class="nav-item dropdown">
+                        <!-- dropdown toggle link eka inventory sandaha -->
+                        <a class="nav-link dropdown-toggle text-white px-2 px-lg-3 py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-warehouse" aria-hidden="true"></i> Inventory Management
+                        </a>
+                        <!-- drop down sub-menus. item registration saha inventory management -->
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/item">Item</a></li>
+                            <li><a class="dropdown-item" href="/inventory">Inventory</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- supplier management menu drop-down list item eka -->
+                    <li class="nav-item dropdown">
+                        <!-- dropdown toggle link eka supplier management page sandaha -->
+                        <a class="nav-link dropdown-toggle text-white px-2 px-lg-3 py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-truck-arrow-right" aria-hidden="true"></i> Supplier Management
+                        </a>
+                        <!-- sub menu items: supplier reg, price request, add price list, purchase orders, grn, payments -->
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/supplier">Supplier Registration</a></li>
+                            <li><a class="dropdown-item" href="/priceRequest">Price List Request</a></li>
+                            <li><a class="dropdown-item" href="/addPriceList">Add Price List</a></li>
+                            <li><a class="dropdown-item" href="/purchaseOrders">Purchase Orders</a></li>
+                            <li><a class="dropdown-item" href="/grn">GRN</a></li>
+                            <li><a class="dropdown-item" href="/supplierPayments">Supplier Payment</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- customer management menu drop-down list item eka -->
+                    <li class="nav-item dropdown">
+                        <!-- dropdown toggle link eka customer management sandaha -->
+                        <a class="nav-link dropdown-toggle text-white px-2 px-lg-3 py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i> Customer Management
+                        </a>
+                        <!-- sub menu items: customer reg, loyalty customer, invoice, payment, seasonal discount -->
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/customer">Customer Registration</a></li>
+                            <li><a class="dropdown-item" href="/loyaltycustomer">Loyalty Customer</a></li>
+                            <li><a class="dropdown-item" href="/invoice">Invoice</a></li>
+                            <li><a class="dropdown-item" href="/customerPayment">Customer Payment</a></li>
+                            <li><a class="dropdown-item" href="/seasonalDiscount">Sesonal Discount</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- right side links display karana list block eka (reports and user logout) -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <!-- reports drop-down list item eka -->
+                    <li class="nav-item dropdown">
+                        <!-- dropdown toggle link eka reports sandaha -->
+                        <a class="nav-link dropdown-toggle text-white px-2 px-lg-3 py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-chart-line" aria-hidden="true"></i> Reports
+                        </a>
+                        <!-- sub menu list. income reports sub item -->
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="/incomereport">Income Report</a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- desktop size screen waladi pamanak display karana username and logout button grid area eka -->
+                    <li class="nav-item d-none d-lg-flex align-items-center ms-3">
+                        <form class="d-flex align-items-center m-0">
+                            <!-- desktop header eke login user ge nama display wenawa -->
+                            <span class="text-black fw-bold me-2" th:text="${loggedusername}"> 123456 </span>
+                            <!-- desktop header eke logout button eka -->
+                            <a style="color: #ffffff;" class="btn btn-outline-light btn-sm border-0 d-flex align-items-center" href="/logout">
+                                Logout<i class="fa-solid fa-right-from-bracket ms-1" style="color: #f60404;"></i>
+                            </a>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </nav>
 <!-- nav bar end -->
