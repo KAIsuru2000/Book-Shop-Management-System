@@ -1,4 +1,4 @@
-package lk.brightbs.report.controller;
+package lk.brightbs.report;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
