@@ -22,7 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 @RestController
@@ -194,5 +196,40 @@ public class UserController {
 		}
 	}
 
+    // system ekata log wela inna user ge designation eka ho role eka ganna get mapping ekak liyanawa
+    @GetMapping(value = "/loggeduser/role", produces = "application/json")
+    public Map<String, String> getLoggedUserRole() {
+        // response eka map ekak widiyata yawanna hash map object ekak hadagannawa
+        Map<String, String> response = new HashMap<>();
+        
+        // login wela inna user ge authentications details system eken gannawa
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        // user name eken database eken user object eka aragannawa
+        User loggedUser = userDao.getByUsername(auth.getName());
+        
+        // designation name eka ho role eka danna roleOrDesignation kiyala variable ekak hadagannawa
+        String roleOrDesignation = "";
+        
+        // user details database eke thiyeda kiyala check karanawa
+        if (loggedUser != null) {
+            // user ta employee details linked wela thiyenawa nam saha designation ekak thiyenawa nam check karanawa
+            if (loggedUser.getEmployee_id() != null && loggedUser.getEmployee_id().getDesignation_id() != null) {
+                // designation eke nama roleOrDesignation variable ekata set karagannawa
+                roleOrDesignation = loggedUser.getEmployee_id().getDesignation_id().getName();
+            } 
+            // user ta employee assign wela nethnam namuth roles thiyeda kiyala check karanawa
+            else if (loggedUser.getRoles() != null && !loggedUser.getRoles().isEmpty()) {
+                // palamu role eke name eka roleOrDesignation variable ekata set karagannawa
+                roleOrDesignation = loggedUser.getRoles().iterator().next().getName();
+            }
+        }
+        
+        // role key ekata roleOrDesignation variable eka set karanawa
+        response.put("role", roleOrDesignation);
+        
+        // response map eka backend controller eken frontend ekata pass karanawa
+        return response;
+    }
 
 }

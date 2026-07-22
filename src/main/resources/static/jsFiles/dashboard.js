@@ -1,5 +1,8 @@
 // Page load wuna wita dashboard statistics data fetch karala gannawa
 window.addEventListener('load', () => {
+
+    // log una userta acces thitena module pamanak penwimata adala function eka
+    fillterLogUserAccessModule();
     // API endpoint ekata fetch request eka yawanawa
     fetch('/dashboard/data')
         .then(response => response.json())
@@ -8,7 +11,7 @@ window.addEventListener('load', () => {
             document.getElementById('lowStockCount').innerText = data.lowStockCount;
             document.getElementById('expiredQuotationsCount').innerText = data.expiredQuotationsCount;
             document.getElementById('pendingPurchaseOrdersCount').innerText = data.pendingPurchaseOrdersCount;
-            
+
             // Income amount eka format karala set karanawa currency ekath ekka
             document.getElementById('todayIncome').innerText = `Rs. ${parseFloat(data.todayIncome).toFixed(2)}`;
 
@@ -47,7 +50,7 @@ const drawDashboardChart = (chartData) => {
     const paddingRight = 40;
     const paddingTop = 30;
     const paddingBottom = 50;
-    
+
     const plotWidth = width - paddingLeft - paddingRight;
     const plotHeight = height - paddingTop - paddingBottom;
 
@@ -82,7 +85,7 @@ const drawDashboardChart = (chartData) => {
 
     // Dynamic bar colors array design template matha brand colors set karanawa
     const barColors = ["#009dc5", "#2e7d32", "#00bcd4", "#ff9800", "#004658", "#ffc107"];
-    
+
     // Bars space layout coordinates settings
     const barCount = chartData.length;
     const spaceBetween = 20;
@@ -92,7 +95,7 @@ const drawDashboardChart = (chartData) => {
     chartData.forEach((item, idx) => {
         // height proportion metrics gannawa
         const barHeight = (item.amount / yMax) * plotHeight;
-        
+
         // Coordinates positioning set
         const xCoord = paddingLeft + spaceBetween + idx * (barWidth + spaceBetween);
         const yCoord = paddingTop + plotHeight - barHeight;
@@ -103,7 +106,7 @@ const drawDashboardChart = (chartData) => {
         rect.setAttribute("y", yCoord);
         rect.setAttribute("width", barWidth);
         rect.setAttribute("height", barHeight);
-        
+
         // Month order match index matha bar color properties assing map
         const color = barColors[idx % barColors.length];
         rect.setAttribute("fill", color);
@@ -146,4 +149,29 @@ const drawDashboardChart = (chartData) => {
     axisLine.setAttribute("stroke", "#555");
     axisLine.setAttribute("stroke-width", "1.5");
     svg.appendChild(axisLine);
+}
+
+// log una userta anuwa module filter wima sadaha
+fillterLogUserAccessModule = ()=>{
+
+    // logged user ge role eka ganna backend api ekata request ekak yawala response object eka aragannawa
+    let loggedUserObj = getServiceRequest("/loggeduser/role");
+
+    // response object eken path eka select karala role eke nama loggedUser variable ekata set karagannawa
+    let loggedUser = loggedUserObj.role;
+
+    // loggedUser variable eke thiyena nama "Cashier" da kiyala check karanawa
+    if (loggedUser == "Cashier" ) {
+
+        dropdownAdminis.style.display = "none";
+        listItem.style.display = "none";
+        dropdownSupplier.style.display = "none";
+
+    // loggedUser variable eke thiyena nama "Manager" da kiyala check karanawa
+    }else if (loggedUser == "Manager") {
+
+        dropdownAdminis.style.display = "flex";
+        listItem.style.display = "flex";
+        dropdownSupplier.style.display = "flex";
+    }
 }

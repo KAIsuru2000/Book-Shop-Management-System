@@ -152,8 +152,6 @@ const fillDataIntoTable = (tableBodyId, dataList, propertyList, editFunction, de
         
         //view button area end
 
-
-
         //ema td eka button row ekata append kirima
         buttonRow.appendChild(buttonTd);
 

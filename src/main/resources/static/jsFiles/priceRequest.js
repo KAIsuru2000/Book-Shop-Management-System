@@ -67,7 +67,7 @@ const getPriceRequestStatus = (dataob) => {
                 '                                                title="Completed"></i>'
         }
         if (dataob.pricelistrequeststatus_id.name == "Pending") {
-            return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #654321;" data-bs-toggle="tooltip"\n' +
+            return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #fcac5c;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Pending"></i>'
         }
         if (dataob.pricelistrequeststatus_id.name == "Deleted") {

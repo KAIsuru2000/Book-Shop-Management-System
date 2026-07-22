@@ -1,3 +1,11 @@
+// Page load wuna wita dashboard statistics data fetch karala gannawa
+window.addEventListener('load', () => {
+
+    // log una userta acces thitena module pamanak penwimata adala function eka
+    fillterLogUserAccessModule();
+
+});
+
 //define function for fill data into select (elementid, displaymsg, datalistname,displaypropertyname)
 const fillDataIntoSelect = (parentId,message,dataList,displayProperty)=>{
     parentId.innerHTML = "";
@@ -109,6 +117,31 @@ if (message != "") {
         parentId.appendChild(option);
         
     });
+}
+
+// log una userta anuwa module filter wima sadaha
+fillterLogUserAccessModule = ()=>{
+
+    // logged user ge role eka ganna backend api ekata request ekak yawala response object eka aragannawa
+    let loggedUserObj = getServiceRequest("/loggeduser/role");
+
+    // response object eken path eka select karala role eke nama loggedUser variable ekata set karagannawa
+    let loggedUser = loggedUserObj.role;
+
+    // loggedUser variable eke thiyena nama "Cashier" da kiyala check karanawa
+    if (loggedUser == "Cashier" ) {
+
+        dropdownAdminis.style.display = "none";
+        listItem.style.display = "none";
+        dropdownSupplier.style.display = "none";
+
+        // loggedUser variable eke thiyena nama "Manager" da kiyala check karanawa
+    }else if (loggedUser == "Manager") {
+
+        dropdownAdminis.style.display = "flex";
+        listItem.style.display = "flex";
+        dropdownSupplier.style.display = "flex";
+    }
 }
 
  

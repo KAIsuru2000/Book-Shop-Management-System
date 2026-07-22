@@ -17,7 +17,7 @@ public interface PrivilegeDao extends JpaRepository<Privilege, Integer> {
         //ema thibena role walata adala module id tika module table eken name walata adalawa genwa gatha yuthuya.
         //elesa genwa gena privilege tika ganima
         //eka user kenekta many role thibiya haka
-        @Query(value ="SELECT bit_or(p.sel) as sel, bit_or(p.inst) as inst , bit_or(p.upd) as upd , bit_or(p.del) as del FROM brightbookshop.privillage as p where p.module_id in (select m.id from brightbookshop.module as m where m.name=?2) and p.role_id in (select uhr.role_id from brightbookshop.user_has_role as uhr where uhr.user_id in(select u.id from brightbookshop.user as u where u.username=?1));" , nativeQuery = true)
+        @Query(value ="SELECT bit_or(p.sel) as sel, bit_or(p.inst) as inst , bit_or(p.upd) as upd , bit_or(p.del) as del FROM brightbookshop.privillage as p where p.module_id in (select m.id from brightbookshop.module as m where m.name=?2) and p.role_id in (select uhr.role_id from brightbookshop.user_has_role as uhr where uhr.user_id in (select u.id from brightbookshop.user as u where u.username=?1));" , nativeQuery = true)
         String getUserPrivilegeByUserModule(String username , String modulename);
 
 

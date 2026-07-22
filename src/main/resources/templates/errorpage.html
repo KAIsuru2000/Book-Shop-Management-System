@@ -1,26 +1,179 @@
+<!-- HTML document eka aramba karana tag eka -->
 <!DOCTYPE html>
+<!-- English language eka default washayen set karana html tag eka -->
 <html lang="en">
+<!-- Head section eka aramba karanawa - page ekata avashya metadata saha link daaganna -->
 <head>
+    <!-- Characters hariyata display wenna Unicode (UTF-8) set karanawa -->
     <meta charset="UTF-8">
+    <!-- Responsive layout eka check karanna device viewport size eka labaa denawa -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Browser tab eke title eka washayen 'Errorpage | Bright Book Shop' kiyala set karanawa -->
     <title>Errorpage | Bright Book Shop</title>
-    <!-- link bootstrp min css file -->
-    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
-
-    <!--link bootstrap js file  -->
-    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
-
-    <!-- link Fontawasome css file -->
-    <link rel="stylesheet" href="/fontawesome-free-6.4.2/css/all.css">
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="d-flex justify-content-center">
-            <i class="fa-solid fa-lock fa-beat fa-2xl" style="color: #f20202;"></i>
-            <h2>Access to this page is restricted</h2>
-            <a href="/dashboard">Go Back To Home</a>
-        </div>
-    </div>
+    <!-- App eke logo/icon eka tab ekata set karagannawa -->
+    <link rel="icon" href="/image/title.png">
     
+    <!-- Bootstrap CSS file eka link karagannawa custom styles pahasuwen hadanna -->
+    <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+    <!-- FontAwesome CSS file eka link karagannawa lassanata icons daaganna -->
+    <link rel="stylesheet" href="/fontawesome-free-6.4.2/css/all.css">
+    <!-- Project eke common/global css styles ganna common.css file eka link karanawa -->
+    <link rel="stylesheet" href="/Style/common.css">
+
+    <!-- CSS styles aramba karanawa error page ekata adala custom design ekak daanna -->
+    <style>
+        /* Card eka middle ekata ganna body ekata flexbox design eka set karanawa */
+        body {
+            /* Display eka flex kiyala niyama karanawa */
+            display: flex;
+            /* Card eka horizontal madata alignment karanawa */
+            justify-content: center;
+            /* Card eka vertical madata alignment karanawa */
+            align-items: center;
+            /* Mulu page eke height eka viewport height ekata samana karanawa */
+            min-height: 100vh;
+            /* Default margins okkoma ain karanawa */
+            margin: 0;
+            /* Project ekata galapena sans-serif font family eka set karanawa */
+            font-family: sans-serif;
+        }
+
+        /* Error messages thiyena card eka styling karaganna 'error-card' class eka liyanawa */
+        .error-card {
+            /* Card eke background eka sudu paata karanawa */
+            background-color: white;
+            /* Card eke mudun mura rounded corner 25px set karanawa */
+            border-radius: 25px;
+            /* Card ekata waten thadi border ekak set karanawa */
+            border: 4px solid white;
+            /* Card ekata sundara shadow/hevanellak set karanawa */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            /* Card eke maximum width eka 550px kiyala seema karanawa */
+            max-width: 550px;
+            /* Card eka responsive wenna width eka 90% set karanawa */
+            width: 90%;
+            /* Card thula thiyena text madata alignment karanawa */
+            text-align: center;
+            /* Card thula space hadaganna padding set karanawa */
+            padding: 45px;
+            /* Card eka hover weddi scale transition eka wena time eka niyama karanawa */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Card eka mathata mouse eka yaddi animation ekak daanawa */
+        .error-card:hover {
+            /* Card eka poddak udata ussanna translation eka set karanawa */
+            transform: translateY(-5px);
+            /* Card eke shadow eka hover wena welawe thawa thick karanawa */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Icon eka display karanna special animation ekak daanawa */
+        .error-icon-box {
+            /* Icon eke size eka loku karanawa */
+            font-size: 5rem;
+            /* Icon eke color eka orange yellow error color ekata set karanawa */
+            color: #de8e05;
+            /* Icon eka yatin space thiyanna margin bottom set karanawa */
+            margin-bottom: 25px;
+            /* Pulse animation eka mehi run wenna set karanawa */
+            animation: pulseWarning 2s infinite;
+        }
+
+        /* Warning icon eka poddak zoom in-out wenna pulse animation keyframes liyanawa */
+        @keyframes pulseWarning {
+            /* Animation arambaye normal size eka set karanawa */
+            0% { transform: scale(1); opacity: 1; }
+            /* Animation eka madadi size eka scale 1.08 kiyalath opacity 0.8 kiyalath set karanawa */
+            50% { transform: scale(1.08); opacity: 0.8; }
+            /* Animation eka avasane apahu normal size ekatama geniyanawa */
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Restrict page heading title eka design karanawa */
+        .error-title {
+            /* Title eke text color eka thada grey/black karanawa */
+            color: #1c1e1f;
+            /* Title eka thada bold/mahatha karanawa */
+            font-weight: 800;
+            /* Title eka yatin space thiyanna margin eka daanawa */
+            margin-bottom: 15px;
+        }
+
+        /* Message details description eka styles set karanawa */
+        .error-message {
+            /* Text eke color eka normal gray karagannawa */
+            color: #555555;
+            /* Font size eka poddak vadi karanawa lassana wenna */
+            font-size: 1.1rem;
+            /* Message eka yatin space set karagannawa button eka kalin */
+            margin-bottom: 35px;
+            /* Line spacing vadi karala read karanna pahasu karanawa */
+            line-height: 1.6;
+        }
+
+        /* Dashboard ekata back wena button eka design karanawa gradient ekak daala */
+        .btn-go-home {
+            /* Project navbar theme dark-cyan gradient eka button ekatath daanawa */
+            background-image: linear-gradient(#1c1e1f, #009dc5, #131313);
+            /* Button eke athule text color eka white karanawa */
+            color: white !important;
+            /* Button ekata waten white color gahana border ekak set karanawa */
+            border: 2px solid white;
+            /* Button eke corners rounded set karagannawa */
+            border-radius: 20px;
+            /* Button eke athule space hadaganna top/bottom, left/right padding set karanawa */
+            padding: 10px 30px;
+            /* Text eka bold karanawa */
+            font-weight: bold;
+            /* Hyperlink eke thiyena underline/ira ain karanawa */
+            text-decoration: none;
+            /* Inline element ekak widihata button eka daagannawa style block eka araksha wenna */
+            display: inline-block;
+            /* Hover karana welawe change eka smooth wenna transition daanawa */
+            transition: all 0.3s ease;
+            /* Button ekata hevanellak daala look eka vadi karanawa */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Home button eka hover wena welawe wena wenaskam liyagannawa */
+        .btn-go-home:hover {
+            /* Hover karadi scale eka 1.08 kiyala vadi karanawa lassanata scale wenna */
+            transform: scale(1.08);
+            /* Hover weddi button shadow eka thawa tikak loku karanawa */
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+        }
+    </style>
+<!-- Head section eka nimawenawa -->
+</head>
+<!-- Body section eka patan gannawa visual elements tika mehi athulaththe -->
+<body>
+
+    <!-- Mada thiyaganna error card block eka aramba karanawa -->
+    <div class="error-card">
+        <!-- Shield and Warning icon box eka hadanawa animatin ekath ekka -->
+        <div class="error-icon-box">
+            <!-- FontAwesome warning icon eka class name eken set karanawa -->
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <!-- Card eke error warning title header eka -->
+        <h2 class="error-title">Access Denied</h2>
+        <!-- Card eke user ta restricted bawa therenna liyana message text eka -->
+        <p class="error-message">Access to this page is restricted.</p>
+        <!-- Home button block eka aramba karanawa -->
+        <div>
+            <!-- Dashboard ekata aith yawana button hyperlink element eka -->
+            <a href="/dashboard" class="btn-go-home">
+                <!-- Home button eka lagin home icon eka daanawa -->
+                <i class="fa-solid fa-house-chimney me-2"></i>Go Back To Home
+            </a>
+        </div>
+    <!-- Card block eka nimawenawa -->
+    </div>
+
+    <!-- Bootstrap js file eka bootstrap functions wada karanna body eka yatin link karanawa -->
+    <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+<!-- Body section eka nimawenawa -->
 </body>
+<!-- HTML tag eka nimawenawa -->
 </html>

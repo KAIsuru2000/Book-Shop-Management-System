@@ -12,6 +12,30 @@ window.addEventListener("load", () => {
     //Call refresh form function
     refreshCustomerPaymentForm();
 
+    // table body ekata click event listener ekak add karanawa row ekak click karaddi edit/delete buttons hide karanna
+    tableCustomerPaymentBody.addEventListener("click", () => {
+        // log wela inna user "Cashier" da kiyala check karanna user ge role eka gannawa
+        let loggedUserObj = getServiceRequest("/loggeduser/role");
+        // loggedUser variable ekata role name eka set karagannawa
+        let loggedUser = loggedUserObj.role;
+        // user cashier nam pamanak meya apply karanawa
+        if (loggedUser === "Cashier") {
+            // buttonrow class eka thiyena element eka select karagannawa (meya tableFunction.js eken click kala row ekata passe hadana row eka)
+            let existingButtonRow = document.querySelector(".buttonrow");
+            // buttonrow eka thibe nam buttons select karala hide karanawa
+            if (existingButtonRow) {
+                // edit button eka select karanawa (.btnUpdate class eka thiyena element eka)
+                let btnUpdate = existingButtonRow.querySelector(".btnUpdate");
+                // delete button eka select karanawa (.btnClear class eka thiyena element eka)
+                let btnClear = existingButtonRow.querySelector(".btnClear");
+                // edit button eka thibe nam display none karala hide karanawa
+                if (btnUpdate) btnUpdate.style.display = "none";
+                // delete button eka thibe nam display none karala hide karanawa
+                if (btnClear) btnClear.style.display = "none";
+            }
+        }
+    });
+
 })
 
 //create function for refresh table
@@ -22,9 +46,9 @@ const refreshCustomerPaymentTable = () => {
         { dataType: 'string', propertyName: 'billno' },
         { dataType: 'function', propertyName: getCustomerName },
         { dataType: 'string', propertyName: 'paymentmethod' },
-        { dataType: 'string', propertyName: 'invoiceamount' },
-        { dataType: 'string', propertyName: 'paidamount' },
-        { dataType: 'string', propertyName: 'balanceamount' },
+        { dataType: 'decimal', propertyName: 'invoiceamount' },
+        { dataType: 'decimal', propertyName: 'paidamount' },
+        { dataType: 'decimal', propertyName: 'balanceamount' },
         { dataType: 'function', propertyName: getCustomerPaymentStatus }
     ];
 
