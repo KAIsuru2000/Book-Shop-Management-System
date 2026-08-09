@@ -43,9 +43,6 @@ public class AddPriceList {
     // @Length(max = 8 , min = 8)
     private String addpricelistno ;
 
-    @Column(name = "note")
-    private String note ;
-
     @Column(name = "addeddatetime")
     @NotNull
     private LocalDateTime addeddatetime;

@@ -1,43 +1,35 @@
 package lk.brightbs.item.controller;
 
-import java.util.List;
-import lk.brightbs.item.dao.SubcategoryDao;
-import lk.brightbs.item.entity.Subcategory;
-
+import lk.brightbs.item.dao.AttributeOptionDao;
+import lk.brightbs.item.entity.AttributeOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
-public class SubcategoryController {
+public class AttributeOptionController {
 
     @Autowired
-    private SubcategoryDao subcategoryDao;
+    private AttributeOptionDao attributeOptionDao;
     
-    //get mapping for get designation all data url - /Subcategory/alldata
-    @GetMapping(value = "/subCategory/alldata" , produces = "application/json")
-    public List<Subcategory> getAllData(){
+    // get mapping for get AttributeOption all data url - /attributeOption/alldata
+    @GetMapping(value = "/attributeOption/alldata" , produces = "application/json")
+    public List<AttributeOption> getAllData(){
 
-        return subcategoryDao.findAll();
+        return attributeOptionDao.findAll();
     }
 
-// category magin sub category eka load kirima url --> /subcategory/bycategory?categoryid=1
-    @GetMapping(value = "/subcategory/bycategory" ,params = {"categoryid"} ,produces = "application/json")
-
-    // 
-    
-    // 2. param value eka illa ganima sadaha bycatogory function ekehi parameter ekak lesa illa gatha heka"@RequestParam("categoryid")" >> ema value eka "Integer categoryid" lesa save kara gani
-    // inpasu eka category id eka query ekata pass kala yuthuya
-    public List<Subcategory> byCategory(@RequestParam("categoryid") Integer categoryid){
-
-        // 
-
-        //1. params ekehi value eka dao walata dama query ekata diya yuthuya >> categoryid wala value eka illa gatha yuthuya
-        return subcategoryDao.byCategory(categoryid);
-        
-        
-
+    // category attribute id ekata saha brand id ekata options filter karana GET mapping endpoint eka liyanawa
+    @GetMapping(value = "/attributeOption/byAttributeAndBrand", produces = "application/json")
+    // RequestParam annotation eka use karala option parameters retrieve karagannawa
+    public List<AttributeOption> getByAttributeAndBrand(
+            @RequestParam("attributeId") Integer attributeId,
+            @RequestParam(value = "brandId", required = false) Integer brandId) {
+        // attributeOptionDao eka call karala dynamically filtered options list eka return karanawa
+        return attributeOptionDao.getByAttributeAndBrand(attributeId, brandId);
     }
 }

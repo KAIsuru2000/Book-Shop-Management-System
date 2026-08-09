@@ -78,92 +78,123 @@ const getAddPriceListStatus = (dataob) => {
 //     //awasanaye roles object eka return karanawa
 //     return itemlist;
 // }
-//function for re fill price list form
+// Edit button eka click kalama form eka refill wena function eka
 const addPriceListFormRefill = (ob, index) => {
+    // console ekata edit karana object eka ha index eka print karanawa
     console.log("Edit", ob, index);
 
-    // refill value in to element -> elementId.value = ob.releventPropertyName
+    // active suppliers details server eken request karala gannawa
     let suppliers = getServiceRequest('priceRequest/alldata');
+    // selectSupplier dropdown element ekata active suppliers fill karanawa
     fillDataIntoSelectSupplier(selectSupplier, "Select Supplier related to price list request..!!", suppliers);
-    selectSupplier.value = JSON.stringify(dataob.supplier_id);
 
-    textCallingName.value = ob.callingname;
-
-    textNic.value = ob.nic;
-
-    selectGender.value = ob.gender;
-
-    dateDOB.value = ob.dob;
-
-    inputEmail.value = ob.email;
-
-    telMobil.value = ob.mobile;
-
-    if (ob.landno == undefined) {
-        telLand.value = "";
-    } else {
-        telLand.value = ob.landno;
+    // selected price list request eka dropdown options athare thiyeda kiyala check karanna variable ekak false karanawa
+    let optionExists = false;
+    // selectSupplier eke thiyena option loop karanawa
+    for (let option of selectSupplier.options) {
+        // option eka empty string ekak newe nam
+        if (option.value !== "") {
+            // value eka parse karala object ekak gannawa
+            let optOb = JSON.parse(option.value);
+            // object id eka click karapu price list request id ekata samanada balanawa
+            if (optOb.id === ob.pricelistrequest_id.id) {
+                // samanai nam optionExists true karala dropdown value eka set karanawa
+                optionExists = true;
+                selectSupplier.value = option.value;
+                break;
+            }
+        }
+    }
+    // option eka select eke nathnam (status eka completed wage wela filter out unoth)
+    if (!optionExists) {
+        // aluth option element ekak dynamic create karanawa
+        let option = document.createElement("option");
+        // option value ekata request object eka stringify karala set karanawa
+        option.value = JSON.stringify(ob.pricelistrequest_id);
+        // brands details thiyenawanam details ekathu karanna default empty string hadagannawa
+        let brands = "";
+        // select karapu supplier ta brands thiyeda kiyala check karanawa
+        if (ob.pricelistrequest_id.supplier_id && ob.pricelistrequest_id.supplier_id.brands && ob.pricelistrequest_id.supplier_id.brands.length > 0) {
+            // brand names lists eka collect karaganna array ekak hadagannawa
+            let brandNames = [];
+            // brands set eka loop karala brand name eka lists ekata append karanawa
+            ob.pricelistrequest_id.supplier_id.brands.forEach(brand => {
+                brandNames.push(brand.name);
+            });
+            // format karala display display string eka hadagannawa
+            brands = " - (" + brandNames.join(" , ") + ")";
+        }
+        // dropdown options eke user ta penwana text name structure eka hadagannawa
+        option.innerText = ob.pricelistrequest_id.requestno + " - " + ob.pricelistrequest_id.supplier_id.suppliername + brands;
+        // dropdown list select element ekata dynamic option eka append karanawa
+        selectSupplier.appendChild(option);
+        // select value ekata new option select value eka assign karanawa
+        selectSupplier.value = option.value;
     }
 
-    textAddress.value = ob.address
+    // itemlist text area form value field refill karanawa
+    textItemList.value = ob.itemlist;
+    // select status dropdown input field eka stringify values walin fill refill karanawa
+    selectaddPriceListStatus.value = JSON.stringify(ob.addpriceliststatus_id);
 
-    if (ob.note == undefined) {
-        textNote.value = "";
-    } else {
-        textNote.value = ob.note;
-    }
+    // valid details check colors green karanna elements elements collection array ekak hadagannawa
+    let elementsToGreen = [selectSupplier, textItemList, selectaddPriceListStatus];
+    // okkoma elements set eka loop karala border green valid class eka apply karanawa
+    elementsToGreen.forEach(element => {
+        // element eke bottom border green color karanawa
+        element.style.borderBottom = "4px solid green";
+        // laginma thiyena label structure block background green color karanawa
+        element.previousElementSibling.style.backgroundColor = "green";
+        // invalid red border class eka ain karanawa
+        element.classList.remove("is-invalid");
+        // valid green border class eka add karanawa
+        element.classList.add("is-valid");
+    });
 
-    selectDesignation.value = JSON.stringify(ob.designation_id);
+    // copy main object addPriceList value details parse duplicate clone dynamic
+    addPriceList = JSON.parse(JSON.stringify(ob));
+    // copy main object oldAddPriceList update comparison check verification details
+    oldAddPriceList = JSON.parse(JSON.stringify(ob));
 
-    selectCivil.value = ob.civilstatus;
+    // update details button visible class remove karanawa
+    btnaddPriceListUpdate.classList.remove("d-none");
+    // submit details add button display hide class add karanawa
+    btnaddPriceListSubmit.classList.add("d-none");
 
-    selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
+    // offcanvas component modal bootstrap open form show methods
+    $("#offcanvasBottom").offcanvas("show");
 
-    buttonEmpAdd.style.display = "none";
-
-
-
-
-    //employee = ob
-    //oldEmployee = ob melesa thibuu wita ob array ekak nisa heap eka thula ekma idehi variable 2 ka awita ekak wenas kala wita anikath wenas we.
-    employee = JSON.parse(JSON.stringify(ob));// string kala witra ram ekehi wena wenama seedi heap ekata giya wita 2k lesa pawathi.
-    oldEmployee = JSON.parse(JSON.stringify(ob));
-
-    //form eka refill wana wita model eka open kara ganima jquary magin
-    // $("#staticBackdrop").modal("show");
-
+    // inner form input areas clear refresh inner table elements call
+    refreshAddPriceListInnerForm();
 }
 
-//function for delete add price list form
+// Price List record soft delete karana function eka
 const addPriceListDelete = (ob, index) => {
+    // console logs record check
     console.log("Delete", ob, index);
 
-    // activeTableRow(tablePurchaseOrderBody, index, "red");
-
-
-    let userConfirm = window.confirm("Are you sure to delete following purchase order...?" +
-        "\n Purchase Order ID : " + ob.id +
-        "\n Purchase Order Date : " + ob.date +
-        "\n Employee designation : " + ob.designation_id.name
+    // confirm alert details message confirm text template output
+    let userConfirm = window.confirm("Are you sure to delete following Price List...?\n" +
+        "Price List No: " + ob.addpricelistno + "\n" +
+        "Supplier: " + (ob.pricelistrequest_id && ob.pricelistrequest_id.supplier_id ? ob.pricelistrequest_id.supplier_id.suppliername : "N/A")
     );
+    // user confirm alert ok click kala nam delete mapping api call karanawa
     if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
-        let deleteResponce = getHTTPServiceRequest("/employee/delete", "DELETE", ob);
+        // delete service request request object details pass get response back
+        let deleteResponse = getHTTPServiceRequest("/addPriceList/delete", "DELETE", ob);
 
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshEmployeeTable();
-            refreshEmployeeform();
-
+        // response eka OK nam user display successfully message set
+        if (deleteResponse === "OK") {
+            // alert message box display
+            window.alert("Deleted successfully!");
+            // table dynamic load refresh call
+            refreshAddPriceListTable();
+            // main full form input fields clear settings call
+            refreshAddPriceListForm();
         } else {
-            window.alert("Delete not successfully" + deleteResponce);
-
+            // fail response warning alerts
+            window.alert("Failed to delete:\n" + deleteResponse);
         }
-
-
-
-
     }
 }
 
@@ -204,11 +235,7 @@ const addPriceListView = (ob, index) => {
         landNoView.innerText = ob.landno;
     }
     addressView.innerText = ob.address
-    if (ob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = ob.note;
-    }
+
     designationView.innerText = ob.designation_id.name;
     civilStatusView.innerText = ob.civilstatus;
     employeeStatusView.innerText = ob.employeestatus_id.name;
@@ -290,94 +317,76 @@ const buttonAddPriceListSubmit = () => {
 
 }
 
-//check form update function
+// update kala properties details verification check check function eka
 const checkFormUpdate = () => {
+    // updates updates warning collection empty string set
     let updates = "";
 
-    if (employee != null && oldEmployee != null) {
-
-        if (employee.fullname != oldEmployee.fullname) {
-            updates = updates + "Full name is changed  ....! \n";
+    // addPriceList object ha oldAddPriceList null check validation
+    if (addPriceList != null && oldAddPriceList != null) {
+        // pricelistrequest id values compare dynamic details
+        if (addPriceList.pricelistrequest_id.id != oldAddPriceList.pricelistrequest_id.id) {
+            // changes collection string append
+            updates += "Price List Request No changed from " + oldAddPriceList.pricelistrequest_id.requestno + " to " + addPriceList.pricelistrequest_id.requestno + "\n";
         }
 
-        if (employee.callingname != oldEmployee.callingname) {
-            updates = updates + "calling name is changed  ....!   " + oldEmployee.callingname + " into " + employee.callingname + "\n";
+        // status values compare dynamic check
+        if (addPriceList.addpriceliststatus_id.id != oldAddPriceList.addpriceliststatus_id.id) {
+            // changes status message append
+            updates += "Status changed to " + addPriceList.addpriceliststatus_id.name + "\n";
         }
 
-        if (employee.mobile != oldEmployee.mobile) {
-            updates = updates + "mobile no is changed  ....! \n" + oldEmployee.mobile + " -> " + employee.mobile + "\n";
-        }
-
-        if (employee.nic != oldEmployee.nic) {
-            updates = updates + "nic is changed  ....! \n";
-        }
-
-        if (employee.gender != oldEmployee.gender) {
-            updates = updates + "gender is changed  ....! \n";
-        }
-
-        if (employee.dob != oldEmployee.dob) {
-            updates = updates + "Date of birth is changed  ....! \n";
-        }
-
-        if (employee.email != oldEmployee.email) {
-            updates = updates + "email is changed  ....! \n";
-        }
-
-        if (employee.address != oldEmployee.address) {
-            updates = updates + "address is changed  ....! \n";
-        }
-
-        if (employee.civilstatus != oldEmployee.civilstatus) {
-            updates = updates + "civil status is changed  ....! \n";
-        }
-
-        if (employee.designation_id.name != oldEmployee.designation_id.name) {
-            updates = updates + "Designation is changed  ....! \n";
-        }
-
-        if (employee.employeestatus_id.name != oldEmployee.employeestatus_id.name) {
-            updates = updates + "employee status is changed  ....! \n";
+        // inner table has item list list values compare match checks
+        if (JSON.stringify(addPriceList.addPriceListHasItemList) !== JSON.stringify(oldAddPriceList.addPriceListHasItemList)) {
+            // items contents status modification append message
+            updates += "Price List items have changed!\n";
         }
     }
 
-
+    // result differences updates log collection output return
     return updates;
 }
 
-// // form update event function 
-// const buttonPurchaseOrderUpdate = () => {
-
-//     //need to check form errors
-//     let errors = checkFormError();
-//     if (errors == "") {
-//         // need to check form update
-//         let updates = checkFormUpdate();
-//         if (updates == "") {
-//             window.alert("nothing to update..\n");
-//         } else {
-//             //need to get user confirmation
-//             let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-//             if (userConfirm) {
-//                 //call put service
-//                 let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
-//                 if (putResponce == "OK") {
-//                     window.alert("Update Successfully...!");
-//                     refreshPurchaseOrderTable();
-//                     refreshPurchaseOrderform();
-//                     $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-//                 } else {
-//                     window.alert("Failed to update...!" + putResponce);
-//                 }
-//             } else {
-
-//             }
-//         }
-//     } else {
-//         window.alert("something went wrong.. \n" + errors);
-//     }
-
-// }
+// main form update details button event trigger action function eka
+const buttonaddPriceListUpdate = () => {
+    // required fields format validations errors list check call
+    let errors = checkFormError();
+    // errors kisith neththan
+    if (errors === "") {
+        // updates change status checks comparison call
+        let updates = checkFormUpdate();
+        // updates string empty nam change kisith natha warning status
+        if (updates === "") {
+            // window alert alert empty notifications
+            window.alert("Nothing to update!");
+        } else {
+            // modifications user updates confirmation confirm alert
+            let userConfirm = window.confirm("Are you sure to update this Add Price List with following changes?\n" + updates);
+            // user confirm verification ok clicks
+            if (userConfirm) {
+                // PUT service update endpoint query api request send
+                let putResponse = getHTTPServiceRequest("/addPriceList/update", "PUT", addPriceList);
+                // response status checks checks OK response
+                if (putResponse === "OK") {
+                    // successfully updated alert display messages
+                    window.alert("Add Price List updated successfully!");
+                    // table data list refresh call
+                    refreshAddPriceListTable();
+                    // form configurations layout reload clean calls
+                    refreshAddPriceListForm();
+                    // offcanvas layout close hide bootstrap components
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // server side processing fails warn
+                    window.alert("Failed to update:\n" + putResponse);
+                }
+            }
+        }
+    } else {
+        // input fields missing values alert format warnings
+        window.alert("Please fill all required fields correctly:\n" + errors);
+    }
+}
 
 // form delete event function 
 const buttonAddPriceListDelete = () => {
@@ -390,11 +399,14 @@ const refreshAddPriceListForm = () => {
     // main object ekata (addPriceList) list ekak (addPriceListHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
     addPriceList.addPriceListHasItemList = new Array();
 
+    // parana object eka comparison walata null karala initialize karanawa
+    oldAddPriceList = null;
+
     // main form eka reset karai
     formAddPriceList.reset();
 
     //validation colors iwath kirima main form sadaha
-    setDefault([selectSupplier, textItemList, selectaddPriceListStatus, textNote]);
+    setDefault([selectSupplier, textItemList, selectaddPriceListStatus]);
 
     // dynamic element refill kala yuthuya
     let suppliers = getServiceRequest('priceRequest/alldata');
@@ -781,6 +793,12 @@ const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
 // add price list clear button eka magin inner form eka clear wimta
 const buttonaddPriceListClear = () => {
     refreshAddPriceListInnerForm();
+}
+
+// add price list clear button eka magin full form eka clear wimta
+const buttonaddPriceListFullFormClear = () => {
+    refreshAddPriceListInnerForm();
+    refreshAddPriceListForm();
 }
 
 

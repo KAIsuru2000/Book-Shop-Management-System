@@ -96,11 +96,7 @@ const employeeRowFormRefill = (ob, index) => {
 
     textAddress.value = ob.address
 
-    if (ob.note == undefined) {
-        textNote.value = "";
-    } else {
-        textNote.value = ob.note;
-    }
+
 
     // js array eka json string ekakata convert kirima JSON.stringify() magin sidu karai
     selectDesignation.value = JSON.stringify(ob.designation_id);
@@ -220,11 +216,7 @@ const employeeRowView = (dataob, index) => {
         landNoView.innerText = dataob.landno;
     }
     addressView.innerText = dataob.address
-    if (dataob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = dataob.note;
-    }
+
     designationView.innerText = dataob.designation_id.name;
     civilStatusView.innerText = dataob.civilstatus;
     employeeStatusView.innerText = dataob.employeestatus_id.name;
@@ -1034,7 +1026,7 @@ const refreshEmployeeform = () => {
     formEmployee.reset();
 
     //validation colors iwath kirima
-    setDefault([textFullName, textCallingName, textNic, selectGender, dateDOB, inputEmail, telMobil, telLand, textAddress, textNote, selectDesignation, selectCivil, selectEmpStatus]);
+    setDefault([textFullName, textCallingName, textNic, selectGender, dateDOB, inputEmail, telMobil, telLand, textAddress, selectDesignation, selectCivil, selectEmpStatus]);
 
     // dynamic element refill kala yuthuya
     let designation = getServiceRequest('/designation/alldata')

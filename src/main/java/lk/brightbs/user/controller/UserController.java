@@ -62,7 +62,7 @@ public class UserController {
         userView.addObject("loggedusername", auth.getName());
 
         //title eka penwimata
-		userView.addObject("title", "User management | Bright Book Shop");
+		userView.addObject("title", "User Management | Bright Book Shop");
 
 
         return userView;

@@ -1,20 +1,17 @@
 package lk.brightbs.item.dao;
-import lk.brightbs.item.entity.Subcategory;
+
+import lk.brightbs.item.entity.CategoryAttribute;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 
-import org.springframework.data.jpa.repository.JpaRepository;
-// import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.Query;
+public interface CategoryAttributeDao extends JpaRepository<CategoryAttribute, Integer>{
 
-
-public interface SubcategoryDao extends JpaRepository<Subcategory, Integer>{
-
-    // category magin sub category eka load kirima D-23 1.50
-    @Query(value = "SELECT sc FROM Subcategory sc where sc.category_id.id=?1" )
-    public List<Subcategory> byCategory(Integer categoryid );
-
-    
+    // subcategory id eka magin category attributes filter karala ganna dynamic query eka liyanawa
+    @Query("select ca from CategoryAttribute ca where ca.subcategory_id.id = ?1")
+    // subcategory id eka pass karala dynamic category attributes list ekak retrieve karana method signature eka set karanawa
+    List<CategoryAttribute> getBySubcategory(Integer subcategoryid);
     
 }

@@ -17,7 +17,7 @@
             <div class="col-12 p-3 d-flex justify-content-center divTitle">
                 <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
                 <i class="fa-solid fa-truck-fast fa-2xl mt-3" style="color: #fcfcfd;"></i>
-                <h2 class="h2 ms-3">Supplier management</h2><!--1rem set margin start  -->
+                <h2 class="h2 ms-3">Supplier Registration</h2><!--1rem set margin start  -->
             </div>
         </div>
         <!-- title area end -->
@@ -111,7 +111,7 @@
                                                 oninput="textValidator(this, '^[A-Za-z0-9 .,&()\\-]{3,100}$', 'supplier', 'suppliername')"
                                                 onclick="textValidator(this, '^[A-Za-z0-9 .,&()\\-]{3,100}$', 'supplier', 'suppliername')"
                                                 required data-bs-toggle="tooltip"
-                                                title="Please enter supplier name correctly">
+                                                title="Please enter supplier's Company name correctly">
                                         </div>
                                     </div>
                                     <!-- Supplier Name area end -->
@@ -198,8 +198,8 @@
                                             </span>
                                             <textarea class="form-control" aria-label="With textarea"
                                                 placeholder="Enter address" id="textAddress" required
-                                                onkeyup="textValidator(this, '^[A-Za-z0-9 .,/()#-]{10,150}$', 'supplier', 'address')"
-                                                onclick="textValidator(this, '^[A-Za-z0-9 .,/()#-]{10,150}$', 'supplier', 'address')"
+                                                onkeyup="textValidator(this, '^[A-Za-z0-9][A-Za-z0-9#./,\\-\\s]{10,99}$', 'supplier', 'address')"
+                                                onclick="textValidator(this, '^[A-Za-z0-9][A-Za-z0-9#./,\\-\\s]{10,99}$', 'supplier', 'address')"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the employee's Address correctly here. (Ex-50/1,Colombo road,Gampaha.)"></textarea>
                                         </div>
@@ -300,10 +300,10 @@
                                             <input type="text" placeholder="Enter Branch Name" class="form-control"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textBranchName"
-                                                oninput="textValidator(this, '^[A-Za-z0-9. -]{3,45}$', 'supplier', 'branchname')"
-                                                onclick="textValidator(this, '^[A-Za-z0-9. -]{3,45}$', 'supplier', 'branchname')"
+                                                oninput="textValidator(this, '^[A-Za-z]{2,50}(\\s[A-Za-z]{2,50})*$', 'supplier', 'branchname')"
+                                                onclick="textValidator(this, '^[A-Za-z]{2,50}(\\s[A-Za-z]{2,50})*$', 'supplier', 'branchname')"
                                                 required data-bs-toggle="tooltip"
-                                                title="Please enter Bank Branch name correctly">
+                                                title="Please enter the name of the town where the bank branch is located correctly">
                                         </div>
                                     </div>
                                     <!-- Branch Name area end -->
@@ -311,7 +311,7 @@
                                 </div>
                                 <!-- Status , Bank Name area and Branch name row end-->
 
-                                <!-- Account No , Holder Name area and note row start-->
+                                <!-- Account No , Holder Name area row start-->
                                 <div class="row mt-4">
 
                                     <!-- Account No area start-->
@@ -344,28 +344,13 @@
                                                 oninput="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'supplier', 'accuntholdername')"
                                                 onclick="textValidator(this, '^([A-Z][a-z]{1,20}[\\s])+([A-Z][a-z]{1,20})$', 'supplier', 'accuntholdername')"
                                                 required data-bs-toggle="tooltip"
-                                                title="Please enter Account Holder name correctly">
+                                                title="Please enter the name of the person who owns the account correctly">
                                         </div>
                                     </div>
                                     <!-- Holder Name area end -->
 
-                                    <!-- note area start -->
-                                    <div class="col-4">
-                                        <div class="input-group">
-                                            <span class="input-group-text lablBg">Note &nbsp;: <span
-                                                    class="text-danger">(optional)</span></span>
-                                            <textarea id="textNote" class="form-control" placeholder="Enter Note"
-                                                aria-label="With textarea"
-                                                onkeyup="textValidator(this, '^.*$', 'supplier', 'note')"
-                                                onclick="textValidator(this, '^.*$', 'supplier', 'note')"
-                                                data-bs-toggle="tooltip"
-                                                title="Enter a note about the employee here"></textarea>
-                                        </div>
-                                    </div>
-                                    <!-- note area end -->
-
                                 </div>
-                                <!-- Account No , Holder Name area and note row end-->
+                                <!-- Account No , Holder Name area row end-->
 
                                 <!-- button row start-->
                                 <div class="row mt-3 mb-4">
@@ -477,10 +462,10 @@
                                     <table style="border: none;">
 
                                         <tbody style="border: none;">
-                                            <tr>
-                                                <th colspan="3" style="text-align: center;border: none;"><img src=""
-                                                        alt="User photo" width="30" height="30"></th>
-                                            </tr>
+<!--                                            <tr>-->
+<!--                                                <th colspan="3" style="text-align: center;border: none;"><img src=""-->
+<!--                                                        alt="User photo" width="30" height="30"></th>-->
+<!--                                            </tr>-->
                                             <tr>
                                                 <th style="color:black; text-align: left;border: none;">Supplier Name
                                                 </th>
@@ -573,14 +558,6 @@
                                                     &nbsp; </th>
                                                 <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
                                                     id="holderNameView"></th>
-                                            </tr>
-                                            <tr>
-                                                <th style="color:black; text-align: left;border: none;">Note
-                                                </th>
-                                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
-                                                    &nbsp; </th>
-                                                <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                    id="noteView"></th>
                                             </tr>
                                         </tbody>
 

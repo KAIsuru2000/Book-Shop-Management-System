@@ -61,7 +61,7 @@ public class PriceRequestController {
         priceRequestView.addObject("loggedusername", auth.getName());
 
 		//title eka penwimata
-		priceRequestView.addObject("title", "Price Request management | Bright Book Shop");
+		priceRequestView.addObject("title", "Price Request Management | Bright Book Shop");
 
         return priceRequestView;
     }
@@ -129,6 +129,11 @@ public class PriceRequestController {
 		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
 		if (userPrivilege.getDel()) {
 			// check ext
+            //        priceRequest delete nm
+            if (priceRequest.getPricelistrequeststatus_id().getName().equals("Deleted")) {
+
+                return " - This Price Request has already been deleted..!";
+            }
 			// exting user object ekak ganima
 			PriceRequest extPriceRequest = priceRequestDao.getReferenceById(priceRequest.getId());
 			if (extPriceRequest == null) {

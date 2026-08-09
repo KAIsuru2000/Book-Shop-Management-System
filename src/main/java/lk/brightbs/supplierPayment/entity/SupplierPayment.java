@@ -1,112 +1,109 @@
-package lk.brightbs.supplierPayment.entity;
+package lk.brightbs.supplierPayment.entity; // Me package eka thula thama supplier payment entity eka thiyenne
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.math.BigDecimal; // Decimal ganithmayak karanna use karana class eka
+import java.time.LocalDate; // Dinaya thaba gannawa (e.g. Cheque Date)
+import java.time.LocalDateTime; // Dinaya saha welawa thaba gannawa
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lk.brightbs.supplier.entity.Supplier;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Column; // Database table eke columns map karanna
+import jakarta.persistence.Entity; // Persistence entity class ekak widiyata thiyagන්න
+import jakarta.persistence.GeneratedValue; // Auto increment karanna
+import jakarta.persistence.GenerationType; // Auto increment strategy define karanna
+import jakarta.persistence.Id; // Primary key eka identify karanna
+import jakarta.persistence.JoinColumn; // Foreign key eka map karanna
+import jakarta.persistence.ManyToOne; // Many to one link eka hadanna
+import jakarta.persistence.Table; // Database table name map karanna
+import jakarta.validation.constraints.NotNull; // Field eka not null wenna rule eka danna
+import com.fasterxml.jackson.annotation.JsonProperty; // JSON mapping waladi property name align karanna
+import lk.brightbs.supplier.entity.Supplier; // Supplier entity eka use karanna import karagannawa
+import lk.brightbs.grn.entity.GRN; // GRN entity eka use karanna import karagannawa
+import lombok.AllArgsConstructor; // Default construction with all args build karanna lombok annotation
+import lombok.Data; // Getter, setter saha tostring auto build karana lombok annotation
+import lombok.NoArgsConstructor; // Default construction with no args build karanna lombok annotation
 
-@Entity
-// make as an persistence entity
-    @Table(name = "supplierpayment") // for map table name
-    @Data // getter , setter tostring
+@Entity // Database entity ekak widiyata map karanawa
+@Table(name = "supplierpayment") // Database eke supplierpayment table ekata map karanawa
+@Data // Class eke getter, setter, tostring auto generate karanawa
+@NoArgsConstructor // Empty constructor eka auto create karanawa
+@AllArgsConstructor // All fields constructor eka auto create karanawa
+public class SupplierPayment { // SupplierPayment main class eka patan gannawa
 
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Id // Primary key ekak widiyata id field eka set karanawa
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto increment set karanawa database eke auto increment widiyata run wenna
+    private Integer id ; // id variable eka database auto-generated integer id ekak thaba ganna
 
-    // main object ekata (purchaseOrder) adala class eka (PurchaseOrder)
-public class SupplierPayment { 
+    @Column(name = "billno" , unique = true) // Database column name eka set karanawa billno saha eya unique wenna ona
+    @NotNull // Me field eka blank/null thiyanna baha
+    private String billno ; // Auto generated bill number eka thiyaganna field eka
 
-    @Id //pk
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // AI
-    private Integer id ;
+    @Column(name = "transferid" , unique = true) // Bank transfer details thiyena column mapping check karala unique wenna ona
+    private String transferid ; // Bank transfer check id eka set karaganna field eka
 
-    @Column(name = "billno" , unique = true)
-    @NotNull // not null
-    // @Length(max = 8 , min = 8)
-    private String billno ;
+    @Column(name = "checkno" , unique = true) // Cheque number details unique checks thiyagena database map karanawa
+    private String checkno ; // Cheque payments waladi cheque number record karanna use karana field eka
 
-    @Column(name = "transferid" , unique = true)
-    // @Length(max = 8 , min = 8)
-    private String transferid ;
+    @Column(name = "referanceno" , unique = true) // Reference number eka map karanawa database table eke referanceno check eka matha
+    private String referanceno ; // Payment referance number eka record karana field eka
 
-    @Column(name = "checkno" , unique = true)
-    // @Length(max = 8 , min = 8)
-    private String checkno ;
+    @Column(name = "checkdate") // Cheque date column details mapping checks
+    private LocalDate checkdate ; // Cheque eka maru karanna thiyena dinaya thaba gannawa
 
-    @Column(name = "checkdate")
-    private LocalDate checkdate ;
+    @Column(name ="totaldueamount") // Total pay details database columns mappings
+    @NotNull // Total amount eka null/blank wenna baha
+    private BigDecimal totaldueamount ; // GRN eke mulu mudala (total netamount) thiyaganna field eka
 
-    @Column(name ="totaldueamount")
-    @NotNull
-    private BigDecimal totaldueamount ;
+    @Column(name ="paidamount") // Paid amount details database table mappings
+    @NotNull // Paid amount not null check status
+    private BigDecimal paidamount ; // Gevana mudala (paid amount) thiyaganna field eka
 
-    @Column(name ="paidamount")
-    @NotNull
-    private BigDecimal paidamount ;
+    @Column(name ="Prepaidamount") // Prepaid amount details map column checks
+    @NotNull // Prepaid amount null wenna baha default 0.00 sets
+    private BigDecimal Prepaidamount ; // Advanced/prepaid mudalak thiyenawa nam record karana field eka
 
-    @Column(name ="balanceamount")
-    @NotNull
-    private BigDecimal balanceamount ;
+    @Column(name ="balanceamount") // Balance amount maps checks database column
+    @NotNull // Balance amount not null check status
+    private BigDecimal balanceamount ; // Payment balance amount details thiyaganna field eka
 
-    @Column(name = "note")
-    private String note ;
+    @Column(name = "note") // Note properties database table column
+    private String note ; // Payment details gana small note ekak liyaganna field eka
 
-    @NotNull
-    @Column(name = "paymentmethod")
-    private String paymentmethod ;
+    @NotNull // Payment method selection eka not null wenna ona
+    @Column(name = "paymentmethod") // Payment method columns mappings
+    private String paymentmethod ; // Gevanna use karapu payment kramaya (Cash, Cheque, Bank Transfer) thaba ganna field eka
 
-    @Column(name = "transferdatetime")
-    private LocalDateTime transferdatetime;
+    @Column(name = "cardtype") // Card type maps database column
+    private String cardtype ; // Card type details thiyaganna field eka (VISA, MASTER, AMEX)
 
-    @Column(name = "addeddatetime")
-    @NotNull
-    private LocalDateTime addeddatetime;
+    @Column(name = "transferdatetime") // Bank transfer datetime maps column
+    private LocalDateTime transferdatetime; // Bank transfer kala welawa record karaganna
 
-    private LocalDateTime updatedatetime;
+    @Column(name = "addeddatetime") // Record eka dapu datetime map database column
+    @NotNull // Data entry dapu welawa not null wenna ona
+    private LocalDateTime addeddatetime; // Payment eka add kala dinaya saha welawa record karana field eka
+
+    private LocalDateTime updatedatetime; // Update kala dinaya saha welawa thaba ganna field eka
    
-    private LocalDateTime deletedatetime;
+    private LocalDateTime deletedatetime; // Cancel/Delete kala dinaya saha welawa thaba ganna field eka
 
-    @NotNull
-    private Integer addeduserid;
+    @NotNull // Added user ID record checks
+    private Integer addeduserid; // Record eka dapu user id eka check karagන්න field eka
 
-    private Integer updateuserid;
+    private Integer updateuserid; // Update karapu user id eka map karaganna field eka
 
-    private Integer deleteuserid;
+    private Integer deleteuserid; // Cancel/delete details verify map user id field eka
    
-    @ManyToOne
-    @JoinColumn(name = "suplierpaymentstatus_id" , referencedColumnName = "id")
-    private SupplierPaymentStatus suplierpaymentstatus_id ;
+    @JsonProperty("suplierpaymentstatus_id") // Front-end eken status id property name align karanna Jackson annotation
+    @ManyToOne // Eka payment status ekakata payment godak thiyenna puluwan nisa many-to-one relashionship
+    @JoinColumn(name = "suplierpaymentstatus_id" , referencedColumnName = "id") // Foreign key alignment
+    private SupplierPaymentStatus suplierpaymentstatus_id ; // Status reference object entity property eka
     
-    @ManyToOne
-    @JoinColumn(name = "supplier_id" , referencedColumnName = "id")
-    private Supplier supplier_id ; 
+    @JsonProperty("supplier_id") // Front-end eken supplier id properties links sets
+    @ManyToOne // Eka supplier ta payment godak karanna puluwan nisa many-to-one relashionship
+    @JoinColumn(name = "supplier_id" , referencedColumnName = "id") // Foreign key mapping
+    private Supplier supplier_id ; // Supplier reference object details variable eka
 
-    // addpricelist_id int
+    @JsonProperty("grn_id") // Front-end eken grn object details link align settings
+    @ManyToOne // Eka GRN record ekakata adala block many to one payment details links
+    @JoinColumn(name = "grn_id" , referencedColumnName = "id") // Foreign key mappings database level checks
+    private GRN grn_id ; // Associated GRN object reference link details variables
+}
 
-    // list ekak lebiya yuthuya
-    // js wala hadapu list eka (purchaseOrderHasItemList)
-    // purchaseOrderHasItemList <- meya enna hethuwa -ER eke purchaseOrder eka one wii purchaseOrderHasItem many wiima
-    // inner form eke data remove kirimata awashya wei e sadaha orphanRemoval = true yodai
-    @OneToMany(mappedBy = "supplierpayment_id" , cascade = CascadeType.ALL , orphanRemoval = true) // mapped by main table id (purchaserequest_id)
-    // CascadeType.ALL- read kirimata awasthawa laba dei
-    private List<SupplierPaymentHasGrn> supplierpaymentHasGrnList;
-
-
-
-    }

@@ -54,8 +54,6 @@ public class User {
 
     private LocalDateTime deletedatetime;
 
-    private String note;
-
     private String photopath;
 
     private byte[] user_photo;

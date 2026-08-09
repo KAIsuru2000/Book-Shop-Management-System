@@ -76,9 +76,6 @@ public class Employee {
     @Length(max = 10, min = 10)
     private String landno;
 
-    @Column(name = "note")
-    private String note;
-
     @Column(name = "dob")
     @NotNull
     private LocalDate dob;
@@ -106,6 +103,7 @@ public class Employee {
     private Integer updateuserid;
     private LocalDateTime deletedatetime;
     private Integer deleteuserid;
+
     private byte[] employee_photo;
 
     @ManyToOne

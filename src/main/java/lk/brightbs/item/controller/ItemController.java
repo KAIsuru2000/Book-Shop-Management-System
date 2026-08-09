@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import lk.brightbs.item.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import lk.brightbs.item.dao.ItemDao;
 import lk.brightbs.item.dao.ItemStatusDao;
 import lk.brightbs.item.entity.Item;
+import lk.brightbs.item.entity.ItemHasAttributeOption; // ItemHasAttributeOption entity class eka import karagannawa
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.user.dao.UserDao;
@@ -63,7 +63,7 @@ public class ItemController {
         itemView.addObject("loggedusername", auth.getName());
 
 		//title eka penwimata
-		itemView.addObject("title", "Item management | Bright Book Shop");
+		itemView.addObject("title", "Item Registration | Bright Book Shop");
 
         return itemView;
     }
@@ -100,6 +100,11 @@ public class ItemController {
 		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ITEM");
 		if (userPrivilege.getDel()) {
 			//check ext
+            //        item eka delete nm
+            if (item.getItemstatus_id().getName().equals("Delete")) {
+
+                return " - This item has already been deleted..!";
+            }
 			//exting user object ekak ganima 
 			Item extItem = itemDao.findById(item.getId()).orElse(null);
 			if(extItem == null ){
@@ -146,6 +151,15 @@ public class ItemController {
 			item.setAddeduserid(logedUser.getId());
 			item.setItemcode(itemDao.getNextItemNo());
 		
+				// JSON parse karala ena attribute option list eka check karala loop karanawa
+				if (item.getItemHasAttributeOptionList() != null) {
+					// list eke hama item has attribute option object ekakatama parent item eka set karanawa
+					for (ItemHasAttributeOption ihao : item.getItemHasAttributeOptionList()) {
+						// item object eka child option eke parent field ekata set karanawa
+						ihao.setItem_id(item);
+					}
+				}
+
 				// save operator
 				itemDao.save(item);
 				return "OK";
@@ -186,6 +200,15 @@ public class ItemController {
 
 				//user object ekata added data time eka add kirima
 				item.setUpdatedatetime(LocalDateTime.now());
+
+				// JSON parse karala ena attribute option list eka check karala loop karanawa
+				if (item.getItemHasAttributeOptionList() != null) {
+					// list eke hama item has attribute option object ekakatama parent item eka set karanawa
+					for (ItemHasAttributeOption ihao : item.getItemHasAttributeOptionList()) {
+						// item object eka child option eke parent field ekata set karanawa
+						ihao.setItem_id(item);
+					}
+				}
 
 				itemDao.save(item);
 				return "OK";

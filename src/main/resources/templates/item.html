@@ -17,7 +17,7 @@
             <div class="col-12 p-3 d-flex justify-content-center divTitle">
                 <!--1rem padding on all 4 sides of the element (1 rem = 16 pixels) |Apply display utilities to create a flexbox container and convert direct child elements to flex items.| justify content center | CSS class  -->
                 <i class="fa-solid fa-layer-group fa-2xl mt-3" style="color: #fcfcfc;"></i>
-                <h2 class="h2 ms-3">Item management</h2><!--1rem set margin start  -->
+                <h2 class="h2 ms-3">Item Registration</h2><!--1rem set margin start  -->
             </div>
         </div>
         <!-- title area end -->
@@ -117,6 +117,25 @@
                                     </div>
                                     <!-- Item Category area end -->
 
+                                    <!-- Item Subcategory area start-->
+                                    <div class="col-4">
+                                        <div class="input-group mb-3">
+                                            <label class="input-group-text lablBg" for="selectItemSubcategory">Item
+                                                Subcategory:
+                                                <span class="fw-bold text-danger">*</span></label>
+                                            <select class="form-select" id="selectItemSubcategory"
+                                                    onchange=" selectDainamicElementValidater(this , 'item', 'subcategory_id'); generateItemName();"
+                                                    onclick=" selectDainamicElementValidater(this , 'item', 'subcategory_id'); generateItemName();"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Select the Item subcategory correctly here.">
+                                                <option selected disabled>Select Item Subcategory</option>
+                                                <option value=""></option>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Item Subcategory area end-->
+
                                     <!-- Item Brand area start-->
                                     <div class="col-4">
                                         <div class="input-group mb-3">
@@ -134,27 +153,16 @@
                                     </div>
                                     <!-- Item Brand area end-->
 
-                                    <!-- Item Subcategory area start-->
-                                    <div class="col-4">
-                                        <div class="input-group mb-3">
-                                            <label class="input-group-text lablBg" for="selectItemSubcategory">Item
-                                                Subcategory:
-                                                <span class="fw-bold text-danger">*</span></label>
-                                            <select class="form-select" id="selectItemSubcategory"
-                                                onchange=" selectDainamicElementValidater(this , 'item', 'subcategory_id'); generateItemName();"
-                                                onclick=" selectDainamicElementValidater(this , 'item', 'subcategory_id'); generateItemName();"
-                                                data-bs-toggle="tooltip"
-                                                title="Select the Item subcategory correctly here.">
-                                                <option selected disabled>Select Item Subcategory</option>
-                                                <option value=""></option>
-                                                <option value=""></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <!-- Item Subcategory area end-->
+
 
                                 </div>
                                 <!-- Item Category , Item Brand and Item Subcategory row end-->
+
+                                <!-- Dynamic attributes saha custom detail generate karaganna placeholder dynamic row eka hadanawa -->
+                                <div class="row mt-4" id="divDynamicAttributesRow">
+                                    <!-- dynamic dropdowns build wela methanata add wenawa -->
+                                </div>
+                                <!-- Dynamic attributes placeholder dynamic row end -->
 
                                 <!--Item name and Item Status row start -->
                                 <div class="row mt-4">
@@ -166,13 +174,11 @@
                                                 Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
                                                 <span class="fw-bold text-danger">*</span>
                                             </span>
-                                            <input type="text" placeholder="
-                                Enter Item Name " class="form-control" aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="textItemName"
-                                                oninput="textValidator(this, '^.*$', 'item', 'itemname')"
-                                                onclick="textValidator(this, '^.*$', 'item', 'itemname')" required
+                                            <!-- auto generate wena nisa textItemName input eka readonly karanawa -->
+                                            <input type="text" placeholder="Item Name Auto Generated" class="form-control" aria-label="Sizing example input"
+                                                aria-describedby="inputGroup-sizing-default" id="textItemName" readonly required
                                                 data-bs-toggle="tooltip"
-                                                title="After entering the item's Category,Brand,Subcategory, Package type and Unit type correctly, Complete the end of the name.">
+                                                title="After entering the item's Category,Brand,Subcategory and attributes correctly, the name will be auto generated.">
                                         </div>
                                     </div>
                                     <!-- Item Name end-->
@@ -211,7 +217,7 @@
                                             <span class="input-group-text lablBg">ROP &nbsp; &nbsp; &nbsp;
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;: <span
                                                     class="fw-bold text-danger">*</span></span>
-                                            <input type="text" class="form-control" placeholder="
+                                            <input type="number" class="form-control" placeholder="
                                             Enter ROP" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textROP" required
                                                 onkeyup="textValidator(this, '^[0-9]+$', 'item', 'rop')"
@@ -227,7 +233,7 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text lablBg">ROQ &nbsp; &nbsp; &nbsp;
                                                 &nbsp; &nbsp; : <span class="fw-bold text-danger">*</span></span>
-                                            <input type="text" class="form-control" placeholder="
+                                            <input type="number" class="form-control" placeholder="
                                             Enter ROQ" aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textROQ" required
                                                 onkeyup="textValidator(this, '^[0-9]+$', 'item', 'roq')"
@@ -248,20 +254,20 @@
                                 <!-- Note , Item Photo and Item Photo Review row start-->
                                 <div class="row mt-4">
 
-                                    <!-- Note area start -->
-                                    <div class="col-4">
-                                        <div class="input-group">
-                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp;:
-                                                <span class="text-danger">(optional)</span></span>
-                                            <textarea placeholder="
-                                            Enter Note" id="textNote" class="form-control" aria-label="With textarea"
-                                                onkeyup="textValidator(this, '^.*$', 'item', 'note')"
-                                                onclick="textValidator(this, '^.*$', 'item', 'note')"
-                                                data-bs-toggle="tooltip"
-                                                title="Enter a note about the employee here"></textarea>
-                                        </div>
-                                    </div>
-                                    <!-- Note area end -->
+<!--                                    &lt;!&ndash; Note area start &ndash;&gt;-->
+<!--                                    <div class="col-4">-->
+<!--                                        <div class="input-group">-->
+<!--                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp;:-->
+<!--                                                <span class="text-danger">(optional)</span></span>-->
+<!--                                            <textarea placeholder="-->
+<!--                                            Enter Note" id="textNote" class="form-control" aria-label="With textarea"-->
+<!--                                                onkeyup="textValidator(this, '^.*$', 'item', 'note')"-->
+<!--                                                onclick="textValidator(this, '^.*$', 'item', 'note')"-->
+<!--                                                data-bs-toggle="tooltip"-->
+<!--                                                title="Enter a note about the employee here"></textarea>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    &lt;!&ndash; Note area end &ndash;&gt;-->
 
                                     <!-- Sales Price area start-->
                                     <div class="col-4">
@@ -404,10 +410,10 @@
                                             <table style="border: none;">
 
                                                 <tbody style="border: none;">
-                                                    <tr>
-                                                        <th colspan="3" style="text-align: center;border: none;"><img
-                                                                src="" alt="User photo" width="30" height="30"></th>
-                                                    </tr>
+<!--                                                    <tr>-->
+<!--                                                        <th colspan="3" style="text-align: center;border: none;"><img-->
+<!--                                                                src="" alt="User photo" width="30" height="30"></th>-->
+<!--                                                    </tr>-->
                                                     <tr>
                                                         <th style="color:black; text-align: left;border: none;">Brand
                                                             name</th>
@@ -487,14 +493,7 @@
 <!--                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"-->
 <!--                                                            id="discountRatioView"></th>-->
 <!--                                                    </tr>-->
-                                                    <tr>
-                                                        <th style="color:black; text-align: left;border: none;">Note
-                                                        </th>
-                                                        <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp;
-                                                            &nbsp; </th>
-                                                        <th style="color:black; text-align: left; font-style: italic; font-weight: 500;border: none;"
-                                                            id="noteView"></th>
-                                                    </tr>
+
                                                 </tbody>
 
                                             </table>

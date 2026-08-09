@@ -9,6 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+// Spring Boot wala PutMapping use karanna me import eka dagannawa
+import org.springframework.web.bind.annotation.PutMapping;
+// Spring Boot wala DeleteMapping use karanna me import eka dagannawa
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +21,10 @@ import org.springframework.web.servlet.ModelAndView;
 import lk.brightbs.addPriceList.dao.AddPriceListDao;
 import lk.brightbs.addPriceList.entity.AddPriceList;
 import lk.brightbs.addPriceList.entity.AddPriceListHasItem;
+// AddPriceListStatusDao class eka use karanna me import eka dagannawa
+import lk.brightbs.addPriceList.dao.AddPriceListStatusDao;
+// AddPricelistStatus entity class eka use karanna me import eka dagannawa
+import lk.brightbs.addPriceList.entity.AddPricelistStatus;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.user.dao.UserDao;
@@ -51,6 +59,10 @@ public class AddPriceListController {
     // price request status dao control eka autowired karagannawa
     @Autowired
     private PriceRequestStatusDao priceRequestStatusDao;
+
+    // add price list status dao instance eka dependency inject karaganna Autowired use karanawa
+    @Autowired
+    private AddPriceListStatusDao addPriceListStatusDao;
 
     //request mapping for load AddPriceList ui url - /addPriceList
 	@RequestMapping("/addPriceList") //request eka meka awoth yata function eka run karanawa
@@ -218,10 +230,88 @@ public class AddPriceListController {
 		}
 	}
 
-    
+	// update karanna mapping eka set karagannawa
+	@PutMapping(value = "/addPriceList/update")
+	// addPriceList object eka parameter ekak widiyata ganna method eka
+	public String updateAddPriceList(@RequestBody AddPriceList addPriceList) {
+		// logged user details ganna spring security authentication context eka gannawa
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// user ge module privilege check karaganna userPrivilegeController call karanawa
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ADDPRICELIST");
+		// upd permission check karanawa update karanna puluwanda kiyala
+		if (userPrivilege.getUpd()) {
+			// existing price list eka database eken getReferenceById use karala check karanawa
+			AddPriceList extAddPriceList = addPriceListDao.getReferenceById(addPriceList.getId());
+			// database eke ehema record ekak nathnam error message ekak yawanawa
+			if (extAddPriceList == null) {
+				// return text message
+				return "Add Price List not exist";
+			}
+			try {
+				// updated date time field ekata wathman welawa assign karanawa
+				addPriceList.setUpdatedatetime(LocalDateTime.now());
+				// updated userid ekata log una user ge id eka set karanawa
+				addPriceList.setUpdateuserid(userDao.getByUsername(auth.getName()).getId());
 
+				// parent child mapping block issues clear karanna items list loop karanawa
+				for (AddPriceListHasItem aplhi : addPriceList.getAddPriceListHasItemList()) {
+					// child item object ekata parent link reference set karanawa
+					aplhi.setAddpricelist_id(addPriceList);
+				}
+
+				// updated data details database table ekata save karanawa
+				addPriceListDao.save(addPriceList);
+				// updates successfully confirm data OK string yawanawa
+				return "OK";
+			} catch (Exception e) {
+				// exception block update fails details return karanawa
+				return "Update not completed : " + e.getMessage();
+			}
+		} else {
+			// permission nathi user error message return karanawa
+			return "Update not completed : you haven't permission...";
+		}
+	}
+
+	// delete / cancel karanna mapping eka set karagannawa
+	@DeleteMapping(value = "/addPriceList/delete")
+	// addPriceList object eka parameter ekak widiyata ganna method eka
+	public String deleteAddPriceList(@RequestBody AddPriceList addPriceList) {
+		// logged user details ganna spring security authentication context eka gannawa
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// user ge module privilege check karaganna userPrivilegeController call karanawa
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "ADDPRICELIST");
+		// del delete/cancel permission check karanawa
+		if (userPrivilege.getDel()) {
+			// existing price list eka database eken reference by id set checks karanawa
+			AddPriceList extAddPriceList = addPriceListDao.getReferenceById(addPriceList.getId());
+			// database eke ehema record ekak nathnam error status messages return
+			if (extAddPriceList == null) {
+				// status message return
+				return "Add Price List not exist";
+			}
+			try {
+				// status check change deleted status name get
+				AddPricelistStatus deletedStatus = addPriceListStatusDao.findByName("Deleted");
+				// delete status details active record set
+				extAddPriceList.setAddpriceliststatus_id(deletedStatus);
+				// delete date time field values assign
+				extAddPriceList.setDeletedatetime(LocalDateTime.now());
+				// delete userid settings assign log user id
+				extAddPriceList.setDeleteuserid(userDao.getByUsername(auth.getName()).getId());
+
+				// update elements database record save checks
+				addPriceListDao.save(extAddPriceList);
+				// success status return
+				return "OK";
+			} catch (Exception e) {
+				// exception details messages response back
+				return "Delete not completed : " + e.getMessage();
+			}
+		} else {
+			// no permission error warning text output return
+			return "Delete not completed : you haven't permission...";
+		}
+	}
 
 }
-    
-
-   

@@ -48,7 +48,7 @@ public class SeasonaldiscountController {
         seasonaldiscountView.addObject("loggedusername", auth.getName());
 
         // title eka penwimata
-        seasonaldiscountView.addObject("title", "Seasonal Discount management | Bright Book Shop");
+        seasonaldiscountView.addObject("title", "Seasonal Discount Management | Bright Book Shop");
 
         return seasonaldiscountView;
     }

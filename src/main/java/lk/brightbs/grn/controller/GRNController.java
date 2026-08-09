@@ -17,6 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import lk.brightbs.addPriceList.entity.AddPriceList;
 import lk.brightbs.grn.dao.GRNDao;
 import lk.brightbs.grn.entity.GRN;
+// GRNStatusDao class eka use karanna me import eka dagannawa
+import lk.brightbs.grn.dao.GRNStatusDao;
+// GRNStatus entity class eka use karanna me import eka dagannawa
+import lk.brightbs.grn.entity.GRNStatus;
 import lk.brightbs.privilege.controller.UserPrivilegeController;
 import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.purchaseOrder.dao.PurchaseOrderDao;
@@ -52,6 +56,10 @@ public class GRNController {
     // purchase order status dao control eka autowired karagannawa
     @Autowired
     private PurchaseOrderStatusDao purchaseOrderStatusDao;
+
+    // grn status dao dependency inject karanna me Autowired line eka dagannawa
+    @Autowired
+    private GRNStatusDao grnStatusDao;
 
     // @Autowired
 	// private UserDao userDao; 
@@ -251,10 +259,88 @@ public class GRNController {
 	 	}
 	 }
 
-    
+	// update karanna mapping eka set karagannawa
+	@PutMapping(value = "/grn/update")
+	// grn object eka parameter ekak widiyata ganna method eka
+	public String updateGRN(@RequestBody GRN gRN) {
+		// logged user details ganna spring security authentication context eka gannawa
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// user ge module privilege check karaganna userPrivilegeController call karanawa
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GRN");
+		// upd permission check karanawa update karanna puluwanda kiyala
+		if (userPrivilege.getUpd()) {
+			// existing grn eka database eken reference by id set checks karanawa
+			GRN extGRN = grnDao.getReferenceById(gRN.getId());
+			// database eke ehema record ekak nathnam error message ekak yawanawa
+			if (extGRN == null) {
+				// return text message
+				return "GRN not exist";
+			}
+			try {
+				// updated date time field ekata wathman welawa assign karanawa
+				gRN.setUpdatedatetime(LocalDateTime.now());
+				// updated userid ekata log una user ge id eka set karanawa
+				gRN.setUpdateuserid(userDao.getByUsername(auth.getName()).getId());
 
+				// parent child mapping block issues clear karanna items list loop karanawa
+				for (GrnHasItem gnItem : gRN.getGrnHasItemList()) {
+					// child item object ekata parent link reference set karanawa
+					gnItem.setGrn_id(gRN);
+				}
+
+				// updated data details database table ekata save karanawa
+				grnDao.save(gRN);
+				// updates successfully confirm data OK string yawanawa
+				return "OK";
+			} catch (Exception e) {
+				// exception block update fails details return karanawa
+				return "Update not completed : " + e.getMessage();
+			}
+		} else {
+			// permission nathi user error message return karanawa
+			return "Update not completed : you haven't permission...";
+		}
+	}
+
+	// delete / cancel karanna mapping eka set karagannawa
+	@DeleteMapping(value = "/grn/delete")
+	// grn object eka parameter ekak widiyata ganna method eka
+	public String deleteGRN(@RequestBody GRN gRN) {
+		// logged user details ganna spring security authentication context eka gannawa
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// user ge module privilege check karaganna userPrivilegeController call karanawa
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "GRN");
+		// del delete/cancel permission check karanawa
+		if (userPrivilege.getDel()) {
+			// existing grn eka database eken reference by id set checks karanawa
+			GRN extGRN = grnDao.getReferenceById(gRN.getId());
+			// database eke ehema record ekak nathnam error status messages return
+			if (extGRN == null) {
+				// status message return
+				return "GRN not exist";
+			}
+			try {
+				// status check change deleted status name get
+				GRNStatus deletedStatus = grnStatusDao.findByName("Deleted");
+				// delete status details active record set
+				extGRN.setGrnstatus_id(deletedStatus);
+				// delete date time field values assign
+				extGRN.setDeletedatetime(LocalDateTime.now());
+				// delete userid settings assign log user id
+				extGRN.setDeleteuserid(userDao.getByUsername(auth.getName()).getId());
+
+				// update elements database record save checks
+				grnDao.save(extGRN);
+				// success status return
+				return "OK";
+			} catch (Exception e) {
+				// exception details messages response back
+				return "Delete not completed : " + e.getMessage();
+			}
+		} else {
+			// no permission error warning text output return
+			return "Delete not completed : you haven't permission...";
+		}
+	}
 
 }
-    
-
-   

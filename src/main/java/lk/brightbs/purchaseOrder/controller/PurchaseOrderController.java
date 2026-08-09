@@ -10,6 +10,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+// Spring Boot wala PutMapping use karanna me import eka dagannawa
+import org.springframework.web.bind.annotation.PutMapping;
+// Spring Boot wala DeleteMapping use karanna me import eka dagannawa
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +24,10 @@ import lk.brightbs.privilege.entity.Privilege;
 import lk.brightbs.purchaseOrder.dao.PurchaseOrderDao;
 import lk.brightbs.purchaseOrder.entity.PurchaseOrder;
 import lk.brightbs.purchaseOrder.entity.PurchaseOrderHasItem;
+// PurchaseOrderStatusDao class eka use karanna me import eka dagannawa
+import lk.brightbs.purchaseOrder.dao.PurchaseOrderStatusDao;
+// PurchaseOrderStatus entity class eka use karanna me import eka dagannawa
+import lk.brightbs.purchaseOrder.entity.PurchaseOrderStatus;
 import lk.brightbs.user.dao.UserDao;
 import lk.brightbs.user.entity.User;
 import lk.brightbs.addPriceList.dao.AddPriceListDao;
@@ -50,6 +58,10 @@ public class PurchaseOrderController {
     // add price list status dao control eka autowired karagannawa
     @Autowired
     private AddPriceListStatusDao addPriceListStatusDao;
+
+    // purchase order status dao dependency inject karanna me Autowired line eka dagannawa
+    @Autowired
+    private PurchaseOrderStatusDao purchaseOrderStatusDao;
 
     //request mapping for load purchase order ui url - /purchaseOrders
 	@RequestMapping("/purchaseOrders") //request eka meka awoth yata function eka run karanawa
@@ -225,10 +237,88 @@ public class PurchaseOrderController {
 		}
 	}
 
-    
+	// update karanna mapping eka set karagannawa
+	@PutMapping(value = "/purchaseOrders/update")
+	// purchaseOrder object eka parameter ekak widiyata ganna method eka
+	public String updatePurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
+		// logged user details ganna spring security authentication context eka gannawa
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// user ge module privilege check karaganna userPrivilegeController call karanawa
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
+		// upd permission check karanawa update karanna puluwanda kiyala
+		if (userPrivilege.getUpd()) {
+			// existing purchase order eka database eken getReferenceById use karala check karanawa
+			PurchaseOrder extPurchaseOrder = purchaseOrderDao.getReferenceById(purchaseOrder.getId());
+			// database eke ehema record ekak nathnam error message ekak yawanawa
+			if (extPurchaseOrder == null) {
+				// return text message
+				return "Purchase Order not exist";
+			}
+			try {
+				// updated date time field ekata wathman welawa assign karanawa
+				purchaseOrder.setUpdatedatetime(LocalDateTime.now());
+				// updated userid ekata log una user ge id eka set karanawa
+				purchaseOrder.setUpdateuserid(userDao.getByUsername(auth.getName()).getId());
 
+				// parent child mapping block issues clear karanna items list loop karanawa
+				for (PurchaseOrderHasItem poItem : purchaseOrder.getPurchaseOrderHasItemList()) {
+					// child item object ekata parent link reference set karanawa
+					poItem.setPurchaserequest_id(purchaseOrder);
+				}
+
+				// updated data details database table ekata save karanawa
+				purchaseOrderDao.save(purchaseOrder);
+				// updates successfully confirm data OK string yawanawa
+				return "OK";
+			} catch (Exception e) {
+				// exception block update fails details return karanawa
+				return "Update not completed : " + e.getMessage();
+			}
+		} else {
+			// permission nathi user error message return karanawa
+			return "Update not completed : you haven't permission...";
+		}
+	}
+
+	// delete / cancel karanna mapping eka set karagannawa
+	@DeleteMapping(value = "/purchaseOrders/delete")
+	// purchaseOrder object eka parameter ekak widiyata ganna method eka
+	public String deletePurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
+		// logged user details ganna spring security authentication context eka gannawa
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// user ge module privilege check karaganna userPrivilegeController call karanawa
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PURCHASEORDER");
+		// del delete/cancel permission check karanawa
+		if (userPrivilege.getDel()) {
+			// existing purchase order eka database eken reference by id set checks karanawa
+			PurchaseOrder extPurchaseOrder = purchaseOrderDao.getReferenceById(purchaseOrder.getId());
+			// database eke ehema record ekak nathnam error status messages return
+			if (extPurchaseOrder == null) {
+				// status message return
+				return "Purchase Order not exist";
+			}
+			try {
+				// status check change deleted status name get
+				PurchaseOrderStatus deletedStatus = purchaseOrderStatusDao.findByName("Deleted");
+				// delete status details active record set
+				extPurchaseOrder.setPurchaserequeststatus_id(deletedStatus);
+				// delete date time field values assign
+				extPurchaseOrder.setDeletedatetime(LocalDateTime.now());
+				// delete userid settings assign log user id
+				extPurchaseOrder.setDeleteuserid(userDao.getByUsername(auth.getName()).getId());
+
+				// update elements database record save checks
+				purchaseOrderDao.save(extPurchaseOrder);
+				// success status return
+				return "OK";
+			} catch (Exception e) {
+				// exception details messages response back
+				return "Delete not completed : " + e.getMessage();
+			}
+		} else {
+			// no permission error warning text output return
+			return "Delete not completed : you haven't permission...";
+		}
+	}
 
 }
-    
-
-   

@@ -193,7 +193,6 @@ const rowFormRefill = (dataob, rowIndex) => {
     selectSupplier.value = JSON.stringify(dataob.supplier_id);
     dateRequireDate.value = dataob.requireddate;
     selectPriceRequestStatus.value = JSON.stringify(dataob.pricelistrequeststatus_id);
-    textNote.value = dataob.note;
 
 
     // all side ekata me priceRequest ekata apply karan nethi items tika ganima 
@@ -264,11 +263,7 @@ const priceRequestRowPrint = (dataob, rowIndex) => {
     supplierNameView.innerText = dataob.supplier_id.suppliername;
     requireDateView.innerText = dataob.requireddate;
     priceRequestStatusView.innerText = dataob.pricelistrequeststatus_id.name;
-    if (dataob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = dataob.note;
-    }
+
     //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
     let selectedItems = "";
     // item list ekak ena nisa
@@ -330,7 +325,7 @@ const refreshPriceRequestForm = () => {
     formPriceRequest.reset();
 
     //validation colors iwath kirima
-    setDefault([selectSupplier, dateRequireDate, selectPriceRequestStatus, textNote]);
+    setDefault([selectSupplier, dateRequireDate, selectPriceRequestStatus]);
 
     suppliers = getServiceRequest("/supplier/alldata");
 
@@ -446,9 +441,6 @@ const checkPriceRequestFormUpdate = () => {
 
     //mulinma veriable eka thibeda balima >> item and olditem >> compair kirima sadaha value thibiya yuthuya
     if (priceRequest != null && oldPriceRequest != null) {
-        if (priceRequest.note != oldPriceRequest.note) {
-            updates = updates + "Note is change...! \n";
-        }
         if (priceRequest.requireddate != oldPriceRequest.requireddate) {
             updates = updates + "Required Date is change...! \n";
         }

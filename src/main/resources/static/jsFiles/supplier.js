@@ -260,11 +260,6 @@ const supplierRowPrint = (dataob, rowIndex) => {
     });
     document.getElementById("selectedBrandsView").textContent = selectedBrands;
     supplierStatusView.innerText = dataob.supplierstatus_id.name;
-    if (dataob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = dataob.note;
-    }
 
     $("#offcanvasBottomSupplierView").offcanvas("show"); // show the offcanvas
 }
@@ -313,7 +308,7 @@ const refreshSupplierForm = () => {
     formSupplier.reset();
 
     //validation colors iwath kirima
-    setDefault([textSupplierName, textBRN, textConPersonName, telContactNo, inputEmail, selectSupplierStatus, textAddress, selectSupplierStatus, selectBankName, textBranchName, telAccountNo, textHolderName, textNote]);
+    setDefault([textSupplierName, textBRN, textConPersonName, telContactNo, inputEmail, selectSupplierStatus, textAddress, selectSupplierStatus, selectBankName, textBranchName, telAccountNo, textHolderName]);
 
     // dynamic element refill kala yuthuya
     allBrand = getServiceRequest('/brand/getBrandListWithoutSupplier')
@@ -487,10 +482,6 @@ const checkSupplierFormUpdate = () => {
         }
         if (supplier.accuntholdername != oldSupplier.accuntholdername) {
             updates = updates + "Account holder name is change...! \n";
-        }
-
-        if (supplier.note != oldSupplier.note) {
-            updates = updates + "note is change...! \n";
         }
 
     }

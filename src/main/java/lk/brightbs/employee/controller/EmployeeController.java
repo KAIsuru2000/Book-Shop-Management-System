@@ -71,7 +71,7 @@ public class EmployeeController {
 		employeeView.addObject("loggedusername", auth.getName());
 
 		// title eka penwimata
-		employeeView.addObject("title", "Employee management | Bright Book Shop");
+		employeeView.addObject("title", "Employee Registration | Bright Book Shop");
 
 		return employeeView;
 	}
@@ -190,6 +190,11 @@ public class EmployeeController {
 
 			return "Delete Not Completed : Employee Not Ext..! ";
 		}
+//        employee delete nm
+        if (employee.getEmployeestatus_id().getName().equals("delete")) {
+
+            return "This employee has already been deleted..!";
+        }
 
 		// check exsistant
 		Employee extEmp = employeeDao.findById(employee.getId()).orElse(null);
@@ -230,6 +235,11 @@ public class EmployeeController {
 			employeeDao.save(extEmp);
 
 			// dependancies
+            User extEmpl = userDao.getByUsername(employee.getEmployeenumber());
+            if(extEmpl != null){
+                extEmpl.setStatus(Boolean.FALSE);
+                userDao.save(extEmpl);
+            }
 
 			return "OK";
 
@@ -284,7 +294,75 @@ public class EmployeeController {
 			employeeDao.save(employee);
 
 			// dependances
+			// meya update karana employeege id ekata adala user object ekak db eke thibeda balima
+			User extUser = userDao.getByEmployee(employee);
+			// user account ekak thibenam, ehi thora-thuru update kirima
+			if (extUser != null) {
+				// user ge username eka employee number ekata set kirima
+				extUser.setUsername(employee.getEmployeenumber());
+				// user ge email eka employee ge email ekata set kirima
+				extUser.setEmail(employee.getEmail());
 
+				// employee ge aluth designation ekata user account ekak awashyada balima
+				if (employee.getDesignation_id().getUseraccount()) {
+					// designation ekata adala role eka set kirima sadaha role set ekak sedima
+					Set<Role> roles = new HashSet<>();
+					// designation eke roleid eka magin role reference eka laba ganima
+					Role role = roleDao.getReferenceById(employee.getDesignation_id().getRoleid());
+					// laba gath role object eka roles set ekata ekathu kirima
+					roles.add(role);
+					// roles tika user object ekata set kirima
+					extUser.setRoles(roles);
+
+					// employee status eka working da kiyala check kirima
+					if (employee.getEmployeestatus_id().getName().equals("working")) {
+						// working nam user account eka active (true) status ekata harwima
+						extUser.setStatus(true);
+					} else {
+						// resign ho delete nam user account eka inactive (false) status ekata harwima
+						extUser.setStatus(false);
+					}
+				} else {
+					// designation ekata user account ekak epa nam status eka false kirima (deactivate kirima)
+					extUser.setStatus(false);
+				}
+
+				// user object eka update kala welawa set kirima
+				extUser.setUpdatedatetime(LocalDateTime.now());
+				// user object eka userDao magin database ekata save kirima
+				userDao.save(extUser);
+			} else {
+				// kalin user account ekak nethnam, aluth designation ekata user account ekak awashya nam saha employee working nam pamanak user account ekak auto-create kirima
+				if (employee.getDesignation_id().getUseraccount() && employee.getEmployeestatus_id().getName().equals("working")) {
+					// user model eke empty constructor ekak magin aluth object ekak sedima
+					User user = new User();
+					// user name eka lesa employee number eka set kirima
+					user.setUsername(employee.getEmployeenumber());
+					// email eka set kirima
+					user.setEmail(employee.getEmail());
+					// account status eka true (active) kirima
+					user.setStatus(true);
+					// added datetime eka local system time ekata set kirima
+					user.setAdded_datetime(LocalDateTime.now());
+					// password eka lesa employeege nic eka encript kara set kirima
+					user.setPassword(bCryptPasswordEncoder.encode(employee.getNic()));
+					// user account ekata adala employee entity eka set kirima
+					user.setEmployee_id(employee);
+
+					// role eka set kirima sadaha role set ekak sedima
+					Set<Role> roles = new HashSet<>();
+					// designation eke roleid ekata adala role details dao eken laba ganima
+					Role role = roleDao.getReferenceById(employee.getDesignation_id().getRoleid());
+					// roles list ekata adala role object eka ekathu kirima
+					roles.add(role);
+					// roles tika user object ekata set kirima
+					user.setRoles(roles);
+
+					// aluth user account eka database ekata save kirima
+					userDao.save(user);
+				}
+			}
+            
 			return "OK";
 
 		} catch (Exception e) {

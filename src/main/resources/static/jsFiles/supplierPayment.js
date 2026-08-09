@@ -1,583 +1,522 @@
-//browser load event
+// Browser load event eka sidu weddi me function eka run wenawa tooltip enable karanna saha functions refresh karanna
 window.addEventListener("load", () => {
 
-    console.log("browser load Event");
+    console.log("browser load Event"); // Console eke load event eka check karanna log ekak danawa
 
-    // enable tooltip
+    // Tooltip elements run karanna bootstrap tooltips enable karagannawa
     $('[data-bs-toggle="tooltip"]').tooltip();
 
+    // Table refresh function eka call karala data reload karagannawa
     refreshSupplierPaymentTable();
 
+    // Form data reset karala refresh karagන්න form refresh function eka call karanawa
     refreshSupplierPaymentForm();
+
+    // Table body ekata click event listener ekak add karanawa cashier user logged wela inna wita buttons block hide karanna
+    tableSupplierPaymentBody.addEventListener("click", () => {
+        // Logged user role details check karagannawa servlet access magin
+        let loggedUserObj = getServiceRequest("/loggeduser/role");
+        let loggedUser = loggedUserObj.role; // Role variable eka set karagannawa
+
+        if (loggedUser === "Cashier") { // Cashier nam pamanak me rules active karanawa
+            let existingButtonRow = document.querySelector(".buttonrow"); // Table row selection eka capture karanawa
+            if (existingButtonRow) {
+                let btnUpdate = existingButtonRow.querySelector(".btnUpdate"); // Update edit action button select check
+                let btnClear = existingButtonRow.querySelector(".btnClear"); // Delete action button select check
+                if (btnUpdate) btnUpdate.style.display = "none"; // Cashier ta edit permission nathi nisa edit button hide karanawa
+                if (btnClear) btnClear.style.display = "none"; // Cashier ta delete permission nathi nisa delete button hide karanawa
+            }
+        }
+    });
 
 })
 
-//refresh table Area
+// Database eken dynamic record set eka load karala table row data insert karana function eka
 const refreshSupplierPaymentTable = () => {
+    // Controller getMapping api service call karala database data collection dynamic list eka load karagannawa
+    const supplierPayments = getServiceRequest("/supplierPayment/alldata");
 
-    let supplierPayments = getServiceRequest("/supplierPayment/alldata");
-
-    let propertyList = [
-        { propertyName: "billno", dataType: "string" },
-        { propertyName: generateSupplierName, dataType: "function" },
-        { propertyName: "totaldueamount", dataType: "decimal" },
-        { propertyName: "paidamount", dataType: "decimal" },
-        { propertyName: "balanceamount", dataType: "decimal" },
-        { propertyName: getSupplierPaymentStatus, dataType: "function" },
+    // Display list array define columns values binding variables
+    displayPropertyList = [
+        { dataType: 'string', propertyName: 'billno' }, // Bill Number row parameters
+        { dataType: 'function', propertyName: generateSupplierName }, // Supplier details custom display functions maps
+        { dataType: 'decimal', propertyName: 'totaldueamount' }, // Total amount details column
+        { dataType: 'decimal', propertyName: 'paidamount' }, // Paid amount details column
+        { dataType: 'decimal', propertyName: 'balanceamount' }, // Balance amount details column
+        { dataType: 'function', propertyName: getSupplierPaymentStatus } // Payment status display check logic function maps
     ];
 
-    //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoTable(tableSupplierPaymentBody, supplierPayments, propertyList, supplierPaymentFormRefill, supplierPaymentDelete, supplierPaymentView, "#offcanvasBottom");
-
-
-    $('#tableSupplierPayment').DataTable();
-
-
+    // Main tables fill parameters setup check row refills delete and printable modals sets
+    fillDataIntoTable(tableSupplierPaymentBody, supplierPayments, displayPropertyList, supplierPaymentFormRefill, supplierPaymentDelete, supplierPaymentView, "#offcanvasBottom");
+    
+    // Jquery datatable status active setups checks search pagination config
+    $('#tableSupplierPayment').dataTable();
 }
 
+// Supplier object eken supplier details dynamic strings generate columns logic maps
 const generateSupplierName = (dataob) => {
-    return dataob.supplier_id.suppliername;
+    // GRN check checks and then nested supplier object references check verification
+    if (dataob.grn_id != null && dataob.grn_id.purchaserequest_id != null && dataob.grn_id.purchaserequest_id.supplier_id != null) {
+        return dataob.grn_id.purchaserequest_id.supplier_id.suppliername; // Supplier name parameter returns
+    }
+    return "-"; // Empty string response checks
 }
+
+// Status column data table formats icons custom return checks
 const getSupplierPaymentStatus = (dataob) => {
-
-    if (dataob.suplierpaymentstatus_id.name == "Deleted") {
-        return '<i class="fa-solid fa-circle-notch fa-spin fa-xl" style="color: #fa0000;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Deleted"></i>'
-    }
-
-    if (dataob.suplierpaymentstatus_id.name == "Partially Paid") {
-        return '<i class="fa-solid fa-circle-half-stroke fa-beat fa-xl" style="color: #f3f702ff;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Partially Paid"></i>'
-    }
-
-    if (dataob.suplierpaymentstatus_id.name == "Paid") {
-        return '<i class="fa-solid fa-circle fa-beat fa-xl" style="color: #1eff00;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Paid"></i>'
-    }
-
-
-}
-// const generateItemList = (dataob) => {
-//     //ewani awasthawaka wenama veriable ekak hada gani. initially(muladi) string
-//     let itemList = "";
-//     // item list ekak ena nisa
-//     dataob.grnHasItemList.forEach((item, index) => {
-//         if (dataob.grnHasItemList.length - 1 == index) {
-//             //last item eken pasu "," ekak set nokarai
-//             itemList = itemList + item.item_id.itemname;
-//         } else {
-//             //items veriable ekata concatinate kara ganimata item object eke name access karala
-//             //name athara gap ekak thaba gani
-//             itemList = itemList + item.item_id.itemname + " , ";
-//         }
-
-//     });
-//     //awasanaye roles object eka return karanawa
-//     return itemList;
-// }
-//function for re fill purchase order form
-const supplierPaymentFormRefill = (ob, index) => {
-    console.log("Edit", ob, index);
-
-
-
-}
-
-//function for delete purchase order form
-const supplierPaymentDelete = (ob, index) => {
-    console.log("Delete", ob, index);
-
-    // activeTableRow(tablePurchaseOrderBody, index, "red");
-
-
-    let userConfirm = window.confirm("Are you sure to delete following purchase order...?" +
-        "\n Purchase Order ID : " + ob.id +
-        "\n Purchase Order Date : " + ob.date +
-        "\n Employee designation : " + ob.designation_id.name
-    );
-    if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
-        let deleteResponce = getHTTPServiceRequest("/employee/delete", "DELETE", ob);
-
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshSupplierPaymentTable();
-            refreshSupplierPaymentform();
-
+    if (dataob.suplierpaymentstatus_id != null) { // Status references check elements validation
+        if (dataob.suplierpaymentstatus_id.name == "Completed" || dataob.suplierpaymentstatus_id.name == "Paid") {
+            // Success details completed green tick icon returns
+            return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip" title="Paid"></i>';
+        } else if (dataob.suplierpaymentstatus_id.name == "Partially Paid") {
+            // Partially Paid yellow indicator returns
+            return '<i class="fa-solid fa-circle-half-stroke fa-beat fa-xl" style="color: #f3f702;" data-bs-toggle="tooltip" title="Partially Paid"></i>';
         } else {
-            window.alert("Delete not successfully" + deleteResponce);
-
+            return '<p>' + dataob.suplierpaymentstatus_id.name + '</p>'; // Default simple status text outputs
         }
-
-
-
-
     }
+    return "-"; // Null checking parameters return
 }
 
-//function for view / print purchase order form
-const supplierPaymentView = (ob, index) => {
-    console.log("View", ob, index);
-    //option 1
-    //aluth window ekak open kara ganima
-    // let newWindow = window.open();
-    // //ema window ekata title ekak demima
-    // //title eke html code tika venama verible ekakata dama ganima
-    // let printView = "<head><title>Print</title></head>"+"<body><table>"+
-    //                 "<tr><th> Employee Fullname </th><td>"+ ob.fullname+"</td></tr>"+
-    //                 "<tr><th> Employee callingname </th><td>"+ ob.callingname+"</td></tr>"+
-    //                 "<tr><th> Employee nic </th><td>"+ ob.nic+"</td></tr>"+
-    //                 "<tr><th> Employee designation </th><td>"+ ob.designation_id.name+"</td></tr>"+
-    //                 "</table></body>";
-    // newWindow.document.write(printView);
-    // //open wana tab eka tika welawak open wee thibee print ekata open weema
-    // setTimeout(()=>{
-    //     newWindow.stop();
-    //     newWindow.print();
-    //     newWindow.close();
-    // }, 1500)
+// Form elements edit features disable maps parameters
+const supplierPaymentFormRefill = (dataob, rowIndex) => { }
+// Form delete functionality mappings disabled parameters checks
+const supplierPaymentDelete = (dataob, rowIndex) => { }
 
-    //option 2
-    // html wala athi modal ekak open weema 
-    fullNameView.innerText = ob.fullname;
-    callingNameView.innerText = ob.callingname;
-    nicView.innerText = ob.nic;
-    genderView.innerText = ob.gender;
-    dobView.innerText = ob.dob;
-    emailView.innerText = ob.email;
-    mobileView.innerText = ob.mobile;
-    if (ob.landno == undefined) {
-        landNoView.innerText = "-";
-    } else {
-        landNoView.innerText = ob.landno;
+// Offcanvas window display supplier payment details print setup configuration data bind function
+const supplierPaymentView = (dataob, rowIndex) => {
+    console.log("View Details", dataob, rowIndex); // View logs setup checks
+
+    // Detail view labels ids tags text content assignments sets
+    billNoView.innerText = dataob.billno; // Bill no mappings sets
+    supplierNameView.innerText = generateSupplierName(dataob); // Supplier custom name calculations sets
+    grnNoView.innerText = dataob.grn_id != null ? dataob.grn_id.grnno : "-"; // GRN index properties sets
+    paymentMethodView.innerText = dataob.paymentmethod; // Payment options details sets
+    totalDueAmountView.innerText = parseFloat(dataob.totaldueamount).toFixed(2); // Total due amount mappings sets
+    paidAmountView.innerText = parseFloat(dataob.paidamount).toFixed(2); // Paid amount mappings sets
+    balanceAmountView.innerText = parseFloat(dataob.balanceamount).toFixed(2); // Balance amount mappings sets
+    statusView.innerText = dataob.suplierpaymentstatus_id != null ? dataob.suplierpaymentstatus_id.name : "-"; // Status details values checks
+    noteView.innerText = dataob.note ? dataob.note : "-"; // Description details sets
+
+    // Payment method conditions match row cheque bank details show hide blocks
+    if (dataob.paymentmethod == "Card") { // Card options checks
+        document.getElementById("rowCardType").style.display = "table-row"; // Card type row visible
+        document.getElementById("rowReferenceNo").style.display = "table-row"; // Reference number row visible
+        document.getElementById("rowChequeNo").style.display = "none"; // Hide cheque fields
+        document.getElementById("rowChequeDate").style.display = "none";
+        document.getElementById("rowTransferId").style.display = "none"; // Hide bank transfer fields
+        cardTypeView.innerText = dataob.cardtype ? dataob.cardtype : "-"; // Value bind sets
+        referenceNoView.innerText = dataob.referanceno ? dataob.referanceno : "-"; // Reference number bind sets
+    } else if (dataob.paymentmethod == "Cheque") { // Cheque options checks
+        document.getElementById("rowCardType").style.display = "none";
+        document.getElementById("rowReferenceNo").style.display = "none";
+        document.getElementById("rowChequeNo").style.display = "table-row"; // Cheque number columns visible
+        document.getElementById("rowChequeDate").style.display = "table-row"; // Cheque date columns visible
+        document.getElementById("rowTransferId").style.display = "none"; // Hide bank transfer fields
+        chequeNoView.innerText = dataob.checkno ? dataob.checkno : "-"; // Value bind sets
+        chequeDateView.innerText = dataob.checkdate ? dataob.checkdate : "-"; // Date sets
+    } else if (dataob.paymentmethod == "Bank Transfer") { // Bank transfer options checks
+        document.getElementById("rowCardType").style.display = "none";
+        document.getElementById("rowReferenceNo").style.display = "none";
+        document.getElementById("rowChequeNo").style.display = "none"; // Hide cheque no
+        document.getElementById("rowChequeDate").style.display = "none"; // Hide cheque date
+        document.getElementById("rowTransferId").style.display = "table-row"; // Show transfer ID row
+        transferIdView.innerText = dataob.transferid ? dataob.transferid : "-"; // Transfer ID value bind
+    } else { // Cash options setups checks
+        document.getElementById("rowCardType").style.display = "none";
+        document.getElementById("rowReferenceNo").style.display = "none";
+        document.getElementById("rowChequeNo").style.display = "none"; // Hide cheque rows
+        document.getElementById("rowChequeDate").style.display = "none";
+        document.getElementById("rowTransferId").style.display = "none"; // Hide transfer rows
     }
-    addressView.innerText = ob.address
-    if (ob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = ob.note;
-    }
-    designationView.innerText = ob.designation_id.name;
-    civilStatusView.innerText = ob.civilstatus;
-    employeeStatusView.innerText = ob.employeestatus_id.name;
 
-    $("#offcanvasBottomView").offcanvas("show"); // show the offcanvas
-
+    $("#offcanvasBottomView").offcanvas("show"); // Bottom offcanvas modal popups active show settings
 }
-//print button function
+
+// Print layouts print execution helper action
 const buttonPrintRow = () => {
+    let newWindow = window.open(); // Blank browser window open checks
 
-    //aluth window ekak open kara ganima
-    let newWindow = window.open();
-    //ema window ekata title ekak demima
-    //title eke html code tika venama verible ekakata dama ganima
-    let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/common.css'></head>" + "<body style='background-color:white;  justify-content: center; display: flex;'>" + tableView.outerHTML +
-        "</body>";
-    newWindow.document.write(printView);
-    //open wana tab eka tika welawak open wee thibee print ekata open weema
+    // Dynamic document elements structure copy inputs
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Print View - Supplier Payment Details</title>
+            <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
+            <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+            <link rel="stylesheet" href="/Style/printView.css">
+        </head>
+        <body>
+            ${document.querySelector('.bodyPrintView').outerHTML}
+        </body>
+        </html>
+    `);
+
+    // Open print window delays wait assets render checks
     setTimeout(() => {
-        newWindow.stop();
-        newWindow.print();
-        newWindow.close();
-    }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
+        newWindow.stop(); // Stop page resource loads
+        newWindow.print(); // Display printer modal sets
+        newWindow.close(); // Close dynamic window tab checks
+    }, 1500) // Delay value milliseconds
 }
 
-//form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
+// Form validation check controls empty null warning outputs
 const checkFormError = () => {
-    let errors = "";
+    let errors = ""; // Errors warning messages accumulator
 
-    if (supplierPayment.balanceamount == null) {
-        errors = errors + "Please Enter valid balance amount...! \n";
+    if (supplierPayment.grn_id == null) { // GRN checks properties
+        errors = errors + "Please Select a GRN...!\n"; // Add to error messages
+    }
+    if (supplierPayment.totaldueamount == null) { // Total amount validation checks
+        errors = errors + "Total Due Amount is empty. Please select GRN again...!\n";
+    }
+    if (supplierPayment.paymentmethod == null) { // Payment kramaya checks validation
+        errors = errors + "Please Select Payment Method...!\n";
+    }
+    if (supplierPayment.paidamount == null) { // Gevana mudala check status
+        errors = errors + "Please Enter Paid Amount...!\n";
+    }
+    if (supplierPayment.balanceamount == null) { // Balance check statuses validations
+        errors = errors + "Please Check Balance Amount calculations...!\n";
+    }
+    
+    // Card payment configurations validation rules
+    if (supplierPayment.paymentmethod == "Card") {
+        if (supplierPayment.cardtype == null || supplierPayment.cardtype == "") { // Card type check
+            errors = errors + "Please Select Card Type...!\n";
+        }
+        if (supplierPayment.referanceno == null || supplierPayment.referanceno == "") { // Reference number check
+            errors = errors + "Please Enter Reference No...!\n";
+        }
     }
 
-    if (supplierPayment.paidamount == null) {
-        errors = errors + "Please Enter valid paid amount...! \n";
+    // Cheque payment configurations validation rules
+    if (supplierPayment.paymentmethod == "Cheque") {
+        if (supplierPayment.checkno == null || supplierPayment.checkno == "") { // Cheque number check
+            errors = errors + "Please Enter Cheque No...!\n";
+        }
+        if (supplierPayment.checkdate == null || supplierPayment.checkdate == "") { // Cheque date check
+            errors = errors + "Please Select Cheque Date...!\n";
+        }
     }
 
-    if (supplierPayment.paymentmethod == null) {
-        errors = errors + "Please Enter valid payment method...! \n";
+    // Bank transfer configurations checks validations rules
+    if (supplierPayment.paymentmethod == "Bank Transfer") {
+        if (supplierPayment.transferid == null || supplierPayment.transferid == "") { // Transfer ID check
+            errors = errors + "Please Enter Transfer ID...!\n";
+        }
     }
 
-    if (supplierPayment.supplier_id == null) {
-        errors = errors + "Please Enter valid supplier...! \n";
+    if (supplierPayment.suplierpaymentstatus_id == null) { // Status dropdown validation rules
+        errors = errors + "Please Select Payment Status...!\n";
     }
 
-    if (supplierPayment.suplierpaymentstatus_id == null) {
-        errors = errors + "Please Enter valid supplier payment status...! \n";
-    }
-
-    if (supplierPayment.totaldueamount == null) {
-        errors = errors + "Please Enter valid total dueamount...! \n";
-    }
-
-    return errors;
+    return errors; // Accumulated output errors warning returns
 }
 
-
-//GRN form submit event function 
+// Submit button handler post details execution
 const buttonSupplierPaymentSubmit = () => {
-    console.log('Add supplier Payment', supplierPayment);
+    console.log('Add Supplier Payment object details', supplierPayment); // Details log checks
 
-    //check form error for required element
+    // Cash, Card, Cheque, Bank Transfer payment types configuration settings checks
+    if (supplierPayment.paymentmethod == "Cash") {
+        supplierPayment.checkno = null; // Cheque details null configuration checks
+        supplierPayment.checkdate = null;
+        supplierPayment.transferid = null; // Transfer ID clear maps checks
+        supplierPayment.cardtype = null; // Card type clear
+        supplierPayment.referanceno = "CASH-" + new Date().getTime(); // CASH reference number calculations sets
+    } else if (supplierPayment.paymentmethod == "Card") {
+        supplierPayment.checkno = null; // Card payment configurations
+        supplierPayment.checkdate = null;
+        supplierPayment.transferid = null; // Resets other details null maps checks
+    } else if (supplierPayment.paymentmethod == "Cheque") {
+        supplierPayment.transferid = null; // Transfer clear sets
+        supplierPayment.cardtype = null; // Card type clear
+        supplierPayment.referanceno = "CHQ-" + new Date().getTime(); // CHEQUE references checks
+    } else if (supplierPayment.paymentmethod == "Bank Transfer") {
+        supplierPayment.checkno = null; // Cheque data resets null maps checks
+        supplierPayment.checkdate = null;
+        supplierPayment.cardtype = null; // Card type clear
+        supplierPayment.referanceno = "TXN-" + new Date().getTime(); // Transfer ID reference code settings sets
+    }
+
+    // Verification errors checklist setups checks
     let errors = checkFormError();
-    if (errors == "") {
-        //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following Supplier Payment Details...?" +
-            "\n Supplier name : " + supplierPayment.supplier_id.suppliername +
-            "\n paid amount : " + supplierPayment.paidamount +
-            "\n balance amount : " + supplierPayment.balanceamount
-        );
-        if (userConfirm) {
-            // call post service
-            let postResponce = getHTTPServiceRequest("/supplierPayment/insert", "POST", supplierPayment);
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshSupplierPaymentTable();
-                refreshSupplierPaymentForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
+    if (errors == "") { // Verification passes is valid
+        let userConfirm = window.confirm("Are you sure to add following Supplier Payment...?" +
+            "\n GRN No : " + supplierPayment.grn_id.grnno +
+            "\n Paid Amount : " + supplierPayment.paidamount +
+            "\n Payment Method : " + supplierPayment.paymentmethod
+        ); // User confirmation prompts popup alerts
+
+        if (userConfirm) { // Success user confirm clicks OK
+            let postResponce = getHTTPServiceRequest("/supplierPayment/insert", "POST", supplierPayment); // API POST save request call execution
+            if (postResponce == "OK") { // Success details saves
+                window.alert("Save successfully "); // Successful Alert response setups
+                refreshSupplierPaymentTable(); // Reload data lists
+                refreshSupplierPaymentForm(); // Reset form elements
+                $("#offcanvasBottom").offcanvas("hide"); // Offcanvas window hide
             } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+                window.alert("Failed to submit \n" + postResponce); // Database error alert returns
             }
         }
     } else {
-        window.alert("Something went wrong...\n" + errors);
+        window.alert("Something went wrong...\n" + errors); // Validation warnings display checks
     }
-
-
 }
 
-//check form update function
-const checkFormUpdate = () => {
-    let updates = "";
+// Edit button functionality placeholder
+const buttonSupplierPaymentUpdate = () => { }
 
-    if (employee != null && oldEmployee != null) {
-
-        if (employee.fullname != oldEmployee.fullname) {
-            updates = updates + "Full name is changed  ....! \n";
-        }
-
-        if (employee.callingname != oldEmployee.callingname) {
-            updates = updates + "calling name is changed  ....!   " + oldEmployee.callingname + " into " + employee.callingname + "\n";
-        }
-
-        if (employee.mobile != oldEmployee.mobile) {
-            updates = updates + "mobile no is changed  ....! \n" + oldEmployee.mobile + " -> " + employee.mobile + "\n";
-        }
-
-        if (employee.nic != oldEmployee.nic) {
-            updates = updates + "nic is changed  ....! \n";
-        }
-
-        if (employee.gender != oldEmployee.gender) {
-            updates = updates + "gender is changed  ....! \n";
-        }
-
-        if (employee.dob != oldEmployee.dob) {
-            updates = updates + "Date of birth is changed  ....! \n";
-        }
-
-        if (employee.email != oldEmployee.email) {
-            updates = updates + "email is changed  ....! \n";
-        }
-
-        if (employee.address != oldEmployee.address) {
-            updates = updates + "address is changed  ....! \n";
-        }
-
-        if (employee.civilstatus != oldEmployee.civilstatus) {
-            updates = updates + "civil status is changed  ....! \n";
-        }
-
-        if (employee.designation_id.name != oldEmployee.designation_id.name) {
-            updates = updates + "Designation is changed  ....! \n";
-        }
-
-        if (employee.employeestatus_id.name != oldEmployee.employeestatus_id.name) {
-            updates = updates + "employee status is changed  ....! \n";
-        }
+// Reset/Clear button trigger setups
+const clearSupplierPaymentForm = () => {
+    let userConfirm = window.confirm("Do you need to refresh form...?"); // Confirmation check alert
+    if (userConfirm) {
+        refreshSupplierPaymentForm(); // Clean form states
     }
-
-
-    return updates;
 }
 
-// // form update event function 
-// const buttonPurchaseOrderUpdate = () => {
+// Select GRN details automatically total amount read values inject
+// Select GRN details automatically total amount read values inject
+const getSupplierPaymentGrnAmount = () => {
+    if (supplierPayment.grn_id != null) { // Selected GRN is valid
+        // GRN net amount value capture and set to input field
+        textTotalDueAmount.value = parseFloat(supplierPayment.grn_id.netamount).toFixed(2);
+        // Trigger textValidator checks to update object bindings
+        textValidator(textTotalDueAmount, '^.*$', 'supplierPayment', 'totaldueamount');
 
-//     //need to check form errors
-//     let errors = checkFormError();
-//     if (errors == "") {
-//         // need to check form update
-//         let updates = checkFormUpdate();
-//         if (updates == "") {
-//             window.alert("nothing to update..\n");
-//         } else {
-//             //need to get user confirmation
-//             let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-//             if (userConfirm) {
-//                 //call put service
-//                 let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
-//                 if (putResponce == "OK") {
-//                     window.alert("Update Successfully...!");
-//                     refreshPurchaseOrderTable();
-//                     refreshPurchaseOrderform();
-//                     $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-//                 } else {
-//                     window.alert("Failed to update...!" + putResponce);
-//                 }
-//             } else {
+        // GRN eke supplier_id eka supplierPayment object ekata set karagannawa null constraint avoid karanna
+        if (supplierPayment.grn_id.purchaserequest_id != null && supplierPayment.grn_id.purchaserequest_id.supplier_id != null) {
+            supplierPayment.supplier_id = supplierPayment.grn_id.purchaserequest_id.supplier_id;
+        }
 
-//             }
-//         }
-//     } else {
-//         window.alert("something went wrong.. \n" + errors);
-//     }
+        // Partially Paid status eke athi GRN ekak nam prepaidamount load karanawa
+        if (supplierPayment.grn_id.grnstatus_id != null && supplierPayment.grn_id.grnstatus_id.name == "Partially Paid") {
+            // Backend eken kalin gewapu mudala gannawa
+            let alreadyPaid = getServiceRequest("/supplierPayment/totalpaidbygrn/" + supplierPayment.grn_id.id);
+            textPrepaidAmount.value = parseFloat(alreadyPaid).toFixed(2);
+            textValidator(textPrepaidAmount, '^.*$', 'supplierPayment', 'Prepaidamount');
+            document.getElementById("divPrepaidAmount").style.display = "flex"; // Prepaid input field eka show karanawa
+        } else {
+            // Pending grn ekak nam prepaidamount eka 0.00 widiyata thiyala field eka hide karanawa
+            textPrepaidAmount.value = "0.00";
+            textValidator(textPrepaidAmount, '^.*$', 'supplierPayment', 'Prepaidamount');
+            document.getElementById("divPrepaidAmount").style.display = "none";
+        }
 
-// }
-
-// form delete event function 
-const buttonSupplierPaymentDelete = () => {
-    refreshSupplierPaymentTable();
+        generateBalanceAmount(); // Calculate balance changes status
+    } else {
+        textTotalDueAmount.value = ""; // Resets values
+        setDefault([textTotalDueAmount]); // Resets validators color sets
+        supplierPayment.totaldueamount = null; // Object properties updates
+        supplierPayment.supplier_id = null; // Supplier properties clear sets
+        textPrepaidAmount.value = "0.00";
+        setDefault([textPrepaidAmount]);
+        supplierPayment.Prepaidamount = null;
+        document.getElementById("divPrepaidAmount").style.display = "none"; // Hide prepaid amount area
+    }
 }
 
+// Payment method changes show hide elements sets
+const handlePaymentMethodChange = () => {
+    let method = selectPaymentMethod.value; // Selection variable mapping value checks
 
+    if (method === "Card") {
+        document.getElementById("divCardType").style.display = "flex"; // Card type dropdown show
+        document.getElementById("divReferenceNo").style.display = "flex"; // Reference number input show
+        document.getElementById("divChequeNo").style.display = "none"; // Hide Cheque inputs
+        document.getElementById("divChequeDate").style.display = "none";
+        document.getElementById("divTransferId").style.display = "none"; // Hide transfer input
+
+        // Reset cheque and transfer values
+        textChequeNo.value = "";
+        textChequeDate.value = "";
+        textTransferId.value = "";
+        setDefault([textChequeNo, textChequeDate, textTransferId]); // Clear colors validation check indicators
+        supplierPayment.checkno = null;
+        supplierPayment.checkdate = null;
+        supplierPayment.transferid = null;
+
+    } else if (method === "Cheque") {
+        document.getElementById("divCardType").style.display = "none"; // Hide Card inputs
+        document.getElementById("divReferenceNo").style.display = "none";
+        document.getElementById("divChequeNo").style.display = "flex"; // Cheque No input container show
+        document.getElementById("divChequeDate").style.display = "flex"; // Cheque Date container show
+        document.getElementById("divTransferId").style.display = "none"; // Hide bank details container
+
+        // Reset transfer and card values checks
+        textTransferId.value = "";
+        selectCardType.value = "";
+        textReferenceNo.value = "";
+        setDefault([textTransferId, selectCardType, textReferenceNo]); // Validation colors clean
+        supplierPayment.transferid = null; // Reset properties
+        supplierPayment.cardtype = null;
+        supplierPayment.referanceno = null;
+
+    } else if (method === "Bank Transfer") {
+        document.getElementById("divCardType").style.display = "none"; // Hide Card inputs
+        document.getElementById("divReferenceNo").style.display = "none";
+        document.getElementById("divChequeNo").style.display = "none"; // Hide Cheque container
+        document.getElementById("divChequeDate").style.display = "none";
+        document.getElementById("divTransferId").style.display = "flex"; // Show transfer input container
+
+        // Reset cheque and card details configuration checks
+        textChequeNo.value = "";
+        textChequeDate.value = "";
+        selectCardType.value = "";
+        textReferenceNo.value = "";
+        setDefault([textChequeNo, textChequeDate, selectCardType, textReferenceNo]); // Clear colors validation check indicators
+        supplierPayment.checkno = null;
+        supplierPayment.checkdate = null;
+        supplierPayment.cardtype = null;
+        supplierPayment.referanceno = null;
+
+    } else { // Default Cash methods rules sets
+        document.getElementById("divCardType").style.display = "none"; // Hide Card inputs
+        document.getElementById("divReferenceNo").style.display = "none";
+        document.getElementById("divChequeNo").style.display = "none"; // Hide Cheque inputs
+        document.getElementById("divChequeDate").style.display = "none";
+        document.getElementById("divTransferId").style.display = "none"; // Hide Transfer details container
+
+        // Clear all additional fields check parameters
+        textChequeNo.value = "";
+        textChequeDate.value = "";
+        textTransferId.value = "";
+        selectCardType.value = "";
+        textReferenceNo.value = "";
+        setDefault([textChequeNo, textChequeDate, textTransferId, selectCardType, textReferenceNo]); // Clear validation style blocks
+        supplierPayment.checkno = null;
+        supplierPayment.checkdate = null;
+        supplierPayment.transferid = null;
+        supplierPayment.cardtype = null;
+        supplierPayment.referanceno = null;
+    }
+}
+
+// Balance amount calculations and validators binding sets
+const generateBalanceAmount = () => {
+    spanElementBalanceAmount = textBalanceAmount.previousElementSibling; // Indicator wrapper style links
+
+    let totalDue = parseFloat(supplierPayment.totaldueamount || 0); // Total amounts capture
+    let prepaid = parseFloat(supplierPayment.Prepaidamount || 0); // Prepaid amount capture
+    let paidAmt = parseFloat(textPaidAmount.value || 0); // Paid amounts capture from input
+
+    // Check variables validation inputs checks
+    if (supplierPayment.totaldueamount != null && textPaidAmount.value !== "") {
+        // Gewanna thiyena ithiri mulu mudala (remaining due)
+        let remainingDue = totalDue - prepaid;
+        // Balance eka = Paid Amount - Remaining Due
+        let balanceAmount = paidAmt - remainingDue;
+
+        if (balanceAmount <= 0) { // Balance amount positive wenna baha, negative ho zero pamanak valid
+            textBalanceAmount.value = balanceAmount.toFixed(2); // Set values
+            textValidator(textBalanceAmount, '^.*$', 'supplierPayment', 'balanceamount'); // Validator bind check update sets
+
+            // Dynamic indicator success colors updates
+            textBalanceAmount.style.borderBottom = "4px solid green";
+            spanElementBalanceAmount.style.backgroundColor = "green";
+            textBalanceAmount.classList.remove("is-invalid");
+            textBalanceAmount.classList.add("is-valid");
+
+            // Auto update status based on balance amount
+            let supplierPaymentStatus = getServiceRequest('/supplierPaymentStatus/alldata');
+            let statusName = (balanceAmount === 0) ? "Paid" : "Partially Paid";
+            let matchedStatus = supplierPaymentStatus.find(status => status.name === statusName);
+            if (matchedStatus) {
+                selectSupplierPaymentStatus.value = JSON.stringify(matchedStatus);
+                supplierPayment.suplierpaymentstatus_id = matchedStatus;
+                
+                // Update status border color
+                let prevElementStatus = selectSupplierPaymentStatus.previousElementSibling;
+                selectSupplierPaymentStatus.style.borderBottom = "4px solid green";
+                prevElementStatus.style.backgroundColor = "green";
+                selectSupplierPaymentStatus.classList.remove("is-invalid");
+                selectSupplierPaymentStatus.classList.add("is-valid");
+            }
+        } else { // Invalid balance values checks positive balances (not allowed to overpay)
+            textBalanceAmount.value = balanceAmount.toFixed(2); // Set values
+            textBalanceAmount.style.borderBottom = "4px solid red"; // Highlight border error reds
+            spanElementBalanceAmount.style.backgroundColor = "red"; // Red indicators backgrounds
+            textBalanceAmount.classList.add("is-invalid"); // Red alert class active sets
+            textBalanceAmount.classList.remove("is-valid");
+            supplierPayment.balanceamount = null; // Null configurations object
+        }
+    } else {
+        // Select karapu payment methods updates defaults
+        let totalDueVal = parseFloat(supplierPayment.totaldueamount || 0);
+        let prepaidVal = parseFloat(supplierPayment.Prepaidamount || 0);
+        let remainingDueVal = totalDueVal - prepaidVal;
+        textBalanceAmount.value = (-remainingDueVal).toFixed(2); // Paid amount thama gahala nathi nisa, gewanna thiyena mudala minus value ekak widiyata balance eke pennanawa
+        setDefault([textBalanceAmount]); // Validation indicators colors reset
+        supplierPayment.balanceamount = null;
+    }
+}
+
+// Main form loading initialization refresh updates setups
 const refreshSupplierPaymentForm = () => {
-    supplierPayment = new Object();
-    // main object ekata (gRN) list ekak (gRNHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
-    supplierPayment.supplierpaymentHasGrnList = new Array();
+    supplierPayment = new Object(); // Empty payment context mapping object create
 
-    formSupplierPayment.reset();
+    formSupplierPayment.reset(); // Native form resets clear details checks
 
-    //validation colors iwath kirima main form sadaha
-    setDefault([selectSupplier, textTotalDueAmount, textPaidItemAmount, textBalanceAmount, textPaymentmethod, textChequeNo, textChequeDate, textTransferId, textNote, selectSupplierPaymentStatus]);
+    // Form inputs validator styles clean colors sets
+    setDefault([selectGrn, textTotalDueAmount, textPrepaidAmount, selectPaymentMethod, textPaidAmount, textBalanceAmount, selectCardType, textReferenceNo, textChequeNo, textChequeDate, textTransferId, textNote, selectSupplierPaymentStatus]);
 
-    // dynamic element refill kala yuthuya
-    let suppliers = getServiceRequest('/grn/getPendingAndPartiallyPaidList');
-    fillDataIntoSelectGRN(selectSupplier, "Select the Supplier related to GRN correctly here.", suppliers );
+    // Additional dynamic containers inputs invisible blocks setups initial load settings
+    document.getElementById("divChequeNo").style.display = "none";
+    document.getElementById("divChequeDate").style.display = "none";
+    document.getElementById("divTransferId").style.display = "none";
+    document.getElementById("divCardType").style.display = "none";
+    document.getElementById("divReferenceNo").style.display = "none";
+    document.getElementById("divPrepaidAmount").style.display = "none";
 
-    let supplierPaymentStatues = getServiceRequest('/supplierPaymentStatus/alldata');
-    fillDataIntoSelect(selectSupplierPaymentStatus, "Please Select Status..!!", supplierPaymentStatues, "name");
+    // Active pending GRNs select dropdown elements reload loads
+    let pendingGrns = getServiceRequest('/grn/getPendingAndPartiallyPaidList');
+    
+    // Select drop down container setups values items push loops
+    selectGrn.innerHTML = ""; // Clean options
+    let optionMsgEs = document.createElement("option"); // Disabled warning instructions option select setups
+    optionMsgEs.value = "";
+    optionMsgEs.selected = "selected";
+    optionMsgEs.disabled = "disabled";
+    optionMsgEs.innerText = "Select GRN No";
+    selectGrn.appendChild(optionMsgEs); // Option adds checks
 
-    // status eka form eka load wana wita select wi thibimata
-    // selected value eka string walin ena nisa stringify kara gani
-    selectSupplierPaymentStatus.value = JSON.stringify(supplierPaymentStatues[0]);
-    // ema value eka newatha object ekata set kala yuththa object format ekeni
-    supplierPayment.suplierpaymentstatus_id = JSON.parse(selectSupplierPaymentStatus.value);
-    // status field eka sadaha validation colour eka laba deema
+    pendingGrns.forEach(grn => { // Dynamic elements populate dropdown lists
+        let option = document.createElement("option");
+        option.value = JSON.stringify(grn); // String json value settings config
+
+        // GRN code displays details checks format
+        let brandNamesList = []; // Item check brands names lists
+        if (grn.grnHasItemList) {
+            grn.grnHasItemList.forEach(grnItem => {
+                if (grnItem.item_id && grnItem.item_id.brand_id && grnItem.item_id.brand_id.name && !brandNamesList.includes(grnItem.item_id.brand_id.name)) {
+                    brandNamesList.push(grnItem.item_id.brand_id.name); // Add check brands
+                }
+            });
+        }
+        let brandsJoined = brandNamesList.join(", "); // Brands joining comma checks
+        let supplierName = (grn.purchaserequest_id && grn.purchaserequest_id.supplier_id) ? grn.purchaserequest_id.supplier_id.suppliername : "-";
+        
+        option.innerText = grn.grnno + " - " + supplierName + " - (" + brandsJoined + ")"; // Title text string formats
+        selectGrn.appendChild(option); // Option push select input
+    });
+
+    // Payment status details fetch api lists reload
+    let supplierPaymentStatus = getServiceRequest('/supplierPaymentStatus/alldata');
+    fillDataIntoSelect(selectSupplierPaymentStatus, "Please Select Status..!", supplierPaymentStatus, "name"); // Fill status options values
+
+    // Auto-select standard default status (index 1: completed status or first element depends database entries)
+    selectSupplierPaymentStatus.value = JSON.stringify(supplierPaymentStatus[1]);
+    supplierPayment.suplierpaymentstatus_id = JSON.parse(selectSupplierPaymentStatus.value); // Set object binding
+    
+    // Status indicators highlights validates green colors sets
     prevElementSupplierPaymentStatus = selectSupplierPaymentStatus.previousElementSibling;
     selectSupplierPaymentStatus.style.borderBottom = "4px solid green";
     prevElementSupplierPaymentStatus.style.backgroundColor = "green";
     selectSupplierPaymentStatus.classList.remove("is-invalid");
     selectSupplierPaymentStatus.classList.add("is-valid");
 
-    // inner form eka refresh karawima
-    refreshSupplierPaymentInnerForm();
-
-    btnSupplierPaymentUpdate.classList.add("d-none");
-    btnSupplierPaymentSubmit.classList.remove("d-none");
+    // Edit functions updating layout hide and inserts layout show active sets
+    btnSupplierPaymentUpdate.style.visibility = "hidden"; // Hide update button
+    btnSupplierPaymentSubmit.style.visibility = "visible"; // Show submit save button
 }
-
-// define function for refresh inner form
-const refreshSupplierPaymentInnerForm = () => {
-
-    // association eke class name ekata samanawa simple walin start kara gani
-    supplierpaymentHasGrn = new Object();
-
-
-    // mehi form eka reset kala wita main form ekath reset wana nisa esa kala noheka
-    // formPurchaseOrder.reset();
-    // ema nisa element tika clean kirima sidu karai
-    // selectItem dynamic nisa clean nokarai
-    // dynamic element refill kala yuthuya
-    let items = getServiceRequest('/item/alldata');
-    // code ekai name ekai dekama drop down ekak thula penwa ganima
-    fillDataIntoSelectTwo(selectItem, "Please Select Item..!!", items, "itemcode", "itemname");
-
-    textPreviousDueAmount.value = "";
-    textPaidAmount.value = "";
-    textAfterDueAmount.value = "";
-
-    // colors wenas kala heka
-    setDefault([selectItem, textPreviousDueAmount, textPaidAmount, textAfterDueAmount]);
-
-    btnSupplierPaymentItemUpdate.classList.add("d-none");
-    btnSupplierPaymentItemSubmit.classList.remove("d-none");
-
-    // Reresh inner table
-    // array eka awashya netha main object ekata array eka gani
-    // let purchaseOrders = [];
-
-    let propertyList = [
-        { propertyName: genareateItemName, dataType: "function" },
-        { propertyName: "previousdueamount", dataType: "decimal" },
-        { propertyName: "paidamount", dataType: "decimal" },
-        { propertyName: "afterdueamount", dataType: "decimal" }
-
-    ];
-
-    //call filldataintotable function (talebodyId, datalist, column list, editefunctionname, deletefunctionname, printfunctionname, buttonvisibility) 
-    fillDataIntoInnerTable(tableInnerBody, supplierPayment.supplierpaymentHasGrnList, propertyList, supplierPaymentItemFormRefill, supplierPaymentItemDelete, "#offcanvasBottom");
-
-    $('#tableInner').DataTable();
-
-    // "grnHasItemList" mehi data thibunoth line price genarate kara gatha heka
-
-    // let totalAmount = 0.00;
-    // for (const supplierPaymentItem of supplierPayment.supplierpaymentHasGrnList) {
-    //     totalAmount = parseFloat(totalAmount) + parseFloat(supplierPaymentItem.lineprice);
-
-    // }
-
-    // grn wala athi total amount eka 
-    // ui eke athi total amount field ekata value eka set kirima
-    // total amount eka 0.00 nowe nam value eka ui ekata set karai
-    // if (totalAmount != 0.00) {
-    //     textTotalAmount.value = totalAmount.toFixed(2);
-    //     // object ekata set karai
-    //     supplierPayment.totalamount = textTotalAmount.value;
-    //     // validation color eka set karai
-    //     prevElementTotalAmount = textTotalAmount.previousElementSibling;
-    //     textTotalAmount.style.borderBottom = "4px solid green";
-    //     prevElementTotalAmount.style.backgroundColor = "green";
-    //     textTotalAmount.classList.remove("is-invalid");
-    //     textTotalAmount.classList.add("is-valid");
-    // }
-
-}
-
-const genareateItemName = (dataob) => {
-    // itemcode + " - " + itemname
-    return dataob.grn_id.itemname;
-}
-
-const supplierPaymentItemFormRefill = (ob, index) => { }
-const supplierPaymentItemDelete = (ob, index) => {
-    console.log("Delete Supplier Payment Item", supplierpaymentHasGrn);
-    let userConfirm = window.confirm("Are you sure to remove following item in Supplier Payment...?"
-        // +
-        // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        // "\n Quantity : " + purchaseOrderHasItem.quentity +
-        // "\n Line Price : " + purchaseOrderHasItem.lineprice
-    );
-    if (userConfirm) {
-        window.alert("Item removed successfully from Supplier Payment...!");
-        // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = supplierPayment.supplierpaymentHasGrnList.map(paymentitem => paymentitem.grn_id.id).indexOf(ob.grn_id.id);
-        if (extIndex != -1) {
-            supplierPayment.supplierpaymentHasGrnList.splice(extIndex, 1);
-        }
-        refreshSupplierPaymentInnerForm();
-    }
-}
-
-const buttonGRNItemUpdate = (ob, index) => { }
-const buttonSupplierPaymentItemSubmit = (ob, index) => {
-    console.log("Supplier Payment Item", supplierpaymentHasGrn);
-
-    let userConfirm = window.confirm("Are you sure to add following item to Supplier Payment...?"
-        +
-        "\n Item : " + supplierpaymentHasGrn.grn_id.itemname +
-        "\n After Due Amount : " + supplierpaymentHasGrn.afterdueamount +
-        "\n Paid Amount : " + supplierpaymentHasGrn.paidamount +
-        "\n Previous Due Amount : " + supplierpaymentHasGrn.previousdueamount
-    );
-    if (userConfirm) {
-        window.alert("Item added successfully...!");
-        // main form eke thiyena list ekata ob eka push karai
-        // ema nisa table ekehida data atha.
-        supplierPayment.supplierpaymentHasGrnList.push(supplierpaymentHasGrn);
-        refreshSupplierPaymentInnerForm();
-    }
-
-}
-
-// // Define function to fill supplier names into a <select> dropdown
-// const fillDataIntoSelectSupplier = (parentId, message, dataList) => {
-//     // Clear existing options
-//     parentId.innerHTML = "";
-//
-//     // Add a default disabled placeholder if message is provided
-//     // if (message !== "") {
-//     const optionMsg = document.createElement("option");
-//     optionMsg.value = "";
-//     optionMsg.selected = true;
-//     optionMsg.disabled = true;
-//     optionMsg.innerText = message;
-//     parentId.appendChild(optionMsg);
-//     // }
-//
-//     // Loop through the data and extract supplier names
-//     dataList.forEach(dataOb => {
-//         // if (dataOb.supplier_id && dataOb.supplier_id.suppliername) {
-//         const option = document.createElement("option");
-//         option.value = JSON.stringify(dataOb); // or dataOb.id if needed
-//         option.innerText = dataOb.supplier_id.suppliername;
-//         parentId.appendChild(option);
-//         // }
-//     });
-// };
-
-// // supplier select kala pasu ema supplierta adala total amount eka auto fill wima sadaha
-// // supplier element eka catch kara ganima
-// let selectSupplierElement = document.getElementById("selectSupplier");
-// // supplier element eka change una pasu
-// selectSupplierElement.addEventListener("change", () => {
-// // supplier element eka value eka json parse kara ganima(supplier value eka string format thibena nisa) dan supplier object ekak lebai
-// let supplier = JSON.parse(selectSupplierElement.value);
-// });
-
-
-// GRN data select dropdown ekata fill karala penwana function eka
-const fillDataIntoSelectGRN = (parentId, message, dataList) => {
-    // dropdown eke kalin thibuna options okkoma clean karanawa
-    parentId.innerHTML = "";
-
-    // disabled message placeholder option ekak set karanawa mulinma select wela thiyenna
-    const optionMsg = document.createElement("option");
-    // option eke value property eka empty string set karanawa
-    optionMsg.value = "";
-    // me option eka mulinma select wela thiyenna true karanawa
-    optionMsg.selected = true;
-    // select unata passe aye eya select karanna bari wenna disabled true karanawa
-    optionMsg.disabled = true;
-    // option eke user-facing display text eka set karanawa
-    optionMsg.innerText = message;
-    // dropdown container select element ekata option optionMsg add karanawa
-    parentId.appendChild(optionMsg);
-
-    // database eken labuna grn records arrays data list loop karanawa
-    dataList.forEach(dataOb => {
-        // new dropdown option element ekak create karagannawa
-        const option = document.createElement("option");
-        // select option value ekata data object eka string format ekata convert karala add karanawa
-        option.value = JSON.stringify(dataOb);
-        
-        // brand name repeat wena eka nawatthan unique brand names list ekak ganna array ekak hadagannawa
-        let brands = [];
-        // grn record eke grnHasItemList property eka thiyeda balanawa
-        if (dataOb.grnHasItemList) {
-            // grn item has list loop karala items access karanawa
-            dataOb.grnHasItemList.forEach(grnItem => {
-                // item objects valid name brand name unique checklist filter karanawa
-                if (grnItem.item_id && grnItem.item_id.brand_id && grnItem.item_id.brand_id.name && !brands.includes(grnItem.item_id.brand_id.name)) {
-                    // unique check pass una brand name list ekata push karanawa
-                    brands.push(grnItem.item_id.brand_id.name);
-                }
-            });
-        }
-        // unique brands names join function use karala comma-separated string format ekata hadagannawa
-        let brandNames = brands.join(", ");
-        
-        // option elements displaying string target format eka set karanawa: grnno - suppliername - brands
-        option.innerText = dataOb.grnno + " - " + dataOb.purchaserequest_id.supplier_id.suppliername + " - " + brandNames;
-        // select drop down structure element parentId option element check push karanawa
-        parentId.appendChild(option);
-        
-    });
-};
-
-
-
-

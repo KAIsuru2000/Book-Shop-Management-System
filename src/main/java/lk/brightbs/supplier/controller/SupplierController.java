@@ -60,7 +60,7 @@ public class SupplierController {
 		supplierView.addObject("loggedusername", auth.getName());
 
 		// title eka penwimata
-		supplierView.addObject("title", "Supplier management | Bright Book Shop");
+		supplierView.addObject("title", "Supplier Registration | Bright Book Shop");
 
 		return supplierView;
 	}
@@ -131,6 +131,11 @@ public class SupplierController {
 		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "SUPPLIER");
 		if (userPrivilege.getDel()) {
 			// check ext
+            //        supplier delete nm
+            if (supplier.getSupplierstatus_id().getName().equals("Deleted")) {
+
+                return " - This supplier has already been deleted..!";
+            }
 			// exting user object ekak ganima
 			Supplier extSupplier = supplierDao.getReferenceById(supplier.getId());
 			if (extSupplier == null) {

@@ -47,11 +47,11 @@ const refreshItemTable = () => {
 // table ekehi status eka penwimata 
 const getItemStatus = (dataob) => {
     let statusName = dataob.itemstatus_id.name;
-    if (statusName == "Instock") {
+    if (statusName == "Active") {
         return '<i class="fa-solid fa-store fa-beat fa-xl" style="color: #00fa11;" data-bs-toggle="tooltip"\n' +
             '                                                title="' + statusName + '"></i>';
     }
-    if (statusName == "Out of Stock") {
+    if (statusName == "Inactive") {
         return '<i class="fa-solid fa-store-slash fa-beat fa-xl" style="color:rgb(249, 236, 1);" data-bs-toggle="tooltip"\n' +
             '                                                title="' + statusName + '"></i>';
     }
@@ -79,54 +79,144 @@ const getItemStatus = (dataob) => {
 // }
 
 // form refill function
+// form refill karana functions eka update liyanawa
 const rowFormRefill = (dataob, rowIndex) => {
-    console.log("Update");
-    console.log(dataob);
+    // console log print liyanawa refill start eka check karanna
+    console.log("Update", dataob);
 
-
-
-    // refill value in to element
-
-
-    let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + dataob.subcategory_id.category_id.id);
-    fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
-
+    // category object value eka element drop down ekata fill karanawa
     selectItemCategory.value = JSON.stringify(dataob.subcategory_id.category_id);
+    // validation color success green add karanawa
+    selectItemCategory.style.borderBottom = "4px solid green";
+    selectItemCategory.previousElementSibling.style.backgroundColor = "green";
 
-    let brandByCategory = getServiceRequest('/brand/bycategory/' + dataob.subcategory_id.category_id.id);
-    fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
-
-    selectItemBrand.value = JSON.stringify(dataob.brand_id);
+    // subcategories list check request aragena dynamic element fill block call karanawa
+    let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + dataob.subcategory_id.category_id.id);
+    // subcategory drop down list fill block method execution
+    fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
+    // saved subcategory reference selection active set block
     selectItemSubcategory.value = JSON.stringify(dataob.subcategory_id);
-    selectItemStatus.value = JSON.stringify(dataob.itemstatus_id);
-    textItemName.value = dataob.itemname;
-    textROP.value = dataob.rop;
-    textROQ.value = dataob.roq;
-    textNote.value = dataob.note;
+    selectItemSubcategory.style.borderBottom = "4px solid green";
+    selectItemSubcategory.previousElementSibling.style.backgroundColor = "green";
 
-    //update kirima sadaha awashya object 2 sada ganima
+    // brand elements matches category select list aragena fill settings
+    let brandByCategory = getServiceRequest('/brand/bycategory/' + dataob.subcategory_id.category_id.id);
+    // brand selection dropdown details update map
+    fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
+    // brand value set active selection bindings
+    selectItemBrand.value = JSON.stringify(dataob.brand_id);
+    selectItemBrand.style.borderBottom = "4px solid green";
+    selectItemBrand.previousElementSibling.style.backgroundColor = "green";
+
+    // status check dropdown values selection restore settings
+    selectItemStatus.value = JSON.stringify(dataob.itemstatus_id);
+    selectItemStatus.style.borderBottom = "4px solid green";
+    selectItemStatus.previousElementSibling.style.backgroundColor = "green";
+
+    // name configurations map text values
+    textItemName.value = dataob.itemname;
+    textItemName.style.borderBottom = "4px solid green";
+    textItemName.previousElementSibling.style.backgroundColor = "green";
+
+    // rop details fields values indicators
+    textROP.value = dataob.rop;
+    textROP.style.borderBottom = "4px solid green";
+    textROP.previousElementSibling.style.backgroundColor = "green";
+
+    // roq elements restore value borders
+    textROQ.value = dataob.roq;
+    textROQ.style.borderBottom = "4px solid green";
+    textROQ.previousElementSibling.style.backgroundColor = "green";
+
+    // update models verification configurations sets
     item = JSON.parse(JSON.stringify(dataob));
     oldItem = JSON.parse(JSON.stringify(dataob));
 
-    console.log("item", item);
-    console.log("oldItem", oldItem);
+    // Dynamic category attribute list select components render details method calls
+    let attributes = getServiceRequest('/categoryAttribute/bysubcategory/' + dataob.subcategory_id.id);
+    renderDynamicAttributes(attributes);
 
-    //     hide add button
+    // saved attributes array matches search selections active block
+    if (dataob.itemHasAttributeOptionList) {
+        // list loop execution start
+        dataob.itemHasAttributeOptionList.forEach(savedOption => {
+            let opt = savedOption.attribute_option_id;
+            let selects = document.querySelectorAll("[id^='selectAttribute']");
+            // select components loops
+            selects.forEach(select => {
+                let attrId = parseInt(select.getAttribute("data-attribute-id"));
+                // option targets check mappings
+                if (opt.category_attribute_id && opt.category_attribute_id.id === attrId) {
+                    for (let i = 0; i < select.options.length; i++) {
+                        let optVal = select.options[i].value;
+                        if (optVal !== "") {
+                            let parsedOpt = JSON.parse(optVal);
+                            // option id verify check matching
+                            if (parsedOpt.id === opt.id) {
+                                select.selectedIndex = i;
+                                // success color borders
+                                select.style.borderBottom = "4px solid green";
+                                select.previousElementSibling.style.backgroundColor = "green";
+                                select.classList.remove("is-invalid");
+                                select.classList.add("is-valid");
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    // dynamic parameters mapping validation binding settings updates
+    validateAttributeSelect();
+
+    // custom details inputs resolves search trace
+    let brandName = dataob.brand_id.name;
+    let subcategoryName = dataob.subcategory_id.name;
+    let generatedBase = brandName + " " + subcategoryName;
+    
+    // attributes values map collect lists
+    let attributeNamesList = [];
+    if (dataob.itemHasAttributeOptionList) {
+        dataob.itemHasAttributeOptionList.forEach(savedOption => {
+            attributeNamesList.push(savedOption.attribute_option_id.name);
+        });
+    }
+    
+    // base combined elements
+    let combinedBaseAndAttr = generatedBase;
+    if (attributeNamesList.length > 0) {
+        combinedBaseAndAttr += " " + attributeNamesList.join(" ");
+    }
+    
+    // custom text difference traces
+    let customTextVal = "";
+    if (dataob.itemname.startsWith(combinedBaseAndAttr)) {
+        customTextVal = dataob.itemname.replace(combinedBaseAndAttr, "").trim();
+    }
+    
+    // custom field updates sets values
+    let customInput = document.getElementById("textCustomInput");
+    if (customInput) {
+        customInput.value = customTextVal;
+        customInput.style.borderBottom = "4px solid green";
+        customInput.previousElementSibling.style.backgroundColor = "green";
+        customInput.classList.remove("is-invalid");
+        customInput.classList.add("is-valid");
+    }
+
+    // buttons actions toggles
     divButtonAdd.style.display = "none";
-
-//     show update button
     divButtonUpdate.style.display = "flex";
-
-
 }
 
+// delete action table elements logs method liyanawa
 const rowDelete = (dataob, rowIndex) => {
-
+    // console log write
     console.log("Delete", dataob, rowIndex);
 
-    // activeTableRow(tableEmployeeBody, index, "red");
-
-
+    // user confirmation alerts maps
     let userConfirm = window.confirm("Are you sure to delete following item...?" +
         "\n Item code : " + dataob.itemcode +
         "\n Item name : " + dataob.itemname +
@@ -134,141 +224,114 @@ const rowDelete = (dataob, rowIndex) => {
         "\n Item Reorder Quantity : " + dataob.roq
     );
     if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
+        // delete requests http method call trigger
         let deleteResponce = getHTTPServiceRequest("/item/delete", "DELETE", dataob);
 
         if (deleteResponce == "OK") {
             window.alert("Delete successfully ");
             refreshItemTable();
             refreshItemForm();
-
         } else {
             window.alert("Delete not successfully" + deleteResponce);
-
         }
-
-
-
-
     }
-
 }
 
-//item table eka thula athi view button eke function eka
+// view detail row offcanvas popup methods
 const itemRowView = (dataob, rowIndex) => {
+    // console trace details
     console.log("View", dataob, rowIndex);
-    // html wala athi modal ekak open weema
+    // view modal labels values set mapping blocks
     brandNameView.innerText = dataob.brand_id.name;
     SubcategoryView.innerText = dataob.subcategory_id.name;
     itemNameView.innerText = dataob.itemname;
     statusView.innerText = dataob.itemstatus_id.name;
     rOPView.innerText = dataob.rop
     rOQView.innerText = dataob.roq;
-    if (dataob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = dataob.note;
-    }
 
-    $("#offcanvasBottomItemView").offcanvas("show"); // show the offcanvas
-
+    // view model targets offcanvas trigger
+    $("#offcanvasBottomItemView").offcanvas("show");
 }
 
-//print offcanvas model eka thula athi print button eka function eka
+// print options configuration triggers
 const buttonPrintRow = () => {
-
-    //aluth window ekak open kara ganima
+    // print window open actions
     let newWindow = window.open();
-    //ema window ekata title ekak demima
-    //title eke html code tika venama verible ekakata dama ganima
-    // let printView = "<head><title>Bright Book Shop | Employee Details</title><link rel='icon' href='/image/title.png'><link rel='stylesheet' href='/bootstrap-5.2.3/css/bootstrap.min.css'><script src='/bootstrap-5.2.3/js/bootstrap.bundle.min.js'></script><link rel='stylesheet' href='/fontawesome-free-6.4.2/css/all.css'><link rel='stylesheet' href='/Style/printView.css'></head>" + "<body>" + bodyView.outerHTML +
-    //     "</body>";
     newWindow.document.write(`
             <html>
             <head>
                 <title>Print View - Item Details</title>
                 <!-- link bootstrp min css file -->
     <link rel="stylesheet" href="/bootstrap-5.2.3/css/bootstrap.min.css">
-
     <!--link bootstrap js file  -->
     <script src="/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
-    
                 <!-- link css file -->
                     <link rel="stylesheet" href="/Style/printView.css">
             </head>
             <body>
+<!--            html file eka thula athi print view ekata sadu view ekehi body eke id eka methanata laba dei-->
                 ${document.querySelector('.bodyPrintView').outerHTML}
             </body>
             </html>
         `);
-    //open wana tab eka tika welawak open wee thibee print ekata open weema
+    // timeout delay print popup actions
     setTimeout(() => {
         newWindow.stop();
         newWindow.print();
         newWindow.close();
-    }, 1500)//1.5 second walata pasuwa block eka run karawai ema pramadaya iilaga piyawarata yaamata pera printView anthargathaya complete wa display kirimata ida salasai
+    }, 1500)
 }
 
-
-// creat function for refersh user form
-//mema function eka browser eka refresh wana thana call karai
-//meya browser refresh function eka thula call karai 
+// form refresh state initialization function
 const refreshItemForm = () => {
-
+    // form inputs configurations clear methods calls
     formItem.reset();
 
-    //create object call item
-    // form ekata enter karana value mehi store we
+    // empty model object maps
     item = new Object();
 
+    // validation colors setDefault helpers lists elements clear
+    setDefault([selectItemCategory, selectItemBrand, selectItemSubcategory, selectItemStatus, textItemName, textROP, textROQ]);
 
-
-    //validation colors iwath kirima
-    setDefault([selectItemCategory, selectItemBrand, selectItemSubcategory, selectItemStatus, textItemName, textROP, textROQ, textNote]);
-
-    // dynamic element refill kala yuthuya
-    let brand = getServiceRequest('/brand/alldata')
+    // dynamic drop down components inputs data sets aragannawa
     let categories = getServiceRequest('/Category/alldata');
-
-
     let itemStatus = getServiceRequest('/itemStatus/alldata');
-    let subCategory = getServiceRequest('/subCategory/alldata');
 
-
-    fillDataIntoSelect(selectItemBrand, "Please Select brand..!", brand, "name");
+    // categories input field data settings fill
     fillDataIntoSelect(selectItemCategory, "Please Select categories..!", categories, "name");
+    
+    // subcategory clean blank options map
+    fillDataIntoSelect(selectItemSubcategory, "Please Select Item Subcategory..!", [], "name");
+    
+    // brand default empty set configurations mapping
+    fillDataIntoSelect(selectItemBrand, "Please Select brand..!", [], "name");
 
+    // item status drop downs values lists fills
     fillDataIntoSelect(selectItemStatus, "Please Select itemStatus..!", itemStatus, "name");
-    // status eka form eka load wana wita select wi thibimata
-    // selected value eka string walin ena nisa stringify kara gani
     selectItemStatus.value = JSON.stringify(itemStatus[0]);
-    // ema value eka newatha object ekata set kala yuththa object format ekeni
     item.itemstatus_id = JSON.parse(selectItemStatus.value);
-    // status field eka sadaha validation colour eka laba deema
+    
+    // state colors set green
     prevElementItemStatus = selectItemStatus.previousElementSibling;
     selectItemStatus.style.borderBottom = "4px solid green";
     prevElementItemStatus.style.backgroundColor = "green";
     selectItemStatus.classList.remove("is-invalid");
     selectItemStatus.classList.add("is-valid");
 
-    fillDataIntoSelect(selectItemSubcategory, "Please Select Item Subcategory..!", subCategory, "name");
+    // placeholder elements dynamic layout rows resets
+    document.getElementById("divDynamicAttributesRow").innerHTML = "";
 
-    //     hide update button
+    // button layouts switches
     divButtonUpdate.style.display = "none";
-
-//     show add button
     divButtonAdd.style.display = "flex";
 }
 
-// item category wala id eka cach karagena
-//eyata link ekak nathi nisa binding validation en netha
-// ema category element eka change una pasu anonimus function ekak add kirima >> dynamic nisa ehi value eka category variable ekata aragena (ema value eka string type nisa jason parse kara ganna) >> emagin ena category object eka value eka if magin check kirima >> ema category object ekehi name eka anuwa element disable , unable kala heka
+// category change selection trigger mappings event listener liyanawa
 let selectCategoryElement = document.getElementById("selectItemCategory");
 selectCategoryElement.addEventListener("change", () => {
     let category = JSON.parse(selectCategoryElement.value);
 
-    // validation color laba deema
+    // category valid border colors states checked
     if (selectCategoryElement.value != "") {
         prevElementItemCategory = selectItemCategory.previousElementSibling;
         selectItemCategory.style.borderBottom = "4px solid green";
@@ -283,60 +346,20 @@ selectCategoryElement.addEventListener("change", () => {
         selectItemCategory.classList.remove("is-valid");
     }
 
-
-    if (category.name == "Book") {
-        // elementId.disabled = "disabled";
-    }
-
-    if (category.name == "pen") {
-        // elementId.disabled = "disabled";
-    }
-
-    //mehi name eka item input ekata set kirima
-    // textItemName.value = category.name;
-
-
-
-
-    // category magin sub category eka load kirima >> eya er eka magin haduna gatha yuthuya
-    //steps --> 1.workbench wala query eka liwima
-    //   2.ema query eka adala dao file ekata demima
-    //      3.adala controller update kirima
-    //      4.url ekehi test kirima
-    // er ekehi subcategory ha category athara aththa many to one ekaki >> ema nisa category value ekakata sambanda subcategory value godak atha. >> ema niasa selected category ekata adala subcategory tika ganimata heki wiya yuthuya
-    // e sadaha subcategorydao file ekehi qureyak liya ema output ekata subcategorycontroller thula service ekak sada ema querry ekahi out put eka genwa gatha heka >> test kala eka magin parameter ekak dunnoth controller ekai dao ekai update wei 
-    // url wala test kala pasu values param pass wenawanam param pas karana krama 2ki 
-    // 1.query param -url patha ekehi "?" ekan pasuwa ena name value pairs lesa yai "&" walin pasu anith value eka(categoryid=1) >> controller service ekehi value ekathula params lesa eka param ekehi nama diya yuthuya
-    // 2.path param - parameter value eka patha ekama yawima >> url eke thibena thana "/" pasuwa value eka yama "/" pasu anith value eka(1)
-    // inpasu query ekata gos byCatogory(Integer categoryid) lesa add kara ganima
-    // inpasu ema category id eka querry ekata pass kirima
-    //ema url eka magin data gena adala dropdown ekata set kala heka
-
-
-
+    // category ID pass karala subcategory list filter request eka yawanawa
     let subcategoriesByCategory = getServiceRequest('/subcategory/bycategory?categoryid=' + category.id);
-
+    // subcategory drop down selection data update
     fillDataIntoSelect(selectItemSubcategory, "Please Select subcategories..!!", subcategoriesByCategory, "name");
     item.subcategory_id = null;
 
-
-    // category and brand athara sambandaya dekwimaa
-    //mehidee category eka magin brand eka ganimata hekiwana paridi sadai
-    //given category ekata adalawa brand ganimata nam brand has category table eka haraha data ganimata sidu wei >> apa dena category id ekata samana wana brand eka association table eka thula sitiya yuthuya
-    //steps --> 1.workbench wala query eka liwima
-    //   2.ema query eka adala dao file ekata demima >> association table ekata entity file sadima
-    //      3.adala controller update kirima
-    //      4.url ekehi test kirima
-
-    // brand table ekehi query eka liya test kirima D-23-2.25
-    //association table ekata entity yak liwima
-    // meya path veriable(param) akarayata sadai
-
-    let brandByCategory = getServiceRequest('/brand/bycategory/' + category.id);
-
-    fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
+    // brand option values clear dynamic category switch parameters maps
+    fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", [], "name");
     item.brand_id = null;
 
+    // dynamic attribute selection rows clears
+    document.getElementById("divDynamicAttributesRow").innerHTML = "";
+
+    // indicators validation flags resets red mapping
     spanItemNameElement = textItemName.previousElementSibling;
     spanItemBrandElement = selectItemBrand.previousElementSibling;
     spanItemSubcategoryElement = selectItemSubcategory.previousElementSibling;
@@ -354,81 +377,298 @@ selectCategoryElement.addEventListener("change", () => {
     textItemName.classList.remove("is-valid");
     selectItemBrand.classList.remove("is-valid");
     selectItemSubcategory.classList.remove("is-valid");
-    item.itemname = null; //item object add to value null
-
-
-
+    item.itemname = null; // reset itemname null
 });
 
+// subcategory selection event listeners maps details config liyanawa
+let selectSubcategoryElement = document.getElementById("selectItemSubcategory");
+selectSubcategoryElement.addEventListener("change", () => {
+    // subcategory selection blank elements checks
+    if (selectSubcategoryElement.value !== "") {
+        let subCategory = JSON.parse(selectSubcategoryElement.value);
+        let categoryId = subCategory.category_id.id;
 
+        // brand category maps endpoint requests trigger
+        let brandByCategory = getServiceRequest('/brand/bycategory/' + categoryId);
+        fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", brandByCategory, "name");
+        item.brand_id = null;
 
+        // categoryAttribute end point path variable dynamic variables aragannawa
+        let attributes = getServiceRequest('/categoryAttribute/bysubcategory/' + subCategory.id);
+        renderDynamicAttributes(attributes);
+    } else {
+        // subcategory empty selection values checks
+        fillDataIntoSelect(selectItemBrand, "Please Select Brand..!!", [], "name");
+        item.brand_id = null;
+        document.getElementById("divDynamicAttributesRow").innerHTML = "";
+    }
+    // real-time name changes update triggers
+    generateItemName();
+});
+
+// brand selection changes trigger logs event listener build
+let selectBrandElement = document.getElementById("selectItemBrand");
+selectBrandElement.addEventListener("change", () => {
+    if (selectBrandElement.value !== "") {
+        item.brand_id = JSON.parse(selectBrandElement.value);
+    } else {
+        item.brand_id = null;
+    }
+
+    // dynamic select boxes updates options match brand id selection refresh
+    const selects = document.querySelectorAll("[id^='selectAttribute']");
+    selects.forEach(select => {
+        const attrId = select.getAttribute("data-attribute-id");
+        const currentValue = select.value;
+        loadAttributeOptions(select, attrId);
+        // option check values mapping verification resets
+        if (currentValue && currentValue !== "") {
+            select.value = currentValue;
+        }
+    });
+
+    // name changes generate updates
+    generateItemName();
+});
+
+// dynamic components layouts columns generation template builds liyanawa
+const renderDynamicAttributes = (attributes) => {
+    const row = document.getElementById("divDynamicAttributesRow");
+    row.innerHTML = ""; // target wrapper reset
+
+    // max 3 dynamic elements check mapping slice list
+    attributes.slice(0, 3).forEach((attr, index) => {
+        const col = document.createElement("div");
+        col.className = "col-3";
+
+        const inputGroup = document.createElement("div");
+        inputGroup.className = "input-group mb-3";
+
+        const label = document.createElement("span");
+        label.className = "input-group-text lablBg";
+        label.innerHTML = attr.name + ` : <span class="fw-bold text-danger">*</span>`;
+
+        const select = document.createElement("select");
+        select.id = "selectAttribute" + index;
+        select.className = "form-select";
+        select.setAttribute("data-attribute-id", attr.id);
+        select.setAttribute("data-attribute-index", index);
+
+        // input select details event logic triggers
+        select.addEventListener("change", () => {
+            validateAttributeSelect();
+            generateItemName();
+        });
+
+        inputGroup.appendChild(label);
+        inputGroup.appendChild(select);
+        col.appendChild(inputGroup);
+        row.appendChild(col);
+
+        // attribute options retrieve triggers
+        loadAttributeOptions(select, attr.id);
+    });
+
+    // custom text detail column build elements map liyanawa
+    const customCol = document.createElement("div");
+    customCol.className = "col-3";
+
+    const customInputGroup = document.createElement("div");
+    customInputGroup.className = "input-group mb-3";
+
+    const customLabel = document.createElement("span");
+    customLabel.className = "input-group-text lablBg";
+    customLabel.innerHTML = `Custom Detail : <span class="text-danger">(optional)</span>`;
+
+    const customInput = document.createElement("input");
+    customInput.type = "text";
+    customInput.id = "textCustomInput";
+    customInput.className = "form-control";
+    customInput.placeholder = "Enter Custom Detail";
+    
+    // event changes updates logic binding
+    customInput.addEventListener("input", () => {
+        if (customInput.value.trim() !== "") {
+            customInput.style.borderBottom = "4px solid green";
+            customInput.previousElementSibling.style.backgroundColor = "green";
+            customInput.classList.remove("is-invalid");
+            customInput.classList.add("is-valid");
+        } else {
+            customInput.style.borderBottom = "1px solid #ced4da";
+            customInput.previousElementSibling.style.backgroundColor = "black";
+            customInput.classList.remove("is-invalid");
+            customInput.classList.remove("is-valid");
+        }
+        generateItemName();
+    });
+
+    customInputGroup.appendChild(customLabel);
+    customInputGroup.appendChild(customInput);
+    customCol.appendChild(customInputGroup);
+    row.appendChild(customCol);
+}
+
+// attribute options loading checks triggers
+const loadAttributeOptions = (select, attributeId) => {
+    let brandId = "";
+    if (item.brand_id && item.brand_id.id) {
+        brandId = item.brand_id.id;
+    }
+
+    let url = `/attributeOption/byAttributeAndBrand?attributeId=${attributeId}`;
+    if (brandId !== "") {
+        url += `&brandId=${brandId}`;
+    }
+
+    const options = getServiceRequest(url);
+    fillDataIntoSelect(select, "Select Option", options, "name");
+}
+
+// attribute select box binding validation logic liyanawa
+const validateAttributeSelect = () => {
+    // items list variables check array resets
+    item.itemHasAttributeOptionList = [];
+
+    const selects = document.querySelectorAll("[id^='selectAttribute']");
+    selects.forEach(select => {
+        if (select.value && select.value !== "") {
+            try {
+                let optionOb = JSON.parse(select.value);
+                // attributes updates select array lists pushes
+                item.itemHasAttributeOptionList.push({
+                    attribute_option_id: optionOb
+                });
+                
+                // validation indicators green
+                select.style.borderBottom = "4px solid green";
+                select.previousElementSibling.style.backgroundColor = "green";
+                select.classList.remove("is-invalid");
+                select.classList.add("is-valid");
+            } catch (e) {}
+        } else {
+            // error indicators red border colors
+            select.style.borderBottom = "4px solid red";
+            select.previousElementSibling.style.backgroundColor = "red";
+            select.classList.add("is-invalid");
+            select.classList.remove("is-valid");
+        }
+    });
+}
+
+// real-time auto name build calculations liyanawa
 const generateItemName = () => {
-
     console.log("generateItemName", item);
 
-    // validation wala colour eka laba deema sadaha
+    // spans target label backgrounds reference indicators
     spanElement = textItemName.previousElementSibling;
 
-    // name eka genarate karanna subcategory brand field fill wi thibiya yuthuya
-    if (item.brand_id != null && item.subcategory_id != null && item.subcategory_id.name != null) {
-        let category = item.subcategory_id.category_id;
-        let brand = item.brand_id;
-        let subCategory = item.subcategory_id;
+    let brandName = "";
+    if (item.brand_id && item.brand_id.name) {
+        brandName = item.brand_id.name;
+    }
 
-        textItemName.value = brand.name + " " + subCategory.name;
+    let subcategoryName = "";
+    if (item.subcategory_id && item.subcategory_id.name) {
+        subcategoryName = item.subcategory_id.name;
+    }
 
-        textItemName.style.borderBottom = "4px solid red";
-        spanElement.style.backgroundColor = "red";
-        textItemName.classList.add("is-invalid");
-        textItemName.classList.remove("is-valid");
-        item.itemname = textItemName.value; //value add to item object
+    // attributes options maps text array builds
+    let attributeValues = [];
+    const selects = document.querySelectorAll("[id^='selectAttribute']");
+    selects.forEach(select => {
+        if (select.value && select.value !== "") {
+            try {
+                let optionOb = JSON.parse(select.value);
+                if (optionOb && optionOb.name) {
+                    attributeValues.push(optionOb.name);
+                }
+            } catch (e) {}
+        }
+    });
 
+    // custom field input details text resolutions
+    const customInput = document.getElementById("textCustomInput");
+    let customText = "";
+    if (customInput && customInput.value) {
+        customText = customInput.value.trim();
+    }
+
+    // name construct blocks execution
+    let nameParts = [];
+    if (brandName) nameParts.push(brandName);
+    if (subcategoryName) nameParts.push(subcategoryName);
+    nameParts = nameParts.concat(attributeValues);
+    if (customText) nameParts.push(customText);
+
+    let generatedName = nameParts.join(" ");
+    textItemName.value = generatedName;
+
+    // checks validation required options selects parameters logic
+    if (brandName && subcategoryName && attributeValues.length === selects.length) {
+        // success state style green
+        textItemName.style.borderBottom = "4px solid green";
+        spanElement.style.backgroundColor = "green";
+        textItemName.classList.remove("is-invalid");
+        textItemName.classList.add("is-valid");
+        item.itemname = generatedName;
     } else {
-
-        textItemName.value = "";
+        // fail state colors styles red
         textItemName.style.borderBottom = "4px solid red";
         spanElement.style.backgroundColor = "red";
         textItemName.classList.add("is-invalid");
         textItemName.classList.remove("is-valid");
-        item.itemname = null; //item object add to value null
-
+        item.itemname = null;
     }
 }
 
-//define function for get item form error
-//form eke ek ek property check kara values naththan msg ekak return kara ganima sdaha
+// form error messages target collections liyanawa
 const checkItemFormError = () => {
     let errors = "";
 
+    // validations select items brand check
     if (item.brand_id == null) {
         errors = errors + "Please select item brand...\n";
     }
+    // validation subcategory checks
     if (item.subcategory_id == null) {
         errors = errors + "Please select item subcategory...\n";
     }
-
+    // validation item status selects checks
     if (item.itemstatus_id == null) {
         errors = errors + "Please select item status...\n";
     }
+    // validation rop check values
     if (item.rop == null) {
         errors = errors + "Please enter rop...\n";
     }
+    // validation roq details check
     if (item.roq == null) {
         errors = errors + "Please enter roq...\n";
+    }
+
+    // attributes options select list checks
+    const selects = document.querySelectorAll("[id^='selectAttribute']");
+    let dynamicAttrErrors = false;
+    selects.forEach(select => {
+        if (!select.value || select.value === "") {
+            dynamicAttrErrors = true;
+        }
+    });
+    if (dynamicAttrErrors) {
+        errors = errors + "Please select all dynamic attributes...\n";
     }
 
     return errors;
 }
 
-//define function for submit item object
+// form submission handler details mapping liyanawa
 const submitItemForm = () => {
-
     console.log('Add Item', item);
 
-    //check form error for required element
+    // check form error validations logs
     let errors = checkItemFormError();
 
-    //get user confurmation
+    // confirm submit requests alerts
     if (errors == "") {
         let userConfirm = window.confirm("Are you sure to add following item details" +
             "\n Item name : " + item.itemname +
@@ -436,15 +676,14 @@ const submitItemForm = () => {
             "\n Item reorder price : " + item.rop
         );
 
-        //call post service
         if (userConfirm) {
+            // submit http POST requests calls
             let postResponce = getHTTPServiceRequest("/item/insert", "POST", item);
             if (postResponce == "OK") {
                 window.alert("Item Added Successfully...!");
                 refreshItemTable();
                 refreshItemForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-
+                $("#offcanvasBottom").offcanvas("hide");
             } else {
                 window.alert("Fail to submit has following error\n" + errors + postResponce);
             }
@@ -452,15 +691,13 @@ const submitItemForm = () => {
     } else {
         window.alert("Form has following errors \n" + errors);
     }
-
 }
 
-//define function for check item updates
+// checks updates check log fields differences liyanawa
 const checkItemFormUpdate = () => {
-
     let updates = "";
 
-    //mulinma veriable eka thibeda balima >> item and olditem >> compair kirima sadaha value thibiya yuthuya
+    // compares items state values old vs new models
     if (item != null && oldItem != null) {
         if (item.subcategory_id.category_id.name != oldItem.subcategory_id.category_id.name) {
             updates = updates + "category is change...! \n";
@@ -471,7 +708,6 @@ const checkItemFormUpdate = () => {
         if (item.subcategory_id.name != oldItem.subcategory_id.name) {
             updates = updates + "subcategory is change...! \n";
         }
-
         if (item.itemstatus_id.name != oldItem.itemstatus_id.name) {
             updates = updates + "item status is change...! \n";
         }
@@ -485,43 +721,48 @@ const checkItemFormUpdate = () => {
             updates = updates + "roq is change...! \n";
         }
 
-        if (item.note != oldItem.note) {
-            updates = updates + "note is change...! \n";
+        // dynamic attribute changes traces compares
+        let dynamicAttrChange = false;
+        let oldAttrs = oldItem.itemHasAttributeOptionList || [];
+        let currentAttrs = item.itemHasAttributeOptionList || [];
+        if (oldAttrs.length !== currentAttrs.length) {
+            dynamicAttrChange = true;
+        } else {
+            for (let i = 0; i < oldAttrs.length; i++) {
+                if (oldAttrs[i].attribute_option_id.id !== currentAttrs[i].attribute_option_id.id) {
+                    dynamicAttrChange = true;
+                    break;
+                }
+            }
         }
-
+        if (dynamicAttrChange) {
+            updates = updates + "attributes is change...! \n";
+        }
     }
     return updates;
-
 }
 
-//define function for update item
+// update buttons action mappings trigger liyanawa
 const buttonItemUpdate = () => {
-
     console.log("item", item);
     console.log("oldItem", oldItem);
 
-    //need to check form error
+    // validations check traces
     let errors = checkItemFormError();
 
-    //get user confurmation
     if (errors == "") {
-
         let updates = checkItemFormUpdate();
         if (updates != "") {
-            let userConfirm = window.confirm("Are you sure to update following user changes \n"
-                + updates
+            let userConfirm = window.confirm("Are you sure to update following user changes \n" + updates);
 
-            );
-
-            //call post service
             if (userConfirm) {
+                // update PUT request triggers call
                 let putResponce = getHTTPServiceRequest("/item/update", "PUT", item);
                 if (putResponce == "OK") {
-                    window.alert("item Added Successfully...!");
+                    window.alert("item Updated Successfully...!");
                     refreshItemTable();
                     refreshItemForm();
-                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-
+                    $("#offcanvasBottom").offcanvas("hide");
                 } else {
                     window.alert("Fail to update has following error\n" + putResponce);
                 }
@@ -529,18 +770,13 @@ const buttonItemUpdate = () => {
         } else {
             window.alert("Nothing to updated \n" + errors);
         }
-
-
-
-
     } else {
         window.alert("Form has following error \n" + errors);
     }
-
 }
 
+// clear button forms action mapping liyanawa
 const clearItemForm = () => {
-
     let userConfirm = window.confirm("Do you need to refresh form...?");
     if (userConfirm) {
         refreshItemForm();

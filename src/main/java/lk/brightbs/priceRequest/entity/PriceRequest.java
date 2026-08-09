@@ -40,9 +40,6 @@ public class PriceRequest {
     // @Length(max = 8 , min = 8)
     private String requestno ;
 
-    @Column(name = "note")
-    private String note ;
-
     @Column(name = "addeddatetime")
     @NotNull
     private LocalDateTime addeddatetime;

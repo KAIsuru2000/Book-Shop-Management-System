@@ -47,7 +47,7 @@ public class PrivilegeController {
         privilegeView.addObject("loggedusername", auth.getName());
 
 		//title eka penwimata
-		privilegeView.addObject("title", "Privilege management | Bright Book Shop");
+		privilegeView.addObject("title", "Privilege Management | Bright Book Shop");
 
         return privilegeView;
     }
@@ -88,6 +88,7 @@ public class PrivilegeController {
 
 		if (userPrivilege.getDel()) {
 			// check ext
+
 
 			try {
 				// delete operator

@@ -1,22 +1,16 @@
 package lk.brightbs.item.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "subcategory")
+@Table(name = "category_attribute")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subcategory {
+public class CategoryAttribute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +19,6 @@ public class Subcategory {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category_id;
+    @JoinColumn(name = "subcategory_id", referencedColumnName = "id")
+    private Subcategory subcategory_id;
 }

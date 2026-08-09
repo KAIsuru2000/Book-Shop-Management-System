@@ -10,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany; // OneToMany relationship use karanna import karagannawa
+import jakarta.persistence.CascadeType; // database operations automatic cascade karaganna import karanawa
+import java.util.List; // java list interface use karanna import karagannawa
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,9 +51,6 @@ public class Item {
     @NotNull
     private BigDecimal roq;
 
-    @Column(name = "note")
-    private String note;
-
     @Column(name = "addeddatetime")
     @NotNull
     private LocalDateTime addeddatetime;
@@ -76,6 +76,11 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "itemstatus_id", referencedColumnName = "id")
     private Itemstatus itemstatus_id;
+
+    // Item ekata adala attributes option list eka cascade edit/delete wena dynamic relationship ekak map karanawa
+    @OneToMany(mappedBy = "item_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    // List class type eka use karala itemHasAttributeOptionList variable eka build karanawa
+    private List<ItemHasAttributeOption> itemHasAttributeOptionList;
 
     // table eka fill kirima sadaha selected data genwa ganimata dao hi query eka
     // sadaha awashya constructer eka sadima >> construnter eka class name ekenma

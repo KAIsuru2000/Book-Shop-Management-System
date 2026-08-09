@@ -51,9 +51,6 @@ public class PurchaseOrder {
     @NotNull
     private BigDecimal totalamount ;
 
-    @Column(name = "note")
-    private String note ;
-
     @Column(name = "addeddatetime")
     @NotNull
     private LocalDateTime addeddatetime;

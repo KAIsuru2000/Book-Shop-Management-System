@@ -1,6 +1,7 @@
 package lk.brightbs.user.dao;
 import java.util.List;
 
+import lk.brightbs.employee.entity.Employee;
 import lk.brightbs.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,11 @@ public interface UserDao extends JpaRepository<User, Integer> {
     // <> = asamana
     @Query(value = "select u from User u where u.username <> ?1 and u.username <> 'Admin' order by u.id desc")
     // list ekak ya yuthuya
-    //log una user name eka parameter ekak lesa gena atha
+    // log una user name eka parameter ekak lesa gena atha
     List<User> findAll(String username);
+
+    // Employee object eka magin adala User object eka database eken laba ganima sadaha query eka
+    @Query("select u from User u where u.employee_id = ?1")
+    User getByEmployee(Employee employee);
     
 }

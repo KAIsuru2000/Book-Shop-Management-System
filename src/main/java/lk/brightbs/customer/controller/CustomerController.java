@@ -50,7 +50,7 @@ public class CustomerController {
         customerView.addObject("loggedusername", auth.getName());
 
 		//title eka penwimata
-		customerView.addObject("title", "Customer management | Bright Book Shop");
+		customerView.addObject("title", "Customer Registration | Bright Book Shop");
 
         return customerView;
     }

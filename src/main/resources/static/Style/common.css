@@ -1,8 +1,8 @@
 
 body {
-    background-color: #6e9099b3;
-    background-repeat: no-repeat;
-    background-position: center;
+    /*background-color: #6e9099b3;*/
+    background: transparent url('../image/bgImage.png') no-repeat center center / cover;
+    background-attachment: fixed;
 }
 
 
@@ -256,4 +256,4 @@ td {
 
 .swal-custom-warning-btn:hover {
     transform: scale(1.08) !important;
-}
+}

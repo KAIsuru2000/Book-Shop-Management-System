@@ -110,12 +110,7 @@ const userRowFormRefill = (dataob, rowIndex) => {
     textUserName.value = dataob.username;
     //email penwima
     emailField.value = dataob.email;
-    //note eka penwima eya optional nisa if else yadimata sidu wei
-    if (dataob.note == null) {
-        textNote.value = "";
-    } else {
-        textNote.value = dataob.note;
-    }
+
     //password eka change kirimata nodei
     passwordField.disabled = true;
     rePasswordField.disabled = true;
@@ -312,7 +307,7 @@ const refreshUserForm = () => {
     oldUser = null;
 
     //validation colors iwath kirima
-    setDefault([selectEmployee, textUserName, passwordField, rePasswordField, emailField, textNote]);
+    setDefault([selectEmployee, textUserName, passwordField, rePasswordField, emailField]);
 
 
     //user form eke employee dropdown ekata enna ona user account hedun nethi ayage list eka
@@ -419,9 +414,6 @@ const checkUserFormUpdate = () => {
         }
         if(user.email != oldUser.email){
             updates = updates + "email is change...! \n";
-        }
-        if(user.note != oldUser.note){
-            updates = updates + "note is change...!! \n";
         }
         if(user.status != oldUser.status){
             updates = updates + "status is change...! \n";

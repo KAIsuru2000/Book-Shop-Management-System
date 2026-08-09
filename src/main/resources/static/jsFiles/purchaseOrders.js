@@ -80,90 +80,134 @@ const generateItemList = (dataob) => {
     //awasanaye roles object eka return karanawa
     return itemList;
 }
-//function for re fill purchase order form
+// Edit button eka click kalama form eka refill wena function eka
 const purchaseOrderFormRefill = (ob, index) => {
+    // console ekata edit karana object eka ha index eka print karanawa
     console.log("Edit", ob, index);
 
-    // refill value in to element -> elementId.value = ob.releventPropertyName
-    textFullName.value = ob.fullname;
+    // pending price lists details server eken request karala gannawa
+    let pendingPriceLists = getServiceRequest('/addPriceList/getPendingList');
+    // selectSupplier dropdown element ekata options fill fillDataIntoSelectSupplier call karanawa
+    fillDataIntoSelectSupplier(selectSupplier, "Select Supplier related to Add Price List..!!", pendingPriceLists);
 
-    textCallingName.value = ob.callingname;
-
-    textNic.value = ob.nic;
-
-    selectGender.value = ob.gender;
-
-    dateDOB.value = ob.dob;
-
-    inputEmail.value = ob.email;
-
-    telMobil.value = ob.mobile;
-
-    if (ob.landno == undefined) {
-        telLand.value = "";
-    } else {
-        telLand.value = ob.landno;
+    // selected add price list options dropdown eke verify karala matches option select checks karanawa
+    let optionExists = false;
+    // selectSupplier options elements loop karanawa
+    for (let option of selectSupplier.options) {
+        // option empty index value options skipping check
+        if (option.value !== "") {
+            // option eke data-addpricelist detail array eka parse objects karanawa
+            let addPriceListObj = JSON.parse(option.getAttribute("data-addpricelist"));
+            // data matches price list id controls matches check
+            if (addPriceListObj && ob.addpricelist_id && addPriceListObj.id === ob.addpricelist_id.id) {
+                // matching option found verify dropdown set values
+                optionExists = true;
+                selectSupplier.value = option.value;
+                break;
+            }
+        }
+    }
+    // matching option dropdown list table collections eke clear nethnam (ex: status changed to completed)
+    if (!optionExists && ob.addpricelist_id) {
+        // dynamic option values build element setup
+        let option = document.createElement("option");
+        // option values assign supplier id JSON
+        option.value = JSON.stringify(ob.supplier_id);
+        // data object attributes binding data-addpricelist
+        option.setAttribute("data-addpricelist", JSON.stringify(ob.addpricelist_id));
+        
+        // brand list filters template structure collections
+        let brands = [];
+        // items loop check brands values mapping
+        if (ob.addpricelist_id.addPriceListHasItemList) {
+            // inner item looping array
+            ob.addpricelist_id.addPriceListHasItemList.forEach(hasItem => {
+                // item name brand names validation constraints checks
+                if (hasItem.item_id && hasItem.item_id.brand_id && hasItem.item_id.brand_id.name) {
+                    // brand name assignment
+                    const brandName = hasItem.item_id.brand_id.name;
+                    // array duplicate checks prevent
+                    if (!brands.includes(brandName)) {
+                        // brand append array list
+                        brands.push(brandName);
+                    }
+                }
+            });
+        }
+        // brand names string comma separator
+        let brandNames = brands.join(", ");
+        // option inner display label template details format
+        option.innerText = ob.addpricelist_id.addpricelistno + " - " + ob.supplier_id.suppliername + " - " + brandNames;
+        // dropdown select component options dynamic addition append
+        selectSupplier.appendChild(option);
+        // select option values active set selection value
+        selectSupplier.value = option.value;
     }
 
-    textAddress.value = ob.address
+    // required date element values refill set
+    dateRequireDate.value = ob.requireddate;
+    // total amount float formats value refill set
+    textTotalAmount.value = parseFloat(ob.totalamount).toFixed(2);
+    // status selection dropdown value refill set
+    selectOrderStatus.value = JSON.stringify(ob.purchaserequeststatus_id);
 
-    if (ob.note == undefined) {
-        textNote.value = "";
-    } else {
-        textNote.value = ob.note;
-    }
+    // valid colors array elements compilation
+    let elementsToGreen = [selectSupplier, dateRequireDate, textTotalAmount, selectOrderStatus];
+    // loops verification colors setup green styles set
+    elementsToGreen.forEach(element => {
+        // element bottom border solid green setup
+        element.style.borderBottom = "4px solid green";
+        // element label blocks background color green setup
+        element.previousElementSibling.style.backgroundColor = "green";
+        // invalid flags validations class name checks clean
+        element.classList.remove("is-invalid");
+        // validation green classes names added
+        element.classList.add("is-valid");
+    });
 
-    selectDesignation.value = JSON.stringify(ob.designation_id);
+    // main objects purchaseOrder clone details duplication parse
+    purchaseOrder = JSON.parse(JSON.stringify(ob));
+    // comparison oldPurchaseOrder clones verification copy values
+    oldPurchaseOrder = JSON.parse(JSON.stringify(ob));
 
-    selectCivil.value = ob.civilstatus;
+    // update details button visible class remove
+    btnPurchaseOrderUpdate.classList.remove("d-none");
+    // add submissions button hide class add
+    btnPurchaseOrderSubmit.classList.add("d-none");
 
-    selectEmpStatus.value = JSON.stringify(ob.employeestatus_id);
+    // offcanvas wrapper layout bootstrap modal components show methods trigger
+    $("#offcanvasBottom").offcanvas("show");
 
-    buttonEmpAdd.style.display = "none";
-
-
-
-
-    //employee = ob
-    //oldEmployee = ob melesa thibuu wita ob array ekak nisa heap eka thula ekma idehi variable 2 ka awita ekak wenas kala wita anikath wenas we.
-    employee = JSON.parse(JSON.stringify(ob));// string kala witra ram ekehi wena wenama seedi heap ekata giya wita 2k lesa pawathi.
-    oldEmployee = JSON.parse(JSON.stringify(ob));
-
-    //form eka refill wana wita model eka open kara ganima jquary magin
-    // $("#staticBackdrop").modal("show");
-
+    // inner form contents items clear refresh inner table elements call
+    refreshPurchaseOrderInnerForm();
 }
 
-//function for delete purchase order form
+// purchase order soft delete karana function eka
 const purchaseOrderDelete = (ob, index) => {
+    // console eke delete karana record id eka print karanawa
     console.log("Delete", ob, index);
 
-    // activeTableRow(tablePurchaseOrderBody, index, "red");
-
-
-    let userConfirm = window.confirm("Are you sure to delete following purchase order...?" +
-        "\n Purchase Order ID : " + ob.id +
-        "\n Purchase Order Date : " + ob.date +
-        "\n Employee designation : " + ob.designation_id.name
+    // confirm message eka display karala confirmation eka gannawa
+    let userConfirm = window.confirm("Are you sure to delete following purchase order...?\n" +
+        "Order No: " + ob.purchaserequestno + "\n" +
+        "Supplier: " + (ob.supplier_id ? ob.supplier_id.suppliername : "N/A")
     );
+    // confirm kala nam DELETE api mapping call karanawa
     if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
-        let deleteResponce = getHTTPServiceRequest("/employee/delete", "DELETE", ob);
+        // DELETE request eka yawanawa
+        let deleteResponse = getHTTPServiceRequest("/purchaseOrders/delete", "DELETE", ob);
 
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshEmployeeTable();
-            refreshEmployeeform();
-
+        // response eka successfully OK nam table update karanawa
+        if (deleteResponse === "OK") {
+            // success alert message eka penwanawa
+            window.alert("Deleted successfully!");
+            // table details and form details refresh clear calls
+            refreshPurchaseOrderTable();
+            refreshPurchaseOrderForm();
         } else {
-            window.alert("Delete not successfully" + deleteResponce);
-
+            // failed errors warnings alert
+            window.alert("Failed to delete:\n" + deleteResponse);
         }
-
-
-
-
     }
 }
 
@@ -204,11 +248,6 @@ const purchaseOrderView = (ob, index) => {
         landNoView.innerText = ob.landno;
     }
     addressView.innerText = ob.address
-    if (ob.note == undefined) {
-        noteView.innerText = "-";
-    } else {
-        noteView.innerText = ob.note;
-    }
     designationView.innerText = ob.designation_id.name;
     civilStatusView.innerText = ob.civilstatus;
     employeeStatusView.innerText = ob.employeestatus_id.name;
@@ -290,94 +329,88 @@ const buttonPurchaseOrderSubmit = () => {
 
 }
 
-//check form update function
+// update kala properties details verification check check function eka
 const checkFormUpdate = () => {
+    // updates updates warning collection empty string set
     let updates = "";
 
-    if (employee != null && oldEmployee != null) {
-
-        if (employee.fullname != oldEmployee.fullname) {
-            updates = updates + "Full name is changed  ....! \n";
+    // purchaseOrder object ha oldPurchaseOrder null check validation
+    if (purchaseOrder != null && oldPurchaseOrder != null) {
+        // supplier id values compare check
+        if (purchaseOrder.supplier_id.id != oldPurchaseOrder.supplier_id.id) {
+            // updates change message string append
+            updates += "Supplier changed from " + oldPurchaseOrder.supplier_id.suppliername + " to " + purchaseOrder.supplier_id.suppliername + "\n";
         }
 
-        if (employee.callingname != oldEmployee.callingname) {
-            updates = updates + "calling name is changed  ....!   " + oldEmployee.callingname + " into " + employee.callingname + "\n";
+        // requireddate values compare check
+        if (purchaseOrder.requireddate != oldPurchaseOrder.requireddate) {
+            // updates change message string append
+            updates += "Required Date changed from " + oldPurchaseOrder.requireddate + " to " + purchaseOrder.requireddate + "\n";
         }
 
-        if (employee.mobile != oldEmployee.mobile) {
-            updates = updates + "mobile no is changed  ....! \n" + oldEmployee.mobile + " -> " + employee.mobile + "\n";
+        // totalamount values compare check
+        if (parseFloat(purchaseOrder.totalamount) != parseFloat(oldPurchaseOrder.totalamount)) {
+            // updates change message string append
+            updates += "Total Amount changed from Rs. " + parseFloat(oldPurchaseOrder.totalamount).toFixed(2) + " to Rs. " + parseFloat(purchaseOrder.totalamount).toFixed(2) + "\n";
         }
 
-        if (employee.nic != oldEmployee.nic) {
-            updates = updates + "nic is changed  ....! \n";
+        // purchaserequeststatus id values compare check
+        if (purchaseOrder.purchaserequeststatus_id.id != oldPurchaseOrder.purchaserequeststatus_id.id) {
+            // updates status message string append
+            updates += "Status changed to " + purchaseOrder.purchaserequeststatus_id.name + "\n";
         }
 
-        if (employee.gender != oldEmployee.gender) {
-            updates = updates + "gender is changed  ....! \n";
-        }
-
-        if (employee.dob != oldEmployee.dob) {
-            updates = updates + "Date of birth is changed  ....! \n";
-        }
-
-        if (employee.email != oldEmployee.email) {
-            updates = updates + "email is changed  ....! \n";
-        }
-
-        if (employee.address != oldEmployee.address) {
-            updates = updates + "address is changed  ....! \n";
-        }
-
-        if (employee.civilstatus != oldEmployee.civilstatus) {
-            updates = updates + "civil status is changed  ....! \n";
-        }
-
-        if (employee.designation_id.name != oldEmployee.designation_id.name) {
-            updates = updates + "Designation is changed  ....! \n";
-        }
-
-        if (employee.employeestatus_id.name != oldEmployee.employeestatus_id.name) {
-            updates = updates + "employee status is changed  ....! \n";
+        // inner table items comparison JSON checks
+        if (JSON.stringify(purchaseOrder.purchaseOrderHasItemList) !== JSON.stringify(oldPurchaseOrder.purchaseOrderHasItemList)) {
+            // updates change message string append
+            updates += "Purchase Order items have changed!\n";
         }
     }
 
-
+    // result differences updates log collection output return
     return updates;
 }
 
-// // form update event function 
-// const buttonPurchaseOrderUpdate = () => {
-
-//     //need to check form errors
-//     let errors = checkFormError();
-//     if (errors == "") {
-//         // need to check form update
-//         let updates = checkFormUpdate();
-//         if (updates == "") {
-//             window.alert("nothing to update..\n");
-//         } else {
-//             //need to get user confirmation
-//             let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-//             if (userConfirm) {
-//                 //call put service
-//                 let putResponce = getHTTPServiceRequest("/employee/update", "PUT", employee);
-//                 if (putResponce == "OK") {
-//                     window.alert("Update Successfully...!");
-//                     refreshPurchaseOrderTable();
-//                     refreshPurchaseOrderform();
-//                     $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-//                 } else {
-//                     window.alert("Failed to update...!" + putResponce);
-//                 }
-//             } else {
-
-//             }
-//         }
-//     } else {
-//         window.alert("something went wrong.. \n" + errors);
-//     }
-
-// }
+// main form update details button event trigger action function eka
+const buttonPurchaseOrderUpdate = () => {
+    // required fields format validations errors list check call
+    let errors = checkFormError();
+    // errors kisith neththan
+    if (errors === "") {
+        // updates change status checks comparison call
+        let updates = checkFormUpdate();
+        // updates string empty nam change kisith natha warning status
+        if (updates === "") {
+            // window alert alert empty notifications
+            window.alert("Nothing to update!");
+        } else {
+            // modifications user updates confirmation confirm alert
+            let userConfirm = window.confirm("Are you sure to update this Purchase Order with following changes?\n" + updates);
+            // user confirm verification ok clicks
+            if (userConfirm) {
+                // PUT service update endpoint query api request send
+                let putResponse = getHTTPServiceRequest("/purchaseOrders/update", "PUT", purchaseOrder);
+                // response status checks checks OK response
+                if (putResponse === "OK") {
+                    // successfully updated alert display messages
+                    window.alert("Purchase Order updated successfully!");
+                    // table data list refresh call
+                    refreshPurchaseOrderTable();
+                    // form configurations layout reload clean calls
+                    refreshPurchaseOrderForm();
+                    // offcanvas layout close hide bootstrap components
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // server side processing fails warn
+                    window.alert("Failed to update:\n" + putResponse);
+                }
+            }
+        }
+    } else {
+        // input fields missing values alert format warnings
+        window.alert("Please fill all required fields correctly:\n" + errors);
+    }
+}
 
 // form delete event function 
 const buttonPurchaseOrderDelete = () => {
@@ -390,6 +423,9 @@ const refreshPurchaseOrderForm = () => {
     // main object ekata (purchaseOrder) list ekak (purchaseOrderHasItemList) add karala thamai inner form eka dewal addd kala gaththaa
     purchaseOrder.purchaseOrderHasItemList = new Array();
 
+    // parana purchase order object eka comparison walata null karala initialize karanawa
+    oldPurchaseOrder = null;
+
     // set min and max value for reqired date
     let minDate = new Date();
     minDate.setDate(minDate.getDate() + 5);
@@ -401,7 +437,7 @@ const refreshPurchaseOrderForm = () => {
     formPurchaseOrder.reset();
 
     //validation colors iwath kirima main form sadaha
-    setDefault([selectSupplier, dateRequireDate, textTotalAmount, textNote, selectOrderStatus]);
+    setDefault([selectSupplier, dateRequireDate, textTotalAmount, selectOrderStatus]);
 
     // dynamic element refill kala yuthuya
     let pendingPriceLists = getServiceRequest('/addPriceList/getPendingList');

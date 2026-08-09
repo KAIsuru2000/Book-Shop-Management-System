@@ -38,7 +38,7 @@ public class LoyaltycustomerController {
         ModelAndView loyaltycustomerView = new ModelAndView();
         loyaltycustomerView.setViewName("loyaltycustomer.html");
         loyaltycustomerView.addObject("loggedusername", auth.getName());
-        loyaltycustomerView.addObject("title", "Loyalty Customer management | Bright Book Shop");
+        loyaltycustomerView.addObject("title", "Manage Loyalty Cards | Bright Book Shop");
 
         return loyaltycustomerView;
     }
