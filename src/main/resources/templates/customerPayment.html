@@ -188,8 +188,8 @@
                                             <input type="text" placeholder="Enter Cash Amount" class="form-control"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textCashAmount"
-                                                onkeyup="textValidator(this, '^.*$', 'customerPayment', 'cashamount'); calculateSplitTotal()"
-                                                onclick="textValidator(this, '^.*$', 'customerPayment', 'cashamount')"
+                                                onkeyup="handleCashAmountInput(); calculateSplitTotal()"
+                                                onclick="textValidator(this, '^.*$', 'customerPayment', 'cashamount'); calculateSplitTotal()"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the customer's Cash Amount correctly here.">
                                         </div>
@@ -211,8 +211,8 @@
                                             <input type="text" placeholder="Enter Card Amount" class="form-control"
                                                 aria-label="Sizing example input"
                                                 aria-describedby="inputGroup-sizing-default" id="textCardAmount"
-                                                onkeyup="textValidator(this, '^.*$', 'customerPayment', 'cardamount'); calculateSplitTotal()"
-                                                onclick="textValidator(this, '^.*$', 'customerPayment', 'cardamount')"
+                                                onkeyup="handleCardAmountInput(); calculateSplitTotal()"
+                                                onclick="textValidator(this, '^.*$', 'customerPayment', 'cardamount');calculateSplitTotal()"
                                                 data-bs-toggle="tooltip"
                                                 title="Enter the customer's Card Amount correctly here.">
                                         </div>
@@ -221,6 +221,52 @@
 
                                 </div>
                                 <!-- Card Amount area end-->
+
+                                <!-- Card Type area start-->
+                                <div class="row mt-3" id="divCardType">
+
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Card Type &nbsp; &nbsp; &nbsp;
+                                                &nbsp; &nbsp; &nbsp; &nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <select class="form-select" id="selectCardType"
+                                                    onchange="selectStaticElementValidater(this , 'customerPayment', 'cardtype')"
+                                                    data-bs-toggle="tooltip" title="Select the Card Type correctly here.">
+                                                <option value="" selected disabled>Select Card Type</option>
+                                                <option value="VISA">VISA</option>
+                                                <option value="MASTER">MASTER</option>
+                                                <option value="AMEX">AMEX</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+
+                                </div>
+                                <!-- Card Type area end-->
+
+                                <!-- Reference No area start-->
+                                <div class="row mt-3" id="divReferenceNo">
+
+                                    <div class="col-3"></div>
+                                    <div class="col-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text lablBg">Reference No &nbsp; &nbsp; &nbsp;
+                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
+                                                <span class="fw-bold text-danger">*</span></span>
+                                            <input type="text" placeholder="
+                                            Enter Reference No" class="form-control" aria-label="Sizing example input"
+                                                   aria-describedby="inputGroup-sizing-default" id="textReferenceNo"
+                                                   onkeyup="textValidator(this, '^.*$', 'customerPayment', 'referenceno')"
+                                                   onclick="textValidator(this, '^.*$', 'customerPayment', 'referenceno')"
+                                                   data-bs-toggle="tooltip" title="Enter the Card Machine Bill No correctly here.">
+                                        </div>
+                                    </div>
+                                    <div class="col-3"></div>
+
+                                </div>
+                                <!-- Reference No area end-->
 
 
 
@@ -273,51 +319,7 @@
                                 </div>
                                 <!-- Balance Amount area end-->
 
-                                <!-- Card Type area start-->
-                                <div class="row mt-3" id="divCardType">
 
-                                    <div class="col-3"></div>
-                                    <div class="col-6">
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Card Type &nbsp; &nbsp; &nbsp;
-                                                &nbsp; &nbsp; &nbsp; &nbsp;:
-                                                <span class="fw-bold text-danger">*</span></span>
-                                            <select class="form-select" id="selectCardType"
-                                                onchange="selectStaticElementValidater(this , 'customerPayment', 'cardtype')"
-                                                data-bs-toggle="tooltip" title="Select the Card Type correctly here.">
-                                                <option value="" selected disabled>Select Card Type</option>
-                                                <option value="VISA">VISA</option>
-                                                <option value="MASTER">MASTER</option>
-                                                <option value="AMEX">AMEX</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-3"></div>
-
-                                </div>
-                                <!-- Card Type area end-->
-
-                                <!-- Reference No area start-->
-                                <div class="row mt-3" id="divReferenceNo">
-
-                                    <div class="col-3"></div>
-                                    <div class="col-6">
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Reference No &nbsp; &nbsp; &nbsp;
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
-                                                <span class="fw-bold text-danger">*</span></span>
-                                            <input type="text" placeholder="
-                                            Enter Reference No" class="form-control" aria-label="Sizing example input"
-                                                aria-describedby="inputGroup-sizing-default" id="textReferenceNo"
-                                                onkeyup="textValidator(this, '^.*$', 'customerPayment', 'referenceno')"
-                                                onclick="textValidator(this, '^.*$', 'customerPayment', 'referenceno')"
-                                                data-bs-toggle="tooltip" title="Enter the Card Machinr Bill No correctly here.">
-                                        </div>
-                                    </div>
-                                    <div class="col-3"></div>
-
-                                </div>
-                                <!-- Reference No area end-->
 
                                 <!--Status  start-->
                                 <div class="row mt-3">

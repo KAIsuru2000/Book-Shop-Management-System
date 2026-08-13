@@ -389,7 +389,9 @@ const handlePaymentMethodChange = () => {
         // Clear split values
         textCashAmount.value = "";
         textCardAmount.value = "";
-        setDefault([textCashAmount, textCardAmount]);
+        textPaidAmount.value = "";
+        textBalanceAmount.value = "";
+        setDefault([textCashAmount, textCardAmount, textPaidAmount, textBalanceAmount]);
         customerPayment.cashamount = null;
         customerPayment.cardamount = null;
     } else if (method === "Cash") {
@@ -406,7 +408,9 @@ const handlePaymentMethodChange = () => {
         textReferenceNo.value = "";
         textCashAmount.value = "";
         textCardAmount.value = "";
-        setDefault([textCardType, textReferenceNo, textCashAmount, textCardAmount]);
+        textPaidAmount.value = "";
+        textBalanceAmount.value = "";
+        setDefault([textCardType, textReferenceNo, textCashAmount, textCardAmount, textPaidAmount, textBalanceAmount]);
         customerPayment.cardtype = null;
         customerPayment.referenceno = null;
         customerPayment.cashamount = null;
@@ -420,7 +424,10 @@ const handlePaymentMethodChange = () => {
         // Paid Amount should be read-only since it is calculated
         textPaidAmount.readOnly = true;
         textPaidAmount.value = "";
-        setDefault([textPaidAmount]);
+        textBalanceAmount.value = "";
+        textReferenceNo.value = "";
+        selectCardType.value = "";
+        setDefault([textPaidAmount,textBalanceAmount, textReferenceNo, selectCardType]);
         customerPayment.paidamount = null;
 
         // Reset Card values
@@ -493,6 +500,54 @@ const calculateSplitTotal = () => {
     }
 }
 
+// Auto fill card amount when cash amount is entered
+const handleCashAmountInput = () => {
+    textValidator(textCashAmount, '^.*$', 'customerPayment', 'cashamount');
+
+    let invoiceAmt = parseFloat(customerPayment.invoiceamount);
+    let cashAmt = parseFloat(textCashAmount.value);
+
+    if (!isNaN(invoiceAmt)) {
+        if (!isNaN(cashAmt)) {
+            let cardAmt = invoiceAmt - cashAmt;
+            if (cardAmt < 0) {
+                cardAmt = 0;
+            }
+            textCardAmount.value = cardAmt.toFixed(2);
+            textValidator(textCardAmount, '^.*$', 'customerPayment', 'cardamount');
+        } else {
+            textCardAmount.value = "";
+            setDefault([textCardAmount]);
+            customerPayment.cardamount = null;
+        }
+    }
+    // calculateSplitTotal();
+}
+
+// Auto fill cash amount when card amount is entered
+const handleCardAmountInput = () => {
+    textValidator(textCardAmount, '^.*$', 'customerPayment', 'cardamount');
+
+    let invoiceAmt = parseFloat(customerPayment.invoiceamount);
+    let cardAmt = parseFloat(textCardAmount.value);
+
+    if (!isNaN(invoiceAmt)) {
+        if (!isNaN(cardAmt)) {
+            let cashAmt = invoiceAmt - cardAmt;
+            if (cashAmt < 0) {
+                cashAmt = 0;
+            }
+            textCashAmount.value = cashAmt.toFixed(2);
+            textValidator(textCashAmount, '^.*$', 'customerPayment', 'cashamount');
+        } else {
+            textCashAmount.value = "";
+            setDefault([textCashAmount]);
+            customerPayment.cashamount = null;
+        }
+    }
+    // calculateSplitTotal();
+}
+
 const refreshCustomerPaymentForm = () => {
 
     customerPayment = new Object();
@@ -518,7 +573,7 @@ const refreshCustomerPaymentForm = () => {
     optionMsgEs.value = "";
     optionMsgEs.selected = "selected";
     optionMsgEs.disabled = "disabled";
-    optionMsgEs.innerText = "Select Customer Name";
+    optionMsgEs.innerText = "Select Invoice no";
     selectInvNo.appendChild(optionMsgEs);
 
 

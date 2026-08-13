@@ -1,0 +1,133 @@
+<!DOCTYPE html> <!-- html document classification define karanawa -->
+<html lang="en"> <!-- english language eka page elements walata select karanawa -->
+
+<!-- Fragment header eka replace karanawa podu head tags laba genima sadaha -->
+<head th:replace="~{fragment :: headerfragment}"></head> <!-- navigation header fragment links replace target setting -->
+
+<body> <!-- page display content start block -->
+
+    <!-- Top nav bar fragment eka replace karanawa navigation bar eka load kirima sadaha -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav> <!-- global top header navigation bar loading block -->
+
+    <!-- Main container eka patan gannawa -->
+    <div class="container-fluid"> <!-- bootstrap fluid container class use karala responsive grid start block -->
+
+        <!-- Title block eka patan gannawa -->
+        <div class="row p-1 mt-1"> <!-- main title dynamic structure row definition -->
+            <div class="col-12 p-3 d-flex justify-content-center divTitle"> <!-- flex alignment elements centered styling -->
+                <!-- Chart icon eka saha page title eka display karanawa -->
+                <i class="fa-solid fa-chart-line fa-2x"></i> <!-- charts dashboard icon representation class -->
+                <h2 class="h2 ms-3">Loss & Profit (PNL) Report</h2> <!-- report header title content displaying -->
+            </div>
+        </div>
+        <!-- Title block eka awasan wenawa -->
+
+        <!-- Filters form block eka patan gannawa -->
+        <div class="row mt-4"> <!-- search filter row container definition -->
+            <div class="col-1"></div> <!-- left margin alignment offset col space -->
+            <!-- Form eka background class ekata set karanawa -->
+            <div class="col-10 mt-1 divForm" style="padding: 20px;"> <!-- filter layout form design container styling -->
+                <form id="formPnlReport" onsubmit="return false;"> <!-- default page reload browser behaviour submit block -->
+                    <div class="row align-items-center"> <!-- centering filters horizontal row elements -->
+                        
+                        <!-- Start date input eka -->
+                        <div class="col-md-3"> <!-- responsive col layout setting -->
+                            <div class="input-group"> <!-- bootstrap input alignment format component class -->
+                                <span class="input-group-text lablBg">Start Date : <span class="text-danger fw-bold">*</span></span> <!-- input prefix description styling -->
+                                <input type="date" class="form-control" id="startDate" required> <!-- start date input element mapping -->
+                            </div>
+                        </div>
+                        
+                        <!-- End date input eka -->
+                        <div class="col-md-3"> <!-- responsive col layout setting -->
+                            <div class="input-group"> <!-- bootstrap input alignment format component class -->
+                                <span class="input-group-text lablBg">End Date : <span class="text-danger fw-bold">*</span></span> <!-- input prefix description styling -->
+                                <input type="date" class="form-control" id="endDate" required> <!-- end date input element mapping -->
+                            </div>
+                        </div>
+                        
+                        <!-- Select Type input eka (Weekly/Monthly) -->
+                        <div class="col-md-3"> <!-- responsive col layout setting -->
+                            <div class="input-group"> <!-- bootstrap input alignment format component class -->
+                                <span class="input-group-text lablBg">Select Type : <span class="text-danger fw-bold">*</span></span> <!-- input prefix description styling -->
+                                <select class="form-select" id="reportType" required> <!-- drop down menu select elements list -->
+                                    <option value="Weekly" selected>Weekly</option> <!-- weekly group option setting -->
+                                    <option value="Monthly">Monthly</option> <!-- monthly group option setting -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions buttons (Generate Report ha Print) -->
+                        <div class="col-md-3 d-flex gap-2 justify-content-end"> <!-- responsive buttons alignment positioning -->
+                            <!-- Report eka generate karana button eka -->
+                            <button type="button" class="btn btnUpdate" onclick="generatePnlReport()"> <!-- report calculation trigger onclick method calling -->
+                                <i class="fa-solid fa-arrows-spin"></i> Generate Report <!-- icons and text label descriptions -->
+                            </button>
+                            <!-- Print button eka print dynamic view hadanna -->
+                            <button type="button" class="btn btnUpdate" onclick="printPnlReport()"> <!-- print trigger format function calling -->
+                                <i class="fa-solid fa-print"></i> Print <!-- print icon descriptions -->
+                            </button>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            <div class="col-1"></div> <!-- right margin alignment offset space -->
+        </div>
+        <!-- Filters form block eka awasan wenawa -->
+
+        <!-- Results block eka (Table eka ha Chart eka) -->
+        <div class="row mt-4"> <!-- report data display grids layout start -->
+            <div class="col-1"></div> <!-- left layout offset spacer -->
+            
+            <!-- Table block eka (Vam paththen) -->
+            <div class="col-6 mt-1 divTable"> <!-- table container width configuration block -->
+                <div class="container-fluid"> <!-- responsive inner table fluid structure -->
+                    <table class="table table-hover" id="tablePnlReport"> <!-- table element styling classes -->
+                        <thead> <!-- table header elements group -->
+                            <tr> <!-- header labels list row definition -->
+                                <th>NO</th> <!-- sequential index column header label -->
+                                <th>WEEK / MONTH</th> <!-- period grouped time details column header label -->
+                                <th>INCOME(RS.)</th> <!-- revenue total income column header label -->
+                                <th>EXPENSE(RS.)</th> <!-- purchases total expense column header label -->
+                                <th>PROFIT / LOSS(RS.)</th> <!-- calculated net profit/loss column header label -->
+                            </tr>
+                        </thead>
+                        <!-- Data dynamic fill karanna table body eka -->
+                        <tbody id="tablePnlReportBody"> <!-- dynamic data listing body block -->
+                            <tr> <!-- fallback instruction initial row setup -->
+                                <td colspan="5" class="text-center">No data available. Please select filters and click Generate Report.</td> <!-- instruction label display cell -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Chart block eka (Dakunu paththen) -->
+            <div class="col-4 mt-1 divTable d-flex flex-column align-items-center justify-content-center" style="min-height: 400px;"> <!-- chart width container block setting -->
+                <!-- Chart title header description -->
+                <h4 class="text-white mb-3" id="chartTitle">Net Profit / Loss Chart</h4> <!-- chart title presentation label styling -->
+                <!-- Chart eka draw karana dynamic container area -->
+                <div id="chartContainer" style="width: 100%; height: 350px; background-color: white; border-radius: 15px; padding: 20px; border: 2px solid white;"> <!-- styling visual frame border settings -->
+                    <!-- Offline chart draw karanna and scale dynamic vector coordinate structure support karanna SVG yodagannawa -->
+                    <svg id="pnlChartSvg" width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none"> <!-- vectors coordinates mapping configuration svg viewport -->
+                        <!-- Path details data neti wita penwana default instruction design eka -->
+                        <text x="300" y="150" fill="#999" text-anchor="middle" font-family="sans-serif">No Chart Data</text> <!-- default offline placeholder description text -->
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="col-1"></div> <!-- right side spacer layout column -->
+        </div>
+        <!-- Results block eka awasan wenawa -->
+
+    </div>
+    <!-- Main container eka awasan wenawa -->
+
+    <!-- Dynamic report page behavior logic dynamic link karaganna and control map script and validation details fill karanna JS map -->
+    <script src="/jsFiles/common.js"></script> <!-- global system common helper scripts loading -->
+    <script src="/jsFiles/pnlreport.js"></script> <!-- PNL report specific calculations javascript script file path reference loading -->
+
+</body> <!-- body visual elements displaying components end -->
+
+</html> <!-- html document layout wrapper end -->

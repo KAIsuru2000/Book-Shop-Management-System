@@ -78,6 +78,10 @@ const getPriceRequestStatus = (dataob) => {
             return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
                 '                                                title="Partially Added"></i>'
         }
+        if (dataob.pricelistrequeststatus_id.name == "Expired") {
+            return '<i class="fa-solid fa-calendar-xmark fa-beat fa-xl" style="color: #f85d02;" data-bs-toggle="tooltip"\n' +
+                '                                                title="Expired"></i>'
+        }
 
         return dataob.pricelistrequeststatus_id.name;
     } else {

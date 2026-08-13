@@ -239,8 +239,8 @@
                                                             class="fw-bold text-danger">*</span></span>
                                                     <!-- unit price selection wenas wana wita seasonal discount calculate karanna meya call karanawa -->
                                                     <select class="form-select" id="selectUnitPrice"
-                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); calculateSeasonalDiscount();"
-                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); calculateSeasonalDiscount();"
+                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
+                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Unit Price correctly here.">
                                                         <option selected disabled value="">Select Unit Price</option>
@@ -255,23 +255,23 @@
                                         <!-- Item and Unit Price area end -->
                                         <!-- discount price and Quantity area start -->
                                         <div class="row mt-4">
-                                            <!-- discount price area start -->
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-text lablBg">Discounted Price :
-                                                        <span class="fw-bold text-danger">*</span></span>
-                                                    <input type="number" class="form-control"
-                                                        placeholder="Enter Discount Price"
-                                                        aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default"
-                                                        id="textDiscountPrice" required
-                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"
-                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Discount Price correctly here.">
-                                                </div>
-                                            </div>
-                                            <!-- discount price area end -->
+<!--                                            &lt;!&ndash; discount price area start &ndash;&gt;-->
+<!--                                            <div class="col-6">-->
+<!--                                                <div class="input-group">-->
+<!--                                                    <span class="input-group-text lablBg">Discounted Price :-->
+<!--                                                        <span class="fw-bold text-danger">*</span></span>-->
+<!--                                                    <input type="number" class="form-control"-->
+<!--                                                        placeholder="Enter Discount Price"-->
+<!--                                                        aria-label="Sizing example input"-->
+<!--                                                        aria-describedby="inputGroup-sizing-default"-->
+<!--                                                        id="textDiscountPrice" required-->
+<!--                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"-->
+<!--                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"-->
+<!--                                                        data-bs-toggle="tooltip"-->
+<!--                                                        title="Enter the Discount Price correctly here.">-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; discount price area end &ndash;&gt;-->
                                             <!--Quantity area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -288,12 +288,6 @@
                                                 </div>
                                             </div>
                                             <!-- Quantity area end -->
-
-
-                                        </div>
-                                        <!-- discount price and Quantity area end -->
-                                        <!-- Line Price area start -->
-                                        <div class="row mt-4">
                                             <!-- Line Price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -301,20 +295,21 @@
                                                         Price :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
-                                                        placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textLinePrice"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
-                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Line Price correctly here.">
+                                                           placeholder="Enter Line Price" aria-label="Sizing example input"
+                                                           aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                           required
+                                                           onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
+                                                           onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
+                                                           data-bs-toggle="tooltip"
+                                                           title="Enter the Line Price correctly here.">
                                                 </div>
                                             </div>
                                             <!-- Line Price area end -->
 
 
                                         </div>
-                                        <!--Line Price area end -->
+                                        <!-- Quantity and line price area end -->
+
                                         <!-- inner form area end -->
 
 
@@ -369,7 +364,7 @@
                                                                 <th>#</th>
                                                                 <th>Item Name</th>
                                                                 <th>Unit Price(Rs.)</th>
-                                                                <th>Discounted Price(Rs.)</th>
+<!--                                                                <th>Discounted Price(Rs.)</th>-->
                                                                 <th>Quantity</th>
                                                                 <th>Line Price(Rs.)</th>
 

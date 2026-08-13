@@ -17,7 +17,7 @@
             <div class="col-12 p-3 d-flex justify-content-center divTitle">
                 <!-- Chart icon eka saha page title eka display karanawa -->
                 <i class="fa-solid fa-chart-line fa-2x"></i>
-                <h2 class="h2 ms-3">Income Report</h2>
+                <h2 class="h2 ms-3">Cashier Payment Report</h2>
             </div>
         </div>
         <!-- Title block eka awasan wenawa -->
@@ -49,10 +49,12 @@
                         <!-- Select Type input eka (Weekly/Monthly) -->
                         <div class="col-md-3">
                             <div class="input-group">
-                                <span class="input-group-text lablBg">Select Type : <span class="text-danger fw-bold">*</span></span>
-                                <select class="form-select" id="reportType" required>
-                                    <option value="Weekly" selected>Weekly</option>
-                                    <option value="Monthly">Monthly</option>
+                                <span class="input-group-text lablBg">Payment Method Type : <span class="text-danger fw-bold">*</span></span>
+                                <select class="form-select" id="paymentType" required>
+                                    <option value="All" selected>All</option>
+                                    <option value="Cash" >Cash</option>
+                                    <option value="Card">Card</option>
+
                                 </select>
                             </div>
                         </div>
@@ -60,7 +62,7 @@
                         <!-- Actions buttons (Generate Report ha Print) -->
                         <div class="col-md-3 d-flex gap-2 justify-content-end">
                             <!-- Report eka generate karana button eka -->
-                            <button type="button" class="btn btnUpdate" onclick="generateIncomeReport()">
+                            <button type="button" class="btn btnUpdate" onclick="generateReport()">
                                 <i class="fa-solid fa-arrows-spin"></i> Generate Report
                             </button>
                             <!-- Print button eka print dynamic view hadanna -->
@@ -76,47 +78,55 @@
         </div>
         <!-- Filters form block eka awasan wenawa -->
 
-        <!-- Results block eka (Table eka ha Chart eka) -->
+        <!-- Results block eka (Table eka) -->
+        <div class="row mt-4">
+            <h2 class="text-white bold" id="totalAmount"></h2>
+
+        </div>
+
         <div class="row mt-4">
             <div class="col-1"></div>
+
+
             
             <!-- Table block eka (Vam paththen) -->
-            <div class="col-5 mt-1 divTable">
+            <div class="col-10 mt-1 divTable">
                 <div class="container-fluid">
                     <table class="table table-striped table-hover" id="tableIncomeReport">
                         <thead>
                             <tr>
-                                <th>NO</th>
-                                <th>WEEK / MONTH</th>
-                                <th>AMOUNT(RS.)</th>
+                                <th>No</th>
+                                <th>Bill NO</th>
+                                <th>Payment Method</th>
+                                <th>Paid Amount(RS.)</th>
                             </tr>
                         </thead>
                         <!-- Data dynamic fill karanna table body eka -->
-                        <tbody id="tableIncomeReportBody">
+                        <tbody id="tableCashierPaymentReportBody">
                             <tr>
-                                <td colspan="3" class="text-center">No data available. Please select filters and click Generate Report.</td>
+                                <td colspan="4" class="text-center">No data available. Please select filters and click Generate Report.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
             
-            <!-- Chart block eka (Dakunu paththen) -->
-            <div class="col-5 mt-1 divTable d-flex flex-column align-items-center justify-content-center" style="min-height: 400px;">
-                <!-- Chart title header description -->
-                <h4 class="text-white mb-3" id="chartTitle">Income Chart</h4>
-                <!-- Chart eka draw karana dynamic container area -->
-                <div id="chartContainer" style="width: 100%; height: 350px; background-color: white; border-radius: 15px; padding: 20px; border: 2px solid white;">
-                    <!-- Offline chart draw karanna and scale dynamic vector coordinate structure support karanna SVG yodagannawa -->
-                    <svg id="incomeChartSvg" width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none">
-                        <!-- Path details data neti wita penwana default instruction design eka -->
-                        <text x="300" y="150" fill="#999" text-anchor="middle" font-family="sans-serif">No Chart Data</text>
-                    </svg>
-                </div>
-            </div>
+<!--            &lt;!&ndash; Chart block eka (Dakunu paththen) &ndash;&gt;-->
+<!--            <div class="col-5 mt-1 divTable d-flex flex-column align-items-center justify-content-center" style="min-height: 400px;">-->
+<!--                &lt;!&ndash; Chart title header description &ndash;&gt;-->
+<!--                <h4 class="text-white mb-3" id="chartTitle">Income Chart</h4>-->
+<!--                &lt;!&ndash; Chart eka draw karana dynamic container area &ndash;&gt;-->
+<!--                <div id="chartContainer" style="width: 100%; height: 350px; background-color: white; border-radius: 15px; padding: 20px; border: 2px solid white;">-->
+<!--                    &lt;!&ndash; Offline chart draw karanna and scale dynamic vector coordinate structure support karanna SVG yodagannawa &ndash;&gt;-->
+<!--                    <svg id="incomeChartSvg" width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none">-->
+<!--                        &lt;!&ndash; Path details data neti wita penwana default instruction design eka &ndash;&gt;-->
+<!--                        <text x="300" y="150" fill="#999" text-anchor="middle" font-family="sans-serif">No Chart Data</text>-->
+<!--                    </svg>-->
+<!--                </div>-->
+<!--            </div>-->
             
             <div class="col-1"></div>
-        </div>
         <!-- Results block eka awasan wenawa -->
 
     </div>
@@ -124,7 +134,8 @@
 
     <!-- Dynamic report page behavior logic dynamic link karaganna and control map script and validation details fill karanna JS map -->
     <script src="/jsFiles/common.js"></script>
-    <script src="/jsFiles/incomereport.js"></script>
+    <script src="/jsFiles/tableFunction.js"></script>
+    <script src="/jsFiles/cashierDailyReport.js"></script>
 
 </body>
 

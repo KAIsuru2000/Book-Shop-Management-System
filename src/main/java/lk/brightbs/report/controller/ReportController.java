@@ -24,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.brightbs.invoice.dao.InvoiceDao;
 import lk.brightbs.invoice.entity.Invoice;
+import lk.brightbs.grn.dao.GRNDao; // grn dao class eka import karagannawa
+import lk.brightbs.grn.entity.GRN; // grn entity class eka import karagannawa
 
 // Report serve kirima sadaha controller class eka hadanawa
 @RestController
@@ -36,6 +38,10 @@ public class ReportController {
     // InvoiceDao eka autowire karagannawa data gannawa sadaha
     @Autowired
     private InvoiceDao invoiceDao;
+
+    // GRNDao eka autowire karagannawa expense data laba ganimata
+    @Autowired // Auto dependency injection sidu kirima
+    private GRNDao grnDao; // grnDao instance eka declare kirima
 
     @GetMapping(value = "/report/getemployeebydesignation" , params = {"designationid"})
     public List<Employee> getEmployeeDataByDesignation(@RequestParam("designationid") Integer designationid){
@@ -146,6 +152,192 @@ public class ReportController {
 
         public void setAmount(BigDecimal amount) {
             this.amount = amount;
+        }
+    }
+
+    // PNL report UI page eka load karana mapping eka
+    @GetMapping("/pnlreport") // browser eken /pnlreport request eka awoth meya run wenawa
+    public ModelAndView getPnlReportUI() { // ModelAndView object ekak return karana getPnlReportUI function eka
+        // Log wuna user ge nama security context eken gannawa
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); // Authentication object eka SecurityContextHolder eken laba gannawa
+        
+        ModelAndView view = new ModelAndView(); // Aluth ModelAndView instance ekak hadagannawa
+        // pnlreport.html file eka render kirimata target name ekak lesa set karanawa
+        view.setViewName("pnlreport.html"); // view name eka pnlreport.html widiyata set karanawa
+        // loggedusername kiyana name ekata logged user ge username value eka set karanawa html template ekata pass karanna
+        view.addObject("loggedusername", auth.getName()); // login una user ge nama page ekata add karanawa
+        // Page eke load wena wita browser title eka set karanawa
+        view.addObject("title", "Profit & Loss (PNL) Report | Bright Book Shop"); // page title eka add karanawa
+        
+        return view; // set karapu model and view eka return karanawa
+    }
+
+    // Loss and Profit (PNL) report data gena ganima sadaha REST API endpoint eka
+    @GetMapping(value = "/pnlreport/data", produces = "application/json") // GET request mapping eka json output labena se set karanawa
+    public List<PnlReportItem> getPnlReportData( // data pass kirima sandaha getPnlReportData method eka hadanawa
+            @RequestParam("startdate") String startDateStr, // startdate parameter eka string dynamic pass karanawa
+            @RequestParam("enddate") String endDateStr, // enddate parameter eka string dynamic pass karanawa
+            @RequestParam("type") String type) { // type parameter eka weekly/monthly dynamic pass karanawa
+
+        try { // Exception hadenna puluwan nisa try block ekak use karanawa
+            // Start date eka local date ekak lesa parse karagannawa
+            LocalDate startDate = LocalDate.parse(startDateStr); // start date eka parse karanawa
+            // End date eka local date ekak lesa parse karagannawa
+            LocalDate endDate = LocalDate.parse(endDateStr); // end date eka parse karanawa
+
+            // Date range eke patan ganna welawa set karanawa
+            LocalDateTime startDateTime = startDate.atStartOfDay(); // local datetime ekak dynamic hadanawa patan ganna welawata
+            // Date range eke awasan welawa set karanawa
+            LocalDateTime endDateTime = endDate.atTime(23, 59, 59); // local datetime ekak dynamic hadanawa awasan welawata
+
+            // Database eken adala date range eke non-deleted invoice list eka gannawa
+            List<Invoice> invoices = invoiceDao.getInvoicesForReport(startDateTime, endDateTime); // invoice details fetch karanawa
+            // Database eken adala date range eke non-deleted GRN list eka gannawa
+            List<GRN> grns = grnDao.getGrnsForReport(startDateTime, endDateTime); // grn details fetch karanawa
+
+            // Dynamic grouping map ekak hadagannawa pnl data details group karanna (label matha)
+            Map<String, PnlGroupedData> groupedData = new LinkedHashMap<>(); // Dynamic label key eken map structure ekak define karanawa
+
+            if ("Weekly".equalsIgnoreCase(type)) { // select type eka weekly nam me block eka run wenawa
+                // Week format eka gannawa sadaha WeekFields objects hadanawa
+                TemporalField weekOfYear = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); // local week numbers ganna format eka dynamic define karanawa
+                
+                // Invoice list eka loop karala week number matha group karanawa
+                for (Invoice inv : invoices) { // invoices loop karanawa
+                    int week = inv.getAddeddatetime().get(weekOfYear); // invoice eke week number eka gannawa
+                    String label = "Week " + week; // table/chart display path label name eka construct karanawa
+                    BigDecimal netAmount = inv.getNetamount(); // netamount value eka variable ekakata gannawa
+                    
+                    // map eke data key eka nathnam aluth grouped data object ekak dynamic register karanawa
+                    // putIfAbsent - elesa group object ekak nettan aluthan hadanawa
+                    groupedData.putIfAbsent(label, new PnlGroupedData()); // map data dynamic set karanawa
+                    groupedData.get(label).addIncome(netAmount); // income amount eka label eke target values walata add karanawa
+                }
+
+                // GRN list eka loop karala week number matha expense group karanawa
+                for (GRN g : grns) { // grn details loop karanawa
+                    int week = g.getAddeddatetime().get(weekOfYear); // grn eke week number eka gannawa
+                    String label = "Week " + week; // table/chart display path label name eka construct karanawa
+                    BigDecimal netAmount = g.getNetamount(); // netamount value eka variable ekakata gannawa
+                    
+                    // map eke data key eka nathnam aluth grouped data object ekak dynamic register karanawa
+                    groupedData.putIfAbsent(label, new PnlGroupedData()); // map data dynamic set karanawa
+                    groupedData.get(label).addExpense(netAmount); // expense amount eka label eke target values walata add karanawa
+                }
+            } else if ("Monthly".equalsIgnoreCase(type)) { // select type eka monthly nam me block eka run wenawa
+                // Invoice list eka loop karala Month description matha group karanawa
+                for (Invoice inv : invoices) { // invoices loop karanawa
+                    LocalDateTime dt = inv.getAddeddatetime(); // added date time eka gannawa
+                    // Month eke number eka saha English nama mix karala label eka hadanawa
+                    String label = dt.getMonthValue() + " - " + dt.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH); // month label name eka dynamically format karanawa
+                    BigDecimal netAmount = inv.getNetamount(); // netamount value eka variable ekakata gannawa
+
+                    // map eke data key eka nathnam aluth grouped data object ekak dynamic register karanawa
+                    groupedData.putIfAbsent(label, new PnlGroupedData()); // map data dynamic set karanawa
+                    groupedData.get(label).addIncome(netAmount); // income amount eka label eke target values walata add karanawa
+                }
+
+                // GRN list eka loop karala Month description matha group karanawa
+                for (GRN g : grns) { // grn details loop karanawa
+                    LocalDateTime dt = g.getAddeddatetime(); // added date time eka gannawa
+                    // Month eke number eka saha English nama mix karala label eka hadanawa
+                    String label = dt.getMonthValue() + " - " + dt.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH); // month label name eka dynamically format karanawa
+                    BigDecimal netAmount = g.getNetamount(); // netamount value eka variable ekakata gannawa
+
+                    // map eke data key eka nathnam aluth grouped data object ekak dynamic register karanawa
+                    groupedData.putIfAbsent(label, new PnlGroupedData()); // map data dynamic set karanawa
+                    groupedData.get(label).addExpense(netAmount); // expense amount eka label eke target values walata add karanawa
+                }
+            }
+
+            // Client ta yawanna objects array list ekak hadagannawa
+            List<PnlReportItem> result = new ArrayList<>(); // return JSON structure object list variable eka hadanawa
+            for (Map.Entry<String, PnlGroupedData> entry : groupedData.entrySet()) { // map objects entry list set loop karanawa
+                BigDecimal inc = entry.getValue().getIncome(); // total income eka entry object eken illa gannawa
+                BigDecimal exp = entry.getValue().getExpense(); // total expense eka entry object eken illa gannawa
+                BigDecimal profit = inc.subtract(exp); // profit/loss value eka calculate karagannawa income - expense widiyata ekathu karanna nm + .add()
+                result.add(new PnlReportItem(entry.getKey(), inc, exp, profit)); // result set data record ekak dynamic collection ekata save karanawa
+            }
+
+            return result; // map format dynamic return karanawa client browser side ekata
+        } catch (Exception e) { // exception handler logs error
+            // Error ekak thibe nam empty list return karanawa
+            return new ArrayList<>(); // errors occur empty collections return details map
+        }
+    }
+
+    // Dynamic map elements data properties structures build helper class structure
+    // database ekaka table ekak waga entity ekak dummy ekak lesa sadanawa
+    public static class PnlGroupedData { // grouping helpers details class
+        private BigDecimal income = BigDecimal.ZERO; // default income value 0
+        private BigDecimal expense = BigDecimal.ZERO; // default expense value 0
+
+        public void addIncome(BigDecimal amount) { // addIncome function eka declare kirima
+            if (amount != null) { // amount null newe nam
+                this.income = this.income.add(amount); // income ekata ekathu karanawa
+            }
+        }
+
+        public void addExpense(BigDecimal amount) { // addExpense function eka declare kirima
+            if (amount != null) { // amount null newe nam
+                this.expense = this.expense.add(amount); // expense ekata ekathu karanawa
+            }
+        }
+
+        public BigDecimal getIncome() { // getIncome function eka declare kirima
+            return income; // income variable return karanawa
+        }
+
+        public BigDecimal getExpense() { // getExpense function eka declare kirima
+            return expense; // expense variable return karanawa
+        }
+    }
+
+    // PNL Report item output details mapping objects data class templates
+    // database ekaka table ekak waga entity ekak dummy ekak lesa sadanawa
+    public static class PnlReportItem { // PnlReportItem representation structure class eka
+        private String label; // label parameter eka
+        private BigDecimal income; // income parameter eka
+        private BigDecimal expense; // expense parameter eka
+        private BigDecimal profit; // profit parameter eka
+
+        public PnlReportItem(String label, BigDecimal income, BigDecimal expense, BigDecimal profit) { // constructor initialization fields map
+            this.label = label; // label setting
+            this.income = income; // income setting
+            this.expense = expense; // expense setting
+            this.profit = profit; // profit setting
+        }
+
+        public String getLabel() { // getLabel function eka declare kirima
+            return label; // label variable return karanawa
+        }
+
+        public void setLabel(String label) { // setLabel function eka declare kirima
+            this.label = label; // value assignment
+        }
+
+        public BigDecimal getIncome() { // getIncome function eka declare kirima
+            return income; // income variable return karanawa
+        }
+
+        public void setIncome(BigDecimal income) { // setIncome function eka declare kirima
+            this.income = income; // value assignment
+        }
+
+        public BigDecimal getExpense() { // getExpense function eka declare kirima
+            return expense; // expense variable return karanawa
+        }
+
+        public void setExpense(BigDecimal expense) { // setExpense function eka declare kirima
+            this.expense = expense; // value assignment
+        }
+
+        public BigDecimal getProfit() { // getProfit function eka declare kirima
+            return profit; // profit variable return karanawa
+        }
+
+        public void setProfit(BigDecimal profit) { // setProfit function eka declare kirima
+            this.profit = profit; // value assignment
         }
     }
 }

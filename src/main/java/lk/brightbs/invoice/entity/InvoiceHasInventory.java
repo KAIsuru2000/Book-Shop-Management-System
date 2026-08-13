@@ -41,9 +41,9 @@ public class InvoiceHasInventory {
     @NotNull
     private BigDecimal lineprice;
 
-    @Column(name = "discountprice")
-    @NotNull
-    private BigDecimal discountprice;
+//    @Column(name = "discountprice")
+//    @NotNull
+//    private BigDecimal discountprice;
 
     // foreign key
     // @Id // primary key nisa

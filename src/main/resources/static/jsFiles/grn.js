@@ -41,18 +41,16 @@ const generateSupplierName = (dataob) => {
 const getGRNStatus = (dataob) => {
 
     if (dataob.grnstatus_id.name == "Pending") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #fcac5c;" data-bs-toggle="tooltip"\n' +
+        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #fcf45c;" data-bs-toggle="tooltip"\n' +
             '                                                title="Pending"></i>'
     }
 
     if (dataob.grnstatus_id.name == "Partially Paid") {
-        return '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #f4eb01;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Partially Paid"></i>'
+        return '<i class="fa-solid fa-circle-half-stroke fa-beat fa-xl" style="color: #f3f702;" data-bs-toggle="tooltip" title="Partially Paid"></i>';
     }
 
     if (dataob.grnstatus_id.name == "Paid") {
-        return '<i class="fa-solid fa-house-circle-check fa-beat fa-xl" style="color: #04f640;" data-bs-toggle="tooltip"\n' +
-            '                                                title="Paid"></i>'
+        return '<i class="fa-solid fa-circle-check fa-beat fa-xl" style="color: #02f707;" data-bs-toggle="tooltip" title="Paid"></i>';
     }
 
     if (dataob.grnstatus_id.name == "Deleted") {
@@ -767,29 +765,128 @@ const calculateNetAmount = () => {
 };
 
 const selectItemChange = () => {
+    // purchase order select karala thiyeda saha selectItem dropdown eke value ekak thiyeda balanawa
     if (gRN.purchaserequest_id && selectItem.value !== "") {
+        // select karapu item eke details json format eken parse karagannawa
         const selectedItem = JSON.parse(selectItem.value);
+        // purchase order eke item list eken select karapu item ekata adala record eka soya gannawa
         const poItem = gRN.purchaserequest_id.purchaseOrderHasItemList.find(
             poi => poi.item_id && poi.item_id.id === selectedItem.id
         );
+        // purchase order item eka labila thiyenawanam
         if (poItem) {
+            // purchase price field ekata uniteprice value eka decimal sthana dekakata set karanawa
             textPurchasePrice.value = parseFloat(poItem.uniteprice).toFixed(2);
+            // purchase price input field eka validate karala binding eka sidu karanawa
             textValidator(textPurchasePrice, '^.*$', 'grnHasItem', 'purchaseprice');
+            // line price eka calculate karanna call karanawa
             calculateLinePrice();
-            generateSalesPrice(); // Purchase price eka set unama sales price eka recalculate karanna call karanawa
+
+            // add price list eken thora gath item ekata adala market price eka soyanna variable ekak mulinma null kiyala gannawa
+            let marketPrice = null;
+            // purchaserequest_id thule addpricelist_id saha addPriceListHasItemList valid da kiyala pariksha karanawa
+            if (gRN.purchaserequest_id.addpricelist_id && gRN.purchaserequest_id.addpricelist_id.addPriceListHasItemList) {
+                // select karapu item id ekata match wena price list record eka filter karagannawa
+                const priceListItem = gRN.purchaserequest_id.addpricelist_id.addPriceListHasItemList.find(
+                    pli => pli.item_id && pli.item_id.id === selectedItem.id
+                );
+                // eya sidu vee thiyenam market price eka laba gannawa
+                if (priceListItem) {
+                    marketPrice = priceListItem.marketprice;
+                }
+            }
+
+            // marketPrice value ekak thiyeda kiyala check karanawa
+            if (marketPrice !== null && marketPrice !== undefined) {
+                // sales price input field ekata market price value eka decimal sthana dekakata auto fill karanawa
+                textSalesPrice.value = parseFloat(marketPrice).toFixed(2);
+                // sales price field eka validate karala grnHasItem object ekata bind karanawa
+                textValidator(textSalesPrice, '^.*$', 'grnHasItem', 'salesprice');
+                
+                // purchase price eka variable ekakata assign karagannawa
+                let purchasePrice = grnHasItem.purchaseprice;
+                // purchase price eka valid number ekak saha 0ta wada wadi nam pamanak profit ratio hadanawa
+                if (purchasePrice != null && purchasePrice !== "" && parseFloat(purchasePrice) > 0) {
+                    // purchase price value eka float number ekak widiyata gannawa
+                    let pPrice = parseFloat(purchasePrice);
+                    // market price value eka float number ekak widiyata gannawa
+                    let sPrice = parseFloat(marketPrice);
+                    // profit ratio calculate karana formula eka (sales price eken purchase price adu karala purchase price eken bedala 100n gunah kireema)
+                    let profitRate = ((sPrice - pPrice) / pPrice) * 100;
+                    // calculated profit ratio eka textProfitRatio field ekata auto fill karanawa
+                    textProfitRatio.value = profitRate.toFixed(2);
+                    // profit ratio field eka validate karala grnHasItem object ekata bind karanawa
+                    textValidator(textProfitRatio, '^.*$', 'grnHasItem', 'profitrate');
+                } else {
+                    // purchase price invalid nam profit ratio clear karanawa
+                    textProfitRatio.value = "";
+                    // profit ratio eke validation border clean karanawa
+                    setDefault([textProfitRatio]);
+                    // object property eka null karanawa
+                    grnHasItem.profitrate = null;
+                }
+            } else {
+                // price list eke market price nathnam sales price field eka clear karanawa
+                textSalesPrice.value = "";
+                // sales price eke validation border clean karanawa
+                setDefault([textSalesPrice]);
+                // object property eka null karanawa
+                grnHasItem.salesprice = null;
+                
+                // profit ratio field eka clear karanawa
+                textProfitRatio.value = "";
+                // validation styling default state ekata reset karanawa
+                setDefault([textProfitRatio]);
+                // object property eka null karanawa
+                grnHasItem.profitrate = null;
+            }
         } else {
+            // purchase order eke item eka nathi nam purchase price field eka clear karanawa
             textPurchasePrice.value = "";
+            // field eke validation styles clean karanawa
             setDefault([textPurchasePrice]);
+            // object property eka null karanawa
             grnHasItem.purchaseprice = null;
+            // line price calculations update karanawa
             calculateLinePrice();
-            generateSalesPrice(); // Purchase price eka set unama sales price eka recalculate karanna call karanawa
+            
+            // sales price clear karanawa
+            textSalesPrice.value = "";
+            // sales price validation styling default state ekata reset karanawa
+            setDefault([textSalesPrice]);
+            // object property eka null karanawa
+            grnHasItem.salesprice = null;
+            
+            // profit ratio clear karanawa
+            textProfitRatio.value = "";
+            // profit ratio validation styling default state ekata reset karanawa
+            setDefault([textProfitRatio]);
+            // object property eka null karanawa
+            grnHasItem.profitrate = null;
         }
     } else {
+        // purchase order ho selectItem drop down select state eka clear nam purchase price field eka clear karanawa
         textPurchasePrice.value = "";
+        // validation style resets
         setDefault([textPurchasePrice]);
+        // object property eka null
         grnHasItem.purchaseprice = null;
+        // line price calculations clear
         calculateLinePrice();
-        generateSalesPrice(); // Purchase price eka set unama sales price eka recalculate karanna call karanawa
+        
+        // sales price field clear
+        textSalesPrice.value = "";
+        // validation border styles clear
+        setDefault([textSalesPrice]);
+        // object property eka null
+        grnHasItem.salesprice = null;
+        
+        // profit ratio field clear
+        textProfitRatio.value = "";
+        // validation border styles clear
+        setDefault([textProfitRatio]);
+        // object property eka null
+        grnHasItem.profitrate = null;
     }
 };
 

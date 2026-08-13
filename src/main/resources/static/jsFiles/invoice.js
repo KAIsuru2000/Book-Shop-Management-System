@@ -450,14 +450,14 @@ const invoiceRowView = (ob, index) => {
 // line price eka automatically generate karanna use karana function eka
 const generateLinePrice = () => {
     // invoiceHasInventory object eken discounted price eka gannawa
-    let discountPrice = invoiceHasInventory.discountprice;
+    let unitePrice = invoiceHasInventory.uniteprice;
     // quantity variable eka gannawa
     let quantity = invoiceHasInventory.quentity;
 
     // discounted price saha quantity select wela thiyeda kiyala check karanawa
-    if (discountPrice != null && quantity != null && discountPrice !== "" && quantity !== "") {
+    if (unitePrice != null && quantity != null && unitePrice !== "" && quantity !== "") {
         // line price eka calculate karagannawa: linePrice = discountedPrice * quantity
-        let linePrice = parseFloat(discountPrice) * parseInt(quantity);
+        let linePrice = parseFloat(unitePrice) * parseInt(quantity);
         // linePrice value eka number ekakda kiyala check karanawa
         if (!isNaN(linePrice)) {
             // UI text field ekata line price value eka set karanawa
@@ -497,10 +497,10 @@ const refreshInvoiceInnerForm = () => {
     // Clear quantity and line price fields
     textQuantity.value = "";
     textLinePrice.value = "";
-    textDiscountPrice.value = "";
+    // textDiscountPrice.value = "";
 
     // Reset styles
-    setDefault([selectItem, selectUnitPrice, textQuantity, textLinePrice, textDiscountPrice]);
+    setDefault([selectItem, selectUnitPrice, textQuantity, textLinePrice]);
 
     // Reset buttons
     btnInvoiceItemUpdate.classList.add("d-none");
@@ -510,7 +510,7 @@ const refreshInvoiceInnerForm = () => {
     let propertyList = [
         { propertyName: generateInnerItemName, dataType: "function" },
         { propertyName: "uniteprice", dataType: "decimal" },
-        { propertyName: "discountprice", dataType: "decimal" },
+        // { propertyName: "discountprice", dataType: "decimal" },
         { propertyName: "quentity", dataType: "string" },
         { propertyName: "lineprice", dataType: "decimal" }
     ];
@@ -575,9 +575,9 @@ const buttonInvoiceItemSubmit = () => {
         errors += "Please select a Unit Price!\n";
     }
     // discounted price calculate wela thiyeda kiyala check karanawa
-    if (invoiceHasInventory.discountprice == null) {
-        errors += "Please enter/calculate a valid Discounted Price!\n";
-    }
+    // if (invoiceHasInventory.discountprice == null) {
+    //     errors += "Please enter/calculate a valid Discounted Price!\n";
+    // }
     // quantity type karala thiyeda kiyala check karanawa
     if (invoiceHasInventory.quentity == null) {
         errors += "Please enter a valid Quantity!\n";
@@ -610,7 +610,7 @@ const buttonInvoiceItemSubmit = () => {
             let userConfirm = window.confirm("Are you sure to add following item to invoice...?"
                 + "\n Item : " + invoiceHasInventory.inventory_id.item_id.itemname
                 + "\n Unit Price : " + invoiceHasInventory.uniteprice
-                + "\n Discounted Price : " + invoiceHasInventory.discountprice
+                // + "\n Discounted Price : " + invoiceHasInventory.discountprice
                 + "\n Quantity : " + invoiceHasInventory.quentity
                 + "\n Line Price : " + invoiceHasInventory.lineprice
             );
@@ -831,65 +831,65 @@ const loyaltyDiscountCalculate = () => {
 }
 
 // select karapu item ekata adala active seasonal discount eka check karala discounted price eka hadana function eka
-const calculateSeasonalDiscount = () => {
-    // selectItem eke value ekak thiyeda kiyala check karanawa
-    if (selectItem.value !== "" && selectUnitPrice.value !== "") {
-        // select karapu item object eka parse karala gannawa
-        let selectedInventoryObj = JSON.parse(selectItem.value);
-        // item id eka variable ekakata assign karagannawa
-        let itemId = selectedInventoryObj.item_id.id;
-        // selectUnitPrice element eke value eka float number ekak widiyata gannawa
-        let unitPrice = parseFloat(selectUnitPrice.value);
-        
-        // unit price valid check eka karanawa
-        if (!isNaN(unitPrice) && unitPrice > 0) {
-            // item id ekata adala active seasonal discount details server eken gannawa
-            let activeDiscount = getServiceRequest("/seasonaldiscount/activebyitem/" + itemId);
-            // discount rate/value variable eka default 0.00 karagannawa
-            let discountAmount = 0.00;
-            
-            // active discount object ekak thiyeda kiyala check karanawa
-            if (activeDiscount && activeDiscount.discount != null) {
-                // active discount value eka float type ekata convert karagannawa
-                discountAmount = parseFloat(activeDiscount.discount);
-            }
-            
-            // unit price eken seasonal discount amount eka adu karala discounted price eka calculate karanawa
-            let discountedPrice = unitPrice - discountAmount;
-            // discounted price 0 ta adu nam eka 0 set karanawa
-            if (discountedPrice < 0) {
-                discountedPrice = 0.00;
-            }
-            
-            // UI text field ekata calculate una discounted price eka decimals 2k widiyata set karanawa
-            textDiscountPrice.value = discountedPrice.toFixed(2);
-            
-            // invoiceHasInventory inner object ekata discounted price eka set karagannawa
-            invoiceHasInventory.discountprice = textDiscountPrice.value;
-            
-            // discounted price box eke color validation border eka valid (green) karanawa
-            textDiscountPrice.style.borderBottom = "4px solid green";
-            textDiscountPrice.previousElementSibling.style.backgroundColor = "green";
-            textDiscountPrice.classList.remove("is-invalid");
-            textDiscountPrice.classList.add("is-valid");
-            
-            // newatha line price eka generate karanna call karanawa
-            generateLinePrice();
-        } else {
-            // unit price value eka invalid nam fields default settings walata reset karanawa
-            textDiscountPrice.value = "";
-            invoiceHasInventory.discountprice = null;
-            setDefault([textDiscountPrice]);
-            generateLinePrice();
-        }
-    } else {
-        // select items empty nam fields clear karanawa
-        textDiscountPrice.value = "";
-        invoiceHasInventory.discountprice = null;
-        setDefault([textDiscountPrice]);
-        generateLinePrice();
-    }
-}
+// const calculateSeasonalDiscount = () => {
+//     // selectItem eke value ekak thiyeda kiyala check karanawa
+//     if (selectItem.value !== "" && selectUnitPrice.value !== "") {
+//         // select karapu item object eka parse karala gannawa
+//         let selectedInventoryObj = JSON.parse(selectItem.value);
+//         // item id eka variable ekakata assign karagannawa
+//         let itemId = selectedInventoryObj.item_id.id;
+//         // selectUnitPrice element eke value eka float number ekak widiyata gannawa
+//         let unitPrice = parseFloat(selectUnitPrice.value);
+//
+//         // unit price valid check eka karanawa
+//         if (!isNaN(unitPrice) && unitPrice > 0) {
+//             // item id ekata adala active seasonal discount details server eken gannawa
+//             let activeDiscount = getServiceRequest("/seasonaldiscount/activebyitem/" + itemId);
+//             // discount rate/value variable eka default 0.00 karagannawa
+//             let discountAmount = 0.00;
+//
+//             // active discount object ekak thiyeda kiyala check karanawa
+//             if (activeDiscount && activeDiscount.discount != null) {
+//                 // active discount value eka float type ekata convert karagannawa
+//                 discountAmount = parseFloat(activeDiscount.discount);
+//             }
+//
+//             // unit price eken seasonal discount amount eka adu karala discounted price eka calculate karanawa
+//             let discountedPrice = unitPrice - discountAmount;
+//             // discounted price 0 ta adu nam eka 0 set karanawa
+//             if (discountedPrice < 0) {
+//                 discountedPrice = 0.00;
+//             }
+//
+//             // UI text field ekata calculate una discounted price eka decimals 2k widiyata set karanawa
+//             textDiscountPrice.value = discountedPrice.toFixed(2);
+//
+//             // invoiceHasInventory inner object ekata discounted price eka set karagannawa
+//             invoiceHasInventory.discountprice = textDiscountPrice.value;
+//
+//             // discounted price box eke color validation border eka valid (green) karanawa
+//             textDiscountPrice.style.borderBottom = "4px solid green";
+//             textDiscountPrice.previousElementSibling.style.backgroundColor = "green";
+//             textDiscountPrice.classList.remove("is-invalid");
+//             textDiscountPrice.classList.add("is-valid");
+//
+//             // newatha line price eka generate karanna call karanawa
+//             generateLinePrice();
+//         } else {
+//             // unit price value eka invalid nam fields default settings walata reset karanawa
+//             textDiscountPrice.value = "";
+//             invoiceHasInventory.discountprice = null;
+//             setDefault([textDiscountPrice]);
+//             generateLinePrice();
+//         }
+//     } else {
+//         // select items empty nam fields clear karanawa
+//         textDiscountPrice.value = "";
+//         invoiceHasInventory.discountprice = null;
+//         setDefault([textDiscountPrice]);
+//         generateLinePrice();
+//     }
+// }
 
 // user manually discounted amount wenas karana wita net amount automatic fill karaganna use karana function eka
 const updateDiscountAmountField = (element) => {

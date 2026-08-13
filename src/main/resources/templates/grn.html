@@ -345,22 +345,7 @@
                                         
                                         <!-- Profit Rate and Sales Price area start -->
                                         <div class="row mt-4">
-                                            <!-- Profit Rate area start -->
-                                            <div class="col-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-text lablBg">Profit Ratio(%) :
-                                                        <span class="fw-bold text-danger">*</span></span>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="Enter Profit Ratio" aria-label="Sizing example input"
-                                                        aria-describedby="inputGroup-sizing-default" id="textProfitRatio"
-                                                        required
-                                                        onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'profitrate'); generateSalesPrice()"
-                                                        onclick="textValidator(this, '^.*$', 'grnHasItem', 'profitrate'); generateSalesPrice()"
-                                                        data-bs-toggle="tooltip"
-                                                        title="Enter the Profit Ratio correctly here.">
-                                                </div>
-                                            </div>
-                                            <!-- Profit Rate area end -->
+
                                             <!-- Sales Price area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -377,6 +362,22 @@
                                                 </div>
                                             </div>
                                             <!-- Sales Price area end -->
+                                            <!-- Profit Rate area start -->
+                                            <div class="col-6">
+                                                <div class="input-group">
+                                                    <span class="input-group-text lablBg">Profit Ratio(%) :
+                                                        <span class="fw-bold text-danger">*</span></span>
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter Profit Ratio" aria-label="Sizing example input"
+                                                           aria-describedby="inputGroup-sizing-default" id="textProfitRatio"
+                                                           required
+                                                           onkeyup="textValidator(this, '^.*$', 'grnHasItem', 'profitrate'); generateSalesPrice()"
+                                                           onclick="textValidator(this, '^.*$', 'grnHasItem', 'profitrate'); generateSalesPrice()"
+                                                           data-bs-toggle="tooltip"
+                                                           title="Enter the Profit Ratio correctly here." readonly>
+                                                </div>
+                                            </div>
+                                            <!-- Profit Rate area end -->
                                         </div>
                                         <!-- Profit Rate and Sales Price area end -->
                                         <!-- Discount Rate area start -->

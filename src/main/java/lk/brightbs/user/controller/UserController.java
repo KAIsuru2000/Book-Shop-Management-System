@@ -232,4 +232,12 @@ public class UserController {
         return response;
     }
 
+//    get loguserid
+    @GetMapping(value = "/loggeduser/userid", produces = "application/json")
+    public Integer getLoggedUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User loggedUser = userDao.getByUsername(auth.getName());
+        return loggedUser.getId();
+    }
+
 }

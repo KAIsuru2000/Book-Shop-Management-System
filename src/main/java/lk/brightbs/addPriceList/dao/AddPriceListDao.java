@@ -10,7 +10,7 @@ public interface AddPriceListDao extends JpaRepository<AddPriceList, Integer>{
 
  @Query(value = "SELECT coalesce(concat('A' , lpad(substring(max(a.addpricelistno),2) +1 , 5 , 0)) , 'A00001')  FROM brightbookshop.addpricelist as a;" , nativeQuery = true) String getNextAddPriceListNo();
 
- @Query("SELECT a FROM AddPriceList a WHERE a.addpriceliststatus_id.name = 'Pending' OR a.addpriceliststatus_id.name = 'Partially Ordered'")
+ @Query("SELECT a FROM AddPriceList a WHERE a.addpriceliststatus_id.name = 'Pending' OR a.addpriceliststatus_id.name = 'Partially Ordered' ORDER BY a.id DESC")
  List<AddPriceList> getPendingList();
 
     // select karapu price list request id ekata adala, delete nowunu price lists set eka ganna query eka

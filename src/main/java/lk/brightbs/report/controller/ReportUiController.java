@@ -46,4 +46,35 @@ public class ReportUiController {
         return reportUiView;
     }
 
+    //request mapping for load report ui url - /reportui
+    @RequestMapping("/cashierDailyReportUi") //request eka meka awoth yata function eka run karanawa
+    public ModelAndView getCashierDailyReportUiByIdUI(){
+
+        // dashboard ekata username ganima sadaha
+        // securitycontextholder magin auth object ekak laba gatha heka
+        // auth magin username eka illa gatha heka
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User logedUser = userDao.getByUsername(auth.getName());
+
+        ModelAndView reportUiView = new ModelAndView();
+//        if(logedUser.getEmployee_id().getDesignation_id().getName().equals("Manager")){
+        reportUiView.setViewName("cashierDailyReport.html");
+
+//        if(logedUser.getEmployee_id().getDesignation_id().getName().equals("Cashier")){
+//            reportUiView.setViewName("creportui.html");}
+
+
+        // dashboard ui ekata object add kirima
+        // ema data model eke nama loggedusername
+        // ehi value eka auth.getname
+        //emagin navbar ekehi log una username eka penwai
+        reportUiView.addObject("loggedusername", auth.getName());
+
+        //title eka penwimata
+        reportUiView.addObject("title", "Cashier Daily Report | Bright Book Shop");
+
+        return reportUiView;
+    }
+
+
 }

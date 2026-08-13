@@ -76,7 +76,7 @@ public class PriceRequestController {
 		// module name eka privilege lesa pass kirima
 		// dan userPrivilege ta privilege object eka (username ekata ha privilege module
 		// ekata adala privileges tika) pamine
-		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICELISTREQUEST");
 		if (userPrivilege.getSel()) {
 			//privilege thiyenawanam data return karanawa
 			return priceRequestDao.findAll(Sort.by(Sort.Direction.DESC ,"id"));
@@ -94,7 +94,7 @@ public class PriceRequestController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		//log una user object eka ara ganima
 		User logedUser = userDao.getByUsername(auth.getName());
-		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICELISTREQUEST");
 		if (userPrivilege.getInst()) {
 			//check duplicate
 			
@@ -126,7 +126,7 @@ public class PriceRequestController {
 	public String deletePriceRequest(@RequestBody PriceRequest priceRequest) {
 		// check user authentication and authorization
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICELISTREQUEST");
 		if (userPrivilege.getDel()) {
 			// check ext
             //        priceRequest delete nm
@@ -166,7 +166,7 @@ public class PriceRequestController {
 	public String updatePriceRequest(@RequestBody PriceRequest priceRequest) {
 		// check user authentication and authorization
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICEREQUEST");
+		Privilege userPrivilege = userPrivilegeController.getPrivilegeByUserModule(auth.getName(), "PRICELISTREQUEST");
 		if (userPrivilege.getUpd()) {
 			// check ext
 			// exting user object ekak ganima

@@ -59,6 +59,10 @@ const getOrderStatus = (dataob) => {
         return '<i class="fa-solid fa-trash-can fa-beat fa-xl" style="color: #fe1616;" data-bs-toggle="tooltip"\n' +
             '                                                title="Deleted"></i>'
     }
+    if (dataob.purchaserequeststatus_id.name == "Expired") {
+        return '<i class="fa-solid fa-calendar-xmark fa-beat fa-xl" style="color: #f85d02;" data-bs-toggle="tooltip"\n' +
+            '                                                title="Expired"></i>'
+    }
 
 
 }
@@ -679,6 +683,12 @@ const selectItemChange = () => {
         const selectedItem = JSON.parse(selectItem.value);
         const hasItem = addPriceList.addPriceListHasItemList.find(hi => hi.item_id && hi.item_id.id === selectedItem.id);
         if (hasItem) {
+            // Auto fill quantity with item's ROQ value
+            if (selectedItem.roq) {
+                textQuantity.value = selectedItem.roq;
+                textValidator(textQuantity, '^.*$', 'purchaseOrderHasItem', 'quentity');
+            }
+
             let finalUnitPrice = parseFloat(hasItem.unitprice);
             
             // Check if min quantity and min quantity price are defined and valid

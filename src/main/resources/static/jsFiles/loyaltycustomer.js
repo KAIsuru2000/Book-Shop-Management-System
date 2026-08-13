@@ -78,7 +78,7 @@ const refreshLoyaltycustomerTable = () => {
         { dataType: 'decimal', propertyName: 'discount' }
     ];
 
-    fillDataIntoTable(tableLoyaltycustomerBody, loyaltycustomers, displayProperty, refilForm, deleteRow, printRow, "#offcanvasBottom");
+    fillDataIntoTable(tableLoyaltycustomerBody, loyaltycustomers, displayProperty, refilForm, null, printRow, "#offcanvasBottom");
     
     if ($.fn.DataTable.isDataTable('#tableLoyaltycustomer')) {
         $('#tableLoyaltycustomer').DataTable().destroy();

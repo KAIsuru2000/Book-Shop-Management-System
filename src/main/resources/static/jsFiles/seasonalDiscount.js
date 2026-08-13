@@ -181,9 +181,9 @@ const refreshSeasonalDiscountTable = () => {
         { dataType: 'function', propertyName: getOfferType }
     ];
 
-    // call the filldataintotable function
     // call the filldataintotable function - pass the tbody not the table to avoid wiping thead
-    fillDataIntoTable(tableSeasonalDiscountBody, seasonalDiscounts, displayProperty, refilForm, deleteRow, printRow, "#offcanvasBottom");
+    // delete button eka details row eken ain kirima sadaha delete function eka null lesa pass karanawa
+    fillDataIntoTable(tableSeasonalDiscountBody, seasonalDiscounts, displayProperty, refilForm, null, printRow, "#offcanvasBottom");
 
     // table eke plugin eka call kirima - properly destroy old instance before recreating
     if ($.fn.DataTable.isDataTable('#tableSeasonalDiscount')) {

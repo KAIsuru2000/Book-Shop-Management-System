@@ -201,22 +201,22 @@
                                     <!-- Item and Unit Price area end -->
                                     <!-- Discounted Price and Quantity area start -->
                                     <div class="row mt-4">
-                                        <!-- Discounted Price area start -->
-                                        <div class="col-6">
-                                            <div class="input-group">
-                                                <span class="input-group-text lablBg"
-                                                    id="inputGroup-sizing-default">Discount Price : <span
-                                                        class="fw-bold text-danger">*</span></span>
-                                                <input placeholder="Enter Discount Price" type="text" class="form-control"  aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default" id="textDiscountedPrice"
-                                                    required
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter the Discount Price correctly here.">
-                                            </div>
-                                        </div>
-                                        <!-- Discounted Price area end -->
+<!--                                        &lt;!&ndash; Discounted Price area start &ndash;&gt;-->
+<!--                                        <div class="col-6">-->
+<!--                                            <div class="input-group">-->
+<!--                                                <span class="input-group-text lablBg"-->
+<!--                                                    id="inputGroup-sizing-default">Discount Price : <span-->
+<!--                                                        class="fw-bold text-danger">*</span></span>-->
+<!--                                                <input placeholder="Enter Discount Price" type="text" class="form-control"  aria-label="Sizing example input"-->
+<!--                                                    aria-describedby="inputGroup-sizing-default" id="textDiscountedPrice"-->
+<!--                                                    required-->
+<!--                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"-->
+<!--                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"-->
+<!--                                                    data-bs-toggle="tooltip"-->
+<!--                                                    title="Enter the Discount Price correctly here.">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        &lt;!&ndash; Discounted Price area end &ndash;&gt;-->
                                         <!-- Quantity area start -->
                                         <div class="col-6">
                                             <div class="input-group">
@@ -233,10 +233,6 @@
                                             </div>
                                         </div>
                                         <!-- Quantity area end -->
-                                    </div>
-                                    <!-- Discounted Price and Quantity area end -->
-                                    <!-- Line Price area start -->
-                                    <div class="row mt-4">
                                         <!-- Line Price area start -->
                                         <div class="col-6">
                                             <div class="input-group">
@@ -244,19 +240,18 @@
                                                     Price :
                                                     <span class="fw-bold text-danger">*</span></span>
                                                 <input type="number" class="form-control"
-                                                    placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                    aria-describedby="inputGroup-sizing-default" id="textLinePrice"
-                                                    required
-                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter the Line Price correctly here.">
+                                                       placeholder="Enter Line Price" aria-label="Sizing example input"
+                                                       aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                       required
+                                                       onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                       onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                       data-bs-toggle="tooltip"
+                                                       title="Enter the Line Price correctly here.">
                                             </div>
                                         </div>
                                         <!-- Line Price area end -->
-                                        <div class="col-6"></div>
                                     </div>
-                                    <!-- Line Price area end -->
+                                    <!-- Quantity and line price area end -->
 
                                     <!--inner form button row start -->
                                     <div class="row mt-4">
@@ -329,7 +324,7 @@
                                 </div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg" id="inputGroup-sizing-default">Invoice Amount
+                                            <span class="input-group-text lablBg">Invoice Amount
                                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
                                                 <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="

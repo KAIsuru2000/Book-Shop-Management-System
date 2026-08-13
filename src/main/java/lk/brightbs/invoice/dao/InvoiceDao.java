@@ -14,7 +14,7 @@ public interface InvoiceDao extends JpaRepository<Invoice, Integer> {
   @Query(value = "SELECT coalesce(concat('INV' , lpad(substring(max(i.invoiceno),4) + 1 , 5 , '0')) , 'INV00001')  FROM brightbookshop.invoice as i;", nativeQuery = true)
   String getNextInvoiceNo();
 
-  @Query("SELECT i FROM Invoice i WHERE i.invoicestatus_id.name = 'pending'")
+  @Query("SELECT i FROM Invoice i WHERE i.invoicestatus_id.name = 'pending'ORDER BY i.id DESC")
   List<Invoice> getPendingInvoices();
 
   // Report hadanna awashya dates athara paid ho pending invoices geta ganima sadaha query eka

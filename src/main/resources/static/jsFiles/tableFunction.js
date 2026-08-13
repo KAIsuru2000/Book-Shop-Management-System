@@ -124,15 +124,22 @@ const fillDataIntoTable = (tableBodyId, dataList, propertyList, editFunction, de
         //edit button area end
 
         //delete button area start
-        let buttonDelete = document.createElement("button");
-        buttonDelete.className = "btn btnClear ms-1 me-1";
-        buttonDelete.innerHTML = " <i class='fa fa-trash'></i> Delete";
+        // deleteFunction eka exist wenawanam (null ho undefined newenam) pamanak delete button eka create karanawa
+        if (deleteFunction) {
+            // delete button element eka document eken create karagannawa
+            let buttonDelete = document.createElement("button");
+            // delete button ekata css classes names assign karanawa
+            buttonDelete.className = "btn btnClear ms-1 me-1";
+            // delete button eke text eka saha trash icon eka innerHTML ekata set karanawa
+            buttonDelete.innerHTML = " <i class='fa fa-trash'></i> Delete";
 
-        //button row eke td ekata button tika append kirima
-        buttonTd.appendChild(buttonDelete);
-        buttonDelete.onclick = () => {
-            //console.log("Delete" , dataob);
-            deleteFunction(dataob, index);
+            // button row eke td ekata delete button eka append karanawa
+            buttonTd.appendChild(buttonDelete);
+            // delete button click kalama trigger wena click event function eka liyanawa
+            buttonDelete.onclick = () => {
+                // delete function eka data object eka saha index eka thula call karanawa
+                deleteFunction(dataob, index);
+            }
         }
         //delete button area end
 

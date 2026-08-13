@@ -60,7 +60,9 @@ public class WebConfiguration {
                     .requestMatchers("/invoice/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
                     .requestMatchers("/customerPayment/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
                     .requestMatchers("/seasonalDiscount/**").hasAnyAuthority("Admin" , "Manager" , "Cashier")
-            .anyRequest().authenticated();
+                    .requestMatchers("/cashierDailyReportUi/**").permitAll()
+                    .requestMatchers("/report/**").permitAll()
+                    .anyRequest().authenticated();
 
             // /employee/** = employee walin pasu thawath services add wena bawa dekwimata(employee/findall)
 
