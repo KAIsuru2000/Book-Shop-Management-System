@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Fragment header eka replace karanawa podu head tags laba genima sadaha -->
+<head th:replace="~{fragment :: headerfragment}"></head>
+
+<body>
+
+    <!-- Top nav bar fragment eka replace karanawa navigation bar eka load kirima sadaha -->
+    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+
+    <!-- Main container eka patan gannawa -->
+    <div class="container-fluid">
+
+        <!-- Title block eka patan gannawa -->
+        <div class="row p-1 mt-1">
+            <div class="col-12 p-3 d-flex justify-content-center divTitle">
+                <!-- Chart icon eka saha page title eka display karanawa -->
+                <i class="fa-solid fa-chart-line fa-2x"></i>
+                <h2 class="h2 ms-3">Income Report</h2>
+            </div>
+        </div>
+        <!-- Title block eka awasan wenawa -->
+
+        <!-- Filters form block eka patan gannawa -->
+        <div class="row mt-4">
+            <div class="col-1"></div>
+            <!-- Form eka background class ekata set karanawa -->
+            <div class="col-10 mt-1 divForm" style="padding: 20px;">
+                <form id="formIncomeReport" onsubmit="return false;">
+                    <div class="row align-items-center">
+                        
+                        <!-- Start date input eka -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text lablBg">Start Date : <span class="text-danger fw-bold">*</span></span>
+                                <input type="date" class="form-control" id="startDate" required>
+                            </div>
+                        </div>
+                        
+                        <!-- End date input eka -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text lablBg">End Date : <span class="text-danger fw-bold">*</span></span>
+                                <input type="date" class="form-control" id="endDate" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Select Type input eka (Weekly/Monthly) -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text lablBg">Select Type : <span class="text-danger fw-bold">*</span></span>
+                                <select class="form-select" id="reportType" required>
+                                    <option value="Weekly" selected>Weekly</option>
+                                    <option value="Monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions buttons (Generate Report ha Print) -->
+                        <div class="col-md-3 d-flex gap-2 justify-content-end">
+                            <!-- Report eka generate karana button eka -->
+                            <button type="button" class="btn btnUpdate" onclick="generateIncomeReport()">
+                                <i class="fa-solid fa-arrows-spin"></i> Generate Report
+                            </button>
+                            <!-- Print button eka print dynamic view hadanna -->
+                            <button type="button" class="btn btnUpdate" onclick="printIncomeReport()">
+                                <i class="fa-solid fa-print"></i> Print
+                            </button>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <!-- Filters form block eka awasan wenawa -->
+
+        <!-- Results block eka (Table eka ha Chart eka) -->
+        <div class="row mt-4">
+            <div class="col-1"></div>
+            
+            <!-- Table block eka (Vam paththen) -->
+            <div class="col-5 mt-1 divTable">
+                <div class="container-fluid">
+                    <table class="table table-striped table-hover" id="tableIncomeReport">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>WEEK / MONTH</th>
+                                <th>AMOUNT(RS.)</th>
+                            </tr>
+                        </thead>
+                        <!-- Data dynamic fill karanna table body eka -->
+                        <tbody id="tableIncomeReportBody">
+                            <tr>
+                                <td colspan="3" class="text-center">No data available. Please select filters and click Generate Report.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Chart block eka (Dakunu paththen) -->
+            <div class="col-5 mt-1 divTable d-flex flex-column align-items-center justify-content-center" style="min-height: 400px;">
+                <!-- Chart title header description -->
+                <h4 class="text-white mb-3" id="chartTitle">Income Chart</h4>
+                <!-- Chart eka draw karana dynamic container area -->
+                <div id="chartContainer" style="width: 100%; height: 350px; background-color: white; border-radius: 15px; padding: 20px; border: 2px solid white;">
+                    <!-- Offline chart draw karanna and scale dynamic vector coordinate structure support karanna SVG yodagannawa -->
+                    <svg id="incomeChartSvg" width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none">
+                        <!-- Path details data neti wita penwana default instruction design eka -->
+                        <text x="300" y="150" fill="#999" text-anchor="middle" font-family="sans-serif">No Chart Data</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="col-1"></div>
+        </div>
+        <!-- Results block eka awasan wenawa -->
+
+    </div>
+    <!-- Main container eka awasan wenawa -->
+
+    <!-- Dynamic report page behavior logic dynamic link karaganna and control map script and validation details fill karanna JS map -->
+    <script src="/jsFiles/common.js"></script>
+    <script src="/jsFiles/incomereport.js"></script>
+
+</body>
+
+</html>
