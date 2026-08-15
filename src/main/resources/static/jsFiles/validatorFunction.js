@@ -87,36 +87,43 @@ const selectDainamicElementValidater = (element, object, property) => {
     //object = string ekaki , string ekak object ekak lesa direct use kala noheka window array ekan ema object eka illa gatha yuthuya eya poduwe ob walata dama gani
     const ob = window[object];
 
-
+    let parsedValue = null;
+    let isJsonValid = false;
 
     if (elementValue != "") {
+        try {
+            parsedValue = JSON.parse(elementValue);
+            isJsonValid = true;
+        } catch (e) {
+            isJsonValid = false;
+        }
+    }
+
+    if (isJsonValid) {
         element.style.borderBottom = "4px solid green";
-        prevElement.style.backgroundColor = "green";
+        if (prevElement) prevElement.style.backgroundColor = "green";
         element.classList.remove("is-invalid");
         element.classList.add("is-valid");
-        // dynamic ekaka value eka java script object ekak bawata change kara gathanyuthuya
-        ob[property] = JSON.parse(elementValue); 
+        if (ob) ob[property] = parsedValue; 
     } else {
         if (element.required) {
             element.style.borderBottom = "4px solid red";
-            prevElement.style.backgroundColor = "red";
+            if (prevElement) prevElement.style.backgroundColor = "red";
             element.classList.add("is-invalid");
             element.classList.remove("is-valid");
-            //employee object ekata null diima
-            ob[property] = null;
+            if (ob) ob[property] = null;
         } else if (element.classList.contains("optional")) {
             element.style.borderBottom = "1px solid #ced4da";
-            prevElement.style.backgroundColor = "black"; // matching the original textValidator normal state
+            if (prevElement) prevElement.style.backgroundColor = "black"; // matching the original textValidator normal state
             element.classList.remove("is-invalid");
             element.classList.remove("is-valid");
-            ob[property] = null;
+            if (ob) ob[property] = null;
         } else {
             element.style.borderBottom = "4px solid red";
-            prevElement.style.backgroundColor = "red";
+            if (prevElement) prevElement.style.backgroundColor = "red";
             element.classList.add("is-invalid");
             element.classList.remove("is-valid");
-            //employee object ekata null diima
-            ob[property] = null;
+            if (ob) ob[property] = null;
         }
     }
 }

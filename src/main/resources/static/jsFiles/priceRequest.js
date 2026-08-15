@@ -110,9 +110,20 @@ const addSelectedItems = () => {
         }
         fillDataIntoSelect(selectAllItems, "", allItem, "itemname");
     } else {
-        // error message eka show karanawa
-        window.alert("Please select an item to add!");
-
+        // select items empty check error sweetalert warning popup box open check
+        Swal.fire({
+            title: "Validation Error",
+            text: "Please select an item to add!",
+            icon: "warning",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-warning-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 const addAllItems = () => {
@@ -143,9 +154,20 @@ const removeSelectedItems = () => {
         }
         fillDataIntoSelect(selectSelectedItems, "", priceRequest.items, "itemname");
     } else {
-        // error message eka show karanawa
-        window.alert("Please select an item to remove!");
-
+        // remove items select empty check validation sweetalert warning modals displays
+        Swal.fire({
+            title: "Validation Error",
+            text: "Please select an item to remove!",
+            icon: "warning",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-warning-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -229,36 +251,74 @@ const rowFormRefill = (dataob, rowIndex) => {
 }
 
 
+// row eke delete button eka click kalaama delete confirm window popups sweetalert open karanawa
 const priceRequestRowDelete = (dataob, rowIndex) => {
+    // console trace log check items records
     console.log("Delete", dataob, rowIndex);
 
-    // activeTableRow(tableEmployeeBody, index, "red");
+    // delete validation checks popup confirmation sweetalert format
+    Swal.fire({
+        title: "Confirm Delete",
+        html: `Are you sure to delete the following Price Request?<br><br>` +
+              `<strong>Supplier Name:</strong> ${dataob.supplier_id.suppliername}<br>` +
+              `<strong>Required Date:</strong> ${dataob.requireddate}<br>` +
+              `<strong>Status:</strong> ${dataob.pricelistrequeststatus_id.name}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // delete check yes confirmation trigger
+        if (result.isConfirmed) {
+            // post request methods endpoints delete service method calls
+            let deleteResponce = getHTTPServiceRequest("/priceRequest/delete", "DELETE", dataob);
 
-
-    let userConfirm = window.confirm("Are you sure to delete following Price Request...?" +
-        "\n Supplier name : " + dataob.supplier_id.suppliername +
-        "\n Required date : " + dataob.requireddate +
-        "\n Status : " + dataob.pricelistrequeststatus_id.name
-    );
-    if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
-        let deleteResponce = getHTTPServiceRequest("/priceRequest/delete", "DELETE", dataob);
-
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshPriceRequestTable();
-            refreshPriceRequestForm();
-
-        } else {
-            window.alert("Delete not successfully" + deleteResponce);
-
+            // server delete request success returned ok
+            if (deleteResponce == "OK") {
+                // delete successful modal display check
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Price Request deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                // data table refresh karagannawa
+                refreshPriceRequestTable();
+                // input form reset clear configurations reload karanawa
+                refreshPriceRequestForm();
+            } else {
+                // error alerts failed sweetalerts dialog show
+                Swal.fire({
+                    title: "Error!",
+                    text: "Delete not successful: " + deleteResponce,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-
-
-
-
-    }
+    });
 }
 // table eka thula athi view button ekata click kalaama view modal eka open karanawa   
 const priceRequestRowPrint = (dataob, rowIndex) => {
@@ -411,30 +471,93 @@ const checkPriceRequestFormErrors = () => {
 }
 
 //PriceRequest form submit event function 
+//PriceRequest form submit event function 
 const buttonPriceRequestSubmit = () => {
+    // console print check log updates details
     console.log('Add Price Request', priceRequest);
 
-    //check form error for required element
+    // form required validation checks error collection lists
     let errors = checkPriceRequestFormErrors();
+    // errors kisith nathnam
     if (errors == "") {
-        //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following supplier...?" +
-            "\n Required date : " + priceRequest.requireddate
-        );
-        if (userConfirm) {
-            // call post service
-            let postResponce = getHTTPServiceRequest("/priceRequest/insert", "POST", priceRequest);
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshPriceRequestTable();
-                refreshPriceRequestForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-            } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+        // price requests submission confirmations sweetalert popups open check
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following price request?<br><br>` +
+                  `<strong>Supplier:</strong> ${priceRequest.supplier_id.suppliername}<br>` +
+                  `<strong>Required Date:</strong> ${priceRequest.requireddate}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirms check yes kala nam
+            if (result.isConfirmed) {
+                // post request service method methods trigger sets database
+                let postResponce = getHTTPServiceRequest("/priceRequest/insert", "POST", priceRequest);
+                // success check responses ok returned unoth
+                if (postResponce == "OK") {
+                    // success status informational dialogues sweetalerts modal popup open
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Price request saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // table metrics reload checks
+                    refreshPriceRequestTable();
+                    // form fields data clears defaults
+                    refreshPriceRequestForm();
+                    // offcanvas sheets panels close karalai hide checks
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // post submit failed alert sweetalert dialog open checks
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Something went wrong...\n" + errors);
+        // required errors check validation warnings sweetalert modal display check
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -481,56 +604,140 @@ const checkPriceRequestFormUpdate = () => {
 }
 
 //define function for update item
+//define function for update item
 const buttonPriceRequestUpdate = () => {
-
+    // console check parameters update logs
     console.log("priceRequest", priceRequest);
     console.log("oldPriceRequest", oldPriceRequest);
 
-    //need to check form error
+    // validation forms errors check inputs
     let errors = checkPriceRequestFormErrors();
 
-    //get user confurmation
+    // validation errors check verify empty check
     if (errors == "") {
-
+        // changes updates check
         let updates = checkPriceRequestFormUpdate();
+        // updates value details differences check
         if (updates != "") {
-            let userConfirm = window.confirm("Are you sure to update following price request changes \n"
-                + updates
-
-            );
-
-            //call post service
-            if (userConfirm) {
-                let putResponce = getHTTPServiceRequest("/priceRequest/update", "PUT", priceRequest);
-                if (putResponce == "OK") {
-                    window.alert("priceRequest updated Successfully...!");
-                    refreshPriceRequestTable();
-                    refreshPriceRequestForm();
-                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-
-                } else {
-                    window.alert("Fail to update has following error\n" + putResponce);
+            // updates validation confirm dialogue box sweetalert open checks
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update the following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // updates parameters confirm yes checks
+                if (result.isConfirmed) {
+                    // PUT method service request call updates database
+                    let putResponce = getHTTPServiceRequest("/priceRequest/update", "PUT", priceRequest);
+                    // update status success ok returned check
+                    if (putResponce == "OK") {
+                        // success status updates alerts open checks
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Price Request details updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        // table content refresh check
+                        refreshPriceRequestTable();
+                        // input forms default clear fields metrics
+                        refreshPriceRequestForm();
+                        // close offcanvas forms sheet modes checks
+                        $("#offcanvasBottom").offcanvas("hide");
+                    } else {
+                        // update failed error sweetalerts modal displays checks
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponce,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            }
+            });
         } else {
-            window.alert("Nothing to updated \n" + errors);
+            // no changes details update popup box open checks
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         }
-
-
-
-
     } else {
-        window.alert("Form has following error \n" + errors);
+        // required parameters check error validation modals displays
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
-
 }
 
 const clearPriceRequestForm = () => {
-
-    let userConfirm = window.confirm("Do you need to refresh form...?");
-    if (userConfirm) {
-        refreshPriceRequestForm();
-    }
+    // clear form confirmation popup window sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you need to refresh form...?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // clear confirm yes checks
+        if (result.isConfirmed) {
+            // refresh price request form function call karalai forms inputs values defaults resets karagannawa
+            refreshPriceRequestForm();
+        }
+    });
 }
 
 // Define function to fill supplier name along with their brands into select dropdown

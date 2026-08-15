@@ -283,20 +283,20 @@
                                 <!-- Reference No area end-->
 
                                 <!-- Note area start-->
-                                <div class="row mt-3">
-                                    <div class="col-3"></div>
-                                    <div class="col-6">
-                                        <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
-                                                <span class="text-danger">(optional)</span></span>
-                                            <textarea placeholder="Enter Note (optional)" class="form-control" id="textNote"
-                                                onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'note')"
-                                                onclick="textValidator(this, '^.*$', 'supplierPayment', 'note')"
-                                                data-bs-toggle="tooltip" title="Enter any extra notes here."></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-3"></div>
-                                </div>
+<!--                                <div class="row mt-3">-->
+<!--                                    <div class="col-3"></div>-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="input-group mb-3">-->
+<!--                                            <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :-->
+<!--                                                <span class="text-danger">(optional)</span></span>-->
+<!--                                            <textarea placeholder="Enter Note (optional)" class="form-control" id="textNote"-->
+<!--                                                onkeyup="textValidator(this, '^.*$', 'supplierPayment', 'note')"-->
+<!--                                                onclick="textValidator(this, '^.*$', 'supplierPayment', 'note')"-->
+<!--                                                data-bs-toggle="tooltip" title="Enter any extra notes here."></textarea>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-3"></div>-->
+<!--                                </div>-->
                                 <!-- Note area end-->
 
                                 <!-- Status area start-->
@@ -333,7 +333,7 @@
                                     <div class="col-5"></div>
 
                                     <!-- update button area start -->
-                                    <div class="col-2">
+                                    <div class="col-2" id="divButtonUpdate">
                                         <button type="button" class=" btn btnUpdate" id="btnSupplierPaymentUpdate"
                                             onclick="buttonSupplierPaymentUpdate()">
                                             <i class="fa-solid fa-file-pen"></i>
@@ -343,7 +343,7 @@
                                     <!-- update button area end -->
 
                                     <!-- Add btn area start -->
-                                    <div class="col-2">
+                                    <div class="col-2" id="divButtonAdd">
                                         <button type="button" class=" btn btnAdd" id="btnSupplierPaymentSubmit"
                                             onclick="buttonSupplierPaymentSubmit()">
                                             <i class="fa-solid fa-file-circle-plus"></i>

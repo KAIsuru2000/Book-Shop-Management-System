@@ -211,30 +211,75 @@ const rowFormRefill = (dataob, rowIndex) => {
     divButtonUpdate.style.display = "flex";
 }
 
-// delete action table elements logs method liyanawa
+// rowDelete function eken table eke row ekak delete karaddi SweetAlert2 confirm box eka open karanawa
 const rowDelete = (dataob, rowIndex) => {
-    // console log write
+    // console eke delete karana item details check karanawa
     console.log("Delete", dataob, rowIndex);
 
-    // user confirmation alerts maps
-    let userConfirm = window.confirm("Are you sure to delete following item...?" +
-        "\n Item code : " + dataob.itemcode +
-        "\n Item name : " + dataob.itemname +
-        "\n Item sale price : " + dataob.rop +
-        "\n Item Reorder Quantity : " + dataob.roq
-    );
-    if (userConfirm) {
-        // delete requests http method call trigger
-        let deleteResponce = getHTTPServiceRequest("/item/delete", "DELETE", dataob);
+    // item delete confirmation popup box sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Delete",
+        html: `Are you sure to delete following item?<br><br>` +
+              `<strong>Item Code:</strong> ${dataob.itemcode}<br>` +
+              `<strong>Item Name:</strong> ${dataob.itemname}<br>` +
+              `<strong>ROP:</strong> Rs. ${dataob.rop}<br>` +
+              `<strong>ROQ:</strong> ${dataob.roq}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // delete validation check yes kala nam
+        if (result.isConfirmed) {
+            // delete endpoint request method HTTP method call yawai
+            let deleteResponce = getHTTPServiceRequest("/item/delete", "DELETE", dataob);
 
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshItemTable();
-            refreshItemForm();
-        } else {
-            window.alert("Delete not successfully" + deleteResponce);
+            // server delete request success OK returned unoth
+            if (deleteResponce == "OK") {
+                // delete successful modal display check
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Item deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                // data table refresh karanawa
+                refreshItemTable();
+                // input form reset/clear update set parameters
+                refreshItemForm();
+            } else {
+                // failure response error sweetalert popup displays
+                Swal.fire({
+                    title: "Error!",
+                    text: "Delete not successful: " + deleteResponce,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-    }
+    });
 }
 
 // view detail row offcanvas popup methods
@@ -662,34 +707,95 @@ const checkItemFormError = () => {
 }
 
 // form submission handler details mapping liyanawa
+// form submission handler details mapping liyanawa
 const submitItemForm = () => {
+    // console log print check logs
     console.log('Add Item', item);
 
-    // check form error validations logs
+    // form errors validation results logs check
     let errors = checkItemFormError();
 
-    // confirm submit requests alerts
+    // check validation errors blank indicators check
     if (errors == "") {
-        let userConfirm = window.confirm("Are you sure to add following item details" +
-            "\n Item name : " + item.itemname +
-            "\n Item reorder quantity : " + item.roq +
-            "\n Item reorder price : " + item.rop
-        );
-
-        if (userConfirm) {
-            // submit http POST requests calls
-            let postResponce = getHTTPServiceRequest("/item/insert", "POST", item);
-            if (postResponce == "OK") {
-                window.alert("Item Added Successfully...!");
-                refreshItemTable();
-                refreshItemForm();
-                $("#offcanvasBottom").offcanvas("hide");
-            } else {
-                window.alert("Fail to submit has following error\n" + errors + postResponce);
+        // item submission confirmations pop up sweetalerts open karagannawa
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following item?<br><br>` +
+                  `<strong>Item Name:</strong> ${item.itemname}<br>` +
+                  `<strong>ROQ:</strong> ${item.roq}<br>` +
+                  `<strong>ROP:</strong> Rs. ${item.rop}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirm check yes kala nam
+            if (result.isConfirmed) {
+                // post request service method methods trigger sets database
+                let postResponce = getHTTPServiceRequest("/item/insert", "POST", item);
+                // success check responses ok returned unoth
+                if (postResponce == "OK") {
+                    // success status informational dialogues modals opens check
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Item saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // table elements reload karagannawa
+                    refreshItemTable();
+                    // form fields data clears defaults
+                    refreshItemForm();
+                    // offcanvas sheets panels close karalai hide karanawa
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // submit failed error alert sweetalert dialog open checks
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Form has following errors \n" + errors);
+        // required errors check validation warnings sweetalert modal display check
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -744,43 +850,139 @@ const checkItemFormUpdate = () => {
 
 // update buttons action mappings trigger liyanawa
 const buttonItemUpdate = () => {
+    // console print check logs
     console.log("item", item);
     console.log("oldItem", oldItem);
 
-    // validations check traces
+    // validation forms errors target inputs check
     let errors = checkItemFormError();
 
+    // validation errors checking verify blank indicators checks
     if (errors == "") {
+        // changes updates verify configurations checks
         let updates = checkItemFormUpdate();
+        // updates value differences checks
         if (updates != "") {
-            let userConfirm = window.confirm("Are you sure to update following user changes \n" + updates);
-
-            if (userConfirm) {
-                // update PUT request triggers call
-                let putResponce = getHTTPServiceRequest("/item/update", "PUT", item);
-                if (putResponce == "OK") {
-                    window.alert("item Updated Successfully...!");
-                    refreshItemTable();
-                    refreshItemForm();
-                    $("#offcanvasBottom").offcanvas("hide");
-                } else {
-                    window.alert("Fail to update has following error\n" + putResponce);
+            // updates validation confirm dialogue box sweetalert open checks
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update the following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // update validation checks yes kala nam
+                if (result.isConfirmed) {
+                    // PUT method service request call trigger updates database
+                    let putResponce = getHTTPServiceRequest("/item/update", "PUT", item);
+                    // update status success ok check
+                    if (putResponce == "OK") {
+                        // success status info alerts open check
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Item details updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        // table content metrics reload check
+                        refreshItemTable();
+                        // input forms default clear fields metrics
+                        refreshItemForm();
+                        // close offcanvas forms sheet modes checks
+                        $("#offcanvasBottom").offcanvas("hide");
+                    } else {
+                        // update failed error sweetalert modal displays checks
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponce,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            }
+            });
         } else {
-            window.alert("Nothing to updated \n" + errors);
+            // no changes details update popup box open checks
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         }
     } else {
-        window.alert("Form has following error \n" + errors);
+        // required items validation errors check sweetalert modal display check
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
 // clear button forms action mapping liyanawa
 const clearItemForm = () => {
-    let userConfirm = window.confirm("Do you need to refresh form...?");
-    if (userConfirm) {
-        refreshItemForm();
-    }
+    // clear form confirmation popup window sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you need to refresh form...?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // clear confirm yes checks
+        if (result.isConfirmed) {
+            // refresh item form function call karalai forms inputs values defaults resets karagannawa
+            refreshItemForm();
+        }
+    });
 }
 
 

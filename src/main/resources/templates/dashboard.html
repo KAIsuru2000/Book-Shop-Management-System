@@ -5,47 +5,56 @@
 
 <body>
     <div class="container-fluid">
-    <!-- nav bar start -->
-    <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
-    <!-- nav bar end -->
+        <!-- nav bar start -->
+        <nav th:replace="~{fragment :: topnavbarfragment}"> </nav>
+        <!-- nav bar end -->
 
-    <!-- Dashboard main grid area patan gannawa -->
-    
+        <!-- Dashboard main grid area patan gannawa -->
+
         <!-- Stat cards row eka -->
         <div class="row mt-4">
             <div class="col-1"></div>
             <div class="col-10">
                 <div class="row g-4">
                     <!-- Low Stock Items card eka -->
-                    <div class="col-md-3">
-                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                    <div class="col-md-4">
+                        <div class="card text-center p-3 border-secondary"
+                            style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
                             <h5 style="color: #de8e05; font-weight: bold;">Low Stock Items</h5>
-                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="lowStockCount">-</h2>
-                            <a href="/inventory" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;"
+                                id="lowStockCount">-</h2>
+                            <a href="/inventory" class="btn border-warning text-warning fw-bold hover-scale"
+                                style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
                         </div>
                     </div>
-                    <!-- Expired Quotations card eka -->
-                    <div class="col-md-3">
-                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
-                            <h5 style="color: #de8e05; font-weight: bold;">Expired Quotations</h5>
-                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="expiredQuotationsCount">-</h2>
-                            <a href="#" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
-                        </div>
-                    </div>
+                    <!--                    &lt;!&ndash; Expired Quotations card eka &ndash;&gt;-->
+                    <!--                    <div class="col-md-3">-->
+                    <!--                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">-->
+                    <!--                            <h5 style="color: #de8e05; font-weight: bold;">Expired Quotations</h5>-->
+                    <!--                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="expiredQuotationsCount">-</h2>-->
+                    <!--                            <a href="#" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                     <!-- Pending Purchase Orders card eka -->
-                    <div class="col-md-3">
-                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                    <div class="col-md-4">
+                        <div class="card text-center p-3 border-secondary"
+                            style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
                             <h5 style="color: #de8e05; font-weight: bold;">Pending Purchase Orders</h5>
-                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;" id="pendingPurchaseOrdersCount">-</h2>
-                            <a href="/purchaseOrders" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                            <h2 style="color: black; font-weight: 800; font-size: 2.2rem; margin: 15px 0;"
+                                id="pendingPurchaseOrdersCount">-</h2>
+                            <a href="/purchaseOrders" class="btn border-warning text-warning fw-bold hover-scale"
+                                style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
                         </div>
                     </div>
                     <!-- Today Income card eka -->
-                    <div class="col-md-3">
-                        <div class="card text-center p-3 border-secondary" style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
+                    <div class="col-md-4">
+                        <div class="card text-center p-3 border-secondary"
+                            style="border-radius: 15px; background-color: white; border: 2px solid #dee2e6;">
                             <h5 style="color: #de8e05; font-weight: bold;">Today Income</h5>
-                            <h2 style="color: black; font-weight: 800; font-size: 2rem; margin: 15px 0;" id="todayIncome">Rs.0.00</h2>
-                            <a href="/incomereport" class="btn border-warning text-warning fw-bold hover-scale" style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
+                            <h2 style="color: black; font-weight: 800; font-size: 2rem; margin: 15px 0;"
+                                id="todayIncome">Rs.0.00</h2>
+                            <a href="/incomereport" class="btn border-warning text-warning fw-bold hover-scale"
+                                style="border-radius: 10px; border-width: 2px;">See More &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -54,19 +63,25 @@
         </div>
 
         <!-- Quick payment button eka cards saha details row deka medata set karana container eka -->
-        <div class="row position-relative" style="height: 0; z-index: 100;">
-            <div class="col-12 d-flex justify-content-center">
-                <!-- Pill-shaped Quick payment offcanvas button eka. Clover icon eka ha "Quick Payment" text eka sahithai. -->
-                <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="refreshCustomerPaymentForm()" style="background: linear-gradient(#1c1e1f, #009dc5, #131313); border: 2px solid white; border-radius: 25px; padding: 6px 18px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.3); transform: translateY(-50%); transition: transform 0.2s ease-in-out;" onmouseover="this.style.transform='translateY(-50%) scale(1.08)'" onmouseout="this.style.transform='translateY(-50%) scale(1)'">
-                    <!-- Clover custom SVG icon eka vama paththen -->
-                    <svg viewBox="0 0 100 100" style="width: 24px; height: 24px;">
-                        <path d="M 50 5 C 58 5, 62 22, 72 28 C 82 36, 95 42, 95 50 C 95 58, 82 64, 72 72 C 62 80, 58 95, 50 95 C 42 95, 38 80, 28 72 C 18 64, 5 58, 5 50 C 5 42, 18 36, 28 28 C 38 20, 42 5, 50 5 Z" fill="#ff9800" stroke="white" stroke-width="6"/>
-                    </svg>
-                    <!-- Quick Payment text description -->
-                    <span style="font-size: 14px; letter-spacing: 0.5px;">Quick Payment</span>
-                </button>
-            </div>
-        </div>
+<!--        <div class="row position-relative" style="height: 0; z-index: 100;">-->
+<!--            <div class="col-12 d-flex justify-content-center">-->
+<!--                &lt;!&ndash; Pill-shaped Quick payment offcanvas button eka. Clover icon eka ha "Quick Payment" text eka sahithai. &ndash;&gt;-->
+<!--                <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom"-->
+<!--                    aria-controls="offcanvasBottom" onclick="refreshCustomerPaymentForm()"-->
+<!--                    style="background: linear-gradient(#1c1e1f, #009dc5, #131313); border: 2px solid white; border-radius: 25px; padding: 6px 18px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.3); transform: translateY(-50%); transition: transform 0.2s ease-in-out;"-->
+<!--                    onmouseover="this.style.transform='translateY(-50%) scale(1.08)'"-->
+<!--                    onmouseout="this.style.transform='translateY(-50%) scale(1)'">-->
+<!--                    &lt;!&ndash; Clover custom SVG icon eka vama paththen &ndash;&gt;-->
+<!--                    <svg viewBox="0 0 100 100" style="width: 24px; height: 24px;">-->
+<!--                        <path-->
+<!--                            d="M 50 5 C 58 5, 62 22, 72 28 C 82 36, 95 42, 95 50 C 95 58, 82 64, 72 72 C 62 80, 58 95, 50 95 C 42 95, 38 80, 28 72 C 18 64, 5 58, 5 50 C 5 42, 18 36, 28 28 C 38 20, 42 5, 50 5 Z"-->
+<!--                            fill="#ff9800" stroke="white" stroke-width="6" />-->
+<!--                    </svg>-->
+<!--                    &lt;!&ndash; Quick Payment text description &ndash;&gt;-->
+<!--                    <span style="font-size: 14px; letter-spacing: 0.5px;">Quick Payment</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <!-- Details block row eka (Bookstore image eka ha monthly income chart eka) -->
         <div class="row mt-4 mb-4">
@@ -75,19 +90,25 @@
                 <div class="row">
                     <!-- Bookstore Image panel eka (Usa adu karala sadasa thibe) -->
                     <div class="col-md-6 d-flex mb-3">
-                        <div style="width: 100%; height: 230px; border: 4px solid white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                            <img src="/image/dashboard_img.png" alt="Shop Stock Image" style="width: 100%; height: 100%;">
+                        <div
+                            style="width: 100%; height: 230px; border: 4px solid white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <img src="/image/dashboard_img.png" alt="Shop Stock Image"
+                                style="width: 100%; height: 100%;">
                         </div>
                     </div>
                     <!-- Six Month Income chart panel eka (Usa adu karala sadasa thibe) -->
                     <div class="col-md-6 d-flex mb-3">
-                        <div class="divTable flex-grow-1 p-3 d-flex flex-column align-items-center justify-content-center" style="background-color: white; height: 230px; border-radius: 20px; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                            <h5 style="color: #004658; font-weight: bold;" class="mb-2">Previous Six Month Income Chart</h5>
+                        <div class="divTable flex-grow-1 p-3 d-flex flex-column align-items-center justify-content-center"
+                            style="background-color: white; height: 230px; border-radius: 20px; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <h5 style="color: #004658; font-weight: bold;" class="mb-2">Previous Six Month Income Chart
+                            </h5>
                             <!-- Chart body usa 160px dakwa adu karala thibe -->
                             <div id="chartContainer" style="width: 100%; height: 160px; padding: 5px;">
                                 <!-- Offline dynamic SVG chart container design eka -->
-                                <svg id="dashboardChartSvg" width="100%" height="100%" viewBox="0 0 600 300" preserveAspectRatio="none">
-                                    <text x="300" y="150" fill="#999" text-anchor="middle" font-family="sans-serif">Loading Chart Data...</text>
+                                <svg id="dashboardChartSvg" width="100%" height="100%" viewBox="0 0 600 300"
+                                    preserveAspectRatio="none">
+                                    <text x="300" y="150" fill="#999" text-anchor="middle"
+                                        font-family="sans-serif">Loading Chart Data...</text>
                                 </svg>
                             </div>
                         </div>
@@ -101,14 +122,14 @@
 
     <!-- offcanvas area start -->
     <div class="offcanvas offcanvas-bottom offCanvasArea" style="height: 490px;" tabindex="-1" data-bs-scroll="true"
-         data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+        data-bs-backdrop="false" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
         <div class="offcanvas-body small">
 
             <!-- form area start -->
             <div class="row">
                 <div class="col-12">
                     <div class="divForm"><!--css class | 1rem set margin top | 4rem set margin end  -->
-                        <form onsubmit="return false"  id="formCustomerPayment">
+                        <form onsubmit="return false" id="formCustomerPayment">
 
                             <!-- required mark and offcanvas close button start -->
                             <div class="row">
@@ -116,7 +137,7 @@
                                 <!-- offcanvas close button start -->
                                 <div class="col-1">
                                     <button type="button" class=" offCanvasCloseBtn" data-bs-dismiss="offcanvas"
-                                            aria-label="Close">X</button>
+                                        aria-label="Close">X</button>
                                 </div>
                                 <!-- offcanvas close button close -->
 
@@ -139,12 +160,13 @@
                                 <div class="col-3"></div>
                                 <div class="col-6">
                                     <div class="input-group mb-3">
-                                        <label class="input-group-text lablBg" for="selectCusName"> Customer Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
-                                            <span class="fw-bold text-danger">*</span></label>
+                                        <label class="input-group-text lablBg" for="selectCusName"> Customer Name &nbsp;
+                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
+                                            <span class="fw-bold text-danger">(optional)</span></label>
                                         <select class="form-select" id="selectCusName"
-                                                onchange="selectDainamicElementValidater(this , 'customerPayment', 'invoice_id')"
-                                                onclick="selectDainamicElementValidater(this , 'customerPayment', 'invoice_id')"
-                                                data-bs-toggle="tooltip" title="Select the customer Name correctly here.">
+                                            onchange="selectDainamicElementValidater(this , 'customerPayment', 'invoice_id')"
+                                            onclick="selectDainamicElementValidater(this , 'customerPayment', 'invoice_id')"
+                                            data-bs-toggle="tooltip" title="Select the customer Name correctly here.">
                                             <option selected disabled>Select Customer Name</option>
                                             <option value=""></option>
                                             <option value=""></option>
@@ -171,8 +193,7 @@
                                                 <select class="form-select" id="selectItem"
                                                     onchange="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
                                                     onclick="selectDainamicElementValidater(this , 'purchaseOrderHasItem', 'item_id')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Select the Item correctly here.">
+                                                    data-bs-toggle="tooltip" title="Select the Item correctly here.">
                                                     <option selected disabled>Select Item</option>
                                                     <option value=""></option>
                                                     <option value=""></option>
@@ -186,7 +207,8 @@
                                                 <span class="input-group-text lablBg"
                                                     id="inputGroup-sizing-default">Unit Price : <span
                                                         class="fw-bold text-danger">*</span></span>
-                                                <input placeholder="Enter Unit Price" type="text" class="form-control"  aria-label="Sizing example input"
+                                                <input placeholder="Enter Unit Price" type="text" class="form-control"
+                                                    aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textUnitPrice"
                                                     required
                                                     onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'uniteprice')"
@@ -201,35 +223,34 @@
                                     <!-- Item and Unit Price area end -->
                                     <!-- Discounted Price and Quantity area start -->
                                     <div class="row mt-4">
-<!--                                        &lt;!&ndash; Discounted Price area start &ndash;&gt;-->
-<!--                                        <div class="col-6">-->
-<!--                                            <div class="input-group">-->
-<!--                                                <span class="input-group-text lablBg"-->
-<!--                                                    id="inputGroup-sizing-default">Discount Price : <span-->
-<!--                                                        class="fw-bold text-danger">*</span></span>-->
-<!--                                                <input placeholder="Enter Discount Price" type="text" class="form-control"  aria-label="Sizing example input"-->
-<!--                                                    aria-describedby="inputGroup-sizing-default" id="textDiscountedPrice"-->
-<!--                                                    required-->
-<!--                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"-->
-<!--                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"-->
-<!--                                                    data-bs-toggle="tooltip"-->
-<!--                                                    title="Enter the Discount Price correctly here.">-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        &lt;!&ndash; Discounted Price area end &ndash;&gt;-->
+                                        <!--                                        &lt;!&ndash; Discounted Price area start &ndash;&gt;-->
+                                        <!--                                        <div class="col-6">-->
+                                        <!--                                            <div class="input-group">-->
+                                        <!--                                                <span class="input-group-text lablBg"-->
+                                        <!--                                                    id="inputGroup-sizing-default">Discount Price : <span-->
+                                        <!--                                                        class="fw-bold text-danger">*</span></span>-->
+                                        <!--                                                <input placeholder="Enter Discount Price" type="text" class="form-control"  aria-label="Sizing example input"-->
+                                        <!--                                                    aria-describedby="inputGroup-sizing-default" id="textDiscountedPrice"-->
+                                        <!--                                                    required-->
+                                        <!--                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"-->
+                                        <!--                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'discountedprice')"-->
+                                        <!--                                                    data-bs-toggle="tooltip"-->
+                                        <!--                                                    title="Enter the Discount Price correctly here.">-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </div>-->
+                                        <!--                                        &lt;!&ndash; Discounted Price area end &ndash;&gt;-->
                                         <!-- Quantity area start -->
                                         <div class="col-6">
                                             <div class="input-group">
                                                 <span class="input-group-text lablBg">Quantity :
                                                     <span class="fw-bold text-danger">*</span></span>
-                                                <input type="number" class="form-control"
-                                                    placeholder="Enter Quantity" aria-label="Sizing example input"
+                                                <input type="number" class="form-control" placeholder="Enter Quantity"
+                                                    aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textQuantity"
                                                     required
                                                     onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
                                                     onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'quentity')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter the Quantity correctly here.">
+                                                    data-bs-toggle="tooltip" title="Enter the Quantity correctly here.">
                                             </div>
                                         </div>
                                         <!-- Quantity area end -->
@@ -239,14 +260,14 @@
                                                 <span class="input-group-text lablBg">Line
                                                     Price :
                                                     <span class="fw-bold text-danger">*</span></span>
-                                                <input type="number" class="form-control"
-                                                       placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                       aria-describedby="inputGroup-sizing-default" id="textLinePrice"
-                                                       required
-                                                       onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                       onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
-                                                       data-bs-toggle="tooltip"
-                                                       title="Enter the Line Price correctly here.">
+                                                <input type="number" class="form-control" placeholder="Enter Line Price"
+                                                    aria-label="Sizing example input"
+                                                    aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                    required
+                                                    onkeyup="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                    onclick="textValidator(this, '^.*$', 'purchaseOrderHasItem', 'lineprice')"
+                                                    data-bs-toggle="tooltip"
+                                                    title="Enter the Line Price correctly here.">
                                             </div>
                                         </div>
                                         <!-- Line Price area end -->
@@ -272,8 +293,8 @@
 
                                         <!-- Add btn area start -->
                                         <div class="col-3">
-                                            <button type="button" id="btnPurchaseOrderItemSubmit"
-                                                class=" btn btnAdd" onclick="buttonPurchaseOrderItemSubmit()">
+                                            <button type="button" id="btnPurchaseOrderItemSubmit" class=" btn btnAdd"
+                                                onclick="buttonPurchaseOrderItemSubmit()">
                                                 <i class="fa-solid fa-file-circle-plus"></i>
                                                 Add
                                             </button>
@@ -309,28 +330,37 @@
                                 </div>
                                 <div class="col-2"></div>
                             </div>
-                            <!-- inner form and table end -->                            <!-- Payment Method and Invoice Amount area start-->
+                            <!-- inner form and table end --> <!-- Payment Method and Invoice Amount area start-->
                             <div class="row mt-3">
                                 <div class="col-1"></div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Payment Method &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:
-                                                <span class="fw-bold text-danger">*</span></span>
+                                        <span class="input-group-text lablBg">Payment Method &nbsp; &nbsp; &nbsp; &nbsp;
+                                            &nbsp; &nbsp; &nbsp;:
+                                            <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="
-                                            Enter Payment Method" class="form-control" aria-label="Sizing example input"
-                                               aria-describedby="inputGroup-sizing-default" id="textPaymentMethod" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'paymentmethod')" onclick="textValidator(this, '^.*$', 'customerPayment', 'paymentmethod')" data-bs-toggle="tooltip"
-                                               title="Enter the customer's Payment Method correctly here.">
+                                            Enter Payment Method" class="form-control"
+                                            aria-label="Sizing example input"
+                                            aria-describedby="inputGroup-sizing-default" id="textPaymentMethod" required
+                                            onkeyup="textValidator(this, '^.*$', 'customerPayment', 'paymentmethod')"
+                                            onclick="textValidator(this, '^.*$', 'customerPayment', 'paymentmethod')"
+                                            data-bs-toggle="tooltip"
+                                            title="Enter the customer's Payment Method correctly here.">
                                     </div>
                                 </div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Invoice Amount
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
-                                                <span class="fw-bold text-danger">*</span></span>
+                                        <span class="input-group-text lablBg">Invoice Amount
+                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                            <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="
-                                            Enter Invoice Amount" class="form-control" aria-label="Sizing example input"
-                                               aria-describedby="inputGroup-sizing-default" id="textInvoiceAmount" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'invoiceamount')" onclick="textValidator(this, '^.*$', 'customerPayment', 'invoiceamount')" data-bs-toggle="tooltip"
-                                               title="Enter the customer's Invoice Amount correctly here.">
+                                            Enter Invoice Amount" class="form-control"
+                                            aria-label="Sizing example input"
+                                            aria-describedby="inputGroup-sizing-default" id="textInvoiceAmount" required
+                                            onkeyup="textValidator(this, '^.*$', 'customerPayment', 'invoiceamount')"
+                                            onclick="textValidator(this, '^.*$', 'customerPayment', 'invoiceamount')"
+                                            data-bs-toggle="tooltip"
+                                            title="Enter the customer's Invoice Amount correctly here.">
                                     </div>
                                 </div>
                                 <div class="col-1"></div>
@@ -342,24 +372,31 @@
                                 <div class="col-1"></div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Paid Amount
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
-                                                <span class="fw-bold text-danger">*</span></span>
+                                        <span class="input-group-text lablBg">Paid Amount
+                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                            <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="
                                             Enter Paid Amount" class="form-control" aria-label="Sizing example input"
-                                               aria-describedby="inputGroup-sizing-default" id="textPaidAmount" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'paidamount')" onclick="textValidator(this, '^.*$', 'customerPayment', 'paidamount')" data-bs-toggle="tooltip"
-                                               title="Enter the customer's Paid Amount correctly here.">
+                                            aria-describedby="inputGroup-sizing-default" id="textPaidAmount" required
+                                            onkeyup="textValidator(this, '^.*$', 'customerPayment', 'paidamount')"
+                                            onclick="textValidator(this, '^.*$', 'customerPayment', 'paidamount')"
+                                            data-bs-toggle="tooltip"
+                                            title="Enter the customer's Paid Amount correctly here.">
                                     </div>
                                 </div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Balance Amount
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
-                                                <span class="fw-bold text-danger">*</span></span>
+                                        <span class="input-group-text lablBg">Balance Amount
+                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
+                                            <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="
-                                            Enter Balance Amount" class="form-control" aria-label="Sizing example input"
-                                               aria-describedby="inputGroup-sizing-default" id="textBalanceAmount" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'balanceamount')" onclick="textValidator(this, '^.*$', 'customerPayment', 'balanceamount')" data-bs-toggle="tooltip"
-                                               title="Enter the customer's Balance Amount correctly here.">
+                                            Enter Balance Amount" class="form-control"
+                                            aria-label="Sizing example input"
+                                            aria-describedby="inputGroup-sizing-default" id="textBalanceAmount" required
+                                            onkeyup="textValidator(this, '^.*$', 'customerPayment', 'balanceamount')"
+                                            onclick="textValidator(this, '^.*$', 'customerPayment', 'balanceamount')"
+                                            data-bs-toggle="tooltip"
+                                            title="Enter the customer's Balance Amount correctly here.">
                                     </div>
                                 </div>
                                 <div class="col-1"></div>
@@ -371,23 +408,30 @@
                                 <div class="col-1"></div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Card Type
-                                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; :
-                                                <span class="fw-bold text-danger">*</span></span>
+                                        <span class="input-group-text lablBg">Card Type
+                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                            &nbsp; :
+                                            <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="
                                             Enter Card Type" class="form-control" aria-label="Sizing example input"
-                                               aria-describedby="inputGroup-sizing-default" id="textCardType" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'cardtype')" onclick="textValidator(this, '^.*$', 'customerPayment', 'cardtype')" data-bs-toggle="tooltip"
-                                               title="Enter the customer's Card Type correctly here.">
+                                            aria-describedby="inputGroup-sizing-default" id="textCardType" required
+                                            onkeyup="textValidator(this, '^.*$', 'customerPayment', 'cardtype')"
+                                            onclick="textValidator(this, '^.*$', 'customerPayment', 'cardtype')"
+                                            data-bs-toggle="tooltip"
+                                            title="Enter the customer's Card Type correctly here.">
                                     </div>
                                 </div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                            <span class="input-group-text lablBg">Reference No &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
-                                                <span class="fw-bold text-danger">*</span></span>
+                                        <span class="input-group-text lablBg">Reference No &nbsp; &nbsp; &nbsp; &nbsp;
+                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;:
+                                            <span class="fw-bold text-danger">*</span></span>
                                         <input type="text" placeholder="
                                             Enter Reference No" class="form-control" aria-label="Sizing example input"
-                                               aria-describedby="inputGroup-sizing-default" id="textReferenceNo" required onkeyup="textValidator(this, '^.*$', 'customerPayment', 'referenceno')" onclick="textValidator(this, '^.*$', 'customerPayment', 'referenceno')" data-bs-toggle="tooltip"
-                                               title="Enter the Reference No correctly here.">
+                                            aria-describedby="inputGroup-sizing-default" id="textReferenceNo" required
+                                            onkeyup="textValidator(this, '^.*$', 'customerPayment', 'referenceno')"
+                                            onclick="textValidator(this, '^.*$', 'customerPayment', 'referenceno')"
+                                            data-bs-toggle="tooltip" title="Enter the Reference No correctly here.">
                                     </div>
                                 </div>
                                 <div class="col-1"></div>
@@ -399,12 +443,13 @@
                                 <div class="col-1"></div>
                                 <div class="col-5">
                                     <div class="input-group mb-3">
-                                        <label class="input-group-text lablBg" for="selectCusPaymentStatus"> Customer Payment Status:
+                                        <label class="input-group-text lablBg" for="selectCusPaymentStatus"> Customer
+                                            Payment Status:
                                             <span class="fw-bold text-danger">*</span></label>
                                         <select class="form-select" id="selectCusPaymentStatus"
-                                                onchange="selectDainamicElementValidater(this , 'customerPayment', 'customerpaymentstatus_id')"
-                                                onclick="selectDainamicElementValidater(this , 'customerPayment', 'customerpaymentstatus_id')"
-                                                data-bs-toggle="tooltip" title="Select the customer
+                                            onchange="selectDainamicElementValidater(this , 'customerPayment', 'customerpaymentstatus_id')"
+                                            onclick="selectDainamicElementValidater(this , 'customerPayment', 'customerpaymentstatus_id')"
+                                            data-bs-toggle="tooltip" title="Select the customer
                                             Payment Status correctly here.">
                                             <option selected disabled>Select Customer Payment Status</option>
                                             <option value=""></option>
@@ -433,7 +478,8 @@
 
                                 <!-- Add btn area start -->
                                 <div class="col-2">
-                                    <button type="button" class=" btn btnAdd" id="btnCusSubmit" onclick="buttonCusSubmit()">
+                                    <button type="button" class=" btn btnAdd" id="btnCusSubmit"
+                                        onclick="buttonCusSubmit()">
                                         <!-- buttonEmpSubmit function eka (employee.js)-->
                                         <i class="fa-solid fa-file-circle-plus"></i>
                                         Add

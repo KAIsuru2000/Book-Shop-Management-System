@@ -99,7 +99,7 @@ const refreshInvoiceForm = () => {
         let option = document.createElement("option");
         // customer object eke value details json parser string karala option value ekata set karanawa
         option.value = JSON.stringify(customer);
-        
+
         // customer ge wathman points gannawa points null nam eka 0 set karanawa
         let pts = customer.points != null ? customer.points : 0;
         // active card tier details placeholder name set karagannawa
@@ -128,7 +128,7 @@ const refreshInvoiceForm = () => {
                 }
             }
         }
-        
+
         // display information and template layout string set karagannawa: Name (Points [Card]) - Mobile Number
         option.innerText = customer.mobileno + " - " + customer.fullname + " (" + pts + "pts [" + card + "])";
         // build option elements dropdown ekata append karagannawa
@@ -182,6 +182,16 @@ const refreshInvoiceForm = () => {
 
 // filter sales prices based on selected item
 const filterSalesPrices = () => {
+    // Reset quantity and line price when new item is selected/cleared
+    textQuantity.value = "";
+    textLinePrice.value = "";
+    if (typeof invoiceHasInventory !== 'undefined') {
+        invoiceHasInventory.quentity = null;
+        invoiceHasInventory.lineprice = null;
+    }
+    setDefault([textQuantity, textLinePrice]);
+    textQuantity.placeholder = "Enter Quantity";
+
     if (selectItem.value === "") {
         selectUnitPrice.innerHTML = "";
         let optionMsg = document.createElement("option");
@@ -237,6 +247,86 @@ const filterSalesPrices = () => {
     }
     calculateSeasonalDiscount();
 }
+
+// Function to validate quantity against available inventory quantity
+const validateQuantity = () => {
+    let quantityValue = textQuantity.value;
+    let prevElement = textQuantity.previousElementSibling;
+
+    // Check if item dropdown has a selection
+    if (selectItem.value === "") {
+        textQuantity.placeholder = "Enter Quantity";
+        textQuantity.style.borderBottom = "4px solid red";
+        prevElement.style.backgroundColor = "red";
+        textQuantity.classList.add("is-invalid");
+        textQuantity.classList.remove("is-valid");
+        invoiceHasInventory.quentity = null;
+        generateLinePrice();
+        return;
+    }
+
+    let selectedInventoryObj = JSON.parse(selectItem.value);
+    let selectedItemId = selectedInventoryObj.item_id.id;
+    let selectedPrice = selectUnitPrice.value;
+    let availableQty = 0;
+    let matchingInventory = null;
+
+    if (selectedPrice !== "") {
+        // Find matching inventory record with selected unit price and item ID
+        matchingInventory = window.activeInventoriesList.find(inventory => 
+            inventory.item_id.id === selectedItemId && 
+            parseFloat(inventory.salesprice).toFixed(2) === parseFloat(selectedPrice).toFixed(2)
+        );
+        if (matchingInventory) {
+            availableQty = matchingInventory.avalablequantity;
+            // Bind the correct inventory_id to invoiceHasInventory
+            invoiceHasInventory.inventory_id = matchingInventory;
+        } else {
+            availableQty = selectedInventoryObj.avalablequantity;
+        }
+    } else {
+        availableQty = selectedInventoryObj.avalablequantity;
+    }
+
+    // Set dynamic placeholder to show available quantity
+    textQuantity.placeholder = "Enter Quantity (Max: " + availableQty + ")";
+
+    if (quantityValue !== "") {
+        let qty = parseInt(quantityValue);
+        let regExp = new RegExp("^[1-9][0-9]*$");
+        
+        // Quantity must be a valid positive integer and less than or equal to available quantity
+        if (regExp.test(quantityValue) && qty <= availableQty && qty > 0) {
+            textQuantity.style.borderBottom = "4px solid green";
+            prevElement.style.backgroundColor = "green";
+            textQuantity.classList.remove("is-invalid");
+            textQuantity.classList.add("is-valid");
+            invoiceHasInventory.quentity = quantityValue;
+        } else {
+            textQuantity.style.borderBottom = "4px solid red";
+            prevElement.style.backgroundColor = "red";
+            textQuantity.classList.add("is-invalid");
+            textQuantity.classList.remove("is-valid");
+            invoiceHasInventory.quentity = null;
+        }
+    } else {
+        if (textQuantity.required) {
+            textQuantity.style.borderBottom = "4px solid red";
+            prevElement.style.backgroundColor = "red";
+            textQuantity.classList.add("is-invalid");
+            textQuantity.classList.remove("is-valid");
+            invoiceHasInventory.quentity = null;
+        } else {
+            textQuantity.style.borderBottom = "1px solid #ced4da";
+            prevElement.style.backgroundColor = "black";
+            textQuantity.classList.remove("is-invalid");
+            textQuantity.classList.remove("is-valid");
+            invoiceHasInventory.quentity = null;
+        }
+    }
+    generateLinePrice();
+}
+
 
 // get customer name function
 const getCustomerName = (dataob) => {
@@ -342,28 +432,91 @@ const invoiceRowFormRefill = (ob, index) => {
 }
 
 // soft delete row by changing status to Canceled
+// meya invoice row delete kirime function ekayi
 const invoiceRowDelete = (ob, index) => {
+    // console log eke delete details pennanawa
     console.log("Delete", ob, index);
+    // invoice eka cancel wela thiyedath balanawa
     if (ob.invoicestatus_id.name === "Canceled") {
-        window.alert("This Invoice is already Canceled!");
+        // ehenam cancel karanna baha kiyala alert ekak danawa
+        Swal.fire({
+            title: "Already Canceled",
+            text: "This Invoice is already Canceled!",
+            icon: "warning",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-warning-btn'
+            },
+            buttonsStyling: false
+        });
         return;
     }
 
-    let userConfirm = window.confirm("Are you sure to Cancel the following Invoice?\n" +
-        "Invoice No: " + ob.invoiceno + "\n" +
-        "Customer: " + (ob.customer_id ? ob.customer_id.fullname : "N/A") + "\n" +
-        "Net Amount: Rs. " + ob.netamount
-    );
-    if (userConfirm) {
-        let deleteResponse = getHTTPServiceRequest("/invoice/delete", "DELETE", ob);
-        if (deleteResponse === "OK") {
-            window.alert("Invoice Canceled successfully!");
-            refreshInvoiceTable();
-            refreshInvoiceForm();
-        } else {
-            window.alert("Failed to cancel:\n" + deleteResponse);
+    // cancel kirima thahawuru karaganna sweetalert pop up eka open karanawa
+    Swal.fire({
+        title: "Confirm Cancel",
+        html: `Are you sure to Cancel the following Invoice?<br><br>` +
+              `<strong>Invoice No:</strong> ${ob.invoiceno}<br>` +
+              `<strong>Customer:</strong> ${ob.customer_id ? ob.customer_id.fullname : "N/A"}<br>` +
+              `<strong>Net Amount:</strong> Rs. ${ob.netamount}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Cancel',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Close',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // user cancel kirima confirm kala nam
+        if (result.isConfirmed) {
+            // delete request service eka call karanawa
+            let deleteResponse = getHTTPServiceRequest("/invoice/delete", "DELETE", ob);
+            // server eken OK labunoth
+            if (deleteResponse === "OK") {
+                // cancel successful modal popup eka open karanawa
+                Swal.fire({
+                    title: "Canceled!",
+                    text: "Invoice Canceled successfully!",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                // table reload karanawa
+                refreshInvoiceTable();
+                // form refresh karanawa
+                refreshInvoiceForm();
+            } else {
+                // failure modal eka open karanawa
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to cancel: " + deleteResponse,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-    }
+    });
 }
 
 // view row details dynamically
@@ -555,17 +708,37 @@ const invoiceItemFormRefill = (ob, index) => {
 }
 
 const invoiceItemDelete = (ob, index) => {
-    let userConfirm = window.confirm("Are you sure to remove this item?");
-    if (userConfirm) {
-        invoice.invoiceHasInventoryList.splice(index, 1);
-        refreshInvoiceInnerForm();
-    }
+    // item eka delete karanna confirm box eka sweetalert walin hadagannawa
+    Swal.fire({
+        title: "Confirm Remove",
+        text: "Are you sure to remove this item?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // user confirm kala nam
+        if (result.isConfirmed) {
+            // dynamic list eken item eka remove karanawa
+            invoice.invoiceHasInventoryList.splice(index, 1);
+            // inner form refresh karanawa
+            refreshInvoiceInnerForm();
+        }
+    });
 }
 
 const buttonInvoiceItemSubmit = () => {
     // errors record karaganna patha empty string ekak thiyagannawa
     let errors = "";
-    
+
     // item select karala thiyeda kiyala check karanawa
     if (invoiceHasInventory.inventory_id == null) {
         errors += "Please select an Item!\n";
@@ -604,30 +777,79 @@ const buttonInvoiceItemSubmit = () => {
 
         // item eka already check eka true nam alert ekak denawa
         if (isExist) {
-            window.alert("This item has already been added to the list!");
+            Swal.fire({
+                title: "Duplicate Item",
+                text: "This item has already been added to the list!",
+                icon: "warning",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         } else {
             // details conform check karanna dialog confirm box eka display karanawa
-            let userConfirm = window.confirm("Are you sure to add following item to invoice...?"
-                + "\n Item : " + invoiceHasInventory.inventory_id.item_id.itemname
-                + "\n Unit Price : " + invoiceHasInventory.uniteprice
-                // + "\n Discounted Price : " + invoiceHasInventory.discountprice
-                + "\n Quantity : " + invoiceHasInventory.quentity
-                + "\n Line Price : " + invoiceHasInventory.lineprice
-            );
-            
-            // confirm kala nam dynamic list ekata push karala form eka refresh karanawa
-            if (userConfirm) {
-                // item successfully conform alert box eka display karanawa
-                window.alert("Item added successfully to invoice...!");
-                // main invoice inventory list ekata object eka push karanawa
-                invoice.invoiceHasInventoryList.push(invoiceHasInventory);
-                // refresh form action eka call karanawa
-                refreshInvoiceInnerForm();
-            }
+            Swal.fire({
+                title: "Confirm Add Item",
+                html: `Are you sure to add the following item to invoice?<br><br>` +
+                      `<strong>Item:</strong> ${invoiceHasInventory.inventory_id.item_id.itemname}<br>` +
+                      `<strong>Unit Price:</strong> Rs. ${invoiceHasInventory.uniteprice}<br>` +
+                      `<strong>Quantity:</strong> ${invoiceHasInventory.quentity}<br>` +
+                      `<strong>Line Price:</strong> Rs. ${invoiceHasInventory.lineprice}`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-confirm-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // confirm kala nam dynamic list ekata push karala form eka refresh karanawa
+                if (result.isConfirmed) {
+                    // item successfully conform alert box eka display karanawa
+                    Swal.fire({
+                        title: "Added!",
+                        text: "Item added successfully to invoice!",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // main invoice inventory list ekata object eka push karanawa
+                    invoice.invoiceHasInventoryList.push(invoiceHasInventory);
+                    // refresh form action eka call karanawa
+                    refreshInvoiceInnerForm();
+                }
+            });
         }
     } else {
         // invalid data thiyeda kiyala errors alert box eke display karanawa
-        window.alert("Please fill all required fields correctly:\n" + errors);
+        Swal.fire({
+            title: "Validation Error",
+            html: "Please fill all required fields correctly:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -658,27 +880,91 @@ const checkFormError = () => {
 
 // invoice submit action
 const buttonInvoiceSubmit = () => {
+    // console log eke details check karanawa
     console.log("Add Invoice", invoice);
+    // form inputs errors check karagannawa
     let errors = checkFormError();
+    // errors kisith nathnam
     if (errors === "") {
-        let userConfirm = window.confirm("Are you sure to add this Invoice?\n" +
-            "Customer: " + (invoice.customer_id ? invoice.customer_id.fullname : "N/A") + "\n" +
-            "Total Amount: Rs. " + invoice.totalamount + "\n" +
-            "Net Amount: Rs. " + invoice.netamount
-        );
-        if (userConfirm) {
-            let postResponse = getHTTPServiceRequest("/invoice/insert", "POST", invoice);
-            if (postResponse === "OK") {
-                window.alert("Invoice saved successfully!");
-                refreshInvoiceTable();
-                refreshInvoiceForm();
-                $("#offcanvasBottom").offcanvas("hide");
-            } else {
-                window.alert("Failed to submit:\n" + postResponse);
+        // invoice submit action validation confirm pop up box eka open karanawa
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add this Invoice?<br><br>` +
+                  `<strong>Customer:</strong> ${invoice.customer_id ? invoice.customer_id.fullname : "N/A"}<br>` +
+                  `<strong>Total Amount:</strong> Rs. ${invoice.totalamount}<br>` +
+                  `<strong>Net Amount:</strong> Rs. ${invoice.netamount}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirmation ok kala nam
+            if (result.isConfirmed) {
+                // service request post method eken database save kirimata request yawai
+                let postResponse = getHTTPServiceRequest("/invoice/insert", "POST", invoice);
+                // success return unoth
+                if (postResponse === "OK") {
+                    // invoice saved success message alert modal box eka pennanawa
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Invoice saved successfully!",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // table data refresh karagannawa
+                    refreshInvoiceTable();
+                    // form fields clear/refresh karagannawa
+                    refreshInvoiceForm();
+                    // form modal offcanvas eka close karagannawa
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // service submit failed warnings sweetalert modal ekin dakkwanna
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponse,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Please fill all required fields correctly:\n" + errors);
+        // required fields fill error warning sweetalert popup alert open karanawa
+        Swal.fire({
+            title: "Validation Error",
+            html: "Please fill all required fields correctly:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -710,27 +996,106 @@ const checkFormUpdate = () => {
 
 // invoice update action
 const buttonInvoiceUpdate = () => {
+    // validation error items checks check karagannawa
     let errors = checkFormError();
+    // errors kisith nathnam
     if (errors === "") {
+        // dynamic field updates updates values verify checks karagannawa
         let updates = checkFormUpdate();
+        // wenas weem kisith sidu wila nathnam
         if (updates === "") {
-            window.alert("Nothing to update!");
+            // no updates changed information box modal popups dakkwanna
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         } else {
-            let userConfirm = window.confirm("Are you sure to update this Invoice with following changes?\n" + updates);
-            if (userConfirm) {
-                let putResponse = getHTTPServiceRequest("/invoice/update", "PUT", invoice);
-                if (putResponse === "OK") {
-                    window.alert("Invoice updated successfully!");
-                    refreshInvoiceTable();
-                    refreshInvoiceForm();
-                    $("#offcanvasBottom").offcanvas("hide");
-                } else {
-                    window.alert("Failed to update:\n" + putResponse);
+            // updates confirmaton checking sweetalert dialogue popup box open karagannawa
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update this Invoice with following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // update confirm action ok kala nam
+                if (result.isConfirmed) {
+                    // service update request method put method eken database yawai
+                    let putResponse = getHTTPServiceRequest("/invoice/update", "PUT", invoice);
+                    // update status response success returned unoth
+                    if (putResponse === "OK") {
+                        // success update information alert popup box open karanawa
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Invoice updated successfully!",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        // table content refresh karalai
+                        refreshInvoiceTable();
+                        // form clear refresh settings default fill karanawa
+                        refreshInvoiceForm();
+                        // input forms offcanvas sheet models hides/close karagannawa
+                        $("#offcanvasBottom").offcanvas("hide");
+                    } else {
+                        // error alerts response sweetalerts modal show karagannawa
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponse,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            }
+            });
         }
     } else {
-        window.alert("Please fill all required fields correctly:\n" + errors);
+        // required errors check validation warnings sweetalert modal dialogue box dakkwanna
+        Swal.fire({
+            title: "Validation Error",
+            html: "Please fill all required fields correctly:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -762,10 +1127,29 @@ const buttonPrintRow = () => {
 
 // clear invoice form action
 const clearInvoiceForm = () => {
-    let userConfirm = window.confirm("Do you want to clear/refresh the form?");
-    if (userConfirm) {
-        refreshInvoiceForm();
-    }
+    // clear form confirmation popup window sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you want to clear/refresh the form?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // clear confirm check yes kala nam
+        if (result.isConfirmed) {
+            // refresh invoice form function call karala form eka reset default settings set karanawa
+            refreshInvoiceForm();
+        }
+    });
 }
 
 // invoice item clear button eka magin inner form eka clear wimta
@@ -777,12 +1161,12 @@ const buttonInvoiceItemClear = () => {
 const loyaltyDiscountCalculate = () => {
     // total amount eka text field eken read karala float number ekak widiyata gannawa
     let totalAmount = parseFloat(textTotalAmount.value);
-    
+
     // total amount eka valid number ekakda kiyala check karanawa
     if (!isNaN(totalAmount) && totalAmount > 0) {
         // discount percentage eka default 0.00 widiyata thiyagannawa
         let discountPercent = 0.00;
-        
+
         // invoice object eke customer_id field ekak saha customer object eke points variable eka thiyeda kiyala check karanawa
         if (invoice.customer_id && invoice.customer_id.points != null) {
             // customer ge points anuwa adala loyalty tier eka server eken Get request ekak magin gannawa
@@ -793,26 +1177,26 @@ const loyaltyDiscountCalculate = () => {
                 discountPercent = parseFloat(loyaltyTier.discount);
             }
         }
-        
+
         // customer ge loyalty discount percentage eka total amount eken adu karala discounted amount eka calculate karagannawa
         let discountAmountValue = totalAmount - (totalAmount * (discountPercent / 100));
         // net amount eka discounted amount value ekatama samanawa auto fill karagannawa
         let netAmountValue = discountAmountValue;
-        
+
         // UI text box walata calculate una values decimals 2k widiyata set karanawa
         textDiscountAmount.value = discountAmountValue.toFixed(2);
         textNetAmount.value = netAmountValue.toFixed(2);
-        
+
         // invoice object eke properties walata me values set karagannawa
         invoice.discountamount = textDiscountAmount.value;
         invoice.netamount = textNetAmount.value;
-        
+
         // discount amount field eke border color eka valid green karanawa
         textDiscountAmount.style.borderBottom = "4px solid green";
         textDiscountAmount.previousElementSibling.style.backgroundColor = "green";
         textDiscountAmount.classList.remove("is-invalid");
         textDiscountAmount.classList.add("is-valid");
-        
+
         // net amount field eke border color eka valid green karanawa
         textNetAmount.style.borderBottom = "4px solid green";
         textNetAmount.previousElementSibling.style.backgroundColor = "green";
@@ -895,14 +1279,14 @@ const loyaltyDiscountCalculate = () => {
 const updateDiscountAmountField = (element) => {
     // text validation check karagannawa
     textValidator(element, '^.*$', 'invoice', 'discountamount');
-    
+
     // discount amount value valid number ekakda kiyala check karanawa
     if (invoice.discountamount != null && invoice.discountamount !== "") {
         // net amount text field value set karanawa
         textNetAmount.value = parseFloat(invoice.discountamount).toFixed(2);
         // invoice object netamount bind karagannawa
         invoice.netamount = textNetAmount.value;
-        
+
         // net amount element styles valid green set karagannawa
         textNetAmount.style.borderBottom = "4px solid green";
         textNetAmount.previousElementSibling.style.backgroundColor = "green";

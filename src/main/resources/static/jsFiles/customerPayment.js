@@ -115,36 +115,74 @@ const customerRowFormRefill = (dataob, rowIndex) => {
 
 }
 
+// meya customer row delete kirime function ekayi
 const customerRowDelete = (dataob, rowIndex) => {
+    // console log eke delete details display karanawa
     console.log("Delete", dataob, rowIndex);
 
-    // activeTableRow(tableEmployeeBody, index, "red");
+    // customer details delete confirm checking modal eka sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Delete",
+        html: `Are you sure to delete the following customer?<br><br>` +
+              `<strong>Customer Full Name:</strong> ${dataob.fullname}<br>` +
+              `<strong>Customer Email:</strong> ${dataob.email}<br>` +
+              `<strong>Customer Status:</strong> ${dataob.customerstatus_id.name}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // delete confirm kala nam
+        if (result.isConfirmed) {
+            // post service method run karalai delete response gannawa
+            let deleteResponce = getHTTPServiceRequest("/customer/delete", "DELETE", dataob);
 
-
-    let userConfirm = window.confirm("Are you sure to delete following customer...?" +
-        "\n Customer full name : " + dataob.fullname +
-        "\n Customer email : " + dataob.email +
-        "\n Customer status : " + dataob.customerstatus_id.name
-    );
-    if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
-        let deleteResponce = getHTTPServiceRequest("/customer/delete", "DELETE", dataob);
-
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshCustomerTable();
-            refreshCustomerForm();
-
-        } else {
-            window.alert("Delete not successfully" + deleteResponce);
-
+            // server reply eka ok returned unoth
+            if (deleteResponce == "OK") {
+                // delete successful modal open karanawa
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Customer deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                // customer table metrics data refresh karagannawa
+                refreshCustomerTable();
+                // input form reset clear karanawa
+                refreshCustomerForm();
+            } else {
+                // errors response details modals open karalai display check karanawa
+                Swal.fire({
+                    title: "Error!",
+                    text: "Delete not successful: " + deleteResponce,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-
-
-
-
-    }
+    });
 }
 
 const customerRowPrint = (dataob, rowIndex) => {
@@ -250,6 +288,7 @@ const checkFormError = () => {
 
 //form submit event function 
 const buttonCusSubmit = () => {
+    // console logs eke details register add verify karanawa
     console.log('Add Customer Payment', customerPayment);
 
     // If payment method is Cash, fill cardtype and referenceno with dummy unique values
@@ -264,29 +303,89 @@ const buttonCusSubmit = () => {
         customerPayment.cardamount = customerPayment.paidamount;
     }
 
-    //check form error for required element
+    // validation forms fields error checking runs check karagannawa
     let errors = checkFormError();
+    // errors checks empty string da kiyala balanawa
     if (errors == "") {
-        //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following customer payment...?" +
-            "\n Customer : " + customerPayment.invoice_id.invoiceno +
-            "\n Paid Amount : " + customerPayment.paidamount +
-            "\n Payment Method : " + customerPayment.paymentmethod
-        );
-        if (userConfirm) {
-            // call post service
-            let postResponce = getHTTPServiceRequest("/customerPayment/insert", "POST", customerPayment);
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshCustomerPaymentTable();
-                refreshCustomerPaymentForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-            } else {
-                window.alert("Failed to submit \n" + postResponce);
+        // user payment confirms check parameters details pop up box modal open karanawa
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following customer payment?<br><br>` +
+                  `<strong>Customer:</strong> ${customerPayment.invoice_id.invoiceno}<br>` +
+                  `<strong>Paid Amount:</strong> Rs. ${customerPayment.paidamount}<br>` +
+                  `<strong>Payment Method:</strong> ${customerPayment.paymentmethod}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirms check details ok kala nam
+            if (result.isConfirmed) {
+                // post request service method parameters set database yawai
+                let postResponce = getHTTPServiceRequest("/customerPayment/insert", "POST", customerPayment);
+                // database save responses success check ok returned unoth
+                if (postResponce == "OK") {
+                    // payment saved success popup modals open karagannawa
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Payment details saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // table data content reload karagannawa
+                    refreshCustomerPaymentTable();
+                    // form fields values reset clear karanawa
+                    refreshCustomerPaymentForm();
+                    // offcanvas popup forms close karalai hide karanawa
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // failure status errors check popup box sweetalerts modals display checks
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Something went wrong...\n" + errors);
+        // required validations errors warnings popup modal opens checks
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -323,43 +422,134 @@ const checkFormUpdate = () => {
 // form update event function 
 const buttonCustomerUpdate = () => {
 
-    //need to check form errors
+    // validation forms fields error checking runs check
     let errors = checkFormError();
+    // errors list checks empty string da kiyala verify check karanawa
     if (errors == "") {
-        // need to check form update
+        // updates checklist values identify check
         let updates = checkFormUpdate();
+        // updates logs empty checks verify changes values null checks
         if (updates == "") {
-            window.alert("nothing to update..\n");
+            // no changes updates alert warning popup box open karanawa
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         } else {
-            //need to get user confirmation
-            let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-            if (userConfirm) {
-                //call put service
-                let putResponce = getHTTPServiceRequest("/customer/update", "PUT", customer);
-                if (putResponce == "OK") {
-                    window.alert("Update Successfully...!");
-                    refreshCustomerTable();
-                    refreshCustomerForm();
-                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-                } else {
-                    window.alert("Failed to update...!" + putResponce);
+            // updates details check confirmation dialogue opens popup checks
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update the following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // updates parameters confirm yes checks
+                if (result.isConfirmed) {
+                    // call update database put request services methods
+                    let putResponce = getHTTPServiceRequest("/customer/update", "PUT", customer);
+                    // update status success returns checked
+                    if (putResponce == "OK") {
+                        // updates details success popup modals open check
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Customer details updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        // customer table matrix reload checks
+                        refreshCustomerTable();
+                        // input forms default clear fields metrics reset checks
+                        refreshCustomerForm();
+                        // close offcanvas forms sheet modes checks
+                        $("#offcanvasBottom").offcanvas("hide");
+                    } else {
+                        // update failed error message dialogues popup windows checks
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponce,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            } else {
-
-            }
+            });
         }
     } else {
-        window.alert("something went wrong.. \n" + errors);
+        // required parameters check error dialogues check validation modals displays
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 
 }
 
 const clearCustomerForm = () => {
-
-    let userConfirm = window.confirm("Do you need to refresh form...?");
-    if (userConfirm) {
-        refreshCustomerPaymentForm();
-    }
+    // clear form confirmation popup window sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you need to refresh form...?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // clear confirm yes checks
+        if (result.isConfirmed) {
+            // refresh customer payment form function call karalai forms inputs values defaults resets karagannawa
+            refreshCustomerPaymentForm();
+        }
+    });
 }
 
 // create function to get selected invoice netamount

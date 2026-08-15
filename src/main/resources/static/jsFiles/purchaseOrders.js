@@ -191,28 +191,67 @@ const purchaseOrderDelete = (ob, index) => {
     // console eke delete karana record id eka print karanawa
     console.log("Delete", ob, index);
 
-    // confirm message eka display karala confirmation eka gannawa
-    let userConfirm = window.confirm("Are you sure to delete following purchase order...?\n" +
-        "Order No: " + ob.purchaserequestno + "\n" +
-        "Supplier: " + (ob.supplier_id ? ob.supplier_id.suppliername : "N/A")
-    );
-    // confirm kala nam DELETE api mapping call karanawa
-    if (userConfirm) {
-        // DELETE request eka yawanawa
-        let deleteResponse = getHTTPServiceRequest("/purchaseOrders/delete", "DELETE", ob);
+    // delete validation checks popup confirmation sweetalert format
+    Swal.fire({
+        title: "Confirm Delete",
+        html: `Are you sure to delete the following purchase order?<br><br>` +
+              `<strong>Order No:</strong> ${ob.purchaserequestno}<br>` +
+              `<strong>Supplier:</strong> ${ob.supplier_id ? ob.supplier_id.suppliername : "N/A"}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // delete check yes confirmation trigger
+        if (result.isConfirmed) {
+            // DELETE request eka yawanawa
+            let deleteResponse = getHTTPServiceRequest("/purchaseOrders/delete", "DELETE", ob);
 
-        // response eka successfully OK nam table update karanawa
-        if (deleteResponse === "OK") {
-            // success alert message eka penwanawa
-            window.alert("Deleted successfully!");
-            // table details and form details refresh clear calls
-            refreshPurchaseOrderTable();
-            refreshPurchaseOrderForm();
-        } else {
-            // failed errors warnings alert
-            window.alert("Failed to delete:\n" + deleteResponse);
+            // response eka successfully OK nam table update karanawa
+            if (deleteResponse === "OK") {
+                // delete successful modal display check sweetalerts
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Purchase Order deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                // table details and form details refresh clear calls
+                refreshPurchaseOrderTable();
+                refreshPurchaseOrderForm();
+            } else {
+                // delete failed error alert sweetalert dialog displays
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to delete: " + deleteResponse,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-    }
+    });
 }
 
 //function for view / print purchase order form
@@ -302,35 +341,95 @@ const checkFormError = () => {
 
 
 //Purchase Order form submit event function 
+//Purchase Order form submit event function 
 const buttonPurchaseOrderSubmit = () => {
+    // console trace check object values
     console.log('Add Purchase Order', purchaseOrder);
 
-    //check form error for required element
+    // check form error for required element
     let errors = checkFormError();
+    // errors kisith neththan
     if (errors === "") {
-        //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following Purchase Order...?" +
-            "\n Supplier name : " + purchaseOrder.supplier_id.suppliername +
-            "\n Purchase Order required date : " + purchaseOrder.requireddate +
-            "\n Purchase Order total amount : " + purchaseOrder.totalamount
-        );
-        if (userConfirm) {
-            // call post service
-            let postResponce = getHTTPServiceRequest("/purchaseOrders/insert", "POST", purchaseOrder);
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshPurchaseOrderTable();
-                refreshPurchaseOrderForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-            } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+        // purchase order submission confirm dialogue box sweetalert open karagannawa
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following Purchase Order?<br><br>` +
+                  `<strong>Supplier Name:</strong> ${purchaseOrder.supplier_id.suppliername}<br>` +
+                  `<strong>Required Date:</strong> ${purchaseOrder.requireddate}<br>` +
+                  `<strong>Total Amount:</strong> Rs. ${purchaseOrder.totalamount}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirm check yes kala nam
+            if (result.isConfirmed) {
+                // post request service method methods trigger sets database
+                let postResponce = getHTTPServiceRequest("/purchaseOrders/insert", "POST", purchaseOrder);
+                // success check responses ok returned check
+                if (postResponce == "OK") {
+                    // success status informational dialogue sweetalert popup open
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Purchase order saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // table elements reload
+                    refreshPurchaseOrderTable();
+                    // form fields data resets clears defaults
+                    refreshPurchaseOrderForm();
+                    // offcanvas sheets panels close karalai hide checks
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // post submit failed alert sweetalert dialog open checks
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Something went wrong...\n" + errors);
+        // required fields validation errors warning sweetalerts modal display check
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
-
-
 }
 
 // update kala properties details verification check check function eka
@@ -376,6 +475,7 @@ const checkFormUpdate = () => {
 }
 
 // main form update details button event trigger action function eka
+// main form update details button event trigger action function eka
 const buttonPurchaseOrderUpdate = () => {
     // required fields format validations errors list check call
     let errors = checkFormError();
@@ -385,34 +485,98 @@ const buttonPurchaseOrderUpdate = () => {
         let updates = checkFormUpdate();
         // updates string empty nam change kisith natha warning status
         if (updates === "") {
-            // window alert alert empty notifications
-            window.alert("Nothing to update!");
+            // no updates warn dialog box sweetalert open check
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         } else {
-            // modifications user updates confirmation confirm alert
-            let userConfirm = window.confirm("Are you sure to update this Purchase Order with following changes?\n" + updates);
-            // user confirm verification ok clicks
-            if (userConfirm) {
-                // PUT service update endpoint query api request send
-                let putResponse = getHTTPServiceRequest("/purchaseOrders/update", "PUT", purchaseOrder);
-                // response status checks checks OK response
-                if (putResponse === "OK") {
-                    // successfully updated alert display messages
-                    window.alert("Purchase Order updated successfully!");
-                    // table data list refresh call
-                    refreshPurchaseOrderTable();
-                    // form configurations layout reload clean calls
-                    refreshPurchaseOrderForm();
-                    // offcanvas layout close hide bootstrap components
-                    $("#offcanvasBottom").offcanvas("hide");
-                } else {
-                    // server side processing fails warn
-                    window.alert("Failed to update:\n" + putResponse);
+            // modifications user updates confirmation confirm alert sweetalert popup open
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update this Purchase Order with following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // updates actions yes checks
+                if (result.isConfirmed) {
+                    // PUT service update endpoint query api request send
+                    let putResponse = getHTTPServiceRequest("/purchaseOrders/update", "PUT", purchaseOrder);
+                    // response status checks checks OK response
+                    if (putResponse === "OK") {
+                        // success status alerts open sweetalerts check
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Purchase Order updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        // table data list refresh call
+                        refreshPurchaseOrderTable();
+                        // form configurations layout reload clean calls
+                        refreshPurchaseOrderForm();
+                        // offcanvas layout close hide bootstrap components
+                        $("#offcanvasBottom").offcanvas("hide");
+                    } else {
+                        // update failed error sweetalerts displays checks
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponse,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            }
+            });
         }
     } else {
-        // input fields missing values alert format warnings
-        window.alert("Please fill all required fields correctly:\n" + errors);
+        // required parameters check error validation modals displays
+        Swal.fire({
+            title: "Validation Error",
+            html: "Please fill all required fields correctly:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -854,44 +1018,101 @@ const genareateItemName = (dataob) => {
 
 const purchaseOrderItemFormRefill = (ob, index) => { }
 const purchaseOrderItemDelete = (ob, index) => {
+    // console trace record checks
     console.log("Delete Purchase Order Item", purchaseOrderHasItem);
-    let userConfirm = window.confirm("Are you sure to remove following item to purchase order...?"
-        // +
-        // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        // "\n Quantity : " + purchaseOrderHasItem.quentity +
-        // "\n Line Price : " + purchaseOrderHasItem.lineprice
-    );
-    if (userConfirm) {
-        window.alert("Item removed successfully from purchase order...!");
-        // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = purchaseOrder.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
-        if (extIndex != -1) {
-            purchaseOrder.purchaseOrderHasItemList.splice(extIndex, 1);
+
+    // item delete confirmation popup box sweetalert open checks
+    Swal.fire({
+        title: "Confirm Remove",
+        text: "Are you sure to remove following item details...?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Remove',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // confirm checks yes kala nam
+        if (result.isConfirmed) {
+            // success status updates sweetalert dialogues displays
+            Swal.fire({
+                title: "Removed!",
+                text: "Item removed successfully from purchase order.",
+                icon: "success",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-confirm-btn'
+                },
+                buttonsStyling: false
+            });
+            // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
+            let extIndex = purchaseOrder.purchaseOrderHasItemList.map(orderitem => orderitem.item_id.id).indexOf(ob.item_id.id);
+            if (extIndex != -1) {
+                purchaseOrder.purchaseOrderHasItemList.splice(extIndex, 1);
+            }
+            // refresh inner forms
+            refreshPurchaseOrderInnerForm();
         }
-        refreshPurchaseOrderInnerForm();
-    }
+    });
 }
 
 const buttonPurchaseOrderItemUpdate = (ob, index) => { }
 const buttonPurchaseOrderItemSubmit = (ob, index) => {
+    // console trace parameter check logs
     console.log("Purchase Order Item", purchaseOrderHasItem);
 
-    let userConfirm = window.confirm("Are you sure to add following item to purchase order...?"
-        +
-        "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        "\n Quantity : " + purchaseOrderHasItem.quentity +
-        "\n Line Price : " + purchaseOrderHasItem.lineprice
-    );
-    if (userConfirm) {
-        window.alert("Item added successfully to purchase order...!");
-        // main form eke thiyena list ekata ob eka push karai
-        // ema nisa table ekehida data atha.
-        purchaseOrder.purchaseOrderHasItemList.push(purchaseOrderHasItem);
-        refreshPurchaseOrderInnerForm();
-    }
-
+    // User confirmation eka gannawa sweetalerts popup modes check
+    Swal.fire({
+        title: "Confirm Add Item",
+        html: `Are you sure to add the following item to the purchase order?<br><br>` +
+              `<strong>Item:</strong> ${purchaseOrderHasItem.item_id.itemname}<br>` +
+              `<strong>Unit Price:</strong> Rs. ${purchaseOrderHasItem.uniteprice}<br>` +
+              `<strong>Quantity:</strong> ${purchaseOrderHasItem.quentity}<br>` +
+              `<strong>Line Price:</strong> Rs. ${purchaseOrderHasItem.lineprice}`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // item addition confirm checks yes
+        if (result.isConfirmed) {
+            // success informational popups alerts open checks
+            Swal.fire({
+                title: "Added!",
+                text: "Item added successfully to purchase order.",
+                icon: "success",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-confirm-btn'
+                },
+                buttonsStyling: false
+            });
+            // main form eke thiyena list ekata ob eka push karai
+            purchaseOrder.purchaseOrderHasItemList.push(purchaseOrderHasItem);
+            // refresh inner forms
+            refreshPurchaseOrderInnerForm();
+        }
+    });
 }
 
 // Define function to fill supplier names from pending price lists into a <select> dropdown

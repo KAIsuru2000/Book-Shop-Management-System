@@ -95,31 +95,61 @@ const customerRowDelete = (dataob, rowIndex) => {
 
     // activeTableRow(tableEmployeeBody, index, "red");
 
+    Swal.fire({
+        title: "Confirm Delete",
+        html: `Are you sure to delete the following customer?<br><br>` +
+              `<strong>Full Name:</strong> ${dataob.fullname}<br>` +
+              `<strong>Email:</strong> ${dataob.email}<br>` +
+              `<strong>Status:</strong> ${dataob.customerstatus_id.name}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let deleteResponce = getHTTPServiceRequest("/customer/delete", "DELETE", dataob);
 
-    let userConfirm = window.confirm("Are you sure to delete following customer...?" +
-        "\n Customer full name : " + dataob.fullname +
-        "\n Customer email : " + dataob.email +
-        "\n Customer status : " + dataob.customerstatus_id.name
-    );
-    if (userConfirm) {
-        // call post service
-        //anthima parameter eka sadaha employeeDelete function eken pass wana name eka yodai
-        let deleteResponce = getHTTPServiceRequest("/customer/delete", "DELETE", dataob);
-
-        if (deleteResponce == "OK") {
-            window.alert("Delete successfully ");
-            refreshCustomerTable();
-            refreshCustomerForm();
-
-        } else {
-            window.alert("Delete not successfully" + deleteResponce);
-
+            if (deleteResponce == "OK") {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Customer deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                refreshCustomerTable();
+                refreshCustomerForm();
+            } else {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Delete not successful: " + deleteResponce,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-
-
-
-
-    }
+    });
 }
     
 const customerRowPrint = (dataob, rowIndex) => {
@@ -220,6 +250,7 @@ const checkFormError = () => {
 }
 
 //form submit event function 
+//form submit event function 
 const buttonCusSubmit = () => {
     console.log('Add Customer', customer);
 
@@ -227,29 +258,78 @@ const buttonCusSubmit = () => {
     let errors = checkFormError();
     if (errors == "") {
         //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following customer...?" +
-            "\n Customer full name : " + customer.fullname +
-            "\n Customer email : " + customer.email +
-            "\n Customer mobileno : " + customer.mobileno +
-            "\n Customer status : " + customer.customerstatus_id.name
-        );
-        if (userConfirm) {
-            // call post service
-            let postResponce = getHTTPServiceRequest("/customer/insert", "POST", customer);
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshCustomerTable();
-                refreshCustomerForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-            } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following customer?<br><br>` +
+                  `<strong>Full Name:</strong> ${customer.fullname}<br>` +
+                  `<strong>Email:</strong> ${customer.email}<br>` +
+                  `<strong>Mobile No:</strong> ${customer.mobileno}<br>` +
+                  `<strong>Status:</strong> ${customer.customerstatus_id.name}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // call post service
+                let postResponce = getHTTPServiceRequest("/customer/insert", "POST", customer);
+                if (postResponce == "OK") {
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Customer saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    refreshCustomerTable();
+                    refreshCustomerForm();
+                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
+                } else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Something went wrong...\n" + errors);
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
-
-
 }
 
 //check form update function
@@ -291,37 +371,114 @@ const buttonCustomerUpdate = () => {
         // need to check form update
         let updates = checkFormUpdate();
         if (updates == "") {
-            window.alert("nothing to update..\n");
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         } else {
             //need to get user confirmation
-            let userConfirm = window.confirm("Are you sure to update following changers.. \n" + updates);
-            if (userConfirm) {
-                //call put service
-                let putResponce = getHTTPServiceRequest("/customer/update", "PUT", customer);
-                if (putResponce == "OK") {
-                    window.alert("Update Successfully...!");
-                    refreshCustomerTable();
-                    refreshCustomerForm();
-                    $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-                } else {
-                    window.alert("Failed to update...!" + putResponce);
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update the following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    //call put service
+                    let putResponce = getHTTPServiceRequest("/customer/update", "PUT", customer);
+                    if (putResponce == "OK") {
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "Customer details updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        refreshCustomerTable();
+                        refreshCustomerForm();
+                        $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
+                    } else {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponce,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            } else {
-
-            }
+            });
         }
     } else {
-        window.alert("something went wrong.. \n" + errors);
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 
 }
 
 const clearCustomerForm = () => {
-
-    let userConfirm = window.confirm("Do you need to refresh form...?");
-    if (userConfirm) {
-        refreshCustomerForm();
-    }
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you need to refresh form...?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            refreshCustomerForm();
+        }
+    });
 }
 
     

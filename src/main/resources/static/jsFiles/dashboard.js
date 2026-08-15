@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
         .then(data => {
             // Cards wala counts dynamic set karanawa
             document.getElementById('lowStockCount').innerText = data.lowStockCount;
-            document.getElementById('expiredQuotationsCount').innerText = data.expiredQuotationsCount;
+            // document.getElementById('expiredQuotationsCount').innerText = data.expiredQuotationsCount;
             document.getElementById('pendingPurchaseOrdersCount').innerText = data.pendingPurchaseOrdersCount;
 
             // Income amount eka format karala set karanawa currency ekath ekka
@@ -152,7 +152,7 @@ const drawDashboardChart = (chartData) => {
 }
 
 // log una userta anuwa module filter wima sadaha
-fillterLogUserAccessModule = ()=>{
+fillterLogUserAccessModule = () => {
 
     // logged user ge role eka ganna backend api ekata request ekak yawala response object eka aragannawa
     let loggedUserObj = getServiceRequest("/loggeduser/role");
@@ -161,14 +161,14 @@ fillterLogUserAccessModule = ()=>{
     let loggedUser = loggedUserObj.role;
 
     // loggedUser variable eke thiyena nama "Cashier" da kiyala check karanawa
-    if (loggedUser == "Cashier" ) {
+    if (loggedUser == "Cashier") {
 
         dropdownAdminis.style.display = "none";
         listItem.style.display = "none";
         dropdownSupplier.style.display = "none";
 
-    // loggedUser variable eke thiyena nama "Manager" da kiyala check karanawa
-    }else if (loggedUser == "Manager") {
+        // loggedUser variable eke thiyena nama "Manager" da kiyala check karanawa
+    } else if (loggedUser == "Manager") {
 
         dropdownAdminis.style.display = "flex";
         listItem.style.display = "flex";

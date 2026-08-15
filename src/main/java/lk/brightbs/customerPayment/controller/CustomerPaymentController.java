@@ -98,20 +98,30 @@ public class CustomerPaymentController {
 				// Invoice record eka database eken hoyagannawa
 				Invoice invoice = invoiceDao.findById(customerPayment.getInvoice_id().getId()).orElse(null);
 				if (invoice != null) { // Invoice record eka hambuna nam
-					InvoiceStatus paidStatus = invoiceStatusDao.getByName("paid"); // "paid" kiyana status object eka gannawa
+					InvoiceStatus paidStatus = invoiceStatusDao.getByName("paid"); // "paid" kiyana status object eka
+																					// gannawa
 					if (paidStatus != null) { // Paid status eka valid nam
 						invoice.setInvoicestatus_id(paidStatus); // Invoice eke status eka update karanawa
 						invoiceDao.save(invoice); // Update karapu invoice eka save karanawa
 					}
 
 					// Payment eka sidu wathma total quantity eka inventory eken adu kirima
-					if (invoice.getInvoiceHasInventoryList() != null) { // Invoice eke items list eka null newe nam pamanak
-						for (InvoiceHasInventory invItem : invoice.getInvoiceHasInventoryList()) { // Invoice eke hema item ekakma loop karala gannawa
-							if (invItem.getInventory_id() != null && invItem.getQuentity() != null) { // Inventory reference eka saha quantity eka thibe nam pamanak
+					if (invoice.getInvoiceHasInventoryList() != null) { // Invoice eke items list eka null newe nam
+																		// pamanak
+						for (InvoiceHasInventory invItem : invoice.getInvoiceHasInventoryList()) { // Invoice eke hema
+																									// item ekakma loop
+																									// karala gannawa
+							if (invItem.getInventory_id() != null && invItem.getQuentity() != null) { // Inventory
+																										// reference eka
+																										// saha quantity
+																										// eka thibe nam
+																										// pamanak
 								// Item ekata adala Inventory record eka database eken hoyagannawa
-								Inventory inventory = inventoryDao.findById(invItem.getInventory_id().getId()).orElse(null);
+								Inventory inventory = inventoryDao.findById(invItem.getInventory_id().getId())
+										.orElse(null);
 								if (inventory != null) { // Ema inventory record eka thibe nam
-									int qtyToReduce = invItem.getQuentity(); // Adu kala yuthu quantity eka variable ekakata gannawa
+									int qtyToReduce = invItem.getQuentity(); // Adu kala yuthu quantity eka variable
+																				// ekakata gannawa
 									// Inventory eke total quantity eken ema quantity eka adu karanawa
 									inventory.setTotalquantity(inventory.getTotalquantity() - qtyToReduce);
 									// Update karapu inventory record eka database eke save karanawa

@@ -36,7 +36,10 @@ const refreshGRNTable = () => {
 }
 
 const generateSupplierName = (dataob) => {
-    return dataob.purchaserequest_id.supplier_id.suppliername;
+    if (dataob.purchaserequest_id && dataob.purchaserequest_id.supplier_id) {
+        return dataob.purchaserequest_id.supplier_id.suppliername;
+    }
+    return "-";
 }
 const getGRNStatus = (dataob) => {
 
@@ -193,28 +196,67 @@ const gRNDelete = (ob, index) => {
     // console eke delete karana record details print karanawa
     console.log("Delete", ob, index);
 
-    // confirm message eka display karala confirmation eka gannawa
-    let userConfirm = window.confirm("Are you sure to delete following GRN...?\n" +
-        "GRN No: " + ob.grnno + "\n" +
-        "Supplier: " + (ob.purchaserequest_id && ob.purchaserequest_id.supplier_id ? ob.purchaserequest_id.supplier_id.suppliername : "N/A")
-    );
-    // confirm kala nam DELETE api mapping call karanawa
-    if (userConfirm) {
-        // DELETE request eka yawanawa
-        let deleteResponse = getHTTPServiceRequest("/grn/delete", "DELETE", ob);
+    // grn record delete window confirm popup sweetalert open opera
+    Swal.fire({
+        title: "Confirm Delete",
+        html: `Are you sure to delete the following GRN?<br><br>` +
+              `<strong>GRN No:</strong> ${ob.grnno}<br>` +
+              `<strong>Supplier:</strong> ${ob.purchaserequest_id && ob.purchaserequest_id.supplier_id ? ob.purchaserequest_id.supplier_id.suppliername : "N/A"}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Delete',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // delete check yes confirmation check
+        if (result.isConfirmed) {
+            // DELETE request eka yawanawa endpoint api methods calls
+            let deleteResponse = getHTTPServiceRequest("/grn/delete", "DELETE", ob);
 
-        // response eka successfully OK nam table update karanawa
-        if (deleteResponse === "OK") {
-            // success alert message eka penwanawa
-            window.alert("Deleted successfully!");
-            // table details and form details refresh clear calls
-            refreshGRNTable();
-            refreshGRNForm();
-        } else {
-            // failed errors warnings alert
-            window.alert("Failed to delete:\n" + deleteResponse);
+            // response eka successfully OK nam table update karanawa
+            if (deleteResponse === "OK") {
+                // delete successful modal display check sweetalerts dialog
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "GRN deleted successfully.",
+                    icon: "success",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-confirm-btn'
+                    },
+                    buttonsStyling: false
+                });
+                // table details and form details refresh clear calls
+                refreshGRNTable();
+                refreshGRNForm();
+            } else {
+                // delete failed error alert sweetalert dialog displays checks
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to delete: " + deleteResponse,
+                    icon: "error",
+                    confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-content',
+                        confirmButton: 'swal-custom-cancel-btn'
+                    },
+                    buttonsStyling: false
+                });
+            }
         }
-    }
+    });
 }
 
 //function for view / print purchase order form
@@ -321,36 +363,95 @@ const checkFormError = () => {
 
 
 //GRN form submit event function 
+//GRN form submit event function 
 const buttonGRNSubmit = () => {
+    // console check log values records
     console.log('Add GRN', gRN);
 
-    //check form error for required element
+    //check form error for required element validation rules
     let errors = checkFormError();
+    // errors checks blank check
     if (errors == "") {
-        //no errors get user confirmation
-        let userConfirm = window.confirm("Are you sure to add following GRN...?" +
-            "\n Supplier name : " + gRN.purchaserequest_id
-                .supplier_id.suppliername +
-            "\n GRN Receive date : " + gRN.receivedate +
-            "\n GRN total amount : " + gRN.totalamount
-        );
-        if (userConfirm) {
-            // call post service
-            let postResponce = getHTTPServiceRequest("/grn/insert", "POST", gRN);
-            if (postResponce == "OK") {
-                window.alert("Save successfully ");
-                refreshGRNTable();
-                refreshGRNForm();
-                $("#offcanvasBottom").offcanvas("hide"); // Close the offcanvas
-            } else {
-                window.alert("Failed to submit \n" + errors + postResponce);
+        // grn submission confirm dialogue box sweetalerts popup open check
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following GRN?<br><br>` +
+                  `<strong>Supplier Name:</strong> ${gRN.purchaserequest_id.supplier_id.suppliername}<br>` +
+                  `<strong>Received Date:</strong> ${gRN.receivedate}<br>` +
+                  `<strong>Total Amount:</strong> Rs. ${gRN.totalamount}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirm check yes kala nam
+            if (result.isConfirmed) {
+                // post request service method methods trigger sets database
+                let postResponce = getHTTPServiceRequest("/grn/insert", "POST", gRN);
+                // success check responses ok returned check
+                if (postResponce == "OK") {
+                    // success status informational dialogue sweetalert popup open
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "GRN saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // table elements reload
+                    refreshGRNTable();
+                    // form fields data resets clears defaults
+                    refreshGRNForm();
+                    // offcanvas sheets panels close karalai hide checks
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // post submit failed alert sweetalert dialog open checks
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Something went wrong...\n" + errors);
+        // required fields validation errors warning sweetalerts modal display check
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
-
-
 }
 
 // update kala properties details verification check check function eka
@@ -416,6 +517,7 @@ const checkFormUpdate = () => {
 }
 
 // main form update details button event trigger action function eka
+// main form update details button event trigger action function eka
 const buttonGRNUpdate = () => {
     // required fields format validations errors list check call
     let errors = checkFormError();
@@ -425,34 +527,98 @@ const buttonGRNUpdate = () => {
         let updates = checkFormUpdate();
         // updates string empty nam change kisith natha warning status
         if (updates === "") {
-            // window alert alert empty notifications
-            window.alert("Nothing to update!");
+            // no updates warn dialog box sweetalert open check
+            Swal.fire({
+                title: "No Changes",
+                text: "Nothing to update.",
+                icon: "info",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn'
+                },
+                buttonsStyling: false
+            });
         } else {
-            // modifications user updates confirmation confirm alert
-            let userConfirm = window.confirm("Are you sure to update this GRN with following changes?\n" + updates);
-            // user confirm verification ok clicks
-            if (userConfirm) {
-                // PUT service update endpoint query api request send
-                let putResponse = getHTTPServiceRequest("/grn/update", "PUT", gRN);
-                // response status checks checks OK response
-                if (putResponse === "OK") {
-                    // successfully updated alert display messages
-                    window.alert("GRN updated successfully!");
-                    // table data list refresh call
-                    refreshGRNTable();
-                    // form configurations layout reload clean calls
-                    refreshGRNForm();
-                    // offcanvas layout close hide bootstrap components
-                    $("#offcanvasBottom").offcanvas("hide");
-                } else {
-                    // server side processing fails warn
-                    window.alert("Failed to update:\n" + putResponse);
+            // modifications user updates confirmation confirm alert sweetalert popup open
+            Swal.fire({
+                title: "Confirm Update",
+                html: "Are you sure to update this GRN with following changes?<br><br>" + updates.replace(/\n/g, "<br>"),
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-solid fa-pen-to-square"></i> Update',
+                cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-warning-btn',
+                    cancelButton: 'swal-custom-cancel-btn'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                // updates actions yes checks
+                if (result.isConfirmed) {
+                    // PUT service update endpoint query api request send
+                    let putResponse = getHTTPServiceRequest("/grn/update", "PUT", gRN);
+                    // response status checks checks OK response
+                    if (putResponse === "OK") {
+                        // success status alerts open sweetalerts check
+                        Swal.fire({
+                            title: "Updated!",
+                            text: "GRN details updated successfully.",
+                            icon: "success",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-confirm-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                        // table data list refresh call
+                        refreshGRNTable();
+                        // form configurations layout reload clean calls
+                        refreshGRNForm();
+                        // offcanvas layout close hide bootstrap components
+                        $("#offcanvasBottom").offcanvas("hide");
+                    } else {
+                        // update failed error sweetalerts displays checks
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Failed to update: " + putResponse,
+                            icon: "error",
+                            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                            customClass: {
+                                popup: 'swal-custom-popup',
+                                title: 'swal-custom-title',
+                                htmlContainer: 'swal-custom-content',
+                                confirmButton: 'swal-custom-cancel-btn'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-            }
+            });
         }
     } else {
-        // input fields missing values alert format warnings
-        window.alert("Please fill all required fields correctly:\n" + errors);
+        // required parameters check error validation modals displays
+        Swal.fire({
+            title: "Validation Error",
+            html: "Please fill all required fields correctly:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -779,8 +945,21 @@ const selectItemChange = () => {
             textPurchasePrice.value = parseFloat(poItem.uniteprice).toFixed(2);
             // purchase price input field eka validate karala binding eka sidu karanawa
             textValidator(textPurchasePrice, '^.*$', 'grnHasItem', 'purchaseprice');
+
+            // quantity field ekata purchase order has item eke quentity value eka set karanawa
+            if (poItem.quentity != null) {
+                textQuantity.value = poItem.quentity;
+                textValidator(textQuantity, '^.*$', 'grnHasItem', 'quentity');
+            } else {
+                textQuantity.value = "";
+                setDefault([textQuantity]);
+                grnHasItem.quentity = null;
+            }
+
             // line price eka calculate karanna call karanawa
             calculateLinePrice();
+            // total quantity calculate karanna call karanawa
+            calculateTotalQuantity();
 
             // add price list eken thora gath item ekata adala market price eka soyanna variable ekak mulinma null kiyala gannawa
             let marketPrice = null;
@@ -847,8 +1026,16 @@ const selectItemChange = () => {
             setDefault([textPurchasePrice]);
             // object property eka null karanawa
             grnHasItem.purchaseprice = null;
+
+            // quantity field eka clear karanawa
+            textQuantity.value = "";
+            setDefault([textQuantity]);
+            grnHasItem.quentity = null;
+
             // line price calculations update karanawa
             calculateLinePrice();
+            // total quantity calculations update karanawa
+            calculateTotalQuantity();
             
             // sales price clear karanawa
             textSalesPrice.value = "";
@@ -871,8 +1058,16 @@ const selectItemChange = () => {
         setDefault([textPurchasePrice]);
         // object property eka null
         grnHasItem.purchaseprice = null;
+
+        // quantity field eka clear karanawa
+        textQuantity.value = "";
+        setDefault([textQuantity]);
+        grnHasItem.quentity = null;
+
         // line price calculations clear
         calculateLinePrice();
+        // total quantity calculations clear
+        calculateTotalQuantity();
         
         // sales price field clear
         textSalesPrice.value = "";
@@ -897,48 +1092,101 @@ const genareateItemName = (dataob) => {
 
 const gRNItemFormRefill = (ob, index) => { }
 const gRNItemDelete = (ob, index) => {
+    // console trace record checks
     console.log("Delete GRN Item", grnHasItem);
-    let userConfirm = window.confirm("Are you sure to remove following item in GRN...?"
-        // +
-        // "\n Item : " + purchaseOrderHasItem.item_id.itemname +
-        // "\n Unit Price : " + purchaseOrderHasItem.uniteprice +
-        // "\n Quantity : " + purchaseOrderHasItem.quentity +
-        // "\n Line Price : " + purchaseOrderHasItem.lineprice
-    );
-    if (userConfirm) {
-        window.alert("Item removed successfully from GRN...!");
-        // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
-        let extIndex = gRN.grnHasItemList.map(grnitem => grnitem.item_id.id).indexOf(ob.item_id.id);
-        if (extIndex != -1) {
-            gRN.grnHasItemList.splice(extIndex, 1);
+
+    // item delete confirmation popup box sweetalert open checks
+    Swal.fire({
+        title: "Confirm Remove",
+        text: "Are you sure to remove following item in GRN...?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-trash"></i> Remove',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-cancel-btn',
+            cancelButton: 'swal-custom-confirm-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // confirm checks yes kala nam
+        if (result.isConfirmed) {
+            // success status updates sweetalert dialogues displays
+            Swal.fire({
+                title: "Removed!",
+                text: "Item removed successfully from GRN.",
+                icon: "success",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-confirm-btn'
+                },
+                buttonsStyling: false
+            });
+            // inner ob eka exsistent soyanawa "purchaseOrder.purchaseOrderHasItemList" mema object eken
+            let extIndex = gRN.grnHasItemList.map(grnitem => grnitem.item_id.id).indexOf(ob.item_id.id);
+            if (extIndex != -1) {
+                gRN.grnHasItemList.splice(extIndex, 1);
+            }
+            // refresh inner forms
+            refreshGRNInnerForm();
         }
-        refreshGRNInnerForm();
-    }
+    });
 }
 
 const buttonGRNItemUpdate = (ob, index) => { }
 const buttonGRNItemSubmit = (ob, index) => {
+    // console trace parameters check logs
     console.log("GRN Item", grnHasItem);
 
-    let userConfirm = window.confirm("Are you sure to add following item to GRN...?"
-        +
-        "\n Item : " + grnHasItem.item_id.itemname +
-        "\n Purchase Price : " + grnHasItem.purchaseprice +
-        "\n Quantity : " + grnHasItem.quentity +
-        "\n Line Price : " + grnHasItem.lineprice +
-        "\n Free Quantity : " + grnHasItem.freequentity +
-        "\n Total Quantity : " + grnHasItem.totalquentity +
-        "\n Profit Ratio : " + grnHasItem.profitrate +
-        "\n Sales Price : " + grnHasItem.salesprice
-    );
-    if (userConfirm) {
-        window.alert("Item added successfully to GRN...!");
-        // main form eke thiyena list ekata ob eka push karai
-        // ema nisa table ekehida data atha.
-        gRN.grnHasItemList.push(grnHasItem);
-        refreshGRNInnerForm();
-    }
-
+    // User confirmation eka gannawa sweetalerts popup modes check
+    Swal.fire({
+        title: "Confirm Add Item",
+        html: `Are you sure to add the following item to GRN?<br><br>` +
+              `<strong>Item:</strong> ${grnHasItem.item_id.itemname}<br>` +
+              `<strong>Purchase Price:</strong> Rs. ${grnHasItem.purchaseprice}<br>` +
+              `<strong>Quantity:</strong> ${grnHasItem.quentity}<br>` +
+              `<strong>Line Price:</strong> Rs. ${grnHasItem.lineprice}`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // item addition confirm checks yes
+        if (result.isConfirmed) {
+            // success informational popups alerts open checks
+            Swal.fire({
+                title: "Added!",
+                text: "Item added successfully to GRN.",
+                icon: "success",
+                confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                    title: 'swal-custom-title',
+                    htmlContainer: 'swal-custom-content',
+                    confirmButton: 'swal-custom-confirm-btn'
+                },
+                buttonsStyling: false
+            });
+            // main form eke thiyena list ekata ob eka push karai
+            gRN.grnHasItemList.push(grnHasItem);
+            // refresh inner forms
+            refreshGRNInnerForm();
+        }
+    });
 }
 
 // Define function to fill supplier names into a <select> dropdown

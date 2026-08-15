@@ -55,9 +55,13 @@ const refreshSupplierPaymentTable = () => {
 
 // Supplier object eken supplier details dynamic strings generate columns logic maps
 const generateSupplierName = (dataob) => {
+    // Check if supplier_id is directly available on the dataob (SupplierPayment)
+    if (dataob.supplier_id != null) {
+        return dataob.supplier_id.suppliername;
+    }
     // GRN check checks and then nested supplier object references check verification
     if (dataob.grn_id != null && dataob.grn_id.purchaserequest_id != null && dataob.grn_id.purchaserequest_id.supplier_id != null) {
-        return dataob.grn_id.purchaserequest_id.supplier_id.suppliername; // Supplier name parameter returns
+        return dataob.grn_id.purchaserequest_id.supplier_id.suppliername;
     }
     return "-"; // Empty string response checks
 }
@@ -215,9 +219,10 @@ const checkFormError = () => {
 }
 
 // Submit button handler post details execution
+// Submit button handler post details execution
 const buttonSupplierPaymentSubmit = () => {
     console.log('Add Supplier Payment object details', supplierPayment); // Details log checks
-
+ 
     // Cash, Card, Cheque, Bank Transfer payment types configuration settings checks
     if (supplierPayment.paymentmethod == "Cash") {
         supplierPayment.checkno = null; // Cheque details null configuration checks
@@ -239,29 +244,90 @@ const buttonSupplierPaymentSubmit = () => {
         supplierPayment.cardtype = null; // Card type clear
         supplierPayment.referanceno = "TXN-" + new Date().getTime(); // Transfer ID reference code settings sets
     }
-
+ 
     // Verification errors checklist setups checks
     let errors = checkFormError();
-    if (errors == "") { // Verification passes is valid
-        let userConfirm = window.confirm("Are you sure to add following Supplier Payment...?" +
-            "\n GRN No : " + supplierPayment.grn_id.grnno +
-            "\n Paid Amount : " + supplierPayment.paidamount +
-            "\n Payment Method : " + supplierPayment.paymentmethod
-        ); // User confirmation prompts popup alerts
-
-        if (userConfirm) { // Success user confirm clicks OK
-            let postResponce = getHTTPServiceRequest("/supplierPayment/insert", "POST", supplierPayment); // API POST save request call execution
-            if (postResponce == "OK") { // Success details saves
-                window.alert("Save successfully "); // Successful Alert response setups
-                refreshSupplierPaymentTable(); // Reload data lists
-                refreshSupplierPaymentForm(); // Reset form elements
-                $("#offcanvasBottom").offcanvas("hide"); // Offcanvas window hide
-            } else {
-                window.alert("Failed to submit \n" + postResponce); // Database error alert returns
+    // validation check errors check blank checks
+    if (errors == "") {
+        // supplier payment submission confirmations sweetalert popup modals displays check
+        Swal.fire({
+            title: "Confirm Submission",
+            html: `Are you sure to add the following Supplier Payment?<br><br>` +
+                  `<strong>GRN No:</strong> ${supplierPayment.grn_id.grnno}<br>` +
+                  `<strong>Paid Amount:</strong> Rs. ${parseFloat(supplierPayment.paidamount).toFixed(2)}<br>` +
+                  `<strong>Payment Method:</strong> ${supplierPayment.paymentmethod}`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa-solid fa-plus"></i> Add',
+            cancelButtonText: '<i class="fa-solid fa-xmark"></i> Cancel',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-confirm-btn',
+                cancelButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            // submit confirm check yes kala nam
+            if (result.isConfirmed) {
+                // API POST save request call execution
+                let postResponce = getHTTPServiceRequest("/supplierPayment/insert", "POST", supplierPayment);
+                // database success response check OK
+                if (postResponce == "OK") {
+                    // success status informational dialogue sweetalert modals displays check
+                    Swal.fire({
+                        title: "Saved!",
+                        text: "Supplier payment saved successfully.",
+                        icon: "success",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-confirm-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                    // data table lists metrics refresh call
+                    refreshSupplierPaymentTable();
+                    // resets forms defaults elements values checks
+                    refreshSupplierPaymentForm();
+                    // offcanvas sheets panels close karalai hide checks
+                    $("#offcanvasBottom").offcanvas("hide");
+                } else {
+                    // post submit failed alert sweetalert dialog open checks
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit: " + postResponce,
+                        icon: "error",
+                        confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-content',
+                            confirmButton: 'swal-custom-cancel-btn'
+                        },
+                        buttonsStyling: false
+                    });
+                }
             }
-        }
+        });
     } else {
-        window.alert("Something went wrong...\n" + errors); // Validation warnings display checks
+        // required parameters check error validation alerts display checks
+        Swal.fire({
+            title: "Validation Error",
+            html: "Something went wrong... Please correct the following errors:<br><br>" + errors.replace(/\n/g, "<br>"),
+            icon: "error",
+            confirmButtonText: '<i class="fa-solid fa-check"></i> OK',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-content',
+                confirmButton: 'swal-custom-cancel-btn'
+            },
+            buttonsStyling: false
+        });
     }
 }
 
@@ -270,10 +336,29 @@ const buttonSupplierPaymentUpdate = () => { }
 
 // Reset/Clear button trigger setups
 const clearSupplierPaymentForm = () => {
-    let userConfirm = window.confirm("Do you need to refresh form...?"); // Confirmation check alert
-    if (userConfirm) {
-        refreshSupplierPaymentForm(); // Clean form states
-    }
+    // clear form confirmation popup window sweetalert open karagannawa
+    Swal.fire({
+        title: "Confirm Refresh",
+        text: "Do you need to refresh form...?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes',
+        cancelButtonText: '<i class="fa-solid fa-xmark"></i> No',
+        customClass: {
+            popup: 'swal-custom-popup',
+            title: 'swal-custom-title',
+            htmlContainer: 'swal-custom-content',
+            confirmButton: 'swal-custom-confirm-btn',
+            cancelButton: 'swal-custom-cancel-btn'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        // clear confirm yes checks
+        if (result.isConfirmed) {
+            // refresh supplier payment form function call karalai forms inputs values defaults resets karagannawa
+            refreshSupplierPaymentForm();
+        }
+    });
 }
 
 // Select GRN details automatically total amount read values inject
@@ -459,7 +544,7 @@ const refreshSupplierPaymentForm = () => {
     formSupplierPayment.reset(); // Native form resets clear details checks
 
     // Form inputs validator styles clean colors sets
-    setDefault([selectGrn, textTotalDueAmount, textPrepaidAmount, selectPaymentMethod, textPaidAmount, textBalanceAmount, selectCardType, textReferenceNo, textChequeNo, textChequeDate, textTransferId, textNote, selectSupplierPaymentStatus]);
+    setDefault([selectGrn, textTotalDueAmount, textPrepaidAmount, selectPaymentMethod, textPaidAmount, textBalanceAmount, selectCardType, textReferenceNo, textChequeNo, textChequeDate, textTransferId, selectSupplierPaymentStatus]);
 
     // Additional dynamic containers inputs invisible blocks setups initial load settings
     document.getElementById("divChequeNo").style.display = "none";
@@ -516,7 +601,13 @@ const refreshSupplierPaymentForm = () => {
     selectSupplierPaymentStatus.classList.remove("is-invalid");
     selectSupplierPaymentStatus.classList.add("is-valid");
 
-    // Edit functions updating layout hide and inserts layout show active sets
-    btnSupplierPaymentUpdate.style.visibility = "hidden"; // Hide update button
-    btnSupplierPaymentSubmit.style.visibility = "visible"; // Show submit save button
+    // // Edit functions updating layout hide and inserts layout show active sets
+    // btnSupplierPaymentUpdate.style.visibility = "hidden"; // Hide update button
+    // btnSupplierPaymentSubmit.style.visibility = "visible"; // Show submit save button
+
+    //     hide update button
+    divButtonUpdate.style.display = "none";
+
+//     show add button
+    divButtonAdd.style.display = "flex";
 }

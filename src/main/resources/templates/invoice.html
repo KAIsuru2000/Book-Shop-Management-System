@@ -149,10 +149,8 @@
                                                 <input type="text" placeholder="Enter Discount Amount"
                                                     class="form-control" aria-label="Sizing example input"
                                                     aria-describedby="inputGroup-sizing-default" id="textDiscountAmount"
-                                                    required
-                                                    onkeyup="updateDiscountAmountField(this)"
-                                                    onclick="updateDiscountAmountField(this)"
-                                                    data-bs-toggle="tooltip"
+                                                    required onkeyup="updateDiscountAmountField(this)"
+                                                    onclick="updateDiscountAmountField(this)" data-bs-toggle="tooltip"
                                                     title="Enter the Discounted Amount correctly here.">
                                             </div>
                                         </div>
@@ -173,20 +171,20 @@
                                             </div>
                                         </div>
                                         <!-- Net Amount area end-->
-                                        <!-- note area start -->
-                                        <div class="row mt-4">
-                                            <div class="input-group">
-                                                <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; : <span
-                                                        class="text-danger">(optional)</span></span>
-                                                <textarea id="textNote" class="form-control" placeholder="Enter Note"
-                                                    aria-label="With textarea"
-                                                    onkeyup="textValidator(this, '^.*$', 'invoice', 'note')"
-                                                    onclick="textValidator(this, '^.*$', 'invoice', 'note')"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Enter a note about the Purchase Order here"></textarea>
-                                            </div>
-                                        </div>
-                                        <!-- note area end -->
+                                        <!--                                        &lt;!&ndash; note area start &ndash;&gt;-->
+                                        <!--                                        <div class="row mt-4">-->
+                                        <!--                                            <div class="input-group">-->
+                                        <!--                                                <span class="input-group-text lablBg">Note &nbsp; &nbsp; &nbsp; : <span-->
+                                        <!--                                                        class="text-danger">(optional)</span></span>-->
+                                        <!--                                                <textarea id="textNote" class="form-control" placeholder="Enter Note"-->
+                                        <!--                                                    aria-label="With textarea"-->
+                                        <!--                                                    onkeyup="textValidator(this, '^.*$', 'invoice', 'note')"-->
+                                        <!--                                                    onclick="textValidator(this, '^.*$', 'invoice', 'note')"-->
+                                        <!--                                                    data-bs-toggle="tooltip"-->
+                                        <!--                                                    title="Enter a note about the Purchase Order here"></textarea>-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </div>-->
+                                        <!--                                        &lt;!&ndash; note area end &ndash;&gt;-->
                                         <!--Invoice Status area start-->
                                         <div class="row mt-4">
                                             <div class="input-group mb-3">
@@ -239,8 +237,8 @@
                                                             class="fw-bold text-danger">*</span></span>
                                                     <!-- unit price selection wenas wana wita seasonal discount calculate karanna meya call karanawa -->
                                                     <select class="form-select" id="selectUnitPrice"
-                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
-                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice();"
+                                                        onchange="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice(); validateQuantity();"
+                                                        onclick="selectStaticElementValidater(this , 'invoiceHasInventory', 'uniteprice'); generateLinePrice(); validateQuantity();"
                                                         data-bs-toggle="tooltip"
                                                         title="Select the Unit Price correctly here.">
                                                         <option selected disabled value="">Select Unit Price</option>
@@ -255,23 +253,23 @@
                                         <!-- Item and Unit Price area end -->
                                         <!-- discount price and Quantity area start -->
                                         <div class="row mt-4">
-<!--                                            &lt;!&ndash; discount price area start &ndash;&gt;-->
-<!--                                            <div class="col-6">-->
-<!--                                                <div class="input-group">-->
-<!--                                                    <span class="input-group-text lablBg">Discounted Price :-->
-<!--                                                        <span class="fw-bold text-danger">*</span></span>-->
-<!--                                                    <input type="number" class="form-control"-->
-<!--                                                        placeholder="Enter Discount Price"-->
-<!--                                                        aria-label="Sizing example input"-->
-<!--                                                        aria-describedby="inputGroup-sizing-default"-->
-<!--                                                        id="textDiscountPrice" required-->
-<!--                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"-->
-<!--                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"-->
-<!--                                                        data-bs-toggle="tooltip"-->
-<!--                                                        title="Enter the Discount Price correctly here.">-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            &lt;!&ndash; discount price area end &ndash;&gt;-->
+                                            <!--                                            &lt;!&ndash; discount price area start &ndash;&gt;-->
+                                            <!--                                            <div class="col-6">-->
+                                            <!--                                                <div class="input-group">-->
+                                            <!--                                                    <span class="input-group-text lablBg">Discounted Price :-->
+                                            <!--                                                        <span class="fw-bold text-danger">*</span></span>-->
+                                            <!--                                                    <input type="number" class="form-control"-->
+                                            <!--                                                        placeholder="Enter Discount Price"-->
+                                            <!--                                                        aria-label="Sizing example input"-->
+                                            <!--                                                        aria-describedby="inputGroup-sizing-default"-->
+                                            <!--                                                        id="textDiscountPrice" required-->
+                                            <!--                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"-->
+                                            <!--                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'discountprice'); generateLinePrice();"-->
+                                            <!--                                                        data-bs-toggle="tooltip"-->
+                                            <!--                                                        title="Enter the Discount Price correctly here.">-->
+                                            <!--                                                </div>-->
+                                            <!--                                            </div>-->
+                                            <!--                                            &lt;!&ndash; discount price area end &ndash;&gt;-->
                                             <!--Quantity area start -->
                                             <div class="col-6">
                                                 <div class="input-group">
@@ -281,8 +279,10 @@
                                                         placeholder="Enter Quantity" aria-label="Sizing example input"
                                                         aria-describedby="inputGroup-sizing-default" id="textQuantity"
                                                         required
-                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'quentity'); generateLinePrice();"
-                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'quentity'); generateLinePrice();"
+                                                        onkeyup="validateQuantity();"
+                                                        oninput="validateQuantity();"
+                                                        onchange="validateQuantity();"
+                                                        onclick="validateQuantity();"
                                                         data-bs-toggle="tooltip"
                                                         title="Enter the Quantity correctly here.">
                                                 </div>
@@ -295,13 +295,13 @@
                                                         Price :
                                                         <span class="fw-bold text-danger">*</span></span>
                                                     <input type="number" class="form-control"
-                                                           placeholder="Enter Line Price" aria-label="Sizing example input"
-                                                           aria-describedby="inputGroup-sizing-default" id="textLinePrice"
-                                                           required
-                                                           onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
-                                                           onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
-                                                           data-bs-toggle="tooltip"
-                                                           title="Enter the Line Price correctly here.">
+                                                        placeholder="Enter Line Price" aria-label="Sizing example input"
+                                                        aria-describedby="inputGroup-sizing-default" id="textLinePrice"
+                                                        required
+                                                        onkeyup="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
+                                                        onclick="textValidator(this, '^.*$', 'invoiceHasInventory', 'lineprice'); generateLinePrice();"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Enter the Line Price correctly here.">
                                                 </div>
                                             </div>
                                             <!-- Line Price area end -->
@@ -364,7 +364,7 @@
                                                                 <th>#</th>
                                                                 <th>Item Name</th>
                                                                 <th>Unit Price(Rs.)</th>
-<!--                                                                <th>Discounted Price(Rs.)</th>-->
+                                                                <!--                                                                <th>Discounted Price(Rs.)</th>-->
                                                                 <th>Quantity</th>
                                                                 <th>Line Price(Rs.)</th>
 
@@ -534,12 +534,12 @@
                                     id="addressView"></th>
 
                             </tr>
-                            <tr>
-                                <th style="color:black; text-align: left;border: none;">Note</th>
-                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
-                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"
-                                    id="noteView"></th>
-                            </tr>
+                            <!--                            <tr>-->
+                            <!--                                <th style="color:black; text-align: left;border: none;">Note</th>-->
+                            <!--                                <th style="color: black;border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>-->
+                            <!--                                <th style="color:black; text-align: left;border: none; font-style: italic; font-weight: 500;"-->
+                            <!--                                    id="noteView"></th>-->
+                            <!--                            </tr>-->
                             <tr>
                                 <th style="color:black; text-align: left; border: none;">Designation </th>
                                 <th style="color: black; border: none;"> &nbsp; &nbsp; :- &nbsp; &nbsp; </th>
